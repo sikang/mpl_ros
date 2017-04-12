@@ -1,3 +1,8 @@
+/**
+ * @file voxel_map_util.h
+ * @brief VoxelMapUtil classes
+ */
+
 #ifndef VOXEL_MAP_UTIL_H
 #define VOXEL_MAP_UTIL_H
 
@@ -7,13 +12,6 @@ class VoxelMapUtil
     : public MapUtilBase<Vec3i, Vec3f, std::vector<char>> {
 public:
   VoxelMapUtil() : MapUtilBase() {}
-
-  void setMap(const Vec3f& ori, const Vec3i& dim, const std::vector<char>& map, decimal_t res) {
-    map_ = map;
-    dim_ = dim;
-    origin_d_ = ori;
-    res_ = res;
-  }
 
   void info() {
     printf("Map Info ============\n");

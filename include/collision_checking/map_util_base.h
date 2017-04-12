@@ -72,18 +72,38 @@ public:
     }
     return false;
   }
+  /**
+   * @brief Set map 
+   *
+   * @param ori origin position
+   * @param dim number of cells in each dimension
+   * @param map array of status os cells
+   * @param res map resolution
+   */
+  void setMap(const Tf& ori, const Ti& dim, const Tmap &map, decimal_t res) {
+    map_ = map;
+    dim_ = dim;
+    origin_d_ = ori;
+    res_ = res;
+  }
 
   ///Print basic information about the util
   virtual void info() {};
   ///Dilate obstacles
   virtual void dilating() {};
+  ///Float position to discrete cell
   virtual Ti floatToInt(const Tf &pt) = 0;
+  ///Discrete cell to float position
   virtual Tf intToFloat(const Ti &pp) = 0;
+  ///Check if the cell is outside
   virtual bool isOutSide(const Ti &pn) = 0;
+  ///Return occupied cells as vector of points
   virtual vec_E<Tf> getCloud() = 0;
-  virtual void setMap(const Tf& ori, const Ti& dim, const Tmap &map, decimal_t res) = 0;
+  ///Retrieve subindex of a cell
   virtual int getIndex(const Ti &pn) = 0;
+  ///Raytrace from pt1 to pt2
   virtual vec_E<Ti> rayTrace(const Tf &pt1, const Tf &pt2) = 0;
+  ///Set dilate information, assume robot is cylinder with radius r and height h
   virtual void dilate(decimal_t r, decimal_t h) = 0;
 
 protected:
@@ -93,9 +113,13 @@ protected:
 
   Tmap map_;
 
+  ///Pre-computed vector of neighboring cells for dilating
   vec_E<Ti> dilate_neighbor_;
+  ///Assume occupied cell has value 100
   char val_occ = 100;
+  ///Assume free cell has value 0
   char val_free = 0;
+  ///Assume unknown cell has value -1
   char val_unknown = -1;
 };
 

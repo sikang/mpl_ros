@@ -124,6 +124,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a1c37da9874992999b7e8a81eaba8ac82">isBlocked</a> (const Tf &amp;p1, const Tf &amp;p2)</td></tr>
 <tr class="memdesc:a1c37da9874992999b7e8a81eaba8ac82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the ray from p1 to p2 is occluded. <br /></td></tr>
 <tr class="separator:a1c37da9874992999b7e8a81eaba8ac82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae569744ce2bdc9f48d38ef071a4a419f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#ae569744ce2bdc9f48d38ef071a4a419f">setMap</a> (const Tf &amp;ori, const Ti &amp;dim, const Tmap &amp;map, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> res)</td></tr>
+<tr class="memdesc:ae569744ce2bdc9f48d38ef071a4a419f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set map.  <a href="#ae569744ce2bdc9f48d38ef071a4a419f">More...</a><br /></td></tr>
+<tr class="separator:ae569744ce2bdc9f48d38ef071a4a419f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5870823b258d56d2cb685549982256a"><td class="memItemLeft" align="right" valign="top"><a id="ae5870823b258d56d2cb685549982256a"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#ae5870823b258d56d2cb685549982256a">info</a> ()</td></tr>
 <tr class="memdesc:ae5870823b258d56d2cb685549982256a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print basic information about the util. <br /></td></tr>
@@ -133,28 +136,32 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:ae5c7d3c4b146cd6ba23696fb1cf9ba4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dilate obstacles. <br /></td></tr>
 <tr class="separator:ae5c7d3c4b146cd6ba23696fb1cf9ba4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33cece17088259b6885ee10e6669a7c2"><td class="memItemLeft" align="right" valign="top"><a id="a33cece17088259b6885ee10e6669a7c2"></a>
-virtual Ti&#160;</td><td class="memItemRight" valign="bottom"><b>floatToInt</b> (const Tf &amp;pt)=0</td></tr>
+virtual Ti&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a33cece17088259b6885ee10e6669a7c2">floatToInt</a> (const Tf &amp;pt)=0</td></tr>
+<tr class="memdesc:a33cece17088259b6885ee10e6669a7c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Float position to discrete cell. <br /></td></tr>
 <tr class="separator:a33cece17088259b6885ee10e6669a7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9319b34af1cbd6c15fcfff761b6d7e02"><td class="memItemLeft" align="right" valign="top"><a id="a9319b34af1cbd6c15fcfff761b6d7e02"></a>
-virtual Tf&#160;</td><td class="memItemRight" valign="bottom"><b>intToFloat</b> (const Ti &amp;pp)=0</td></tr>
+virtual Tf&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a9319b34af1cbd6c15fcfff761b6d7e02">intToFloat</a> (const Ti &amp;pp)=0</td></tr>
+<tr class="memdesc:a9319b34af1cbd6c15fcfff761b6d7e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discrete cell to float position. <br /></td></tr>
 <tr class="separator:a9319b34af1cbd6c15fcfff761b6d7e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29b4707a92d49e7508f0d6de49f12846"><td class="memItemLeft" align="right" valign="top"><a id="a29b4707a92d49e7508f0d6de49f12846"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOutSide</b> (const Ti &amp;pn)=0</td></tr>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a29b4707a92d49e7508f0d6de49f12846">isOutSide</a> (const Ti &amp;pn)=0</td></tr>
+<tr class="memdesc:a29b4707a92d49e7508f0d6de49f12846"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the cell is outside. <br /></td></tr>
 <tr class="separator:a29b4707a92d49e7508f0d6de49f12846"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affc31d1199b7b6d5828a243802c1ba28"><td class="memItemLeft" align="right" valign="top"><a id="affc31d1199b7b6d5828a243802c1ba28"></a>
-virtual <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Tf &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getCloud</b> ()=0</td></tr>
+virtual <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Tf &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#affc31d1199b7b6d5828a243802c1ba28">getCloud</a> ()=0</td></tr>
+<tr class="memdesc:affc31d1199b7b6d5828a243802c1ba28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return occupied cells as vector of points. <br /></td></tr>
 <tr class="separator:affc31d1199b7b6d5828a243802c1ba28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb9118a5c0cee46e9022f545e5cb1593"><td class="memItemLeft" align="right" valign="top"><a id="acb9118a5c0cee46e9022f545e5cb1593"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setMap</b> (const Tf &amp;ori, const Ti &amp;dim, const Tmap &amp;map, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> res)=0</td></tr>
-<tr class="separator:acb9118a5c0cee46e9022f545e5cb1593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadd5ed3a1c54a27bcf81cdd17d0257f3"><td class="memItemLeft" align="right" valign="top"><a id="aadd5ed3a1c54a27bcf81cdd17d0257f3"></a>
-virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndex</b> (const Ti &amp;pn)=0</td></tr>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#aadd5ed3a1c54a27bcf81cdd17d0257f3">getIndex</a> (const Ti &amp;pn)=0</td></tr>
+<tr class="memdesc:aadd5ed3a1c54a27bcf81cdd17d0257f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve subindex of a cell. <br /></td></tr>
 <tr class="separator:aadd5ed3a1c54a27bcf81cdd17d0257f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a647ebdf7af17aed5c25ca10050610300"><td class="memItemLeft" align="right" valign="top"><a id="a647ebdf7af17aed5c25ca10050610300"></a>
-virtual <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Ti &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>rayTrace</b> (const Tf &amp;pt1, const Tf &amp;pt2)=0</td></tr>
+virtual <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Ti &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a647ebdf7af17aed5c25ca10050610300">rayTrace</a> (const Tf &amp;pt1, const Tf &amp;pt2)=0</td></tr>
+<tr class="memdesc:a647ebdf7af17aed5c25ca10050610300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raytrace from pt1 to pt2. <br /></td></tr>
 <tr class="separator:a647ebdf7af17aed5c25ca10050610300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25dfc8c1b9cd9a4b61b7918f22e24f83"><td class="memItemLeft" align="right" valign="top"><a id="a25dfc8c1b9cd9a4b61b7918f22e24f83"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dilate</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> h)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a25dfc8c1b9cd9a4b61b7918f22e24f83">dilate</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> h)=0</td></tr>
+<tr class="memdesc:a25dfc8c1b9cd9a4b61b7918f22e24f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set dilate information, assume robot is cylinder with radius r and height h. <br /></td></tr>
 <tr class="separator:a25dfc8c1b9cd9a4b61b7918f22e24f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -178,16 +185,20 @@ Ti&#160;</td><td class="memItemRight" valign="bottom"><b>dim_</b></td></tr>
 Tmap&#160;</td><td class="memItemRight" valign="bottom"><b>map_</b></td></tr>
 <tr class="separator:aaa11a01d1191149b499e267a79cbf4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01c63d0c37d452c61932ef7ef7b92b7e"><td class="memItemLeft" align="right" valign="top"><a id="a01c63d0c37d452c61932ef7ef7b92b7e"></a>
-<a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Ti &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dilate_neighbor_</b></td></tr>
+<a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Ti &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a01c63d0c37d452c61932ef7ef7b92b7e">dilate_neighbor_</a></td></tr>
+<tr class="memdesc:a01c63d0c37d452c61932ef7ef7b92b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pre-computed vector of neighboring cells for dilating. <br /></td></tr>
 <tr class="separator:a01c63d0c37d452c61932ef7ef7b92b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fa2fc3a85918bd96092f0712b8ec087"><td class="memItemLeft" align="right" valign="top"><a id="a1fa2fc3a85918bd96092f0712b8ec087"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>val_occ</b> = 100</td></tr>
+char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a1fa2fc3a85918bd96092f0712b8ec087">val_occ</a> = 100</td></tr>
+<tr class="memdesc:a1fa2fc3a85918bd96092f0712b8ec087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume occupied cell has value 100. <br /></td></tr>
 <tr class="separator:a1fa2fc3a85918bd96092f0712b8ec087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11b131e3ce244a71350c338ef64f23be"><td class="memItemLeft" align="right" valign="top"><a id="a11b131e3ce244a71350c338ef64f23be"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>val_free</b> = 0</td></tr>
+char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a11b131e3ce244a71350c338ef64f23be">val_free</a> = 0</td></tr>
+<tr class="memdesc:a11b131e3ce244a71350c338ef64f23be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume free cell has value 0. <br /></td></tr>
 <tr class="separator:a11b131e3ce244a71350c338ef64f23be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62cbaae64c90c7b8c29d0829de921d8d"><td class="memItemLeft" align="right" valign="top"><a id="a62cbaae64c90c7b8c29d0829de921d8d"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>val_unknown</b> = -1</td></tr>
+char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a62cbaae64c90c7b8c29d0829de921d8d">val_unknown</a> = -1</td></tr>
+<tr class="memdesc:a62cbaae64c90c7b8c29d0829de921d8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume unknown cell has value -1. <br /></td></tr>
 <tr class="separator:a62cbaae64c90c7b8c29d0829de921d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -228,6 +239,68 @@ template&lt;class Ti, class Tf, class Tmap&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Simple constructor </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae569744ce2bdc9f48d38ef071a4a419f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae569744ce2bdc9f48d38ef071a4a419f">&#9670;&nbsp;</a></span>setMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Ti, class Tf, class Tmap&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMapUtilBase.html">MapUtilBase</a>&lt; Ti, Tf, Tmap &gt;::setMap </td>
+          <td>(</td>
+          <td class="paramtype">const Tf &amp;&#160;</td>
+          <td class="paramname"><em>ori</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Ti &amp;&#160;</td>
+          <td class="paramname"><em>dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Tmap &amp;&#160;</td>
+          <td class="paramname"><em>map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td>
+          <td class="paramname"><em>res</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ori</td><td>origin position </td></tr>
+    <tr><td class="paramname">dim</td><td>number of cells in each dimension </td></tr>
+    <tr><td class="paramname">map</td><td>array of status os cells </td></tr>
+    <tr><td class="paramname">res</td><td>map resolution </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

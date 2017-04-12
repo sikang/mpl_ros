@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['info',['info',['../classMapUtilBase.html#ae5870823b258d56d2cb685549982256a',1,'MapUtilBase::info()'],['../classVoxelMapUtil.html#aa7200bf8d851638999f8b70c2ddc6fa9',1,'VoxelMapUtil::info()']]],
-  ['isblocked',['isBlocked',['../classMapUtilBase.html#a1c37da9874992999b7e8a81eaba8ac82',1,'MapUtilBase']]],
-  ['isfree',['isFree',['../classMapUtilBase.html#a37f96280af14e03d498e67132b15795d',1,'MapUtilBase::isFree(int idx)'],['../classMapUtilBase.html#a4d5fc06f08b631a401bded12ae023e66',1,'MapUtilBase::isFree(const Ti &amp;pn)']]],
-  ['isoccupied',['isOccupied',['../classMapUtilBase.html#a69963eb5e85bfbcc52d45f76e1cbc5ec',1,'MapUtilBase::isOccupied(int idx)'],['../classMapUtilBase.html#aeeb020745671ff8398ffcd88bd41c34c',1,'MapUtilBase::isOccupied(const Ti &amp;pn)']]],
-  ['isoutsidexyz',['isOutSideXYZ',['../classMapUtilBase.html#a6c0963d9a06b7bd7d0ddec0745fc6002',1,'MapUtilBase']]],
-  ['isunknown',['isUnKnown',['../classMapUtilBase.html#af6f48c3df738c3cbd4a7bda421fecba1',1,'MapUtilBase::isUnKnown(int idx)'],['../classMapUtilBase.html#a7d721f9f57c549535645cdc29fa78963',1,'MapUtilBase::isUnKnown(const Ti &amp;pn)']]]
+  ['getcloud',['getCloud',['../classMapUtilBase.html#affc31d1199b7b6d5828a243802c1ba28',1,'MapUtilBase::getCloud()'],['../classVoxelMapUtil.html#afee9442b216a511b0ccab907fc4f1709',1,'VoxelMapUtil::getCloud()']]],
+  ['getdim',['getDim',['../classMapUtilBase.html#a457c625408d278d7873a9923c41663f2',1,'MapUtilBase']]],
+  ['getindex',['getIndex',['../classMapUtilBase.html#aadd5ed3a1c54a27bcf81cdd17d0257f3',1,'MapUtilBase::getIndex()'],['../classVoxelMapUtil.html#a4e857bd090191ca5f4e4368d96485967',1,'VoxelMapUtil::getIndex()']]],
+  ['getmap',['getMap',['../classMapUtilBase.html#a0d3376528c2cab2c1673a509fc114bad',1,'MapUtilBase']]],
+  ['getorigin',['getOrigin',['../classMapUtilBase.html#ae3f11bf394161cd9fcbcc24d3dada929',1,'MapUtilBase']]],
+  ['getres',['getRes',['../classMapUtilBase.html#a2abeb968daa0e00eb052f985f1c68bcf',1,'MapUtilBase']]],
+  ['gettotaltime',['getTotalTime',['../classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f',1,'Trajectory']]]
 ];

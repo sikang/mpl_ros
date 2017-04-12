@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['operator_3d_3d',['operator==',['../structWaypoint.html#a78d55c82e0b9654ccc852a0c5971025d',1,'Waypoint']]]
+  ['maputilbase',['MapUtilBase',['../classMapUtilBase.html#a680aee3ddc8d5fe08de8fed742f73e76',1,'MapUtilBase']]],
+  ['max_5facc',['max_acc',['../classPrimitive.html#a25e5b4fa8b11ed0be84a5246f8d09215',1,'Primitive']]],
+  ['max_5fvel',['max_vel',['../classPrimitive.html#a14682cf852b57be7fa55a2429fc70306',1,'Primitive']]]
 ];

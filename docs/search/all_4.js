@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['getdim',['getDim',['../classMapUtilBase.html#a457c625408d278d7873a9923c41663f2',1,'MapUtilBase']]],
-  ['getmap',['getMap',['../classMapUtilBase.html#a0d3376528c2cab2c1673a509fc114bad',1,'MapUtilBase']]],
-  ['getorigin',['getOrigin',['../classMapUtilBase.html#ae3f11bf394161cd9fcbcc24d3dada929',1,'MapUtilBase']]],
-  ['getres',['getRes',['../classMapUtilBase.html#a2abeb968daa0e00eb052f985f1c68bcf',1,'MapUtilBase']]],
-  ['gettotaltime',['getTotalTime',['../classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f',1,'Trajectory']]]
+  ['floattoint',['floatToInt',['../classMapUtilBase.html#a33cece17088259b6885ee10e6669a7c2',1,'MapUtilBase::floatToInt()'],['../classVoxelMapUtil.html#a9458f6603f42b57d46257a957079fcf7',1,'VoxelMapUtil::floatToInt()']]]
 ];
