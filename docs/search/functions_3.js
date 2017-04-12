@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['j',['J',['../classPrimitive1D.html#ad3aad54db9f13729ea5af5ff608ee3ab',1,'Primitive1D::J()'],['../classPrimitive.html#a7a91a66cdc103d66926aae7da24939b3',1,'Primitive::J()'],['../classTrajectory.html#a9de3103dbebd1e425bfb5d247905582e',1,'Trajectory::J()']]]
+  ['getdim',['getDim',['../classMapUtilBase.html#a457c625408d278d7873a9923c41663f2',1,'MapUtilBase']]],
+  ['getmap',['getMap',['../classMapUtilBase.html#a0d3376528c2cab2c1673a509fc114bad',1,'MapUtilBase']]],
+  ['getorigin',['getOrigin',['../classMapUtilBase.html#ae3f11bf394161cd9fcbcc24d3dada929',1,'MapUtilBase']]],
+  ['getres',['getRes',['../classMapUtilBase.html#a2abeb968daa0e00eb052f985f1c68bcf',1,'MapUtilBase']]],
+  ['gettotaltime',['getTotalTime',['../classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f',1,'Trajectory']]]
 ];

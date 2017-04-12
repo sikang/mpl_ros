@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['sample',['sample',['../classPrimitive.html#aa15ac4cb4b646446c858bf52ef3a06cf',1,'Primitive::sample()'],['../classTrajectory.html#a642225510c88c8eb8137faaff92c2fcf',1,'Trajectory::sample()']]],
-  ['scale',['scale',['../classTrajectory.html#ab6ab39c7d4ab8387300e6b0d2055f16a',1,'Trajectory']]],
-  ['scale_5fdown',['scale_down',['../classTrajectory.html#a8b714873cc8c99bdfb822037b8646754',1,'Trajectory']]],
-  ['solve',['solve',['../math_8h.html#a981120793ddb8cdf9ce466e8c2e70e4b',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e):&#160;math.cpp'],['../math_8h.html#af81382faed5667c02f3f447c3eefd064',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e, decimal_t f, decimal_t g):&#160;math.cpp']]]
+  ['quad',['quad',['../math_8h.html#a5b1ef571b298b14e320d7d9f31528871',1,'math.cpp']]],
+  ['quartic',['quartic',['../math_8h.html#a11e53038927f416e637df83d4a0b18bc',1,'math.cpp']]],
+  ['quatf',['Quatf',['../data__type_8h.html#a4857a8f36ec316f647bfc006d4799e9a',1,'data_type.h']]]
 ];

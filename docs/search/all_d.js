@@ -1,14 +1,7 @@
 var searchData=
 [
-  ['t',['t',['../classPrimitive.html#a70f76ce1aa18321cc779b794610a8fae',1,'Primitive']]],
-  ['t_5f',['t_',['../classPrimitive.html#addf18cdf875316f9c28f95f5d34e8484',1,'Primitive']]],
-  ['total_5fdistance',['total_distance',['../data__utils_8h.html#a3f82ae87bcf143405fd986be6ca44a68',1,'data_utils.h']]],
-  ['total_5fdistance3f',['total_distance3f',['../data__utils_8h.html#a188bab5f6177f4853e7bff0d5c61cfe6',1,'data_utils.h']]],
-  ['total_5fdistance3i',['total_distance3i',['../data__utils_8h.html#aca4035bd3287a21e2e0a8e7a5a0357f5',1,'data_utils.h']]],
-  ['traj',['traj',['../classPrimitive.html#ac1df44ac9e3bd6d0de41a1c0a83e30a5',1,'Primitive']]],
-  ['trajectory',['Trajectory',['../classTrajectory.html',1,'Trajectory'],['../classTrajectory.html#aa340ba80f1f4d1aa39f19f069d5d8089',1,'Trajectory::Trajectory()'],['../classTrajectory.html#adac628485b1435285343ad23d418771e',1,'Trajectory::Trajectory(const std::vector&lt; Primitive &gt; &amp;trajs)']]],
-  ['trajectory_2eh',['trajectory.h',['../trajectory_8h.html',1,'']]],
-  ['trajs_5f',['trajs_',['../classPrimitive.html#adb08c85bb9ae72ac3151d6e00b32a173',1,'Primitive']]],
-  ['transform_5fvec',['transform_vec',['../data__utils_8h.html#ac3745ddcc3002193bbcd5caab64cd1df',1,'data_utils.h']]],
-  ['transform_5fvec3',['transform_vec3',['../data__utils_8h.html#a79960a9e7c7bad6ec5641ed1729ad8d0',1,'data_utils.h']]]
+  ['sample',['sample',['../classPrimitive.html#aa15ac4cb4b646446c858bf52ef3a06cf',1,'Primitive::sample()'],['../classTrajectory.html#a642225510c88c8eb8137faaff92c2fcf',1,'Trajectory::sample()']]],
+  ['scale',['scale',['../classTrajectory.html#ab6ab39c7d4ab8387300e6b0d2055f16a',1,'Trajectory']]],
+  ['scale_5fdown',['scale_down',['../classTrajectory.html#a8b714873cc8c99bdfb822037b8646754',1,'Trajectory']]],
+  ['solve',['solve',['../math_8h.html#a981120793ddb8cdf9ce466e8c2e70e4b',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e):&#160;math.cpp'],['../math_8h.html#af81382faed5667c02f3f447c3eefd064',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e, decimal_t f, decimal_t g):&#160;math.cpp']]]
 ];

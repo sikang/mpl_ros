@@ -7,8 +7,10 @@ var menudata={children:[
 {text:"Class Members",url:"functions.html",children:[
 {text:"All",url:"functions.html",children:[
 {text:"c",url:"functions.html#index_c"},
+{text:"d",url:"functions.html#index_d"},
 {text:"e",url:"functions.html#index_e"},
 {text:"g",url:"functions.html#index_g"},
+{text:"i",url:"functions.html#index_i"},
 {text:"j",url:"functions.html#index_j"},
 {text:"l",url:"functions.html#index_l"},
 {text:"m",url:"functions.html#index_m"},
@@ -20,8 +22,10 @@ var menudata={children:[
 {text:"v",url:"functions.html#index_v"}]},
 {text:"Functions",url:"functions_func.html",children:[
 {text:"c",url:"functions_func.html#index_c"},
+{text:"d",url:"functions_func.html#index_d"},
 {text:"e",url:"functions_func.html#index_e"},
 {text:"g",url:"functions_func.html#index_g"},
+{text:"i",url:"functions_func.html#index_i"},
 {text:"j",url:"functions_func.html#index_j"},
 {text:"l",url:"functions_func.html#index_l"},
 {text:"m",url:"functions_func.html#index_m"},
