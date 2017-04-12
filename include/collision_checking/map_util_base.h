@@ -2,8 +2,6 @@
  * @file map_util_base.h
  * @brief MapUtilBase classes
  */
-
-
 #ifndef MAP_UTIL_BASE_H
 #define MAP_UTIL_BASE_H
 

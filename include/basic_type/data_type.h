@@ -1,8 +1,9 @@
-/*! \file data_type.h
-    \brief Defines all data types used in this lib
+/**
+ *@file data_type.h
+ * @brief Defines all data types used in this lib
 
-    Mostly alias from Eigen Library.
-    */
+ * Mostly alias from Eigen Library.
+ */
 
 #ifndef BASIC_DATA_H
 #define BASIC_DATA_H

@@ -1,6 +1,7 @@
-/*! \file data_utils.h
-    \brief Provide a few widely used function for basic type
-    */
+/**
+ * @file data_utils.h
+ * @brief Provide a few widely used function for basic type
+ */
 #ifndef DATA_UTIL_H
 #define DATA_UTIL_H
 
