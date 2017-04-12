@@ -1,9 +1,21 @@
+/**
+ * @file map_util_base.h
+ * @brief MapUtilBase classes
+ */
+
+
 #ifndef MAP_UTIL_BASE_H
 #define MAP_UTIL_BASE_H
 
 #include <stack>
 #include <basic_type/data_type.h>
 
+/**
+ * @biref The base class is provided by considering both 2D and 3D maps
+ * @param Ti is integer index of cell/voxel
+ * @param Tf is float position of cell/voxel
+ * @param Tmap is defined as a 1D array 
+ */
 template <class Ti, class Tf, class Tmap> class MapUtilBase {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
