@@ -1,0 +1,10 @@
+\form#0:$b*t^2+c*t+d = 0$
+\form#1:$a*t^3+b*t^2+c*t+d = 0$
+\form#2:$a*t^4+b*t^3+c*t^2+d*t+e = 0$
+\form#3:$a, b, c$
+\form#4:$a*t^6+b*t^5+c*t^4+d*t^3+e*t^2+f*t+g = 0$
+\form#5:$R^3$
+\form#6:$p(t) = \frac{c(0)}{120}t^5+\frac{c(1)}{24}t^4+\frac{c(2)}{6}t^3+\frac{c(3)}{2}t^2+c(4)t+c(5) = 0$
+\form#7:$J(t, i) = \int_0^t |p^{(i+1)}(t)|^2dt$
+\form#8:$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$
+\form#9:$t = \lambda(\tau)^{-1}$
