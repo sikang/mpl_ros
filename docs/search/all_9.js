@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['mrsl_20motion_20primitive_20for_20quadrotor',['MRSL Motion Primitive for quadrotor',['../index.html',1,'']]],
   ['map_5futil_5fbase_2eh',['map_util_base.h',['../map__util__base_8h.html',1,'']]],
   ['maputilbase',['MapUtilBase',['../classMapUtilBase.html',1,'MapUtilBase&lt; Ti, Tf, Tmap &gt;'],['../classMapUtilBase.html#a680aee3ddc8d5fe08de8fed742f73e76',1,'MapUtilBase::MapUtilBase()']]],
   ['maputilbase_3c_20vec3i_2c_20vec3f_2c_20std_3a_3avector_3c_20char_20_3e_20_3e',['MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; char &gt; &gt;',['../classMapUtilBase.html',1,'']]],
