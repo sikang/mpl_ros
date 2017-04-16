@@ -70,8 +70,13 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
   }
 
   path_.push_back(start);
-  for (const auto &it_node : path)
-    path_.push_back(it_node);
+  int i = 0;
+  for (const auto& it: path) {
+    if(ENV_->goal_outside() && i == path.size() - 1)
+      break;
+    path_.push_back(it);
+    i++;
+  }
 
   return true;
 }

@@ -50,6 +50,10 @@ namespace mrsl
         return map_util_->img(0, traj);
       }
 
+      bool goal_outside() {
+        return goal_outside_;
+      }
+
       void add_image(const cv::Mat& img, const Aff3f& TF, const CameraInfo& info) {
         map_util_->addImage(img, TF, info);
       }
@@ -84,6 +88,7 @@ namespace mrsl
         ps_.clear();
         primitives_.clear();
         goal_node_ = goal;
+        goal_outside_ = false;
 
         if (map_util_->isOutside(goal.pos)) {
           printf(ANSI_COLOR_GREEN "goal out side! " ANSI_COLOR_RESET "\n");
@@ -94,7 +99,7 @@ namespace mrsl
       bool is_goal(const Waypoint& state) const
       {
         return (state.pos - goal_node_.pos).norm() <= 1 &&
-          (state.vel - goal_node_.vel).norm() <= 0.1;
+          (state.vel - goal_node_.vel).norm() <= dv_;
       }
 
       double get_heur(const Waypoint& state) const
