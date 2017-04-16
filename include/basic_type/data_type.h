@@ -76,10 +76,10 @@ typedef Eigen::Matrix<decimal_t, Eigen::Dynamic, 3> MatD3f;
 ///NxN matrix in float
 typedef Eigen::Matrix<decimal_t, Eigen::Dynamic, Eigen::Dynamic> MatDf;
 
-/*
+//Allias of Eigen::Translation
 typedef Eigen::Translation<decimal_t, 3> Trans3f;
+//Allias of Eigen::AngleAxis
 typedef Eigen::AngleAxis<decimal_t> Anglef;
-*/
 
 ///Allias of Eigen::Quaterniond
 typedef Eigen::Quaternion<decimal_t> Quatf;

@@ -1,40 +1,36 @@
-#include <planner/mrsl_mp_util.h>
+#include <planner/mp_vision_util.h>
 
-NXMPUtil::NXMPUtil(bool verbose) :
+MPVisionUtil::MPVisionUtil(bool verbose) :
   _planner_verbose(verbose)
 {
  if(_planner_verbose)
     printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+  ENV_.reset(new mrsl::env_vision());
 }
 
-std::vector<Waypoint> NXMPUtil::getPath() {
-  return _path;
+void MPVisionUtil::setEpsilon(decimal_t eps) {
+  epsilon_ = eps;
 }
 
-void NXMPUtil::setEpsilon(decimal_t eps) {
-  _epsilon = eps;
-}
-
-void NXMPUtil::setDt(decimal_t dt) {
+void MPVisionUtil::setDt(decimal_t dt) {
   ENV_->set_dt(dt);
   ENV_->set_discretization(false);
 }
 
-void NXMPUtil::setAmax(decimal_t a_max) {
+void MPVisionUtil::setAmax(decimal_t a_max) {
   ENV_->set_a_max(a_max);
 }
 
-void NXMPUtil::setVmax(decimal_t v_max) {
+void MPVisionUtil::setVmax(decimal_t v_max) {
   ENV_->set_v_max(v_max);
 }
 
-void NXMPUtil::setMapUtil(VoxelMapUtil* map_util) {
-  ENV_.reset(new mrsl::env_mp(map_util));
+void MPVisionUtil::addImage(const cv::Mat& img, const Aff3f& TF, const CameraInfo& info) {
+  ENV_->add_image(img, TF, info);
 }
 
-bool NXMPUtil::plan(const Waypoint &start, const Waypoint &goal) {
-  _path.clear();
-  primitives_.clear();
+bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
+  path_.clear();
 
   if(_planner_verbose) {
     printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
@@ -51,9 +47,15 @@ bool NXMPUtil::plan(const Waypoint &start, const Waypoint &goal) {
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 
-  //ENV_->reset();
   ENV_->set_goal(goal);
-  double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, _epsilon);
+
+  if( !ENV_->is_free(start.pos) )
+  {
+    printf("start is not free!\n");
+    return false;
+  }
+
+  double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
 
   std::cout << "Plan cost = " << pcost << std::endl;
   std::cout << "Path length = " << path.size() << std::endl;
@@ -67,20 +69,19 @@ bool NXMPUtil::plan(const Waypoint &start, const Waypoint &goal) {
     return false;
   }
 
-  _path.push_back(start);
+  path_.push_back(start);
   for (const auto &it_node : path)
-    _path.push_back(it_node);
+    path_.push_back(it_node);
 
-  //std::reverse(_path.begin(), _path.end());
   return true;
 }
 
-Trajectory NXMPUtil::getTraj() {
+Trajectory MPVisionUtil::getTraj() {
   std::vector<Primitive> ps;
 
-  for(int i = 0; i < (int)_path.size()-1; i++){
-    Waypoint nw1 = _path[i];
-    Waypoint nw2 = _path[i+1];
+  for(int i = 0; i < (int)path_.size()-1; i++){
+    Waypoint nw1 = path_[i];
+    Waypoint nw2 = path_[i+1];
 
     nw1.use_pos = true;
     nw1.use_vel = true;

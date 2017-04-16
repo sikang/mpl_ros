@@ -6,7 +6,7 @@
 
 namespace mrsl
 {
-  class env_mp : public env_int<Waypoint>
+  class env_map : public env_int<Waypoint>
   {
     protected:
       Waypoint goal_node_;    // discrete coordinates of the goal node
@@ -27,7 +27,7 @@ namespace mrsl
 
     public:
 
-      env_mp(VoxelMapUtil* map_util)
+      env_map(VoxelMapUtil* map_util)
         : map_util_(map_util)
       {}
 

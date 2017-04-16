@@ -9,7 +9,7 @@
 #include <collision_checking/map_util_base.h>
 
 class VoxelMapUtil
-    : public MapUtilBase<Vec3i, Vec3f, std::vector<char>> {
+    : public MapUtilBase<Vec3i, Vec3f, std::vector<signed char>> {
 public:
   VoxelMapUtil() : MapUtilBase() {}
 
@@ -131,7 +131,7 @@ public:
   }
 
   void dilating() {
-    std::vector<char> map = map_;
+    std::vector<signed char> map = map_;
     Vec3i n = Vec3i::Zero();
     for (n(0) = 0; n(0) < dim_(0); n(0)++) {
       for (n(1) = 0; n(1) < dim_(1); n(1)++) {

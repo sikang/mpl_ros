@@ -2,8 +2,8 @@
   <name>motion_primitive_library</name>
   <version>0.1.0</version>
   <description> search-based motion primitive planning library</description>
-  <author>Nikolay Atanasov</author>
-  <maintainer email="atanasov@seas.upenn.edu">Sikang Liu</maintainer>
+  <author>Sikang Liu</author>
+  <maintainer email="sikang@seas.upenn.edu">Sikang Liu</maintainer>
   <license>GPLv3</license>
   
   <!-- Dependencies which this package needs to build itself. -->

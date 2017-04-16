@@ -1,11 +1,11 @@
-#include <planner/env_mp.h>
 #include <planner/astar.h>
+#include <planner/env_map.h>
 #include <primitive/trajectory.h>
 
-class NXMPUtil
+class MPMapUtil
 {
   public:
-    NXMPUtil(bool verbose);
+    MPMapUtil(bool verbose);
     bool plan(const Waypoint &start, const Waypoint &goal);
     std::vector<Waypoint> getPath();
     Trajectory getTraj();
@@ -22,7 +22,7 @@ class NXMPUtil
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
  protected:
     bool _planner_verbose;
-    std::unique_ptr<mrsl::env_mp> ENV_;
+    std::unique_ptr<mrsl::env_map> ENV_;
     std::vector<Waypoint> _path;
     decimal_t _epsilon = 1.0;
 
