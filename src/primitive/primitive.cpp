@@ -34,20 +34,21 @@ Primitive1D::Primitive1D(decimal_t p1, decimal_t v1,
 }
 
 Vec3f Primitive1D::evaluate(decimal_t t) const {
-  return Vec3f(c(0)/120*std::pow(t, 5)+c(1)/24*std::pow(t,4)+c(2)/6*t*t*t+c(3)/2*t*t+c(4)*t+c(5),
-               c(0)/24*std::pow(t,4)+c(1)/6*t*t*t+c(2)/2*t*t+c(3)*t+c(4),
+  return Vec3f(c(0)/120*t*t*t*t*t+c(1)/24*t*t*t*t+c(2)/6*t*t*t+c(3)/2*t*t+c(4)*t+c(5),
+               c(0)/24*t*t*t*t+c(1)/6*t*t*t+c(2)/2*t*t+c(3)*t+c(4),
                c(0)/6*t*t*t+c(1)/2*t*t+c(2)*t+c(3));
 }
 
 decimal_t Primitive1D::J(decimal_t t, int i) const {
   // i = 1, return integration of square of acc
   if(i == 1)
-    return c(0)*c(0)/252.*std::pow(t,7)+c(1)*c(1)/20.*std::pow(t,5)+c(2)*c(2)/3.*t*t*t+c(3)*c(3)*t+c(0)*c(1)/36.*std::pow(t,5)+
-      c(0)*c(2)/15.*std::pow(t,5)+c(0)*c(3)/12.*std::pow(t,4)+c(1)*c(2)/4.*std::pow(t,4)+c(1)*c(3)/3.*t*t*t+c(2)*c(3)*t*t;
+    return c(0)*c(0)/252*t*t*t*t*t*t*t+c(0)*c(1)/36*t*t*t*t*t*t+(c(1)*c(1)/20+c(0)*c(2)/15)*t*t*t*t*t+
+      (c(0)*c(3)/12+c(1)*c(2)/4)*t*t*t*t+(c(2)*c(2)/3+c(1)*c(3)/3)*t*t*t+
+      c(2)*c(3)*t*t+c(3)*c(3)*t;
   // i = 2, return integration of square of jerk
   else if(i == 2)
     return c(2)*c(2)*t+c(1)*c(2)*t*t+(c(1)*c(1)+c(0)*c(2))/3.*t*t*t+
-      c(0)*c(1)/4.*std::pow(t,4)+c(0)*c(0)/20.*std::pow(t,5);
+      c(0)*c(1)/4.*t*t*t*t+c(0)*c(0)/20.*t*t*t*t*t;
   // i = 3, return integration of square of snap
   else if(i == 3)
     return c(0)*c(0)/3.*t*t*t+c(0)*c(1)*t*t+c(1)*c(1)*t;
