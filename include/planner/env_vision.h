@@ -70,6 +70,7 @@ namespace mrsl
         pos_dim_ = ((Vec3f(10, 10, 5) - pos_ori_)/ds_).cast<int>();
         pos_length_ = pos_dim_(0) * pos_dim_(1) * pos_dim_(2);
 
+        U_.clear();
         if(use_3d) {
           for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
             for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )

@@ -43,6 +43,7 @@ namespace mrsl
         Vec3i dim = map_util_->getDim();
         pos_length_ = dim(0) * dim(1);
 
+        U_.clear();
         if(use_3d) {
           for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
             for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
