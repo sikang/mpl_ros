@@ -1,11 +1,11 @@
 #include <planner/astar.h>
-#include <planner/env_int.h>
+#include <planner/env_base.h>
 #include <primitive/primitive.h>
 
 
 template <class state>
-double mrsl::ARAStar<state>::Astar( const state& start_coord, int start_idx,
-                                  const env_int<state>& ENV,
+double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_idx,
+                                  const env_base<state>& ENV,
                                   std::list<state>& path, std::vector<int>& action_idx,
                                   double eps )
 {
@@ -62,8 +62,8 @@ double mrsl::ARAStar<state>::Astar( const state& start_coord, int start_idx,
 
 
 template <class state>
-double mrsl::ARAStar<state>::ARAstar( const state& start_coord, int start_idx,
-                                    const env_int<state>& ENV,
+double mrsl::ARAStar<state>::ARAstar( const state& start_coord, mrsl::Key start_idx,
+                                    const env_base<state>& ENV,
                                     std::list<state>& path, std::vector<int>& action_idx,
                                     double eps, double allocated_time_secs )
 {
@@ -172,11 +172,11 @@ double mrsl::ARAStar<state>::ARAstar( const state& start_coord, int start_idx,
 template <class state>
 void mrsl::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
                                std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-                               const env_int<state>& ENV )
+                               const env_base<state>& ENV )
 {
   // Get successors
   std::vector<state> succ_coord;
-  std::vector<int> succ_idx;
+  std::vector<mrsl::Key> succ_idx;
   std::vector<double> succ_cost;
   std::vector<int> succ_act_idx;
   ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx );

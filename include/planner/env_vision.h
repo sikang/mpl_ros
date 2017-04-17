@@ -1,12 +1,12 @@
 #ifndef ENV_MP_H
 #define ENV_MP_H
-#include <planner/env_int.h>
+#include <planner/env_base.h>
 #include <primitive/primitive.h>
 #include <collision_checking/vision_queue_util.h>
 
 namespace mrsl
 {
-  class env_vision : public env_int<Waypoint>
+  class env_vision : public env_base<Waypoint>
   {
     protected:
       Waypoint goal_node_;    // discrete coordinates of the goal node
@@ -136,12 +136,17 @@ namespace mrsl
       }
 
 
-      int state_to_idx(const Waypoint& state) const
+      Key state_to_idx(const Waypoint& state) const
       {
         Vec3i pi = ((state.pos - pos_ori_)/ds_).cast<int>();
         Vec3i vi = ((state.vel - vel_ori_)/dv_).cast<int>();
+        return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) +
+          std::to_string(vi(0)) + "-" + std::to_string(vi(1));
+
+        /*
         int pos_id = pi(0) + pi(1)*pos_dim_(0) + pi(2)*pos_dim_(0)*pos_dim_(1);
         return pos_id + pos_length_ * vi(0) + pos_length_ * vel_dim_(0) * vi(1);
+        */
       }
 
       bool is_free(const Vec3f& pt) const {
@@ -154,7 +159,7 @@ namespace mrsl
 
       void get_succ( const Waypoint& curr, 
           std::vector<Waypoint>& succ,
-          std::vector<int>& succ_idx,
+          std::vector<Key>& succ_idx,
           std::vector<double>& succ_cost,
           std::vector<int>& action_idx ) const
       {

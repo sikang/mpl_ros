@@ -28,7 +28,7 @@ void MPMapUtil::setVmax(decimal_t v_max) {
   ENV_->set_v_max(v_max);
 }
 
-void MPMapUtil::setMapUtil(VoxelMapUtil* map_util) {
+void MPMapUtil::setMapUtil(std::shared_ptr<VoxelMapUtil> map_util) {
   ENV_.reset(new mrsl::env_map(map_util));
 }
 

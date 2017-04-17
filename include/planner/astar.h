@@ -14,7 +14,9 @@ namespace mrsl
 {
   // Forward declaration
   template <class state>
-  class env_int;
+  class env_base;
+  
+  typedef std::string Key;
   
   // heap element comparison
   template <class arastate>
@@ -33,7 +35,7 @@ namespace mrsl
   };  
 
   template <class arastate>
-  using hashMap = std::unordered_map<int, std::shared_ptr<arastate> >;
+  using hashMap = std::unordered_map<Key, std::shared_ptr<arastate> >;
   
   template <class arastate>
   using priorityQueue = boost::heap::d_ary_heap<std::pair<double,std::shared_ptr<arastate>>, boost::heap::mutable_<true>, boost::heap::arity<2>, boost::heap::compare< compare_pair<arastate> >>;
@@ -46,7 +48,7 @@ namespace mrsl
     state coord;                            // discrete coordinates of this node
     std::shared_ptr<ARAState<state>> parent; // pointer to parent node
     int parent_action_id = -1;
-    int hashkey;
+    Key hashkey;
     // pointer to heap location
     typename priorityQueue<ARAState<state>>::handle_type heapkey;
     
@@ -61,7 +63,7 @@ namespace mrsl
     bool bInconsistent = false;
     //ARAState(){}
     
-    ARAState( int hashkey, const state& coord )
+    ARAState( Key hashkey, const state& coord )
       : hashkey(hashkey), coord(coord)//, parent(nullptr)
     {}
   };
@@ -86,15 +88,15 @@ namespace mrsl
   class ARAStar
   {
   public:
-    double Astar( const state& start_coord, int start_idx, const env_int<state>& ENV,
+    double Astar( const state& start_coord, Key start_idx, const env_base<state>& ENV,
                  std::list<state>& path, std::vector<int>& action_idx, double eps = 1 );
-    double ARAstar( const state& start_coord, int start_idx, const env_int<state>& ENV,
+    double ARAstar( const state& start_coord, Key start_idx, const env_base<state>& ENV,
                     std::list<state>& path, std::vector<int>& action_idx, double eps = 1,
                     double allocated_time_secs = std::numeric_limits<double>::infinity() );
   private:
     void spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
               std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-              const env_int<state>& ENV );
+              const env_base<state>& ENV );
     void MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
     void ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
     static double toc(std::chrono::high_resolution_clock::time_point& t2){

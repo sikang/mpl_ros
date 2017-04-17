@@ -13,7 +13,7 @@ class MPMapUtil
     void setAmax(decimal_t a);
     void setDt(decimal_t a);
     void setEpsilon(decimal_t eps);
-    void setMapUtil(VoxelMapUtil* map_util);
+    void setMapUtil(std::shared_ptr<VoxelMapUtil> map_util);
 
     // Debug objs
     std::vector<Primitive> primitives_;

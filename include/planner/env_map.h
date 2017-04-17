@@ -1,16 +1,16 @@
 #ifndef ENV_MP_H
 #define ENV_MP_H
-#include <planner/env_int.h>
+#include <planner/env_base.h>
 #include <primitive/primitive.h>
 #include <collision_checking/voxel_map_util.h>
 
 namespace mrsl
 {
-  class env_map : public env_int<Waypoint>
+  class env_map : public env_base<Waypoint>
   {
     protected:
       Waypoint goal_node_;    // discrete coordinates of the goal node
-      VoxelMapUtil* map_util_;
+      std::shared_ptr<VoxelMapUtil> map_util_;
       decimal_t w_ = 10;
 
       bool goal_outside_;
@@ -27,9 +27,11 @@ namespace mrsl
 
     public:
 
-      env_map(VoxelMapUtil* map_util)
+      env_map(std::shared_ptr<VoxelMapUtil> map_util)
         : map_util_(map_util)
       {}
+
+      ~env_map() {}
 
       void set_discretization(bool use_3d) {
         decimal_t du = 1;
@@ -113,12 +115,17 @@ namespace mrsl
       }
 
 
-      int state_to_idx(const Waypoint& state) const
+      Key state_to_idx(const Waypoint& state) const
       {
         Vec3i vi = ((state.vel - vel_ori_)/dv_).cast<int>();
-        int pos_id = map_util_->getIndex(map_util_->floatToInt(state.pos));
+        Vec3i pi = map_util_->floatToInt(state.pos);
+        return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) +
+          std::to_string(vi(0)) + "-" + std::to_string(vi(1));
+        
+        /*
+        int pos_id = map_util_->getIndex(pi);
         return pos_id + pos_length_ * vi(0) + pos_length_ * vel_dim_(0) * vi(1);
-        return pos_id;
+        */
       }
 
       bool is_free(const Primitive& p) const{
@@ -133,7 +140,7 @@ namespace mrsl
 
       void get_succ( const Waypoint& curr, 
           std::vector<Waypoint>& succ,
-          std::vector<int>& succ_idx,
+          std::vector<Key>& succ_idx,
           std::vector<double>& succ_cost,
           std::vector<int>& action_idx ) const
       {
