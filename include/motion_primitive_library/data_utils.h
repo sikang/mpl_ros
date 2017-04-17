@@ -5,7 +5,7 @@
 #ifndef DATA_UTIL_H
 #define DATA_UTIL_H
 
-#include <basic_type/data_type.h>
+#include <motion_primitive_library/data_type.h>
 
 ///Compare function used for sort vector
 template <class T1, class T2>

@@ -73,7 +73,7 @@ Inheritance diagram for VoxelMapUtil:</div>
  <div class="center">
   <img src="classVoxelMapUtil.png" usemap="#VoxelMapUtil_map" alt=""/>
   <map id="VoxelMapUtil_map" name="VoxelMapUtil_map">
-<area href="classMapUtilBase.html" alt="MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; char &gt; &gt;" shape="rect" coords="0,0,299,24"/>
+<area href="classMapUtilBase.html" alt="MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; signed char &gt; &gt;" shape="rect" coords="0,0,341,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -142,11 +142,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearAround</b> (cons
 <tr class="memitem:a896001d4116a0da04f79b90d34e29c34"><td class="memItemLeft" align="right" valign="top"><a id="a896001d4116a0da04f79b90d34e29c34"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearArround</b> (const <a class="el" href="data__type_8h.html#ae912524491a09326ef25e4e4781c965f">Vec3i</a> &amp;pn)</td></tr>
 <tr class="separator:a896001d4116a0da04f79b90d34e29c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; char &gt; &gt;</a></td></tr>
+<tr class="inherit_header pub_methods_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; signed char &gt; &gt;</a></td></tr>
 <tr class="memitem:a680aee3ddc8d5fe08de8fed742f73e76 inherit pub_methods_classMapUtilBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a680aee3ddc8d5fe08de8fed742f73e76">MapUtilBase</a> ()</td></tr>
 <tr class="separator:a680aee3ddc8d5fe08de8fed742f73e76 inherit pub_methods_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d3376528c2cab2c1673a509fc114bad inherit pub_methods_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="a0d3376528c2cab2c1673a509fc114bad"></a>
-std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a0d3376528c2cab2c1673a509fc114bad">getMap</a> ()</td></tr>
+std::vector&lt; signed char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a0d3376528c2cab2c1673a509fc114bad">getMap</a> ()</td></tr>
 <tr class="memdesc:a0d3376528c2cab2c1673a509fc114bad inherit pub_methods_classMapUtilBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve map as array. <br /></td></tr>
 <tr class="separator:a0d3376528c2cab2c1673a509fc114bad inherit pub_methods_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2abeb968daa0e00eb052f985f1c68bcf inherit pub_methods_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="a2abeb968daa0e00eb052f985f1c68bcf"></a>
@@ -193,17 +193,17 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a1c37da9874992999b7e8a81eaba8ac82">isBlocked</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;p1, const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;p2)</td></tr>
 <tr class="memdesc:a1c37da9874992999b7e8a81eaba8ac82 inherit pub_methods_classMapUtilBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the ray from p1 to p2 is occluded. <br /></td></tr>
 <tr class="separator:a1c37da9874992999b7e8a81eaba8ac82 inherit pub_methods_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae569744ce2bdc9f48d38ef071a4a419f inherit pub_methods_classMapUtilBase"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#ae569744ce2bdc9f48d38ef071a4a419f">setMap</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;ori, const <a class="el" href="data__type_8h.html#ae912524491a09326ef25e4e4781c965f">Vec3i</a> &amp;dim, const std::vector&lt; char &gt; &amp;map, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> res)</td></tr>
+<tr class="memitem:ae569744ce2bdc9f48d38ef071a4a419f inherit pub_methods_classMapUtilBase"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#ae569744ce2bdc9f48d38ef071a4a419f">setMap</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;ori, const <a class="el" href="data__type_8h.html#ae912524491a09326ef25e4e4781c965f">Vec3i</a> &amp;dim, const std::vector&lt; signed char &gt; &amp;map, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> res)</td></tr>
 <tr class="memdesc:ae569744ce2bdc9f48d38ef071a4a419f inherit pub_methods_classMapUtilBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set map.  <a href="classMapUtilBase.html#ae569744ce2bdc9f48d38ef071a4a419f">More...</a><br /></td></tr>
 <tr class="separator:ae569744ce2bdc9f48d38ef071a4a419f inherit pub_methods_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; char &gt; &gt;</a></td></tr>
+<tr class="inherit_header pub_attribs_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; signed char &gt; &gt;</a></td></tr>
 <tr class="memitem:ad04103b92dbc604668d616b6877b36c7 inherit pub_attribs_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="ad04103b92dbc604668d616b6877b36c7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>EIGEN_MAKE_ALIGNED_OPERATOR_NEW</b></td></tr>
 <tr class="separator:ad04103b92dbc604668d616b6877b36c7 inherit pub_attribs_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; char &gt; &gt;</a></td></tr>
+<tr class="inherit_header pro_attribs_classMapUtilBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classMapUtilBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classMapUtilBase.html">MapUtilBase&lt; Vec3i, Vec3f, std::vector&lt; signed char &gt; &gt;</a></td></tr>
 <tr class="memitem:a813a2cd0cbac174e5509b077aba531a5 inherit pro_attribs_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="a813a2cd0cbac174e5509b077aba531a5"></a>
 <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>res_</b></td></tr>
 <tr class="separator:a813a2cd0cbac174e5509b077aba531a5 inherit pro_attribs_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -214,7 +214,7 @@ Additional Inherited Members</h2></td></tr>
 <a class="el" href="data__type_8h.html#ae912524491a09326ef25e4e4781c965f">Vec3i</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dim_</b></td></tr>
 <tr class="separator:a1e2afdb003c808e7a7ddcd4a832594d4 inherit pro_attribs_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa11a01d1191149b499e267a79cbf4a6 inherit pro_attribs_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="aaa11a01d1191149b499e267a79cbf4a6"></a>
-std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>map_</b></td></tr>
+std::vector&lt; signed char &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>map_</b></td></tr>
 <tr class="separator:aaa11a01d1191149b499e267a79cbf4a6 inherit pro_attribs_classMapUtilBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01c63d0c37d452c61932ef7ef7b92b7e inherit pro_attribs_classMapUtilBase"><td class="memItemLeft" align="right" valign="top"><a id="a01c63d0c37d452c61932ef7ef7b92b7e"></a>
 <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; <a class="el" href="data__type_8h.html#ae912524491a09326ef25e4e4781c965f">Vec3i</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMapUtilBase.html#a01c63d0c37d452c61932ef7ef7b92b7e">dilate_neighbor_</a></td></tr>

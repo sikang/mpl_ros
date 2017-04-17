@@ -2,7 +2,6 @@
 #define POLY_TRAJ_H
 
 #include <primitive/primitive.h>
-#include <basic_type/data_type.h>
 #include <deque>
 
 class PolyTraj {

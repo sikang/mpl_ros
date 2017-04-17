@@ -76,18 +76,18 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a22453650c494bb62050186280fc3d0a2"><td class="memItemLeft" align="right" valign="top"><a id="a22453650c494bb62050186280fc3d0a2"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>Astar</b> (const state &amp;start_coord, int start_idx, const <a class="el" href="classmrsl_1_1env__int.html">env_int</a>&lt; state &gt; &amp;ENV, std::list&lt; state &gt; &amp;path, std::vector&lt; int &gt; &amp;action_idx, double eps=1)</td></tr>
-<tr class="separator:a22453650c494bb62050186280fc3d0a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cb9a1a4c32a023faac5054d33e1892e"><td class="memItemLeft" align="right" valign="top"><a id="a5cb9a1a4c32a023faac5054d33e1892e"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>ARAstar</b> (const state &amp;start_coord, int start_idx, const <a class="el" href="classmrsl_1_1env__int.html">env_int</a>&lt; state &gt; &amp;ENV, std::list&lt; state &gt; &amp;path, std::vector&lt; int &gt; &amp;action_idx, double eps=1, double allocated_time_secs=std::numeric_limits&lt; double &gt;::infinity())</td></tr>
-<tr class="separator:a5cb9a1a4c32a023faac5054d33e1892e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcfee8f11ccd8c58ca7505f49b2d314d"><td class="memItemLeft" align="right" valign="top"><a id="adcfee8f11ccd8c58ca7505f49b2d314d"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>Astar</b> (const state &amp;start_coord, Key start_idx, const <a class="el" href="classmrsl_1_1env__base.html">env_base</a>&lt; state &gt; &amp;ENV, std::list&lt; state &gt; &amp;path, std::vector&lt; int &gt; &amp;action_idx, double eps=1)</td></tr>
+<tr class="separator:adcfee8f11ccd8c58ca7505f49b2d314d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c4d8cdce92a338b5f6a84f79dba3ba0"><td class="memItemLeft" align="right" valign="top"><a id="a9c4d8cdce92a338b5f6a84f79dba3ba0"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ARAstar</b> (const state &amp;start_coord, Key start_idx, const <a class="el" href="classmrsl_1_1env__base.html">env_base</a>&lt; state &gt; &amp;ENV, std::list&lt; state &gt; &amp;path, std::vector&lt; int &gt; &amp;action_idx, double eps=1, double allocated_time_secs=std::numeric_limits&lt; double &gt;::infinity())</td></tr>
+<tr class="separator:a9c4d8cdce92a338b5f6a84f79dba3ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a1896b51c215f856c400e425bdeeba9bd"><td class="memItemLeft" align="right" valign="top"><a id="a1896b51c215f856c400e425bdeeba9bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>spin</b> (const std::shared_ptr&lt; <a class="el" href="structmrsl_1_1ARAState.html">ARAState</a>&lt; state &gt;&gt; &amp;currNode_pt, std::shared_ptr&lt; <a class="el" href="structmrsl_1_1ARAStateSpace.html">ARAStateSpace</a>&lt; state &gt;&gt; &amp;sss_ptr, const <a class="el" href="classmrsl_1_1env__int.html">env_int</a>&lt; state &gt; &amp;ENV)</td></tr>
-<tr class="separator:a1896b51c215f856c400e425bdeeba9bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1bbde8df7adec5f3655e4ac39958a5a"><td class="memItemLeft" align="right" valign="top"><a id="af1bbde8df7adec5f3655e4ac39958a5a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>spin</b> (const std::shared_ptr&lt; <a class="el" href="structmrsl_1_1ARAState.html">ARAState</a>&lt; state &gt;&gt; &amp;currNode_pt, std::shared_ptr&lt; <a class="el" href="structmrsl_1_1ARAStateSpace.html">ARAStateSpace</a>&lt; state &gt;&gt; &amp;sss_ptr, const <a class="el" href="classmrsl_1_1env__base.html">env_base</a>&lt; state &gt; &amp;ENV)</td></tr>
+<tr class="separator:af1bbde8df7adec5f3655e4ac39958a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7cd90f40c13c4a28208c9af5a769435"><td class="memItemLeft" align="right" valign="top"><a id="ac7cd90f40c13c4a28208c9af5a769435"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MoveInconsToOpen</b> (std::shared_ptr&lt; <a class="el" href="structmrsl_1_1ARAStateSpace.html">ARAStateSpace</a>&lt; state &gt;&gt; &amp;sss_ptr)</td></tr>
 <tr class="separator:ac7cd90f40c13c4a28208c9af5a769435"><td class="memSeparator" colspan="2">&#160;</td></tr>

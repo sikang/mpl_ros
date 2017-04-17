@@ -6,7 +6,7 @@
 #define MAP_UTIL_BASE_H
 
 #include <stack>
-#include <basic_type/data_type.h>
+#include <motion_primitive_library/data_type.h>
 
 /**
  * @biref The base class is provided by considering both 2D and 3D maps

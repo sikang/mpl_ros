@@ -6,7 +6,7 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include <basic_type/data_type.h>
+#include <motion_primitive_library/data_type.h>
 #include "math.h"
 
 /**

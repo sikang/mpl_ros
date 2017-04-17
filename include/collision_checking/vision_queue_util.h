@@ -2,7 +2,7 @@
 #define VISION_QUEUE_UTIL_H
 #include <memory>
 #include <deque>
-#include <basic_type/data_utils.h>
+#include <motion_primitive_library/data_utils.h>
 #include <collision_checking/vision_util.h>
 
 class VisionQueueUtil {
