@@ -13,7 +13,7 @@ IF(USE_ROS)
     DEPENDS Eigen3 
     CATKIN_DEPENDS 
     INCLUDE_DIRS include
-    LIBRARIES primitive poly_solver vision_util vision_queue_util mp_map_util mp_vision_util
+    LIBRARIES primitive poly_solver vision_util vision_queue_util mp_map_util mp_vision_util mp_sfc_util
     )
   INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
   LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
@@ -37,6 +37,11 @@ target_link_libraries(poly_solver primitive)
 add_library(mp_map_util src/planner/mp_map_util.cpp
     src/planner/astar.cpp)
 target_link_libraries(mp_map_util primitive)
+
+add_library(mp_sfc_util src/planner/mp_sfc_util.cpp
+  src/collision_checking/sfc_util.cpp
+  src/planner/astar.cpp)
+target_link_libraries(mp_sfc_util primitive)
 
 
 add_library(vision_util src/collision_checking/vision_util.cpp)

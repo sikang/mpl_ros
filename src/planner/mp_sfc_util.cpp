@@ -1,38 +1,38 @@
-#include <planner/mp_map_util.h>
+#include <planner/mp_sfc_util.h>
 
-MPMapUtil::MPMapUtil(bool verbose) :
+MPSFCUtil::MPSFCUtil(bool verbose) :
   planner_verbose_(verbose)
 {
  if(planner_verbose_)
     printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
-std::vector<Waypoint> MPMapUtil::getPath() {
+std::vector<Waypoint> MPSFCUtil::getPath() {
   return path_;
 }
 
-void MPMapUtil::setEpsilon(decimal_t eps) {
+void MPSFCUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;
 }
 
-void MPMapUtil::setDt(decimal_t dt) {
+void MPSFCUtil::setDt(decimal_t dt) {
   ENV_->set_dt(dt);
   ENV_->set_discretization(false);
 }
 
-void MPMapUtil::setAmax(decimal_t a_max) {
+void MPSFCUtil::setAmax(decimal_t a_max) {
   ENV_->set_a_max(a_max);
 }
 
-void MPMapUtil::setVmax(decimal_t v_max) {
+void MPSFCUtil::setVmax(decimal_t v_max) {
   ENV_->set_v_max(v_max);
 }
 
-void MPMapUtil::setMapUtil(std::shared_ptr<VoxelMapUtil> map_util) {
-  ENV_.reset(new mrsl::env_map(map_util));
+void MPSFCUtil::setMap(const Polyhedra& polys) {
+  ENV_.reset(new mrsl::env_sfc(polys));
 }
 
-bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
+bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
   path_.clear();
   primitives_.clear();
 
@@ -53,14 +53,13 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
 
   //ENV_->reset();
   ENV_->set_goal(goal);
-  double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
+  if(ENV_->goal_outside()) {
+    if(planner_verbose_)
+      printf(ANSI_COLOR_RED "PLANNER: Goal is outside!\n" ANSI_COLOR_RESET);
+  }
+  else
+     AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
 
-  std::cout << "Plan cost = " << pcost << std::endl;
-  std::cout << "Path length = " << path.size() << std::endl;
-  std::cout << "action_idx.size() = " << action_idx.size() << std::endl;
-
-
-  //ps_ = ENV_->ps_;
   if (path.empty()) {
     if(planner_verbose_)
       printf(ANSI_COLOR_RED "Cannot find a path, Abort!" ANSI_COLOR_RESET "\n");
@@ -75,7 +74,7 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
   return true;
 }
 
-Trajectory MPMapUtil::getTraj() {
+Trajectory MPSFCUtil::getTraj() {
   std::vector<Primitive> ps;
 
   for(int i = 0; i < (int)path_.size()-1; i++){

@@ -1,11 +1,11 @@
 #include <planner/astar.h>
-#include <planner/env_map.h>
+#include <planner/env_sfc.h>
 #include <primitive/trajectory.h>
 
-class MPMapUtil
+class MPSFCUtil
 {
   public:
-    MPMapUtil(bool verbose);
+    MPSFCUtil(bool verbose);
     bool plan(const Waypoint &start, const Waypoint &goal);
     std::vector<Waypoint> getPath();
     Trajectory getTraj();
@@ -13,7 +13,7 @@ class MPMapUtil
     void setAmax(decimal_t a);
     void setDt(decimal_t a);
     void setEpsilon(decimal_t eps);
-    void setMapUtil(std::shared_ptr<VoxelMapUtil> map_util);
+    void setMap(const Polyhedra& poly);
 
     // Debug objs
     std::vector<Primitive> primitives_;
@@ -22,7 +22,7 @@ class MPMapUtil
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
  protected:
     bool planner_verbose_;
-    std::unique_ptr<mrsl::env_map> ENV_;
+    std::unique_ptr<mrsl::env_sfc> ENV_;
     std::vector<Waypoint> path_;
     decimal_t epsilon_ = 1.0;
 

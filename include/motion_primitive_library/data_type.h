@@ -1,5 +1,5 @@
 /**
- *@file data_type.h
+ * @file data_type.h
  * @brief Defines all data types used in this lib
 
  * Mostly alias from Eigen Library.
@@ -89,4 +89,23 @@ typedef Eigen::Transform<decimal_t, 2, Eigen::Affine> Aff2f;
 typedef Eigen::Transform<decimal_t, 3, Eigen::Affine> Aff3f;
 ///std::pair of Eigen::Vector3d
 typedef std::pair<Vec3f, Vec3f> pair_Vec3f;
+
+class Face {
+  public:
+    Vec3f p;
+    Vec3f n;
+    bool pass;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+    Face(Vec3f _p, Vec3f _n):
+      p(_p), n(_n), pass(true) {}
+    Face(Vec3f _p, Vec3f _n, bool _pass):
+      p(_p), n(_n), pass(_pass) {}
+};
+
+typedef vec_E<Face> Polyhedron; // composed by planes with form (p, n)
+typedef vec_E<Polyhedron> Polyhedra;
+
+typedef vec_E<vec_Vec3f> BoundVec3f; // compose by extreme points
+
 #endif
