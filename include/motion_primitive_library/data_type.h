@@ -90,6 +90,15 @@ typedef Eigen::Transform<decimal_t, 3, Eigen::Affine> Aff3f;
 ///std::pair of Eigen::Vector3d
 typedef std::pair<Vec3f, Vec3f> pair_Vec3f;
 
+///Ellipsoid: first is the Affine Transform, second is the center
+typedef std::pair<Mat3f, Vec3f> Ellipsoid;
+///Vector of Ellipsoids
+typedef vec_E<Ellipsoid> vec_Ellipsoid;
+
+typedef std::pair<MatD3f, VecDf> LinearConstraint3f; // Ax <= b
+typedef vec_E<LinearConstraint3f> vec_LinearConstraint3f;
+
+
 class Face {
   public:
     Vec3f p;

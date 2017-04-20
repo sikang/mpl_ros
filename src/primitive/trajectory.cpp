@@ -257,10 +257,9 @@ bool Trajectory::scale(decimal_t ri, decimal_t rf) {
 bool Trajectory::evaluate(decimal_t time, Waypoint &p) const{
   decimal_t tau = lambda_.getTau(time);
   if(tau < 0)
-  {
-    printf("tau: %f\n", tau);
-    return false;
-  }
+    tau = 0;
+  if(tau > total_t_)
+    tau = total_t_;
 
   decimal_t lambda = 1;
   decimal_t lambda_dot = 0;
