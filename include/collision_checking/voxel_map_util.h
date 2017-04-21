@@ -214,11 +214,11 @@ public:
       map_[getIndex(n)] = val_free;
   }
 
-  void clearArround(const Vec3i& pn)
+  void clearArround(const Vec3i& pn, decimal_t r)
   {
     if(!isOutSide(pn))
       map_[getIndex(pn)] = val_free;
-    int dilate_xy = std::ceil(1.0 / res_);
+    int dilate_xy = std::ceil(r / res_);
     int dilate_z = 2; // assum robot is 0.2 m high
 
     Vec3i n;
