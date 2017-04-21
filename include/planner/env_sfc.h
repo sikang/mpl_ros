@@ -91,8 +91,10 @@ namespace mrsl
 
       bool is_goal(const Waypoint& state) const
       {
-        return (state.pos - goal_node_.pos).norm() <= 1 &&
-          (state.vel - goal_node_.vel).norm() <= dv_;
+        bool goaled = (state.pos - goal_node_.pos).norm() < 1;
+        if(goaled && goal_node_.use_vel)
+          goaled = (state.vel - goal_node_.vel).norm() < dv_;
+        return goaled;
       }
 
       double get_heur(const Waypoint& state) const
