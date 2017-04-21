@@ -57,6 +57,7 @@ bool SFCUtil::insideSFC(const Primitive& pr, const Polyhedra& polys,
 
   //printf("poly size: %zu, poly2 size: %zu\n", polys.size(), polys2.size());
   const vec_E<Vec6f> cs = pr.coeffs();
+  decimal_t min_t = 100;
   for(const auto& v: polys[id]){
     Vec3f n = v.n;
     decimal_t a1 = n(0);
@@ -71,15 +72,25 @@ bool SFCUtil::insideSFC(const Primitive& pr, const Polyhedra& polys,
 
     std::vector<decimal_t> ts = solve(a, b, c, d, e);
     //printf("a, b, c, d, e: %f, %f, %f, %f, %f\n", a, b, c, d, e);
-    for(const auto& it: ts) 
+    for(const auto& it: ts) {
       if(it >= t1 && it <= t2)
       {
-	Waypoint pt = pr.evaluate(it+ 1e-1);
-	if(!insidePolyhedron(pt.pos, polys[id]))
-	  return insideSFC(pr, polys2, it, t2);
+        if(it < min_t)
+          min_t = it;
       }
+    }
   }
+  if(min_t <= t2) {
+    Waypoint pt = pr.evaluate(min_t + 1e-3);
+    if(!insidePolyhedron(pt.pos, polys[id]))
+      return insideSFC(pr, polys2, min_t, t2);
+  }
+  else
+    return true;
+
+  /*
   Waypoint p1 = pr.evaluate(t2);
   return insidePolyhedron(p1.pos, polys[id]);
+  */
 }
 

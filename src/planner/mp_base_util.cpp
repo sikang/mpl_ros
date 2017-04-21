@@ -21,7 +21,10 @@ void MPBaseUtil::setEpsilon(decimal_t eps) {
 
 void MPBaseUtil::setDt(decimal_t dt) {
   ENV_->set_dt(dt);
-  ENV_->set_discretization(false);
+}
+
+void MPBaseUtil::setMode(int n, bool use_3d) {
+  ENV_->set_discretization(n, use_3d);
 }
 
 void MPBaseUtil::setAmax(decimal_t a_max) {
@@ -53,3 +56,4 @@ Trajectory MPBaseUtil::getTraj() {
 
   return Trajectory(ps);
 }
+

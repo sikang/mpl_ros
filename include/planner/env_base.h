@@ -26,8 +26,8 @@ class env_base
       return goal_outside_;
     }
 
-    void set_discretization(bool use_3d) {
-      decimal_t du = 1;
+    void set_discretization(int n, bool use_3d) {
+      decimal_t du = u_max_ / n;
       dv_ = du * dt_;
       vel_ori_ = Vec3f(-v_max_, -v_max_, 0);
       vel_dim_ = (-2*vel_ori_/dv_).cast<int>();
@@ -40,7 +40,7 @@ class env_base
       if(use_3d) {
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
-            for(decimal_t dz = -u_max_; dz <= u_max_; dz += du )
+            for(decimal_t dz = -0.5; dz <= 0.5; dz += 0.5 )
               U_.push_back(Vec3f(dx, dy, dz));
       }
       else{
