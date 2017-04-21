@@ -1,29 +1,14 @@
 #include <planner/mp_vision_util.h>
 
-MPVisionUtil::MPVisionUtil(bool verbose) :
-  _planner_verbose(verbose)
+MPVisionUtil::MPVisionUtil(bool verbose)
 {
- if(_planner_verbose)
+  planner_verbose_ = verbose;
+  if(planner_verbose_)
     printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
   ENV_.reset(new mrsl::env_vision());
 }
 
-void MPVisionUtil::setEpsilon(decimal_t eps) {
-  epsilon_ = eps;
-}
-
-void MPVisionUtil::setDt(decimal_t dt) {
-  ENV_->set_dt(dt);
-  ENV_->set_discretization(false);
-}
-
-void MPVisionUtil::setAmax(decimal_t a_max) {
-  ENV_->set_a_max(a_max);
-}
-
-void MPVisionUtil::setVmax(decimal_t v_max) {
-  ENV_->set_v_max(v_max);
-}
+cv::Mat MPVisionUtil::getImage() { return ENV_->image(getTraj()); }
 
 void MPVisionUtil::addImage(const cv::Mat& img, const Aff3f& TF, const CameraInfo& info) {
   ENV_->add_image(img, TF, info);
@@ -32,7 +17,7 @@ void MPVisionUtil::addImage(const cv::Mat& img, const Aff3f& TF, const CameraInf
 bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
   path_.clear();
 
-  if(_planner_verbose) {
+  if(planner_verbose_) {
     printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
         start.pos(0), start.pos(1), start.pos(2),
         start.vel(0), start.vel(1), start.vel(2),
@@ -57,14 +42,9 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
 
   double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
 
-  std::cout << "Plan cost = " << pcost << std::endl;
-  std::cout << "Path length = " << path.size() << std::endl;
-  std::cout << "action_idx.size() = " << action_idx.size() << std::endl;
-
-
   //ps_ = ENV_->ps_;
   if (path.empty()) {
-    if(_planner_verbose)
+    if(planner_verbose_)
       printf(ANSI_COLOR_RED "Cannot find a path, Abort!" ANSI_COLOR_RESET "\n");
     return false;
   }
@@ -72,7 +52,7 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
   path_.push_back(start);
   int i = 0;
   for (const auto& it: path) {
-    if(ENV_->goal_outside() && i == path.size() - 1)
+    if(ENV_->goal_outside() && i == (int) path.size() - 1)
       break;
     path_.push_back(it);
     i++;
@@ -81,24 +61,3 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
   return true;
 }
 
-Trajectory MPVisionUtil::getTraj() {
-  std::vector<Primitive> ps;
-
-  for(int i = 0; i < (int)path_.size()-1; i++){
-    Waypoint nw1 = path_[i];
-    Waypoint nw2 = path_[i+1];
-
-    nw1.use_pos = true;
-    nw1.use_vel = true;
-    nw1.use_acc = false;
-
-    nw2.use_pos = true;
-    nw2.use_vel = true;
-    nw2.use_acc = false;
-
-    Primitive p(nw1, nw2, ENV_->get_dt());
-    ps.push_back(p);
-  }
-
-  return Trajectory(ps);
-}

@@ -1,31 +1,10 @@
 #include <planner/mp_sfc_util.h>
 
-MPSFCUtil::MPSFCUtil(bool verbose) :
-  planner_verbose_(verbose)
+MPSFCUtil::MPSFCUtil(bool verbose)
 {
- if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
-}
-
-std::vector<Waypoint> MPSFCUtil::getPath() {
-  return path_;
-}
-
-void MPSFCUtil::setEpsilon(decimal_t eps) {
-  epsilon_ = eps;
-}
-
-void MPSFCUtil::setDt(decimal_t dt) {
-  ENV_->set_dt(dt);
-  ENV_->set_discretization(false);
-}
-
-void MPSFCUtil::setAmax(decimal_t a_max) {
-  ENV_->set_a_max(a_max);
-}
-
-void MPSFCUtil::setVmax(decimal_t v_max) {
-  ENV_->set_v_max(v_max);
+  planner_verbose_= verbose;
+  if(planner_verbose_)
+    printf(ANSI_COLOR_CYAN "MPSFCUtil PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
 void MPSFCUtil::setMap(const Polyhedra& polys) {
@@ -74,24 +53,3 @@ bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
   return true;
 }
 
-Trajectory MPSFCUtil::getTraj() {
-  std::vector<Primitive> ps;
-
-  for(int i = 0; i < (int)path_.size()-1; i++){
-    Waypoint nw1 = path_[i];
-    Waypoint nw2 = path_[i+1];
-
-    nw1.use_pos = true;
-    nw1.use_vel = true;
-    nw1.use_acc = false;
-
-    nw2.use_pos = true;
-    nw2.use_vel = true;
-    nw2.use_acc = false;
-
-    Primitive p(nw1, nw2, ENV_->get_dt());
-    ps.push_back(p);
-  }
-
-  return Trajectory(ps);
-}

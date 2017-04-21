@@ -35,10 +35,12 @@ add_library(poly_solver src/primitive/poly_solver.cpp
 target_link_libraries(poly_solver primitive)
 
 add_library(mp_map_util src/planner/mp_map_util.cpp
+  src/planner/mp_base_util.cpp
     src/planner/astar.cpp)
 target_link_libraries(mp_map_util primitive)
 
 add_library(mp_sfc_util src/planner/mp_sfc_util.cpp
+  src/planner/mp_base_util.cpp
   src/collision_checking/sfc_util.cpp
   src/planner/astar.cpp)
 target_link_libraries(mp_sfc_util primitive)
@@ -50,7 +52,8 @@ add_library(vision_queue_util src/collision_checking/vision_queue_util.cpp)
 target_link_libraries(vision_queue_util vision_util)
 
 add_library(mp_vision_util src/planner/mp_vision_util.cpp
-    src/planner/astar.cpp)
+  src/planner/mp_base_util.cpp
+  src/planner/astar.cpp)
 target_link_libraries(mp_vision_util primitive vision_queue_util)
 
 

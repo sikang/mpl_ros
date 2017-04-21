@@ -13,7 +13,7 @@
 namespace mrsl
 {
   // Forward declaration
-  template <class state>
+  //template <class state>
   class env_base;
   
   typedef std::string Key;
@@ -88,15 +88,15 @@ namespace mrsl
   class ARAStar
   {
   public:
-    double Astar( const state& start_coord, Key start_idx, const env_base<state>& ENV,
+    double Astar( const state& start_coord, Key start_idx, const env_base& ENV,
                  std::list<state>& path, std::vector<int>& action_idx, double eps = 1 );
-    double ARAstar( const state& start_coord, Key start_idx, const env_base<state>& ENV,
+    double ARAstar( const state& start_coord, Key start_idx, const env_base& ENV,
                     std::list<state>& path, std::vector<int>& action_idx, double eps = 1,
                     double allocated_time_secs = std::numeric_limits<double>::infinity() );
   private:
     void spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
               std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-              const env_base<state>& ENV );
+              const env_base& ENV );
     void MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
     void ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
     static double toc(std::chrono::high_resolution_clock::time_point& t2){

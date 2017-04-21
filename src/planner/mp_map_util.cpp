@@ -1,31 +1,10 @@
 #include <planner/mp_map_util.h>
 
-MPMapUtil::MPMapUtil(bool verbose) :
-  planner_verbose_(verbose)
+MPMapUtil::MPMapUtil(bool verbose)
 {
+  planner_verbose_ = verbose;
  if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
-}
-
-std::vector<Waypoint> MPMapUtil::getPath() {
-  return path_;
-}
-
-void MPMapUtil::setEpsilon(decimal_t eps) {
-  epsilon_ = eps;
-}
-
-void MPMapUtil::setDt(decimal_t dt) {
-  ENV_->set_dt(dt);
-  ENV_->set_discretization(false);
-}
-
-void MPMapUtil::setAmax(decimal_t a_max) {
-  ENV_->set_a_max(a_max);
-}
-
-void MPMapUtil::setVmax(decimal_t v_max) {
-  ENV_->set_v_max(v_max);
+    printf(ANSI_COLOR_CYAN "MPMapUtil PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
 void MPMapUtil::setMapUtil(std::shared_ptr<VoxelMapUtil> map_util) {
@@ -75,24 +54,4 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
   return true;
 }
 
-Trajectory MPMapUtil::getTraj() {
-  std::vector<Primitive> ps;
 
-  for(int i = 0; i < (int)path_.size()-1; i++){
-    Waypoint nw1 = path_[i];
-    Waypoint nw2 = path_[i+1];
-
-    nw1.use_pos = true;
-    nw1.use_vel = true;
-    nw1.use_acc = false;
-
-    nw2.use_pos = true;
-    nw2.use_vel = true;
-    nw2.use_acc = false;
-
-    Primitive p(nw1, nw2, ENV_->get_dt());
-    ps.push_back(p);
-  }
-
-  return Trajectory(ps);
-}

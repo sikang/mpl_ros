@@ -5,7 +5,7 @@
 
 template <class state>
 double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_idx,
-                                  const env_base<state>& ENV,
+                                  const env_base& ENV,
                                   std::list<state>& path, std::vector<int>& action_idx,
                                   double eps )
 {
@@ -63,7 +63,7 @@ double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_id
 
 template <class state>
 double mrsl::ARAStar<state>::ARAstar( const state& start_coord, mrsl::Key start_idx,
-                                    const env_base<state>& ENV,
+                                    const env_base& ENV,
                                     std::list<state>& path, std::vector<int>& action_idx,
                                     double eps, double allocated_time_secs )
 {
@@ -172,7 +172,7 @@ double mrsl::ARAStar<state>::ARAstar( const state& start_coord, mrsl::Key start_
 template <class state>
 void mrsl::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
                                std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-                               const env_base<state>& ENV )
+                               const env_base& ENV )
 {
   // Get successors
   std::vector<state> succ_coord;
@@ -287,8 +287,5 @@ void mrsl::ARAStar<state>::ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>
 
 
 // explicit instantiations
-template class mrsl::ARAStar<std::vector<int>>;
-template class mrsl::ARAStar<std::array<int,3>>;
-template class mrsl::ARAStar<std::array<int,2>>;
 template class mrsl::ARAStar<Waypoint>;
 
