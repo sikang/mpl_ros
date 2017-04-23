@@ -1,10 +1,8 @@
 #include <collision_checking/sfc_util.h>
-// Optimistic: 
 
 SFCUtil::SFCUtil() {}
 
-SFCUtil::SFCUtil(const Polyhedra& polys) : polys_(polys) {
-}
+SFCUtil::SFCUtil(const Polyhedra& polys) : polys_(polys) {}
 
 Polyhedra SFCUtil::sfc() {
   return polys_;
@@ -42,7 +40,7 @@ bool SFCUtil::insideSFC(const Primitive& pr, const Polyhedra& polys,
   Waypoint p0 = pr.evaluate(t1);
 
   int id = -1;
-  for(int i = 0; i < polys.size(); i++) {
+  for(int i = 0; i < (int) polys.size(); i++) {
     if(insidePolyhedron(p0.pos, polys[i]))  {
       id = i;
       break;
@@ -80,11 +78,9 @@ bool SFCUtil::insideSFC(const Primitive& pr, const Polyhedra& polys,
       }
     }
   }
-  if(min_t <= t2) {
-    Waypoint pt = pr.evaluate(min_t + 1e-3);
-    if(!insidePolyhedron(pt.pos, polys[id]))
+
+  if(min_t <= t2) 
       return insideSFC(pr, polys2, min_t, t2);
-  }
   else
     return true;
 

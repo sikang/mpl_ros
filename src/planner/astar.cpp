@@ -31,7 +31,6 @@ double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_id
   while(true)
   {
     expands++;
-    //printf("expands: %d\n", expands);
     if( ENV.is_goal(currNode_pt->coord) ) break;
     
     spin( currNode_pt, sss_ptr, ENV ); // update heap

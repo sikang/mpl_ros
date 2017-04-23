@@ -156,6 +156,7 @@ class env_base
         std::vector<double>& succ_cost,
         std::vector<int>& action_idx ) const
     {
+      printf("Used Null get_succ\n");
       succ.push_back(curr);
       succ_idx.push_back( state_to_idx(curr) );
       succ_cost.push_back(0);
@@ -179,8 +180,8 @@ class env_base
     Vec3f pos_ori_, vel_ori_;
     Vec3i pos_dim_, vel_dim_;
 
-    vec_Vec3f ps_;
-    std::vector<Primitive> primitives_;
+    mutable vec_Vec3f ps_;
+    mutable std::vector<Primitive> primitives_;
 
 
 };

@@ -13,7 +13,9 @@ std::vector<Primitive> MPBaseUtil::getPrimitives() {
   return ENV_->primitives(); 
 }
 
-vec_Vec3f MPBaseUtil::getPs() { return ENV_->ps(); }
+vec_Vec3f MPBaseUtil::getPs() { 
+  return ENV_->ps(); 
+}
 
 void MPBaseUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;

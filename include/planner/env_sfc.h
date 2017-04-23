@@ -46,7 +46,8 @@ class env_sfc : public env_base
         std::vector<double>& succ_cost,
         std::vector<int>& action_idx ) const
     {
-      //ps_.push_back(curr.pos);
+      //printf("expand!\n");
+      ps_.push_back(curr.pos);
       succ.clear();
       succ_idx.clear();
       succ_cost.clear();
