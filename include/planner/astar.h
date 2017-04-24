@@ -89,7 +89,7 @@ namespace mrsl
   {
   public:
     double Astar( const state& start_coord, Key start_idx, const env_base& ENV,
-                 std::list<state>& path, std::vector<int>& action_idx, double eps = 1 );
+                 std::list<state>& path, std::vector<int>& action_idx, double eps = 1 , int max_expand = -1);
     double ARAstar( const state& start_coord, Key start_idx, const env_base& ENV,
                     std::list<state>& path, std::vector<int>& action_idx, double eps = 1,
                     double allocated_time_secs = std::numeric_limits<double>::infinity() );

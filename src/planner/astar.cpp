@@ -7,7 +7,7 @@ template <class state>
 double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_idx,
                                   const env_base& ENV,
                                   std::list<state>& path, std::vector<int>& action_idx,
-                                  double eps )
+                                  double eps, int max_expand )
 {
   // Check if done
   if( ENV.is_goal(start_coord) )
@@ -35,7 +35,7 @@ double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_id
     
     spin( currNode_pt, sss_ptr, ENV ); // update heap
     
-    if( sss_ptr->pq.empty() )
+    if( sss_ptr->pq.empty() || (max_expand > 0 && expands >= max_expand))
       return std::numeric_limits<double>::infinity();
 
     // get element with smallest cost
