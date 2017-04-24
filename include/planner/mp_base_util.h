@@ -18,6 +18,7 @@ class MPBaseUtil
     void setAmax(decimal_t a);
     void setDt(decimal_t a);
     void setEpsilon(decimal_t eps);
+    void setMaxNum(int num);
     void setMode(int n, bool use_3d);
 
     virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
@@ -31,6 +32,7 @@ class MPBaseUtil
     std::unique_ptr<mrsl::env_base> ENV_;
     std::vector<Waypoint> path_;
     decimal_t epsilon_ = 1.0;
+    int max_num_ = -1;
 
 };
 

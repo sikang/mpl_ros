@@ -21,6 +21,10 @@ void MPBaseUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;
 }
 
+void MPBaseUtil::setMaxNum(int num) {
+  max_num_ = num;
+}
+
 void MPBaseUtil::setDt(decimal_t dt) {
   ENV_->set_dt(dt);
 }

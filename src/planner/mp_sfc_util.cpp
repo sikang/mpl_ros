@@ -42,7 +42,7 @@ bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
       printf(ANSI_COLOR_RED "MPSFCUtil: Goal is outside!\n" ANSI_COLOR_RESET);
   }
   else
-    AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, 1000);
+    AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, max_num_);
 
   if (path.empty()) {
     if(planner_verbose_)
