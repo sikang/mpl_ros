@@ -12,6 +12,7 @@ var searchData=
   ['vec4f',['Vec4f',['../data__type_8h.html#a8b42cea28794d6e53074544129a74b97',1,'data_type.h']]],
   ['vec6f',['Vec6f',['../data__type_8h.html#a0d5d8b43b7b87d7dde4c803a341d14af',1,'data_type.h']]],
   ['vec_5fe',['vec_E',['../data__type_8h.html#a6b9210d48a0a541940af71827aad1b41',1,'data_type.h']]],
+  ['vec_5fellipsoid',['vec_Ellipsoid',['../data__type_8h.html#a47ddb28a89d8b9f6aaa729f91e61dbec',1,'data_type.h']]],
   ['vec_5fvec2f',['vec_Vec2f',['../data__type_8h.html#af640446aaa0ada84a270bd5639b36a7d',1,'data_type.h']]],
   ['vec_5fvec2i',['vec_Vec2i',['../data__type_8h.html#a79168c9f029798876a1093e0e53bc36b',1,'data_type.h']]],
   ['vec_5fvec3f',['vec_Vec3f',['../data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b',1,'data_type.h']]],

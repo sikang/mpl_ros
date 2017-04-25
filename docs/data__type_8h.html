@@ -65,6 +65,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
@@ -83,6 +84,11 @@ $(function() {
 </div>
 <p><a href="data__type_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFace.html">Face</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a34995b955465f6bbb37c359173d50477"><td class="memItemLeft" align="right" valign="top"><a id="a34995b955465f6bbb37c359173d50477"></a>
@@ -214,6 +220,29 @@ typedef Eigen::Transform&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc
 typedef std::pair&lt; <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a>, <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="data__type_8h.html#a8f4b636ce76b430796cf6ccfa3772149">pair_Vec3f</a></td></tr>
 <tr class="memdesc:a8f4b636ce76b430796cf6ccfa3772149"><td class="mdescLeft">&#160;</td><td class="mdescRight">std::pair of Eigen::Vector3d <br /></td></tr>
 <tr class="separator:a8f4b636ce76b430796cf6ccfa3772149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79f3b8f2deea3f9f977cdc99cfc4a76"><td class="memItemLeft" align="right" valign="top"><a id="ab79f3b8f2deea3f9f977cdc99cfc4a76"></a>
+typedef std::pair&lt; <a class="el" href="data__type_8h.html#afcf06f64a885e93ef5fd2db02b0712f4">Mat3f</a>, <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="data__type_8h.html#ab79f3b8f2deea3f9f977cdc99cfc4a76">Ellipsoid</a></td></tr>
+<tr class="memdesc:ab79f3b8f2deea3f9f977cdc99cfc4a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ellipsoid: first is the Affine Transform, second is the center. <br /></td></tr>
+<tr class="separator:ab79f3b8f2deea3f9f977cdc99cfc4a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47ddb28a89d8b9f6aaa729f91e61dbec"><td class="memItemLeft" align="right" valign="top"><a id="a47ddb28a89d8b9f6aaa729f91e61dbec"></a>
+typedef <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; <a class="el" href="data__type_8h.html#ab79f3b8f2deea3f9f977cdc99cfc4a76">Ellipsoid</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="data__type_8h.html#a47ddb28a89d8b9f6aaa729f91e61dbec">vec_Ellipsoid</a></td></tr>
+<tr class="memdesc:a47ddb28a89d8b9f6aaa729f91e61dbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of Ellipsoids. <br /></td></tr>
+<tr class="separator:a47ddb28a89d8b9f6aaa729f91e61dbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26a1629a4de1dd2b6c203d3c330d3820"><td class="memItemLeft" align="right" valign="top"><a id="a26a1629a4de1dd2b6c203d3c330d3820"></a>
+typedef std::pair&lt; <a class="el" href="data__type_8h.html#ac03c981c62b09b5215426b23e3c1235b">MatD3f</a>, <a class="el" href="data__type_8h.html#afee968dcbed41b4e1628fbb4b0a9bc64">VecDf</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>LinearConstraint3f</b></td></tr>
+<tr class="separator:a26a1629a4de1dd2b6c203d3c330d3820"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97477a2716b74d7fa5e03978ea0d03f0"><td class="memItemLeft" align="right" valign="top"><a id="a97477a2716b74d7fa5e03978ea0d03f0"></a>
+typedef <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; LinearConstraint3f &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>vec_LinearConstraint3f</b></td></tr>
+<tr class="separator:a97477a2716b74d7fa5e03978ea0d03f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad818c6b3f00ecc726b53a609afe3c185"><td class="memItemLeft" align="right" valign="top"><a id="ad818c6b3f00ecc726b53a609afe3c185"></a>
+typedef <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; <a class="el" href="classFace.html">Face</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Polyhedron</b></td></tr>
+<tr class="separator:ad818c6b3f00ecc726b53a609afe3c185"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd1e04d95f3b6835a5b1ee09c7477a17"><td class="memItemLeft" align="right" valign="top"><a id="abd1e04d95f3b6835a5b1ee09c7477a17"></a>
+typedef <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Polyhedron &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Polyhedra</b></td></tr>
+<tr class="separator:abd1e04d95f3b6835a5b1ee09c7477a17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28ffdc051b6c8f72f78ac10c7cdba640"><td class="memItemLeft" align="right" valign="top"><a id="a28ffdc051b6c8f72f78ac10c7cdba640"></a>
+typedef <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BoundVec3f</b></td></tr>
+<tr class="separator:a28ffdc051b6c8f72f78ac10c7cdba640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines all data types used in this lib. </p>

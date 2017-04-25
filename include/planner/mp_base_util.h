@@ -1,9 +1,17 @@
+/**
+ * @file mp_base_util.h
+ * @brief base class for mp_planner
+ *
+ * Base classes for planning
+ */
+
 #ifndef MP_BASE_UTIL_H
 #define MP_BASE_UTIL_H
 
 #include <planner/astar.h>
 #include <planner/env_base.h>
 #include <primitive/trajectory.h>
+
 
 class MPBaseUtil
 {
@@ -23,17 +31,20 @@ class MPBaseUtil
 
     virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
 
-    // Debug objs
+    ///Debug pimitives
     std::vector<Primitive> primitives_;
+    ///Stores the expanded nodes
     vec_Vec3f ps_;
 
-
-    bool planner_verbose_;
+    ///Env class
     std::unique_ptr<mrsl::env_base> ENV_;
     std::vector<Waypoint> path_;
     decimal_t epsilon_ = 1.0;
+    ///Maxmum number of expansion allowd, -1 means no limitation
     int max_num_ = -1;
 
+    ///Enabled to display debug message
+    bool planner_verbose_;
 };
 
 

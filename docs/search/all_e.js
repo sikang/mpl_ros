@@ -4,5 +4,6 @@ var searchData=
   ['scale',['scale',['../classTrajectory.html#ab6ab39c7d4ab8387300e6b0d2055f16a',1,'Trajectory']]],
   ['scale_5fdown',['scale_down',['../classTrajectory.html#a8b714873cc8c99bdfb822037b8646754',1,'Trajectory']]],
   ['setmap',['setMap',['../classMapUtilBase.html#ae569744ce2bdc9f48d38ef071a4a419f',1,'MapUtilBase']]],
+  ['sfcutil',['SFCUtil',['../classSFCUtil.html',1,'']]],
   ['solve',['solve',['../math_8h.html#a981120793ddb8cdf9ce466e8c2e70e4b',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e):&#160;math.cpp'],['../math_8h.html#af81382faed5667c02f3f447c3eefd064',1,'solve(decimal_t a, decimal_t b, decimal_t c, decimal_t d, decimal_t e, decimal_t f, decimal_t g):&#160;math.cpp']]]
 ];
