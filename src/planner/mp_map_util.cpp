@@ -3,8 +3,8 @@
 MPMapUtil::MPMapUtil(bool verbose)
 {
   planner_verbose_ = verbose;
- if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "MPMapUtil PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+  if(planner_verbose_)
+    printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
 void MPMapUtil::setMapUtil(std::shared_ptr<VoxelMapUtil> map_util) {
@@ -24,25 +24,24 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
         goal.pos(0), goal.pos(1), goal.pos(2),
         goal.vel(0), goal.vel(1), goal.vel(2),
         goal.acc(0), goal.acc(1), goal.acc(2));
+    if(!ENV_->is_free(start.pos)) {
+      if(planner_verbose_)
+        printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
+      return false;
+    }
   }
 
   mrsl::ARAStar<Waypoint> AA;
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 
-  //ENV_->reset();
   ENV_->set_goal(goal);
-  double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
 
-  std::cout << "Plan cost = " << pcost << std::endl;
-  std::cout << "Path length = " << path.size() << std::endl;
-  std::cout << "action_idx.size() = " << action_idx.size() << std::endl;
+  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, max_num_);
 
-
-  //ps_ = ENV_->ps_;
   if (path.empty()) {
     if(planner_verbose_)
-      printf(ANSI_COLOR_RED "Cannot find a path, Abort!" ANSI_COLOR_RESET "\n");
+      printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a path!" ANSI_COLOR_RESET "\n");
     return false;
   }
 

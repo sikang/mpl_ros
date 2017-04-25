@@ -5,6 +5,42 @@ MPBaseUtil::MPBaseUtil()
   planner_verbose_ = false;
 }
 
+void MPBaseUtil::setEpsilon(decimal_t eps) {
+  epsilon_ = eps;
+  if(planner_verbose_)
+    printf("[MPPLANNER] set epsilon: %f\n", epsilon_);
+}
+
+void MPBaseUtil::setMaxNum(int num) {
+  max_num_ = num;
+  if(planner_verbose_)
+    printf("[MPPLANNER] set max num: %d\n", max_num_);
+}
+
+void MPBaseUtil::setDt(decimal_t dt) {
+  ENV_->set_dt(dt);
+  if(planner_verbose_)
+    printf("[MPPLANNER] set dt: %f\n", dt);
+}
+
+void MPBaseUtil::setMode(int n, bool use_3d) {
+  ENV_->set_discretization(n, use_3d);
+  if(planner_verbose_)
+    printf("[MPPLANNER] set n: %d, use_3d: %d\n", n, use_3d);
+}
+
+void MPBaseUtil::setAmax(decimal_t a_max) {
+  ENV_->set_a_max(a_max);
+  if(planner_verbose_)
+    printf("[MPPLANNER] set a_max: %f\n", a_max);
+}
+
+void MPBaseUtil::setVmax(decimal_t v_max) {
+  ENV_->set_v_max(v_max);
+  if(planner_verbose_)
+    printf("[MPPLANNER] set v_max: %f\n", v_max);
+}
+
 std::vector<Waypoint> MPBaseUtil::getPath() {
   return path_;
 }
@@ -15,30 +51,6 @@ std::vector<Primitive> MPBaseUtil::getPrimitives() {
 
 vec_Vec3f MPBaseUtil::getPs() { 
   return ENV_->ps(); 
-}
-
-void MPBaseUtil::setEpsilon(decimal_t eps) {
-  epsilon_ = eps;
-}
-
-void MPBaseUtil::setMaxNum(int num) {
-  max_num_ = num;
-}
-
-void MPBaseUtil::setDt(decimal_t dt) {
-  ENV_->set_dt(dt);
-}
-
-void MPBaseUtil::setMode(int n, bool use_3d) {
-  ENV_->set_discretization(n, use_3d);
-}
-
-void MPBaseUtil::setAmax(decimal_t a_max) {
-  ENV_->set_a_max(a_max);
-}
-
-void MPBaseUtil::setVmax(decimal_t v_max) {
-  ENV_->set_v_max(v_max);
 }
 
 Trajectory MPBaseUtil::getTraj() {

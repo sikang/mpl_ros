@@ -4,7 +4,7 @@ MPVisionUtil::MPVisionUtil(bool verbose)
 {
   planner_verbose_ = verbose;
   if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
   ENV_.reset(new mrsl::env_vision());
 }
 
@@ -26,6 +26,11 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
         goal.pos(0), goal.pos(1), goal.pos(2),
         goal.vel(0), goal.vel(1), goal.vel(2),
         goal.acc(0), goal.acc(1), goal.acc(2));
+    if(!ENV_->is_free(start.pos)) {
+      if(planner_verbose_)
+        printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
+      return false;
+    }
   }
 
   mrsl::ARAStar<Waypoint> AA;
@@ -34,18 +39,11 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
 
   ENV_->set_goal(goal);
 
-  if( !ENV_->is_free(start.pos) )
-  {
-    printf("start is not free!\n");
-    return false;
-  }
+  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, max_num_);
 
-  double pcost = AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_);
-
-  //ps_ = ENV_->ps_;
   if (path.empty()) {
     if(planner_verbose_)
-      printf(ANSI_COLOR_RED "Cannot find a path, Abort!" ANSI_COLOR_RESET "\n");
+      printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a path!" ANSI_COLOR_RESET "\n");
     return false;
   }
 

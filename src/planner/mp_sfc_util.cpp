@@ -4,7 +4,7 @@ MPSFCUtil::MPSFCUtil(bool verbose)
 {
   planner_verbose_= verbose;
   if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "MPSFCUtil PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
 void MPSFCUtil::setMap(const Polyhedra& polys) {
@@ -26,7 +26,7 @@ bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
         goal.acc(0), goal.acc(1), goal.acc(2));
     if(!ENV_->is_free(start.pos)) {
       if(planner_verbose_)
-        printf(ANSI_COLOR_RED "MPSFCUtil: start is not free!" ANSI_COLOR_RESET "\n");
+        printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
       return false;
     }
   }
@@ -35,18 +35,18 @@ bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 
-  //ENV_->reset();
   ENV_->set_goal(goal);
+
   if(ENV_->goal_outside()) {
     if(planner_verbose_)
-      printf(ANSI_COLOR_RED "MPSFCUtil: Goal is outside!\n" ANSI_COLOR_RESET);
+      printf(ANSI_COLOR_RED "[MPPlanner] Goal is outside!\n" ANSI_COLOR_RESET);
   }
   else
     AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, max_num_);
 
   if (path.empty()) {
     if(planner_verbose_)
-      printf(ANSI_COLOR_RED "MPSFCUtil: Cannot find a path!" ANSI_COLOR_RESET "\n");
+      printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a path!" ANSI_COLOR_RESET "\n");
     return false;
   }
 
