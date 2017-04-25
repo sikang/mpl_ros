@@ -36,8 +36,12 @@ class env_map : public env_base
 
     }
 
+    bool is_free(const Vec3f& pt) const {
+      return map_util_->isFree(map_util_->floatToInt(pt));
+    }
 
-    bool is_free(const Primitive& p) const{
+
+    bool is_free(const Primitive& p) const {
       std::vector<Waypoint> pts = p.sample(5);
       for(const auto& pt: pts){
         if(map_util_->isOccupied(map_util_->floatToInt(pt.pos)))
@@ -53,6 +57,7 @@ class env_map : public env_base
         std::vector<double>& succ_cost,
         std::vector<int>& action_idx ) const
     {
+      ps_.push_back(curr.pos);
       succ.clear();
       succ_idx.clear();
       succ_cost.clear();

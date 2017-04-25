@@ -145,7 +145,10 @@ class env_base
       printf(ANSI_COLOR_RESET "\n");
     }
 
-    virtual bool is_free(const Vec3f& pt) const { return false; }
+    virtual bool is_free(const Vec3f& pt) const { 
+      printf("Used Null is_free()\n");
+      return false; 
+    }
 
     virtual void set_goal(const Waypoint& state) {}
 
@@ -156,7 +159,7 @@ class env_base
         std::vector<double>& succ_cost,
         std::vector<int>& action_idx ) const
     {
-      printf("Used Null get_succ\n");
+      printf("Used Null get_succ()\n");
       succ.push_back(curr);
       succ_idx.push_back( state_to_idx(curr) );
       succ_cost.push_back(0);
