@@ -59,6 +59,24 @@ class SubVoxelMapUtil : public VoxelMapUtil {
 
     Vec3i getDimUp() { return dim_up_; }
 
+    std::vector<signed char> getSubMap() {
+      std::vector<signed char> submap;
+      Vec3i dim = dim_up_- dim_low_;
+      submap.resize(dim(0) * dim(1) * dim(2));
+      Vec3i n;
+      int cnt = 0;
+      for (n(2) = dim_low_(2); n(2) < dim_up_(2); n(2)++) {
+        for (n(1) = dim_low_(1); n(1) < dim_up_(1); n(1)++) {
+          for (n(0) = dim_low_(0); n(0) < dim_up_(0); n(0)++) {
+            submap[cnt] = map_[getIndex(n)];
+            cnt ++;
+          }
+        }
+      }
+      return submap;
+    }
+
+
   private:
     Vec3i dim_low_;
     Vec3i dim_up_;

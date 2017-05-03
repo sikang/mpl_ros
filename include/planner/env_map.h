@@ -23,18 +23,12 @@ class env_map : public env_base
       goal_node_ = goal;
 
       const Vec3i goal_int = map_util_->floatToInt(goal_node_.pos);
-      if (map_util_->isOutSideXYZ(goal_int, 0) ||
-          map_util_->isOutSideXYZ(goal_int, 1)) {
+      if (map_util_->isOutSide(goal_int)) {
         printf(ANSI_COLOR_GREEN "goal out side! " ANSI_COLOR_RESET "\n");
         goal_outside_ = true;
       }
       else
-      {
         goal_outside_ = false;
-        if(map_util_->isOutSideXYZ(goal_int, 2)) 
-          printf(ANSI_COLOR_RED "need to change goal z! " ANSI_COLOR_RESET "\n");
-      }
-
     }
 
     bool is_free(const Vec3f& pt) const {

@@ -28,7 +28,7 @@ class env_base
 
     void set_discretization(int n, bool use_3d) {
       decimal_t du = u_max_ / n;
-      dv_ = du * dt_;
+      dv_ = 0.5 * du * dt_;
       vel_ori_ = Vec3f(-v_max_, -v_max_, 0);
       vel_dim_ = (-2*vel_ori_/dv_).cast<int>();
 
@@ -55,14 +55,14 @@ class env_base
     {
       bool goaled = (state.pos - goal_node_.pos).norm() < 1;
       if(goaled && goal_node_.use_vel)
-        goaled = (state.vel - goal_node_.vel).norm() < dv_;
+        goaled = (state.vel - goal_node_.vel).norm() < du_ * dt_;
       return goaled;
     }
 
     double get_heur(const Waypoint& state) const
     {
       //return 0;
-      //return w_*(state.n.pos - goal_node_.n.pos).lpNorm<Eigen::Infinity>() / v_max_;
+      //return w_*(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
       const Vec3f p0 = state.pos;
       const Vec3f p1 = goal_node_.pos;
       const Vec3f v0 = state.vel;
@@ -97,7 +97,7 @@ class env_base
       Vec3i pi = ((state.pos - pos_ori_)/ds_).cast<int>();
       Vec3i vi = ((state.vel - vel_ori_)/dv_).cast<int>();
       return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) +
-        std::to_string(vi(0)) + "-" + std::to_string(vi(1));
+        std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2));
     }
 
     void forward_action( const Waypoint& curr, int action_id, 
