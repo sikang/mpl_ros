@@ -28,7 +28,7 @@ class env_base
 
     void set_discretization(int n, bool use_3d) {
       decimal_t du = u_max_ / n;
-      dv_ = 0.5 * du * dt_;
+      dv_ = 0.2 * du * dt_;
       vel_ori_ = Vec3f(-v_max_, -v_max_, 0);
       vel_dim_ = (-2*vel_ori_/dv_).cast<int>();
 
@@ -55,7 +55,7 @@ class env_base
     {
       bool goaled = (state.pos - goal_node_.pos).norm() < 1;
       if(goaled && goal_node_.use_vel)
-        goaled = (state.vel - goal_node_.vel).norm() < du_ * dt_;
+        goaled = (state.vel - goal_node_.vel).norm() < dv_ * 5;
       return goaled;
     }
 
