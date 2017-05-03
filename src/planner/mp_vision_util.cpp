@@ -1,11 +1,13 @@
 #include <planner/mp_vision_util.h>
 
+using namespace MPL;
+
 MPVisionUtil::MPVisionUtil(bool verbose)
 {
   planner_verbose_ = verbose;
   if(planner_verbose_)
     printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
-  ENV_.reset(new mrsl::env_vision());
+  ENV_.reset(new MPL::env_vision());
 }
 
 cv::Mat MPVisionUtil::getImage() { return ENV_->image(getTraj()); }
@@ -33,7 +35,7 @@ bool MPVisionUtil::plan(const Waypoint &start, const Waypoint &goal) {
     }
   }
 
-  mrsl::ARAStar<Waypoint> AA;
+  MPL::ARAStar<Waypoint> AA;
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 

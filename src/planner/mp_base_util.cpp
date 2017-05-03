@@ -1,5 +1,7 @@
 #include <planner/mp_base_util.h>
 
+using namespace MPL;
+
 MPBaseUtil::MPBaseUtil()
 {
   planner_verbose_ = false;

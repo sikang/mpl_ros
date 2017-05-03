@@ -3,19 +3,18 @@
  * @brief VoxelMapUtil classes
  */
 
-#ifndef VOXEL_MAP_UTIL_H
-#define VOXEL_MAP_UTIL_H
+#ifndef MPL_VOXEL_MAP_UTIL_H
+#define MPL_VOXEL_MAP_UTIL_H
 
 #include <collision_checking/map_util_base.h>
 
-class VoxelMapUtil
-    : public MapUtilBase<Vec3i, Vec3f, std::vector<signed char>> {
+namespace MPL {
+class VoxelMapUtil : public MapUtilBase<Vec3i, Vec3f, std::vector<signed char>> {
 public:
   VoxelMapUtil() : MapUtilBase() {}
 
   void info() {
-    printf("Map Info ============\n");
-
+    printf("VoxelMap Info ============\n");
     printf("   res: [%f]\n", res_);
     printf("   origin: [%f, %f, %f]\n", origin_d_(0), origin_d_(1), origin_d_(2));
     Vec3f dim_d = dim_.cast<decimal_t>() * res_;
@@ -148,25 +147,6 @@ public:
     map_ = map;
   }
 
-  void addPoints(const vec_Vec3f &pts) {
-    for (const auto &pt : pts) {
-      if(pt(2) < -1.0)
-        continue;
-      Vec3i pn_raw = floatToInt(pt);
-      for(int z = 0; z < dim_(2); z++) {
-        Vec3i pn = pn_raw;
-        pn(2) = z;
-        if (!isOutSide(pn)) {
-          for (const auto &it : dilate_neighbor_) {
-            if (!isOutSide(pn + it))
-            map_[getIndex(pn + it)] = val_occ;
-          }
-
-        }
-      }
-    }
-  }
-
   bool isEdge(const Vec3i &n) {
     return n(0) == 0 || n(0) == dim_(0) - 1 ||
       n(1) == 0 || n(1) == dim_(1) - 1;
@@ -185,36 +165,12 @@ public:
     }
   }
 
-
-  void freeUnKnown(decimal_t theta) {
-    Vec3i n;
-    for (n(0) = 0; n(0) < dim_(0); n(0)++) {
-      for (n(1) = 0; n(1) < dim_(1); n(1)++) {
-        for (n(2) = 0; n(2) < dim_(2); n(2)++) {
-          if (isUnKnown(n)){
-            Vec3f pt = intToFloat(n);
-            decimal_t t = atan2(pt(2), sqrt(pt(0)*pt(0) + pt(1)*pt(1)));
-            //if(fabs(t) <= theta && !isBlocked(Vec3f(0, 0, 0), pt))
-            if(fabs(t) <= theta)
-              map_[getIndex(n)] = val_free;
-          }
-        }
-      }
-    }
-  }
-
   void clear()
   {
     std::fill(map_.begin(), map_.end(), val_unknown);
   }
 
-  void clearAround(const Vec3i& n)
-  {
-    if(!isOutSide(n))
-      map_[getIndex(n)] = val_free;
-  }
-
-  void clearArround(const Vec3i& pn, decimal_t r)
+  void clearAround(const Vec3i& pn, decimal_t r)
   {
     if(!isOutSide(pn))
       map_[getIndex(pn)] = val_free;
@@ -230,10 +186,10 @@ public:
         }
       }
     }
+ 
   }
 
-
-
 };
-
+  
+}
 #endif

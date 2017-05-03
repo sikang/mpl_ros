@@ -2,8 +2,8 @@
  * @file map_util_base.h
  * @brief MapUtilBase classes
  */
-#ifndef MAP_UTIL_BASE_H
-#define MAP_UTIL_BASE_H
+#ifndef MPL_MAP_UTIL_BASE_H
+#define MPL_MAP_UTIL_BASE_H
 
 #include <stack>
 #include <motion_primitive_library/data_type.h>
@@ -14,6 +14,7 @@
  * @param Tf is float position of cell/voxel
  * @param Tmap is defined as a 1D array 
  */
+namespace MPL {
 template <class Ti, class Tf, class Tmap> class MapUtilBase {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -80,7 +81,7 @@ public:
    * @param map array of status os cells
    * @param res map resolution
    */
-  void setMap(const Tf& ori, const Ti& dim, const Tmap &map, decimal_t res) {
+  virtual void setMap(const Tf& ori, const Ti& dim, const Tmap &map, decimal_t res) {
     map_ = map;
     dim_ = dim;
     origin_d_ = ori;
@@ -122,5 +123,6 @@ protected:
   ///Assume unknown cell has value -1
   char val_unknown = -1;
 };
+}
 
 #endif

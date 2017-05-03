@@ -5,7 +5,7 @@
 #include <vector>
 #include <primitive/primitive.h>
 
-namespace mrsl{
+namespace MPL {
 typedef std::string Key;
 
 class env_base

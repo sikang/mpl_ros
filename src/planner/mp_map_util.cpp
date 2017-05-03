@@ -1,5 +1,7 @@
 #include <planner/mp_map_util.h>
 
+using namespace MPL;
+
 MPMapUtil::MPMapUtil(bool verbose)
 {
   planner_verbose_ = verbose;
@@ -8,7 +10,11 @@ MPMapUtil::MPMapUtil(bool verbose)
 }
 
 void MPMapUtil::setMapUtil(std::shared_ptr<VoxelMapUtil> map_util) {
-  ENV_.reset(new mrsl::env_map(map_util));
+  ENV_.reset(new MPL::env_map(map_util));
+}
+
+void MPMapUtil::setMapUtil(std::shared_ptr<SubVoxelMapUtil> map_util) {
+  ENV_.reset(new MPL::env_map(map_util));
 }
 
 bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
@@ -31,7 +37,7 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
     }
   }
 
-  mrsl::ARAStar<Waypoint> AA;
+  MPL::ARAStar<Waypoint> AA;
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 

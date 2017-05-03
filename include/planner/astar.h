@@ -10,7 +10,7 @@
 #include <list>                           // std::list
 #include <chrono>                         // std::chrono::high_resolution_clock
 
-namespace mrsl
+namespace MPL
 {
   // Forward declaration
   //template <class state>

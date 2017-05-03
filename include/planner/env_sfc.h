@@ -3,7 +3,7 @@
 #include <planner/env_base.h>
 #include <collision_checking/sfc_util.h>
 
-namespace mrsl {
+namespace MPL {
 class env_sfc : public env_base
 {
   protected:

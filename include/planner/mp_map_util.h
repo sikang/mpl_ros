@@ -6,7 +6,8 @@ class MPMapUtil : public MPBaseUtil
   public:
     MPMapUtil(bool verbose);
     bool plan(const Waypoint &start, const Waypoint &goal);
-    void setMapUtil(std::shared_ptr<VoxelMapUtil> map_util);
+    void setMapUtil(std::shared_ptr<MPL::VoxelMapUtil> map_util);
+    void setMapUtil(std::shared_ptr<MPL::SubVoxelMapUtil> map_util);
 };
 
 

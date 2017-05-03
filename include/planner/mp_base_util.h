@@ -37,7 +37,7 @@ class MPBaseUtil
     vec_Vec3f ps_;
 
     ///Env class
-    std::unique_ptr<mrsl::env_base> ENV_;
+    std::unique_ptr<MPL::env_base> ENV_;
     std::vector<Waypoint> path_;
     decimal_t epsilon_ = 1.0;
     ///Maxmum number of expansion allowd, -1 means no limitation

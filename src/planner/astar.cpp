@@ -4,7 +4,7 @@
 
 
 template <class state>
-double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_idx,
+double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
                                   const env_base& ENV,
                                   std::list<state>& path, std::vector<int>& action_idx,
                                   double eps, int max_expand )
@@ -61,7 +61,7 @@ double mrsl::ARAStar<state>::Astar( const state& start_coord, mrsl::Key start_id
 
 
 template <class state>
-double mrsl::ARAStar<state>::ARAstar( const state& start_coord, mrsl::Key start_idx,
+double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_idx,
                                     const env_base& ENV,
                                     std::list<state>& path, std::vector<int>& action_idx,
                                     double eps, double allocated_time_secs )
@@ -169,13 +169,13 @@ double mrsl::ARAStar<state>::ARAstar( const state& start_coord, mrsl::Key start_
 
 
 template <class state>
-void mrsl::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
+void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
                                std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
                                const env_base& ENV )
 {
   // Get successors
   std::vector<state> succ_coord;
-  std::vector<mrsl::Key> succ_idx;
+  std::vector<MPL::Key> succ_idx;
   std::vector<double> succ_cost;
   std::vector<int> succ_act_idx;
   ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx );
@@ -249,7 +249,7 @@ void mrsl::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNod
  * Private stuff
  */ 
 template <class state>
-void mrsl::ARAStar<state>::MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>>& sss_ptr)
+void MPL::ARAStar<state>::MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>>& sss_ptr)
 {
   while( !sss_ptr->il.empty() )
   {
@@ -268,7 +268,7 @@ void mrsl::ARAStar<state>::MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>
 
 
 template <class state>
-void mrsl::ARAStar<state>::ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>& sss_ptr)
+void MPL::ARAStar<state>::ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>& sss_ptr)
 {
   //recompute priorities for states in OPEN and reorder it
   priorityQueue<ARAState<state>> new_pq;
@@ -286,5 +286,5 @@ void mrsl::ARAStar<state>::ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>
 
 
 // explicit instantiations
-template class mrsl::ARAStar<Waypoint>;
+template class MPL::ARAStar<Waypoint>;
 

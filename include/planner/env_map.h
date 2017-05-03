@@ -3,8 +3,9 @@
 #include <planner/env_base.h>
 #include <primitive/primitive.h>
 #include <collision_checking/voxel_map_util.h>
+#include <collision_checking/sub_voxel_map_util.h>
 
-namespace mrsl {
+namespace MPL {
 class env_map : public env_base
 {
   protected:
@@ -44,10 +45,10 @@ class env_map : public env_base
     bool is_free(const Primitive& p) const {
       std::vector<Waypoint> pts = p.sample(5);
       for(const auto& pt: pts){
-	      Vec3i pn = map_util_->floatToInt(pt.pos);
-	      if(map_util_->isOccupied(pn) ||
-			      map_util_->isOutSide(pn))
-		      return false;
+        Vec3i pn = map_util_->floatToInt(pt.pos);
+        if(map_util_->isOccupied(pn) ||
+           (!goal_outside_ && map_util_->isOutSide(pn)))
+          return false;
       }
 
       return true;

@@ -1,5 +1,7 @@
 #include <planner/mp_sfc_util.h>
 
+using namespace MPL;
+
 MPSFCUtil::MPSFCUtil(bool verbose)
 {
   planner_verbose_= verbose;
@@ -8,7 +10,7 @@ MPSFCUtil::MPSFCUtil(bool verbose)
 }
 
 void MPSFCUtil::setMap(const Polyhedra& polys) {
-  ENV_.reset(new mrsl::env_sfc(polys));
+  ENV_.reset(new MPL::env_sfc(polys));
 }
 
 bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
@@ -31,7 +33,7 @@ bool MPSFCUtil::plan(const Waypoint &start, const Waypoint &goal) {
     }
   }
 
-  mrsl::ARAStar<Waypoint> AA;
+  MPL::ARAStar<Waypoint> AA;
   std::vector<int> action_idx;
   std::list<Waypoint> path;
 

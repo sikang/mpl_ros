@@ -4,7 +4,7 @@
 #include <primitive/primitive.h>
 #include <collision_checking/vision_queue_util.h>
 
-namespace mrsl {
+namespace MPL {
 class env_vision : public env_base
 {
   protected:
