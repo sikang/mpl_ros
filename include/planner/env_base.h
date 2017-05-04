@@ -29,12 +29,10 @@ class env_base
     void set_discretization(int n, bool use_3d) {
       decimal_t du = u_max_ / n;
       dv_ = std::min(0.2 * du * dt_, 0.4);
-      vel_ori_ = Vec3f(-v_max_, -v_max_, 0);
-      vel_dim_ = (-2*vel_ori_/dv_).cast<int>();
+      vel_ori_ = Vec3f(-v_max_, -v_max_, -v_max_);
 
       ds_ = 0.5 * dv_ * dt_;
       pos_ori_ = Vec3f(-100, -100, -100);
-      pos_dim_ = ((Vec3f(100, 100, 100) - pos_ori_)/ds_).cast<int>();
 
       U_.clear();
       if(use_3d) {
@@ -193,7 +191,6 @@ class env_base
     Waypoint goal_node_;
 
     Vec3f pos_ori_, vel_ori_;
-    Vec3i pos_dim_, vel_dim_;
 
     mutable vec_Vec3f ps_;
     mutable std::vector<Primitive> primitives_;
