@@ -28,7 +28,7 @@ class env_base
 
     void set_discretization(int n, bool use_3d) {
       decimal_t du = u_max_ / n;
-      dv_ = 0.2 * du * dt_;
+      dv_ = std::min(0.2 * du * dt_, 0.4);
       vel_ori_ = Vec3f(-v_max_, -v_max_, 0);
       vel_dim_ = (-2*vel_ori_/dv_).cast<int>();
 
