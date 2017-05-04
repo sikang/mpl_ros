@@ -35,7 +35,10 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
     
     spin( currNode_pt, sss_ptr, ENV ); // update heap
     
-    if( sss_ptr->pq.empty() || (max_expand > 0 && expands >= max_expand))
+    bool reachMaxStep = (max_expand > 0 && expands >= max_expand);
+    if(reachMaxStep)
+      printf(ANSI_COLOR_RED "MaxExpandStep [%d] Reached!!!!!!\n\n" ANSI_COLOR_RESET, max_expand);
+    if( sss_ptr->pq.empty() || reachMaxStep)
       return std::numeric_limits<double>::infinity();
 
     // get element with smallest cost
