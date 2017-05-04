@@ -53,9 +53,9 @@ class env_base
 
     bool is_goal(const Waypoint& state) const
     {
-      bool goaled = (state.pos - goal_node_.pos).norm() < 1;
+      bool goaled = (state.pos - goal_node_.pos).norm() < tol_dis;
       if(goaled && goal_node_.use_vel)
-        goaled = (state.vel - goal_node_.vel).norm() < dv_ * 5;
+        goaled = (state.vel - goal_node_.vel).norm() < tol_vel;
       return goaled;
     }
 
@@ -127,6 +127,14 @@ class env_base
       dt_ = dt;
     }
 
+    void set_tol_dis(decimal_t dis) {
+      tol_dis = dis;
+    }
+
+    void set_tol_vel(decimal_t vel) {
+      tol_vel = vel;
+    }
+
     decimal_t get_dt() {
       return dt_;
     }
@@ -140,7 +148,9 @@ class env_base
       printf("+       wi: %d                 +\n", wi_);
       printf("+    v_max: %.2f               +\n", v_max_);
       printf("+    a_max: %.2f               +\n", a_max_);
-      printf("+ neighbors: %zu               +\n", U_.size());
+      printf("+    U num: %zu                +\n", U_.size());
+      printf("+  tol_dis: %.2f               +\n", tol_dis);
+      printf("+  tol_vel: %.2f               +\n", tol_vel);
       printf("++++++++++ PLANNER +++++++++++\n");
       printf(ANSI_COLOR_RESET "\n");
     }
@@ -171,6 +181,8 @@ class env_base
     double w_ = 10;
     int wi_ = 1;
 
+    double tol_dis = 1.0;
+    double tol_vel = 1.0;
     double u_max_ = 1;
     double v_max_ = 2;
     double a_max_ = 1;

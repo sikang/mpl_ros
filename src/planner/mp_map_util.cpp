@@ -30,13 +30,13 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
         goal.pos(0), goal.pos(1), goal.pos(2),
         goal.vel(0), goal.vel(1), goal.vel(2),
         goal.acc(0), goal.acc(1), goal.acc(2));
-    if(!ENV_->is_free(start.pos)) {
-      if(planner_verbose_)
-        printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
-      return false;
-    }
   }
 
+  if(!ENV_->is_free(start.pos)) {
+    printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
+    return false;
+  }
+ 
   MPL::ARAStar<Waypoint> AA;
   std::vector<int> action_idx;
   std::list<Waypoint> path;

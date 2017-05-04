@@ -28,6 +28,7 @@ class MPBaseUtil
     void setEpsilon(decimal_t eps);
     void setMaxNum(int num);
     void setMode(int n, bool use_3d);
+    void setTol(decimal_t tol_dis, decimal_t tol_vel);
 
     virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
 

@@ -10,37 +10,46 @@ MPBaseUtil::MPBaseUtil()
 void MPBaseUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;
   if(planner_verbose_)
-    printf("[MPPLANNER] set epsilon: %f\n", epsilon_);
+    printf("[MPBaseUtil] set epsilon: %f\n", epsilon_);
 }
 
 void MPBaseUtil::setMaxNum(int num) {
   max_num_ = num;
   if(planner_verbose_)
-    printf("[MPPLANNER] set max num: %d\n", max_num_);
+    printf("[MPBaseUtil] set max num: %d\n", max_num_);
 }
 
 void MPBaseUtil::setDt(decimal_t dt) {
   ENV_->set_dt(dt);
   if(planner_verbose_)
-    printf("[MPPLANNER] set dt: %f\n", dt);
+    printf("[MPBaseUtil] set dt: %f\n", dt);
 }
 
 void MPBaseUtil::setMode(int n, bool use_3d) {
   ENV_->set_discretization(n, use_3d);
   if(planner_verbose_)
-    printf("[MPPLANNER] set n: %d, use_3d: %d\n", n, use_3d);
+    printf("[MPBaseUtil] set n: %d, use_3d: %d\n", n, use_3d);
 }
 
 void MPBaseUtil::setAmax(decimal_t a_max) {
   ENV_->set_a_max(a_max);
   if(planner_verbose_)
-    printf("[MPPLANNER] set a_max: %f\n", a_max);
+    printf("[MPBaseUtil] set a_max: %f\n", a_max);
 }
 
 void MPBaseUtil::setVmax(decimal_t v_max) {
   ENV_->set_v_max(v_max);
   if(planner_verbose_)
-    printf("[MPPLANNER] set v_max: %f\n", v_max);
+    printf("[MPBaseUtil] set v_max: %f\n", v_max);
+}
+
+void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel) {
+  ENV_->set_tol_dis(tol_dis);
+  ENV_->set_tol_vel(tol_vel);
+  if(planner_verbose_) {
+    printf("[MPBaseUtil] set tol_dis: %f\n", tol_dis);
+    printf("[MPBaseUtil] set tol_vel: %f\n", tol_vel);
+  }
 }
 
 std::vector<Waypoint> MPBaseUtil::getPath() {
