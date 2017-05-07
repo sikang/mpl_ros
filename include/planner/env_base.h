@@ -133,6 +133,10 @@ class env_base
       tol_vel = vel;
     }
 
+    void set_w(decimal_t w) {
+      w_ = w;
+    }
+
     decimal_t get_dt() {
       return dt_;
     }

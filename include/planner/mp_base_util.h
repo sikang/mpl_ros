@@ -24,7 +24,8 @@ class MPBaseUtil
  
     void setVmax(decimal_t v);
     void setAmax(decimal_t a);
-    void setDt(decimal_t a);
+    void setDt(decimal_t dt);
+    void setW(decimal_t w);
     void setEpsilon(decimal_t eps);
     void setMaxNum(int num);
     void setMode(int n, bool use_3d);

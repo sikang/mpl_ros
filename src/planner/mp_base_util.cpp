@@ -25,6 +25,12 @@ void MPBaseUtil::setDt(decimal_t dt) {
     printf("[MPBaseUtil] set dt: %f\n", dt);
 }
 
+void MPBaseUtil::setW(decimal_t w) {
+  ENV_->set_w(w);
+  if(planner_verbose_)
+    printf("[MPBaseUtil] set w: %f\n", w);
+}
+
 void MPBaseUtil::setMode(int n, bool use_3d) {
   ENV_->set_discretization(n, use_3d);
   if(planner_verbose_)
