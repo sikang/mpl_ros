@@ -34,9 +34,9 @@ class MPBaseUtil
     virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
 
     ///Debug pimitives
-    std::vector<Primitive> primitives_;
+    //std::vector<Primitive> primitives_;
     ///Stores the expanded nodes
-    vec_Vec3f ps_;
+    //vec_Vec3f ps_;
 
     ///Env class
     std::unique_ptr<MPL::env_base> ENV_;

@@ -2,26 +2,51 @@ cmake_minimum_required(VERSION 2.8)
 project(motion_primitive_library)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
+SET(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(USE_ROS TRUE)
 
-
 IF(USE_ROS)
-  message(STATUS "Compile ROS utils.")
+  MESSAGE(STATUS "Compile with ROS.")
   # roslib cmake_modules
   FIND_PACKAGE(catkin REQUIRED COMPONENTS roscpp)
   catkin_package(
-    DEPENDS Eigen3 
+    DEPENDS Eigen3
     CATKIN_DEPENDS 
-    INCLUDE_DIRS include
+    INCLUDE_DIRS include 
     LIBRARIES primitive poly_solver vision_util vision_queue_util mp_map_util mp_sfc_util mp_vision_util bfs
     )
   INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
   LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
 ENDIF()
 
-find_package(Eigen3 REQUIRED)
-find_package(OpenCV REQUIRED )
-include_directories(./include ${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
+FIND_PACKAGE(VTK REQUIRED)
+
+IF(NOT VTK_FOUND)
+  SET(DEFAULT FALSE)
+  SET(REASON "VTK was not found.")
+  MESSAGE("VTK was not found")
+ELSE()
+  INCLUDE(${VTK_USE_FILE})
+  MESSAGE("VTK was found")
+ENDIF()
+
+FIND_PACKAGE(Eigen3 REQUIRED)
+FIND_PACKAGE(OpenCV REQUIRED )
+FIND_PACKAGE(PkgConfig REQUIRED)
+#PKG_CHECK_MODULES(EIGEN3 REQUIRED eigen3)
+PKG_CHECK_MODULES(YAMLCPP REQUIRED yaml-cpp)
+#FIND_PACKAGE( Boost COMPONENTS filesystem system REQUIRED )
+include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} include)
+
+
+IF(YAMLCPP_FOUND)
+  MESSAGE(STATUS "Found yaml-cpp.")
+  #MESSAGE("YAMLCPP_INCLUDE_DIRS: ${YAMLCPP_INCLUDE_DIRS}")
+  #MESSAGE("YAMLCPP_LIBRARIES: ${YAMLCPP_LIBRARIES}")
+  #MESSAGE("YAMLCPP_LIBRARY_DIRS: ${YAMLCPP_LIBRARY_DIRS}")
+ELSE()
+  MESSAGE(FATAL_ERROR "Could not find yaml-cpp.")
+ENDIF()
 
 
 
@@ -58,3 +83,7 @@ target_link_libraries(mp_vision_util primitive vision_queue_util)
 
 add_library(bfs src/planner/bfs.cpp)
 target_link_libraries(bfs primitive)
+
+add_executable(test_planner_2d test/test_planner_2d.cpp)
+target_link_libraries(test_planner_2d mp_map_util ${YAMLCPP_LIBRARIES} ${Boost_LIBRARIES} ${VTK_LIBRARIES})
+
