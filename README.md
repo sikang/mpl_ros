@@ -34,6 +34,23 @@ bool valid = planner->plan(start, goal); // Plan from start to goal
 The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/sikang/motion_primitive_library/blob/master/data/output.jpg).
 ![Visualization](./data/output.jpg)
 
+Run following command:
+```sh
+$ ./build/test_planner_2d ../data/corridor.yaml
+[MPPlanner] PLANNER VERBOSE ON
+[MPBaseUtil] set epsilon: 1.000000
+[MPBaseUtil] set v_max: 2.000000
+[MPBaseUtil] set a_max: 1.000000
+[MPBaseUtil] set dt: 1.000000
+[MPBaseUtil] set max num: 5000
+[MPBaseUtil] set n: 1, use_3d: 0
+[MPBaseUtil] set tol_dis: 1.000000
+[MPBaseUtil] set tol_vel: 1.000000
+start pos: [2.500000, -3.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
+goal pos: [35.000000, 2.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
+MP Planner takes: 19.000000 ms
+MP Planner expanded states: 1429
+```
 
 Note that only control space in acceleration is available at this time!
 
