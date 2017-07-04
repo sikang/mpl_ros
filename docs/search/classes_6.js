@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['polysolver',['PolySolver',['../classPolySolver.html',1,'']]],
-  ['polytraj',['PolyTraj',['../classPolyTraj.html',1,'']]],
-  ['primitive',['Primitive',['../classPrimitive.html',1,'']]],
-  ['primitive1d',['Primitive1D',['../classPrimitive1D.html',1,'']]]
+  ['lambda',['Lambda',['../classLambda.html',1,'']]],
+  ['lambdaseg',['LambdaSeg',['../classLambdaSeg.html',1,'']]]
 ];

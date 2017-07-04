@@ -33,6 +33,8 @@ bool valid = planner->plan(start, goal); // Plan from start to goal
 
 The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/sikang/motion_primitive_library/blob/master/data/output.jpg).
 ![Visualization](./data/output.jpg)
+
+
 Note that only control space in acceleration is available at this time!
 
 

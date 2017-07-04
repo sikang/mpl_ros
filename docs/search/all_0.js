@@ -9,7 +9,7 @@ var searchData=
   ['ansi_5fcolor_5fred',['ANSI_COLOR_RED',['../data__type_8h.html#a34995b955465f6bbb37c359173d50477',1,'data_type.h']]],
   ['ansi_5fcolor_5freset',['ANSI_COLOR_RESET',['../data__type_8h.html#a92a364c2b863dde1a024a77eac2a5b3b',1,'data_type.h']]],
   ['ansi_5fcolor_5fyellow',['ANSI_COLOR_YELLOW',['../data__type_8h.html#a5a123b382640b3aa65dd5db386002fbc',1,'data_type.h']]],
-  ['arastar',['ARAStar',['../classmrsl_1_1ARAStar.html',1,'mrsl']]],
-  ['arastate',['ARAState',['../structmrsl_1_1ARAState.html',1,'mrsl']]],
-  ['arastatespace',['ARAStateSpace',['../structmrsl_1_1ARAStateSpace.html',1,'mrsl']]]
+  ['arastar',['ARAStar',['../classMPL_1_1ARAStar.html',1,'MPL']]],
+  ['arastate',['ARAState',['../structMPL_1_1ARAState.html',1,'MPL']]],
+  ['arastatespace',['ARAStateSpace',['../structMPL_1_1ARAStateSpace.html',1,'MPL']]]
 ];
