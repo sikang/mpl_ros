@@ -2,8 +2,7 @@
 
 using namespace MPL;
 
-MPMapUtil::MPMapUtil(bool verbose)
-{
+MPMapUtil::MPMapUtil(bool verbose) {
   planner_verbose_ = verbose;
   if(planner_verbose_)
     printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);

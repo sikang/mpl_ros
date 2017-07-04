@@ -2,8 +2,7 @@
 
 using namespace MPL;
 
-MPBaseUtil::MPBaseUtil()
-{
+MPBaseUtil::MPBaseUtil() {
   planner_verbose_ = false;
 }
 

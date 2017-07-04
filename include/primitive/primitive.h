@@ -5,7 +5,7 @@
 
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
-
+#include <memory>
 #include <motion_primitive_library/data_type.h>
 #include "math.h"
 
@@ -21,6 +21,11 @@ struct Waypoint {
   bool use_vel = false;///<If true, attribute vel will be used in primitive generation 
   bool use_acc = false;///<If true, attribute acc will be used in primitive generation 
 
+  int n = 0;
+  decimal_t cost = 0;
+  decimal_t gcost = 0;
+
+  std::shared_ptr<Waypoint> parent;
   ///Print all the useful attributes
   void print() const {
     if(use_pos)

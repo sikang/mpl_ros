@@ -14,3 +14,5 @@ cd ~/catkin_ws & catkin_make -DCMAKE_BUILD_TYPE=Release
 ## Example Usage
 ./bin/test_xxx ./maps/xxx
 
+## Doxygen
+For more details, please refer to https://sikang.github.io/motion_primitive_library/

@@ -1,5 +1,5 @@
-#ifndef ENV_INT_H_
-#define ENV_INT_H_
+#ifndef ENV_INT_H
+#define ENV_INT_H
 
 #include <memory>
 #include <vector>
