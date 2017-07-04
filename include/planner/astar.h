@@ -1,5 +1,5 @@
-#ifndef __ASTAR_NX_H_
-#define __ASTAR_NX_H_
+#ifndef ASTAR_H
+#define ASTAR_H
 
 #include <boost/heap/d_ary_heap.hpp>      // boost::heap::d_ary_heap
 #include <memory>                         // std::shared_ptr

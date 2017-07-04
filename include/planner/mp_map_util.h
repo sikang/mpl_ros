@@ -6,7 +6,7 @@
 #include <planner/mp_base_util.h>
 
 /**
- * @brief Motion primitive map util class
+ * @brief Motion primitive planner in voxel map
  */
 class MPMapUtil : public MPBaseUtil
 {

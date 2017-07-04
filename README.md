@@ -37,6 +37,9 @@ The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/
 Run following command:
 ```sh
 $ ./build/test_planner_2d ../data/corridor.yaml
+```
+You should see following messages if it works properly:
+```sh
 [MPPlanner] PLANNER VERBOSE ON
 [MPBaseUtil] set epsilon: 1.000000
 [MPBaseUtil] set v_max: 2.000000

@@ -69,38 +69,57 @@ $(function() {
 <div class="title">SFCUtil Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Collision checking inside a Safe Flight Corridor (SFC)  
+ <a href="classSFCUtil.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="sfc__util_8h_source.html">sfc_util.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a0aa7774d45edbe842459ce728b719aeb"><td class="memItemLeft" align="right" valign="top"><a id="a0aa7774d45edbe842459ce728b719aeb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#a0aa7774d45edbe842459ce728b719aeb">SFCUtil</a> ()</td></tr>
+<tr class="memdesc:a0aa7774d45edbe842459ce728b719aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple constructor. <br /></td></tr>
+<tr class="separator:a0aa7774d45edbe842459ce728b719aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff7e59f4906fb4dd6376af348dde458a"><td class="memItemLeft" align="right" valign="top"><a id="aff7e59f4906fb4dd6376af348dde458a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SFCUtil</b> (const Polyhedra &amp;polys)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#aff7e59f4906fb4dd6376af348dde458a">SFCUtil</a> (const Polyhedra &amp;polys)</td></tr>
+<tr class="memdesc:aff7e59f4906fb4dd6376af348dde458a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with polyhedra as input. <br /></td></tr>
 <tr class="separator:aff7e59f4906fb4dd6376af348dde458a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad11e012de0828bee6d0cb05407189ed8"><td class="memItemLeft" align="right" valign="top"><a id="ad11e012de0828bee6d0cb05407189ed8"></a>
-Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><b>sfc</b> ()</td></tr>
+Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#ad11e012de0828bee6d0cb05407189ed8">sfc</a> ()</td></tr>
+<tr class="memdesc:ad11e012de0828bee6d0cb05407189ed8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get polyhedra. <br /></td></tr>
 <tr class="separator:ad11e012de0828bee6d0cb05407189ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aea59f494b54d5ccc748bdb5c348866"><td class="memItemLeft" align="right" valign="top"><a id="a7aea59f494b54d5ccc748bdb5c348866"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFree</b> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#a7aea59f494b54d5ccc748bdb5c348866">isFree</a> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+<tr class="memdesc:a7aea59f494b54d5ccc748bdb5c348866"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a primitive is inside the SFC from <img class="formulaInl" alt="$t: 0 \rightarrow dt$" src="form_11.png"/>. <br /></td></tr>
 <tr class="separator:a7aea59f494b54d5ccc748bdb5c348866"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01e71dd5853535722290c1fa6706a6ab"><td class="memItemLeft" align="right" valign="top"><a id="a01e71dd5853535722290c1fa6706a6ab"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFree</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#a01e71dd5853535722290c1fa6706a6ab">isFree</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<tr class="memdesc:a01e71dd5853535722290c1fa6706a6ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a point is inside SFC. <br /></td></tr>
 <tr class="separator:a01e71dd5853535722290c1fa6706a6ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ae54e63a6683be1d4ed2f669940a336bc"><td class="memItemLeft" align="right" valign="top"><a id="ae54e63a6683be1d4ed2f669940a336bc"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>insidePolyhedron</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt, const Polyhedron &amp;Vs)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#ae54e63a6683be1d4ed2f669940a336bc">insidePolyhedron</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt, const Polyhedron &amp;Vs)</td></tr>
+<tr class="memdesc:ae54e63a6683be1d4ed2f669940a336bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a point is inside the given polyhedron. <br /></td></tr>
 <tr class="separator:ae54e63a6683be1d4ed2f669940a336bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afadf2c4b7b2af881fe4173177c7d66bd"><td class="memItemLeft" align="right" valign="top"><a id="afadf2c4b7b2af881fe4173177c7d66bd"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>insideSFC</b> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, const Polyhedra &amp;polys, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t1, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t2)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#afadf2c4b7b2af881fe4173177c7d66bd">insideSFC</a> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, const Polyhedra &amp;polys, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t1, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t2)</td></tr>
+<tr class="memdesc:afadf2c4b7b2af881fe4173177c7d66bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a primitive is inside the SFC from <img class="formulaInl" alt="$t: t1\rightarrow t2$" src="form_12.png"/>. <br /></td></tr>
 <tr class="separator:afadf2c4b7b2af881fe4173177c7d66bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a88c3398b1fd693d01b0b16c7c23fd57f"><td class="memItemLeft" align="right" valign="top"><a id="a88c3398b1fd693d01b0b16c7c23fd57f"></a>
-Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><b>polys_</b></td></tr>
+Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSFCUtil.html#a88c3398b1fd693d01b0b16c7c23fd57f">polys_</a></td></tr>
+<tr class="memdesc:a88c3398b1fd693d01b0b16c7c23fd57f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The SFC object. <br /></td></tr>
 <tr class="separator:a88c3398b1fd693d01b0b16c7c23fd57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Collision checking inside a Safe Flight Corridor (SFC) </p>
+<p>SFC is an ordered collection of convex polyhedra that models free space </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/collision_checking/<a class="el" href="sfc__util_8h_source.html">sfc_util.h</a></li>
 <li>src/collision_checking/sfc_util.cpp</li>
 </ul>

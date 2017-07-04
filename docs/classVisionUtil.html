@@ -68,53 +68,77 @@ $(function() {
 <div class="title">VisionUtil Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Collision checking inside the image space.  
+ <a href="classVisionUtil.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="vision__util_8h_source.html">vision_util.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a857ccc62b291307609f7af74e2796f25"><td class="memItemLeft" align="right" valign="top"><a id="a857ccc62b291307609f7af74e2796f25"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a857ccc62b291307609f7af74e2796f25">VisionUtil</a> ()</td></tr>
+<tr class="memdesc:a857ccc62b291307609f7af74e2796f25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple constructor. <br /></td></tr>
+<tr class="separator:a857ccc62b291307609f7af74e2796f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf8bade16bace6f8631deeb194d37022"><td class="memItemLeft" align="right" valign="top"><a id="adf8bade16bace6f8631deeb194d37022"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>VisionUtil</b> (const cv::Mat &amp;img, const <a class="el" href="structCameraInfo.html">CameraInfo</a> &amp;info)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#adf8bade16bace6f8631deeb194d37022">VisionUtil</a> (const cv::Mat &amp;<a class="el" href="classVisionUtil.html#a337c76d2db9a3833501a5d06ec9dafc6">img</a>, const <a class="el" href="structCameraInfo.html">CameraInfo</a> &amp;info)</td></tr>
+<tr class="memdesc:adf8bade16bace6f8631deeb194d37022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with cv image and camera info. <br /></td></tr>
 <tr class="separator:adf8bade16bace6f8631deeb194d37022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a65fe1b4a003fc74cf95d982159afb0"><td class="memItemLeft" align="right" valign="top"><a id="a8a65fe1b4a003fc74cf95d982159afb0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setBound</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> u, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> l)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a8a65fe1b4a003fc74cf95d982159afb0">setBound</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> u, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> l)</td></tr>
+<tr class="memdesc:a8a65fe1b4a003fc74cf95d982159afb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bounding box in depth. <br /></td></tr>
 <tr class="separator:a8a65fe1b4a003fc74cf95d982159afb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2878ba9da2ba5ad695deb45d6d865919"><td class="memItemLeft" align="right" valign="top"><a id="a2878ba9da2ba5ad695deb45d6d865919"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOutside</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a2878ba9da2ba5ad695deb45d6d865919">isOutside</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<tr class="memdesc:a2878ba9da2ba5ad695deb45d6d865919"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the point is outside of the image after projection. <br /></td></tr>
 <tr class="separator:a2878ba9da2ba5ad695deb45d6d865919"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a528efe7008a06e930fdfdf2ea904793d"><td class="memItemLeft" align="right" valign="top"><a id="a528efe7008a06e930fdfdf2ea904793d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVeryFree</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a528efe7008a06e930fdfdf2ea904793d">isVeryFree</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<tr class="memdesc:a528efe7008a06e930fdfdf2ea904793d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the point is in free space without occlusion. <br /></td></tr>
 <tr class="separator:a528efe7008a06e930fdfdf2ea904793d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4b33ec0711a54f2ec6c6c2cb794b278"><td class="memItemLeft" align="right" valign="top"><a id="aa4b33ec0711a54f2ec6c6c2cb794b278"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFree</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#aa4b33ec0711a54f2ec6c6c2cb794b278">isFree</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<tr class="memdesc:aa4b33ec0711a54f2ec6c6c2cb794b278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the point is not occupied. <br /></td></tr>
 <tr class="separator:aa4b33ec0711a54f2ec6c6c2cb794b278"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8c1d77cae4024fde47b407d5fe49854"><td class="memItemLeft" align="right" valign="top"><a id="ab8c1d77cae4024fde47b407d5fe49854"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFree</b> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, const <a class="el" href="data__type_8h.html#a99980a710976449f0a9d3d2ae8b8be87">Aff3f</a> &amp;TF)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#ab8c1d77cae4024fde47b407d5fe49854">isFree</a> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, const <a class="el" href="data__type_8h.html#a99980a710976449f0a9d3d2ae8b8be87">Aff3f</a> &amp;TF)</td></tr>
+<tr class="memdesc:ab8c1d77cae4024fde47b407d5fe49854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the primitive is free. <br /></td></tr>
 <tr class="separator:ab8c1d77cae4024fde47b407d5fe49854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a337c76d2db9a3833501a5d06ec9dafc6"><td class="memItemLeft" align="right" valign="top"><a id="a337c76d2db9a3833501a5d06ec9dafc6"></a>
-cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>img</b> ()</td></tr>
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a337c76d2db9a3833501a5d06ec9dafc6">img</a> ()</td></tr>
+<tr class="memdesc:a337c76d2db9a3833501a5d06ec9dafc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the image. <br /></td></tr>
 <tr class="separator:a337c76d2db9a3833501a5d06ec9dafc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab779992a4ba1f99257eb2fcd5ec07c2d"><td class="memItemLeft" align="right" valign="top"><a id="ab779992a4ba1f99257eb2fcd5ec07c2d"></a>
-cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>img_inflated</b> ()</td></tr>
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#ab779992a4ba1f99257eb2fcd5ec07c2d">img_inflated</a> ()</td></tr>
+<tr class="memdesc:ab779992a4ba1f99257eb2fcd5ec07c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inflated image. <br /></td></tr>
 <tr class="separator:ab779992a4ba1f99257eb2fcd5ec07c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6696c6548e36a89054ea41e8a8a73c55"><td class="memItemLeft" align="right" valign="top"><a id="a6696c6548e36a89054ea41e8a8a73c55"></a>
-cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>drawing</b> (const cv::Mat &amp;img, const <a class="el" href="classTrajectory.html">Trajectory</a> &amp;traj, const <a class="el" href="data__type_8h.html#a99980a710976449f0a9d3d2ae8b8be87">Aff3f</a> &amp;TF)</td></tr>
+cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a6696c6548e36a89054ea41e8a8a73c55">drawing</a> (const cv::Mat &amp;<a class="el" href="classVisionUtil.html#a337c76d2db9a3833501a5d06ec9dafc6">img</a>, const <a class="el" href="classTrajectory.html">Trajectory</a> &amp;traj, const <a class="el" href="data__type_8h.html#a99980a710976449f0a9d3d2ae8b8be87">Aff3f</a> &amp;TF)</td></tr>
+<tr class="memdesc:a6696c6548e36a89054ea41e8a8a73c55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project the trajectory into image space. <br /></td></tr>
 <tr class="separator:a6696c6548e36a89054ea41e8a8a73c55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51db9ce1477732a8b71a9dc16db5d75e"><td class="memItemLeft" align="right" valign="top"><a id="a51db9ce1477732a8b71a9dc16db5d75e"></a>
-<a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cloud</b> (const cv::Mat &amp;img)</td></tr>
+<a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a51db9ce1477732a8b71a9dc16db5d75e">cloud</a> (const cv::Mat &amp;<a class="el" href="classVisionUtil.html#a337c76d2db9a3833501a5d06ec9dafc6">img</a>)</td></tr>
+<tr class="memdesc:a51db9ce1477732a8b71a9dc16db5d75e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the point cloud from disparity image. <br /></td></tr>
 <tr class="separator:a51db9ce1477732a8b71a9dc16db5d75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7133b8e63d835b4947fd434db46f9bf8"><td class="memItemLeft" align="right" valign="top"><a id="a7133b8e63d835b4947fd434db46f9bf8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOutside</b> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a7133b8e63d835b4947fd434db46f9bf8">isOutside</a> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn)</td></tr>
+<tr class="memdesc:a7133b8e63d835b4947fd434db46f9bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the image point is outside. <br /></td></tr>
 <tr class="separator:a7133b8e63d835b4947fd434db46f9bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0631f4517fa8086154336f8bfc9ecb51"><td class="memItemLeft" align="right" valign="top"><a id="a0631f4517fa8086154336f8bfc9ecb51"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOccupied</b> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a0631f4517fa8086154336f8bfc9ecb51">isOccupied</a> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+<tr class="memdesc:a0631f4517fa8086154336f8bfc9ecb51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the image point is on obstacle. <br /></td></tr>
 <tr class="separator:a0631f4517fa8086154336f8bfc9ecb51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15c9ca6a7321833831259623e8b327c3"><td class="memItemLeft" align="right" valign="top"><a id="a15c9ca6a7321833831259623e8b327c3"></a>
-<a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><b>intToFloat</b> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn, double d)</td></tr>
+<a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a15c9ca6a7321833831259623e8b327c3">intToFloat</a> (const <a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a> &amp;pn, double d)</td></tr>
+<tr class="memdesc:a15c9ca6a7321833831259623e8b327c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert image point to 3D point. <br /></td></tr>
 <tr class="separator:a15c9ca6a7321833831259623e8b327c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cd8e72813a99947ff2fa65b67aff3c0"><td class="memItemLeft" align="right" valign="top"><a id="a9cd8e72813a99947ff2fa65b67aff3c0"></a>
-<a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a>&#160;</td><td class="memItemRight" valign="bottom"><b>floatToInt</b> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<a class="el" href="data__type_8h.html#a23b8ecbae233e16feeb5e4867cf75ce7">Vec2i</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#a9cd8e72813a99947ff2fa65b67aff3c0">floatToInt</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt)</td></tr>
+<tr class="memdesc:a9cd8e72813a99947ff2fa65b67aff3c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert 3D point into image point. <br /></td></tr>
 <tr class="separator:a9cd8e72813a99947ff2fa65b67aff3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae44474c12655dab3584bf2eb9a777cda"><td class="memItemLeft" align="right" valign="top"><a id="ae44474c12655dab3584bf2eb9a777cda"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>inflate</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> h)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionUtil.html#ae44474c12655dab3584bf2eb9a777cda">inflate</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> h)</td></tr>
+<tr class="memdesc:ae44474c12655dab3584bf2eb9a777cda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inflate obstacle in image space. <br /></td></tr>
 <tr class="separator:ae44474c12655dab3584bf2eb9a777cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -135,7 +159,9 @@ cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>img_inflated_</b><
 <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>lower_bound_</b> = -0.2</td></tr>
 <tr class="separator:a8a0faef4a79c272b8d1c1bc295b8795c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Collision checking inside the image space. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/collision_checking/<a class="el" href="vision__util_8h_source.html">vision_util.h</a></li>
 <li>src/collision_checking/vision_util.cpp</li>
 </ul>

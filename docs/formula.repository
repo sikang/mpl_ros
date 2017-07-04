@@ -9,3 +9,5 @@
 \form#8:$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$
 \form#9:$t = \lambda(\tau)^{-1}$
 \form#10:$ du = \frac{u_{max}}{n}$
+\form#11:$t: 0 \rightarrow dt$
+\form#12:$t: t1\rightarrow t2$
