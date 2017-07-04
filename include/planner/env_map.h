@@ -1,3 +1,8 @@
+/**
+ * @file env_map.h
+ * @biref environment for planning in voxel map
+ */
+
 #ifndef ENV_MP_H
 #define ENV_MP_H
 #include <planner/env_base.h>
@@ -6,6 +11,10 @@
 #include <collision_checking/sub_voxel_map_util.h>
 
 namespace MPL {
+
+/**
+ * @brief Voxel map environment
+ */
 class env_map : public env_base
 {
   protected:
@@ -13,12 +22,14 @@ class env_map : public env_base
 
   public:
 
+    ///Constructor with map util as input
     env_map(std::shared_ptr<VoxelMapUtil> map_util)
       : map_util_(map_util)
     {}
 
     ~env_map() {}
 
+    ///Set goal state
     void set_goal(const Waypoint& goal) {
       goal_node_ = goal;
 
@@ -31,13 +42,19 @@ class env_map : public env_base
         goal_outside_ = false;
     }
 
+    ///Check if a point is in free space
     bool is_free(const Vec3f& pt) const {
       return map_util_->isFree(map_util_->floatToInt(pt));
     }
 
 
-    bool is_free(const Primitive& p) const {
-      std::vector<Waypoint> pts = p.sample(5);
+    /**
+     * @brief Check if a primitive is in free space
+     *
+     * We sample n (default as 5) points along a primitive, and check each point for collision
+     */
+    bool is_free(const Primitive& p, int n = 5) const {
+      std::vector<Waypoint> pts = p.sample(n);
       for(const auto& pt: pts){
         Vec3i pn = map_util_->floatToInt(pt.pos);
         if(map_util_->isOccupied(pn) ||
@@ -48,6 +65,12 @@ class env_map : public env_base
       return true;
     }
 
+    /**
+     * @brief Get successor
+     *
+     * When goal is outside, extra step is needed for finding optimal trajectory
+     * Here we use Heuristic function and multiply with 2
+     */
     void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,

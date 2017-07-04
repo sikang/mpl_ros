@@ -1,9 +1,18 @@
+/**
+ * @file env_sfc.h
+ * @brief environment for planning in Safe Flight Corridor (SFC)
+ */
+
 #ifndef ENV_SFC_H
 #define ENV_SFC_H
 #include <planner/env_base.h>
 #include <collision_checking/sfc_util.h>
 
 namespace MPL {
+
+/**
+ * @brief SFC environment
+ */
 class env_sfc : public env_base
 {
   protected:
@@ -11,14 +20,17 @@ class env_sfc : public env_base
 
   public:
 
+    ///Constructor with ordered Polyhedra as input
     env_sfc(const Polyhedra& polys) {
       map_util_.reset(new SFCUtil(polys));
     }
 
+    ///Get the Polyhedra
     Polyhedra map() {
       return map_util_->sfc();
     }
 
+    ///Set goal state
     void set_goal(const Waypoint& goal) {
       ps_.clear();
       primitives_.clear();
@@ -31,15 +43,26 @@ class env_sfc : public env_base
       }
     }
 
-
+    ///Check if a point is in free space
     bool is_free(const Vec3f& pt) const {
       return map_util_->isFree(pt);
     }
 
+    /**
+     * @brief Check if a primitive is in free space
+     *
+     * This is done through closed-form calculation between polynomials and half-plane
+     */
     bool is_free(const Primitive& pr) const {
       return map_util_->isFree(pr, dt_);
     }
 
+    /**
+     * @brief Get successor
+     *
+     *
+     * Goal outside is not supported under current version
+     */
     void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,

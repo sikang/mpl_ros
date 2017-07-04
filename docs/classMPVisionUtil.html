@@ -74,7 +74,7 @@ Inheritance diagram for MPVisionUtil:</div>
  <div class="center">
   <img src="classMPVisionUtil.png" usemap="#MPVisionUtil_map" alt=""/>
   <map id="MPVisionUtil_map" name="MPVisionUtil_map">
-<area href="classMPBaseUtil.html" alt="MPBaseUtil" shape="rect" coords="0,0,83,24"/>
+<area href="classMPBaseUtil.html" title="Motion primitive base util class. " alt="MPBaseUtil" shape="rect" coords="0,0,83,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -84,7 +84,8 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>MPVisionUtil</b> (bool verbose)</td></tr>
 <tr class="separator:a5e3eb2a86449e0bd7b86ab4c0180a7da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad79f6e2bf8341fe09c665fbbf69ff62e"><td class="memItemLeft" align="right" valign="top"><a id="ad79f6e2bf8341fe09c665fbbf69ff62e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>plan</b> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPVisionUtil.html#ad79f6e2bf8341fe09c665fbbf69ff62e">plan</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)</td></tr>
+<tr class="memdesc:ad79f6e2bf8341fe09c665fbbf69ff62e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Planning thread. <br /></td></tr>
 <tr class="separator:ad79f6e2bf8341fe09c665fbbf69ff62e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44533db5170235ad7f20fa9aee84ef30"><td class="memItemLeft" align="right" valign="top"><a id="a44533db5170235ad7f20fa9aee84ef30"></a>
 cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>getImage</b> ()</td></tr>
@@ -93,41 +94,57 @@ cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><b>getImage</b> ()</t
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addImage</b> (const cv::Mat &amp;img, const <a class="el" href="data__type_8h.html#a99980a710976449f0a9d3d2ae8b8be87">Aff3f</a> &amp;TF, const <a class="el" href="structCameraInfo.html">CameraInfo</a> &amp;info)</td></tr>
 <tr class="separator:a8653b474a8ad80fc1617135d2bbb3178"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classMPBaseUtil"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMPBaseUtil')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classMPBaseUtil.html">MPBaseUtil</a></td></tr>
+<tr class="memitem:a671f1f09b90b1a3f39f4a08685473d09 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a671f1f09b90b1a3f39f4a08685473d09"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a671f1f09b90b1a3f39f4a08685473d09">MPBaseUtil</a> ()</td></tr>
+<tr class="memdesc:a671f1f09b90b1a3f39f4a08685473d09 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple constructor. <br /></td></tr>
+<tr class="separator:a671f1f09b90b1a3f39f4a08685473d09 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a360485cb1b95b65db1686749b0ad76d6 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a360485cb1b95b65db1686749b0ad76d6"></a>
-std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getPath</b> ()</td></tr>
+std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a360485cb1b95b65db1686749b0ad76d6">getPath</a> ()</td></tr>
+<tr class="memdesc:a360485cb1b95b65db1686749b0ad76d6 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes on the optimal trajectory. <br /></td></tr>
 <tr class="separator:a360485cb1b95b65db1686749b0ad76d6 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4690352b033fe627db0565802d4a966c inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a4690352b033fe627db0565802d4a966c"></a>
-<a class="el" href="classTrajectory.html">Trajectory</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getTraj</b> ()</td></tr>
+<a class="el" href="classTrajectory.html">Trajectory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a4690352b033fe627db0565802d4a966c">getTraj</a> ()</td></tr>
+<tr class="memdesc:a4690352b033fe627db0565802d4a966c inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get optimal trajectory. <br /></td></tr>
 <tr class="separator:a4690352b033fe627db0565802d4a966c inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81f67cb3ab47a252790794644fe2cb72 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a81f67cb3ab47a252790794644fe2cb72"></a>
-std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getPrimitives</b> ()</td></tr>
+std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a81f67cb3ab47a252790794644fe2cb72">getPrimitives</a> ()</td></tr>
+<tr class="memdesc:a81f67cb3ab47a252790794644fe2cb72 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get expanded primitives. <br /></td></tr>
 <tr class="separator:a81f67cb3ab47a252790794644fe2cb72 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf24eba4e80dbd21a6e543e678de166c inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="adf24eba4e80dbd21a6e543e678de166c"></a>
-<a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getPs</b> ()</td></tr>
+<a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#adf24eba4e80dbd21a6e543e678de166c">getPs</a> ()</td></tr>
+<tr class="memdesc:adf24eba4e80dbd21a6e543e678de166c inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get expanded nodes. <br /></td></tr>
 <tr class="separator:adf24eba4e80dbd21a6e543e678de166c inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a1e0029563fdde423907e81a53200d6 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a2a1e0029563fdde423907e81a53200d6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setVmax</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> v)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a2a1e0029563fdde423907e81a53200d6">setVmax</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> v)</td></tr>
+<tr class="memdesc:a2a1e0029563fdde423907e81a53200d6 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max vel in each axis. <br /></td></tr>
 <tr class="separator:a2a1e0029563fdde423907e81a53200d6 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6367af5d9e97c8900a18fda49805f2b6 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a6367af5d9e97c8900a18fda49805f2b6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setAmax</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> a)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a6367af5d9e97c8900a18fda49805f2b6">setAmax</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> a)</td></tr>
+<tr class="memdesc:a6367af5d9e97c8900a18fda49805f2b6 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max acc in each axis. <br /></td></tr>
 <tr class="separator:a6367af5d9e97c8900a18fda49805f2b6 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac72b99df0dd45eee681b6c36c34c3537 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="ac72b99df0dd45eee681b6c36c34c3537"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDt</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ac72b99df0dd45eee681b6c36c34c3537">setDt</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
+<tr class="memdesc:ac72b99df0dd45eee681b6c36c34c3537 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set dt for each primitive. <br /></td></tr>
 <tr class="separator:ac72b99df0dd45eee681b6c36c34c3537 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdf706d4f4fd96e5dc5fbf384b2d724a inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="abdf706d4f4fd96e5dc5fbf384b2d724a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setW</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> w)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#abdf706d4f4fd96e5dc5fbf384b2d724a">setW</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> w)</td></tr>
+<tr class="memdesc:abdf706d4f4fd96e5dc5fbf384b2d724a inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set weight for cost in time. <br /></td></tr>
 <tr class="separator:abdf706d4f4fd96e5dc5fbf384b2d724a inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aad99835300f90624326add6e527bcd inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a6aad99835300f90624326add6e527bcd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setEpsilon</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> eps)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a6aad99835300f90624326add6e527bcd">setEpsilon</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> eps)</td></tr>
+<tr class="memdesc:a6aad99835300f90624326add6e527bcd inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set greedy searching param. <br /></td></tr>
 <tr class="separator:a6aad99835300f90624326add6e527bcd inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38122fae7d17f4529a7000e10d29d3cf inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a38122fae7d17f4529a7000e10d29d3cf"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaxNum</b> (int num)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a38122fae7d17f4529a7000e10d29d3cf">setMaxNum</a> (int num)</td></tr>
+<tr class="memdesc:a38122fae7d17f4529a7000e10d29d3cf inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max number of expansion. <br /></td></tr>
 <tr class="separator:a38122fae7d17f4529a7000e10d29d3cf inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a488c15529ab1ee3e8122db446dadb6a0 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a488c15529ab1ee3e8122db446dadb6a0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMode</b> (int n, bool use_3d)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a488c15529ab1ee3e8122db446dadb6a0">setMode</a> (int n, bool use_3d)</td></tr>
+<tr class="memdesc:a488c15529ab1ee3e8122db446dadb6a0 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable discretization. <br /></td></tr>
 <tr class="separator:a488c15529ab1ee3e8122db446dadb6a0 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a4ca49c3b18972c879a70bfb9a3f201 inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a7a4ca49c3b18972c879a70bfb9a3f201"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setTol</b> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_dis, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_vel)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a7a4ca49c3b18972c879a70bfb9a3f201">setTol</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_dis, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_vel)</td></tr>
+<tr class="memdesc:a7a4ca49c3b18972c879a70bfb9a3f201 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tolerance in geometric and dynamic spaces. <br /></td></tr>
 <tr class="separator:a7a4ca49c3b18972c879a70bfb9a3f201 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -136,14 +153,17 @@ Public Attributes</h2></td></tr>
 std::unique_ptr&lt; <a class="el" href="classMPL_1_1env__vision.html">MPL::env_vision</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ENV_</b></td></tr>
 <tr class="separator:a0a7f37fb6b56f54c255f5a03345a0d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classMPBaseUtil"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classMPBaseUtil')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classMPBaseUtil.html">MPBaseUtil</a></td></tr>
-<tr class="memitem:a97f2b1a152eff92b778fe838cd50d32b inherit pub_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classMPL_1_1env__base.html">MPL::env_base</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a97f2b1a152eff92b778fe838cd50d32b">ENV_</a></td></tr>
-<tr class="memdesc:a97f2b1a152eff92b778fe838cd50d32b inherit pub_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug pimitives.  <a href="classMPBaseUtil.html#a97f2b1a152eff92b778fe838cd50d32b">More...</a><br /></td></tr>
+<tr class="memitem:a97f2b1a152eff92b778fe838cd50d32b inherit pub_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a97f2b1a152eff92b778fe838cd50d32b"></a>
+std::unique_ptr&lt; <a class="el" href="classMPL_1_1env__base.html">MPL::env_base</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a97f2b1a152eff92b778fe838cd50d32b">ENV_</a></td></tr>
+<tr class="memdesc:a97f2b1a152eff92b778fe838cd50d32b inherit pub_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Env class. <br /></td></tr>
 <tr class="separator:a97f2b1a152eff92b778fe838cd50d32b inherit pub_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70de651f7d8ed80d92710f6ede60dbb0 inherit pub_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a70de651f7d8ed80d92710f6ede60dbb0"></a>
-std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>path_</b></td></tr>
+std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a70de651f7d8ed80d92710f6ede60dbb0">path_</a></td></tr>
+<tr class="memdesc:a70de651f7d8ed80d92710f6ede60dbb0 inherit pub_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate nodes in optimal trajectory. <br /></td></tr>
 <tr class="separator:a70de651f7d8ed80d92710f6ede60dbb0 inherit pub_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a532897035738c4d196ecd73c751ad5bd inherit pub_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a532897035738c4d196ecd73c751ad5bd"></a>
-<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>epsilon_</b> = 1.0</td></tr>
+<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a532897035738c4d196ecd73c751ad5bd">epsilon_</a> = 1.0</td></tr>
+<tr class="memdesc:a532897035738c4d196ecd73c751ad5bd inherit pub_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Greedy searching parameter. <br /></td></tr>
 <tr class="separator:a532897035738c4d196ecd73c751ad5bd inherit pub_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a98e75b4acfd38a6e3898b42d8fccf9 inherit pub_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a2a98e75b4acfd38a6e3898b42d8fccf9"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a2a98e75b4acfd38a6e3898b42d8fccf9">max_num_</a> = -1</td></tr>

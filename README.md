@@ -31,7 +31,7 @@ planner->setTol(1, 1); // Tolerance for goal region
 bool valid = planner->plan(start, goal); // Plan from start to goal
 ```
 
-The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/sikang/motion_primitive_library/blob/master/data/output.jpg).
+The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/sikang/motion_primitive_library/blob/master/data/output.jpg). Grey dots show the expended nodes.
 ![Visualization](./data/output.jpg)
 
 Run following command:

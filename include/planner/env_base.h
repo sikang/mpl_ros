@@ -1,54 +1,36 @@
-#ifndef ENV_INT_H
-#define ENV_INT_H
+/**
+ * @file env_base.h
+ * @brief environment base class
+ */
+
+#ifndef ENV_BASE_H
+#define ENV_BASE_H
 
 #include <memory>
 #include <vector>
 #include <primitive/primitive.h>
 
 namespace MPL {
-typedef std::string Key;
+  
+/**
+ * @brief Key for node
+ *
+ * We use string as the Key for indexing, by default the Key refers to 'pos-vel-acc-...'
+ */
+typedef std::string Key; 
 
+/**
+ * @brief Base environment class
+ */
 class env_base
 {
   public:
+    ///Simple constructor
     env_base(){}
     ~env_base(){}
 
-    vec_Vec3f ps() {
-      return ps_;
-    }
 
-    std::vector<Primitive> primitives() {
-      return primitives_;
-    }
-
-    bool goal_outside() {
-      return goal_outside_;
-    }
-
-    void set_discretization(int n, bool use_3d) {
-      decimal_t du = u_max_ / n;
-      dv_ = std::min(0.2 * du * dt_, 0.4);
-      vel_ori_ = Vec3f(-v_max_, -v_max_, -v_max_);
-
-      ds_ = 0.5 * dv_ * dt_;
-      pos_ori_ = Vec3f(-100, -100, -100);
-
-      U_.clear();
-      if(use_3d) {
-        for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
-          for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
-            for(decimal_t dz = -0.5; dz <= 0.5; dz += 0.5 )
-              U_.push_back(Vec3f(dx, dy, dz));
-      }
-      else{
-        for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
-          for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
-            U_.push_back(Vec3f(dx, dy, 0));
-      }
-    }
-
-
+    ///Check if hit the goal region
     bool is_goal(const Waypoint& state) const
     {
       bool goaled = (state.pos - goal_node_.pos).norm() < tol_dis;
@@ -57,6 +39,7 @@ class env_base
       return goaled;
     }
 
+    ///Heuristic function 
     double get_heur(const Waypoint& state) const
     {
       //return 0;
@@ -90,14 +73,16 @@ class env_base
       return cost;
     }
 
+    ///Genegrate Key from state
     Key state_to_idx(const Waypoint& state) const
     {
-      Vec3i pi = ((state.pos - pos_ori_)/ds_).cast<int>();
-      Vec3i vi = ((state.vel - vel_ori_)/dv_).cast<int>();
+      Vec3i pi = (state.pos/ds_).cast<int>();
+      Vec3i vi = (state.vel/dv_).cast<int>();
       return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) +
         std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2));
     }
 
+    ///Recover trajectory
     void forward_action( const Waypoint& curr, int action_id, 
         std::vector<Waypoint>& next_micro ) const
     {
@@ -111,36 +96,67 @@ class env_base
       }
     }
 
+    /**
+     * @brief Set discretization in control space
+     * @param n indicates how many samples on each semi-axes, eq: \f$ du = \frac{u_{max}}{n}\f$
+     * @param use_3d if true, we also expand in z-axis
+     */
+    void set_discretization(int n, bool use_3d) {
+      decimal_t du = u_max_ / n;
+      dv_ = std::min(0.2 * du * dt_, 0.4); //need to be small but not too much
+      ds_ = 0.5 * dv_ * dt_;
 
+      U_.clear();
+      if(use_3d) {
+        for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
+          for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
+            for(decimal_t dz = -0.5; dz <= 0.5; dz += 0.5 ) //here we reduce the z control
+              U_.push_back(Vec3f(dx, dy, dz));
+      }
+      else{
+        for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
+          for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
+            U_.push_back(Vec3f(dx, dy, 0));
+      }
+    }
+
+
+
+    ///Set max vel in each axis
     void set_v_max(decimal_t v) {
       v_max_ = v;
     }
 
+    ///Set max acc in each axis, also the control input as acc
     void set_a_max(decimal_t a) {
       a_max_ = a;
       u_max_ = a_max_;
     }
 
+    ///Set dt for primitive
     void set_dt(decimal_t dt) {
       dt_ = dt;
     }
 
+    ///Set distance tolerance for goal region
     void set_tol_dis(decimal_t dis) {
       tol_dis = dis;
     }
 
+    ///Set velocity tolerance for goal region
     void set_tol_vel(decimal_t vel) {
       tol_vel = vel;
     }
 
+    ///Set weight for cost in time, usually no need to change
     void set_w(decimal_t w) {
       w_ = w;
     }
 
-    decimal_t get_dt() {
-      return dt_;
-    }
+    ///Set goal state
+    virtual void set_goal(const Waypoint& state) {}
 
+    ///Print out params
     void info() {
       printf(ANSI_COLOR_YELLOW "\n");
       printf("++++++++++ PLANNER +++++++++++\n");
@@ -157,14 +173,24 @@ class env_base
       printf(ANSI_COLOR_RESET "\n");
     }
 
+    ///Check if a point is in free space
     virtual bool is_free(const Vec3f& pt) const { 
-      printf("Used Null is_free()\n");
+      printf("Used Null is_free() for pt\n");
       return false; 
     }
 
-    virtual void set_goal(const Waypoint& state) {}
+    ///Check if a primitive is in free space
+    virtual bool is_free(const Primitive& pr) const { 
+      printf("Used Null is_free() for pr\n");
+      return false; 
+    }
 
+    ///Retrieve dt
+    decimal_t get_dt() {
+      return dt_;
+    }
 
+    ///Get successor
     virtual void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
@@ -178,10 +204,26 @@ class env_base
       action_idx.push_back(0);
     }
 
+    ///Returns expanded nodes
+    vec_Vec3f ps() {
+      return ps_;
+    }
+
+    ///Returns expanded edges
+    std::vector<Primitive> primitives() {
+      return primitives_;
+    }
+
+    ///Flag shows that if the goal is outside map
+    bool goal_outside() {
+      return goal_outside_;
+    }
+
 
     bool goal_outside_;
-    double w_ = 10;
-    int wi_ = 1;
+    double w_ = 10; 
+    ///order of derivatives
+    int wi_ = 1; 
 
     double tol_dis = 1.0;
     double tol_vel = 1.0;
@@ -191,15 +233,12 @@ class env_base
     double dt_ = 1.0;
     double ds_, dv_;
 
+    ///Array of constant control input
     vec_Vec3f U_;
     Waypoint goal_node_;
 
-    Vec3f pos_ori_, vel_ori_;
-
     mutable vec_Vec3f ps_;
     mutable std::vector<Primitive> primitives_;
-
-
 };
 }
 

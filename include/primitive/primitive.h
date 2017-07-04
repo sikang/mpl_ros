@@ -10,7 +10,9 @@
 #include "math.h"
 
 /**
- * @brief State includes position, velocity and acceleration in \f$R^3\f$
+ * @brief Node in graph
+ *
+ * State includes position, velocity and acceleration in \f$R^3\f$
  */
 struct Waypoint {
   Vec3f pos; 
