@@ -14,12 +14,12 @@ Prerequisite:
 
 Using Catkin:
 ```sh
-$ mv jps3d ~/catkin_ws/src
+$ mv mpl_ros ~/catkin_ws/src
 $ cd ~/catkin_ws & catkin_make -DCMAKE_BUILD_TYPE=Release
 ```
 Using Catkin Tools:
 ```sh
-$ mv jps3d ~/catkin_ws/src
+$ mv mpl_ros ~/catkin_ws/src
 $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ cd ~/catkin_ws & catkin build
 ```
@@ -60,5 +60,6 @@ Simple | Levine | Skir | Office
 :----- | :----- | :--- | :-----
 <img src="./test_node/maps/simple/simple.png" width="128"> |<img src="./test_node/maps/levine/levine.png" width="128"> |<img src="./test_node/maps/skir/skir.png" width="128"> |<img src="./test_node/maps/office/office.png" width="128"> 
 
-User can form their own maps using the `mapping_utils`, a launch file example is provided in `./test_node/launch/map_generator` for converting a stl file into voxel map. More details can be found on [wiki].
+User can form their own maps using the `mapping_utils`, a launch file example is provided in `./test_node/launch/map_generator` for converting a STL file into voxel map. 
+For details about the full utilities, please refer to [wiki](https://github.com/sikang/mpl_ros/wiki).
 
