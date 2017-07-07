@@ -1,6 +1,6 @@
 #include "mesh_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 
 MeshDisplay::MeshDisplay() {
   mesh_color_property_ =
@@ -211,4 +211,4 @@ void MeshDisplay::updateScale() {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::MeshDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::MeshDisplay, rviz::Display)

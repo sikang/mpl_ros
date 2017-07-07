@@ -7,7 +7,7 @@
 #include <OGRE/OgreSceneManager.h>
 #include <rviz/ogre_helpers/arrow.h>
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 class VectorVisual {
 public:
   VectorVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);

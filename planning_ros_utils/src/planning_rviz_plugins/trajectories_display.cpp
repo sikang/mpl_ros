@@ -1,7 +1,7 @@
 #include <tf/transform_listener.h>
 #include "trajectories_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   TrajectoriesDisplay::TrajectoriesDisplay() {
     num_property_ =
       new rviz::IntProperty("Num of samples", 20, "Number of samples to display.",
@@ -170,4 +170,4 @@ namespace mav_rviz_plugins {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::TrajectoriesDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::TrajectoriesDisplay, rviz::Display)

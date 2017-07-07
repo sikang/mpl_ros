@@ -15,7 +15,7 @@
 
 #include "path_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class PathsDisplay
     : public rviz::MessageFilterDisplay<planning_ros_msgs::Paths> {
       Q_OBJECT

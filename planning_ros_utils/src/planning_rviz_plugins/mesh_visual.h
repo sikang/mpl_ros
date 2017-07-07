@@ -10,7 +10,7 @@
 
 #include <rviz/ogre_helpers/mesh_shape.h>
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class MeshVisual {
     public:
       MeshVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);

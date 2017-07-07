@@ -13,7 +13,7 @@
 #include <rviz/message_filter_display.h>
 #include "ellipsoids_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 
   class EllipsoidsVisual;
 

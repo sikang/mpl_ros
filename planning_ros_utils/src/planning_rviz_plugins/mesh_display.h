@@ -19,7 +19,7 @@
 #include "bound_visual.h"
 #include "vector_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 class MeshDisplay
     : public rviz::MessageFilterDisplay<planning_ros_msgs::Mesh> {
   Q_OBJECT
@@ -66,4 +66,4 @@ private:
   vec_E<std::pair<Vec3f, Vec3f>> vs_;
 };
 
-} // end namespace mav_rviz_plugins
+} // end namespace planning_rviz_plugins

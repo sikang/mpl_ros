@@ -4,7 +4,7 @@
 #include <ros/time.h>
 #include "map_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 
 MapDisplay::MapDisplay()
     : point_cloud_common_(new rviz::PointCloudCommon(this)) {
@@ -244,4 +244,4 @@ void MapDisplay::reset() {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::MapDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::MapDisplay, rviz::Display)

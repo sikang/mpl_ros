@@ -15,7 +15,7 @@
 
 #include "trajectory_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class TrajectoryDisplay
     : public rviz::MessageFilterDisplay<planning_ros_msgs::Trajectory> {
       Q_OBJECT

@@ -11,7 +11,7 @@
 
 #include <rviz/ogre_helpers/shape.h>
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class EllipsoidsVisual {
     public:
       EllipsoidsVisual(Ogre::SceneManager *scene_manager,

@@ -110,7 +110,7 @@ class env_base
       if(use_3d) {
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
-            for(decimal_t dz = -0.5; dz <= 0.5; dz += 0.5 ) //here we reduce the z control
+            for(decimal_t dz = -u_max_; dz <= u_max_; dz += u_max_ ) //here we reduce the z control
               U_.push_back(Vec3f(dx, dy, dz));
       }
       else{

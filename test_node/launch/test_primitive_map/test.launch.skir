@@ -11,24 +11,25 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <remap from="~pose" to="/move_base_simple/goal"/>
-    <param name="file" value="$(find test_node)/maps/simple/simple.bag"/>
+    <!--<param name="file" value="$(find test_node)/maps/simple/simple.bag"/>-->
     <!--<param name="file" value="$(find test_node)/maps/levine/levine.bag"/>-->
-    <!--<param name="file" value="$(find test_node)/maps/skir/skir.bag"/>-->
+    <param name="file" value="$(find test_node)/maps/skir/skir.bag"/>
     <param name="topic" value="/voxel_map"/>
     <!-- Set start and goal -->
-    <param name="start_x" value="12.5"/>
-    <param name="start_y" value="1.4"/>
-    <param name="start_z" value="0.0"/>
+    <param name="start_x" value="5.5"/>
+    <param name="start_y" value="5.5"/>
+    <param name="start_z" value="0.5"/>
     <param name="start_vx" value="1.0"/>
     <param name="start_vy" value="0.0"/>
     <param name="start_vz" value="0.0"/>
-    <param name="goal_x" value="6.4"/>
-    <param name="goal_y" value="16.6"/>
-    <param name="goal_z" value="0.0"/>
+    <param name="goal_x" value="1.5"/>
+    <param name="goal_y" value="1.5"/>
+    <param name="goal_z" value="5.5"/>
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1.0"/>
+    <param name="use_3d" value="true"/>
   </node>
 
 </launch>

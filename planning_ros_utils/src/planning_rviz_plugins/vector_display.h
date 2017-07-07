@@ -16,7 +16,7 @@
 #include "vector_visual.h"
 #include "path_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class VectorDisplay
     : public rviz::MessageFilterDisplay<planning_ros_msgs::Arrows> {
       Q_OBJECT

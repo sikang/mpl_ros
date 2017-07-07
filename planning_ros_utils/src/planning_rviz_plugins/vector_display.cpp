@@ -1,7 +1,7 @@
 #include <tf/transform_listener.h>
 #include "vector_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   VectorDisplay::VectorDisplay() {
     line_color_property_ =
       new rviz::ColorProperty("LineColor", QColor(204, 51, 204), "Color to draw the line.",
@@ -164,4 +164,4 @@ namespace mav_rviz_plugins {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::VectorDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::VectorDisplay, rviz::Display)

@@ -1,6 +1,6 @@
 #include "polyhedra_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 
 PolyhedraDisplay::PolyhedraDisplay() {
   mesh_color_property_ =
@@ -213,4 +213,4 @@ void PolyhedraDisplay::updateVsColorAndAlpha() {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::PolyhedraDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::PolyhedraDisplay, rviz::Display)

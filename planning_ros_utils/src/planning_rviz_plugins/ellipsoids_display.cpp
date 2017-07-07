@@ -1,7 +1,7 @@
 #include <tf/transform_listener.h>
 #include "ellipsoids_display.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
 
 EllipsoidsDisplay::EllipsoidsDisplay() {
   color_property_ = new rviz::ColorProperty("Color", QColor(204, 51, 204),
@@ -72,7 +72,7 @@ void EllipsoidsDisplay::processMessage(
   visuals_.push_back(visual);
 }
 
-} // end namespace mav_rviz_plugins
+} // end namespace planning_rviz_plugins
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mav_rviz_plugins::EllipsoidsDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::EllipsoidsDisplay, rviz::Display)

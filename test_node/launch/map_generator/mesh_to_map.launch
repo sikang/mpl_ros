@@ -4,7 +4,7 @@
     type="mesh_sampling"
     name="mesh_to_cloud"
     output="screen">
-    <param name="file" value="$(find test_node)/models/iros2017_corridor.stl"/>
+    <param name="file" value="$(find test_node)/maps/skir/skir.stl"/>
     <remap from="~cloud" to="cloud"/>
     <param name="n_samples" value="1000000"/>
     <param name="leaf_size" value="0.05"/>
@@ -18,12 +18,12 @@
     output="screen">
     <remap from="~cloud" to="cloud"/>
     <remap from="~voxel_map" to="voxel_map"/>
-    <param name="resolution" value="0.2"/>
+    <param name="resolution" value="0.1"/>
     <param name="origin_x" value="0"/>
-    <param name="origin_y" value="-5"/>
-    <param name="origin_z" value="0.5"/>
-    <param name="range_x" value="40"/>
+    <param name="origin_y" value="0"/>
+    <param name="origin_z" value="0.0"/>
+    <param name="range_x" value="10"/>
     <param name="range_y" value="10"/>
-    <param name="range_z" value="1"/>
+    <param name="range_z" value="6"/>
   </node>
 </launch>

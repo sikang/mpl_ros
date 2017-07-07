@@ -1,6 +1,6 @@
 #include "vector_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   VectorVisual::VectorVisual(Ogre::SceneManager *scene_manager,
                            Ogre::SceneNode *parent_node) {
     scene_manager_ = scene_manager;

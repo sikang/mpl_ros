@@ -21,7 +21,7 @@
 #include <ros_utils/data_ros_utils.h>
 #include "bound_visual.h"
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class MapDisplay
     : public rviz::MessageFilterDisplay<planning_ros_msgs::VoxelMap> {
       Q_OBJECT
@@ -56,4 +56,4 @@ namespace mav_rviz_plugins {
         std_msgs::Header header_;
     };
 
-} // namespace mav_rviz_plugins
+} // namespace planning_rviz_plugins

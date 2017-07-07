@@ -8,7 +8,7 @@
 
 #include <rviz/ogre_helpers/billboard_line.h>
 
-namespace mav_rviz_plugins {
+namespace planning_rviz_plugins {
   class TrajectoryVisual {
     public:
       TrajectoryVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);
