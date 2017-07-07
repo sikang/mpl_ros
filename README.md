@@ -1,5 +1,10 @@
-# ROS Wrapper for MRSL Motion Primitive Library
+MRSL Motion Primitive Library ROS
 =====================
+A ROS wrapper for implementing Motion Primitive Library in planning tasks. Stacks include:
+  - `motion_primitive_library`: back-end for planning trajectory in various environments
+  - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
+  - 'planning_ros_utils': ROS utils for interfacing with MPL
+  - `test_node`: examples
 
 ## Compilation
 Prerequisite:
