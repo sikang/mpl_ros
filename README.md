@@ -54,8 +54,10 @@ The planned trajectory and voxel map are visualized in Rviz as:
 
 <img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> 
 
-## Maps List
+The built-in maps are listed as below:
 Simple | Levine | Skir | Office
 :----- | :----- | :--- | :-----
 <img src="./test_node/maps/simple/simple.png" width="128"> |<img src="./test_node/maps/levine/levine.png" width="128"> |<img src="./test_node/maps/skir/skir.png" width="128"> |<img src="./test_node/maps/office/office.png" width="128"> 
+
+User can form their own maps using the `mapping_utils`, a launch file example is provided in `./test_node/launch/map_generator` for converting a stl file into voxel map. More details can be found on [wiki].
 
