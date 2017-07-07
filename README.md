@@ -51,7 +51,8 @@ goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], 
 ```
 
 The planned trajectory and voxel map are visualized in Rviz as:
-<img src="./test_node/samples/simple1.png" width="256"> <img src="./test_node/samples/simple2.png" width="256"> 
+
+<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> 
 
 ## Maps List
 Simple | Levine | Skir | Office
