@@ -21,5 +21,5 @@ $ cd ~/catkin_ws & catkin build
 ## Maps List
 Simple | Levine | Skir | Office
 :----- | :----- | :--- | :-----
-<img src="./test_node/maps/simple/simple.png" width="96"> |<img src="./test_node/maps/simple/levine.png" width="96"> |<img src="./test_node/maps/skir/skir.png" width="96"> |<img src="./test_node/maps/office/office.png" width="96"> 
+<img src="./test_node/maps/simple/simple.png" width="128"> |<img src="./test_node/maps/levine/levine.png" width="128"> |<img src="./test_node/maps/skir/skir.png" width="128"> |<img src="./test_node/maps/office/office.png" width="128"> 
 
