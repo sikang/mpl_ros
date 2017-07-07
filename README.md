@@ -3,8 +3,9 @@
 
 ## Compilation
 Prerequisite:
-  - 'ROS': Indigo+
+  - 'ROS'(Indigo+)
   - ['catkin_simple'](https://github.com/catkin/catkin_simple)
+  - 'QT'(4+)
 
 Using Catkin:
 ```sh

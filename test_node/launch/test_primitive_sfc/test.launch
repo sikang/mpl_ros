@@ -1,0 +1,21 @@
+<launch>
+  <arg name="debug" default="false"/>
+
+  <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
+  <arg name="prefix" value="" unless="$(arg debug)"/>
+
+  <node pkg="test_node"
+    type="test_primitive_sfc"
+    name="test_primitive"
+    launch-prefix="$(arg prefix)"
+    output="screen">
+    <remap from="~pose" to="/move_base_simple/goal"/>
+    <remap from="~waypoints" to="/waypoints"/>
+    <param name="file" value="$(find test_node)/maps/configure2.map"/>
+    <!--<param name="file" value="$(find test_node)/maps/levine.map"/>-->
+    <!--<param name="file" value="$(find test_node)/maps/skir.map"/>-->
+    <param name="topic" value="/voxel_map"/>
+    <param name="num" value="-1"/>
+  </node>
+
+</launch>

@@ -1,0 +1,70 @@
+<library path="lib/libmav_rviz_plugins">
+  <class name="mav_rviz_plugins/Ellipsoids"
+    type="mav_rviz_plugins::EllipsoidsDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Ellipsoids msg.
+    </description>
+  </class>
+
+
+  <class name="mav_rviz_plugins/Polyhedra"
+    type="mav_rviz_plugins::PolyhedraDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Polyhedra msg.
+    </description>
+  </class>
+
+  <class name="mav_rviz_plugins/Mesh"
+    type="mav_rviz_plugins::MeshDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Mesh.msg.
+    </description>
+  </class>
+
+
+  <class name="mav_rviz_plugins/VoxelMap"
+    type="mav_rviz_plugins::MapDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/VoxelMap msg.
+    </description>
+  </class>
+
+  <class name="mav_rviz_plugins/Paths"
+    type="mav_rviz_plugins::PathsDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Paths msg.
+    </description>
+  </class>
+
+  <class name="mav_rviz_plugins/Path"
+    type="mav_rviz_plugins::PathDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Path msg.
+    </description>
+  </class>
+
+  <class name="mav_rviz_plugins/Trajectory"
+    type="mav_rviz_plugins::TrajectoryDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Trajectory msg.
+    </description>
+  </class>
+
+  <class name="mav_rviz_plugins/Trajectories"
+    type="mav_rviz_plugins::TrajectoriesDisplay"
+    base_class_type="rviz::Display">
+    <description>
+      visualize planning_ros_msgs/Trajectories msg.
+    </description>
+  </class>
+
+
+
+</library>
