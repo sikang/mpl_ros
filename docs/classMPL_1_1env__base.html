@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.1</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -60,7 +60,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>MPL</b></li><li class="navelem"><a class="el" href="classMPL_1_1env__base.html">env_base</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceMPL.html">MPL</a></li><li class="navelem"><a class="el" href="classMPL_1_1env__base.html">env_base</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -104,7 +104,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:ac9e994df3ed3c123cb01c6ce3411823d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heuristic function. <br /></td></tr>
 <tr class="separator:ac9e994df3ed3c123cb01c6ce3411823d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6734c7621ec2a67aae7a3fc3f5e3fc1"><td class="memItemLeft" align="right" valign="top"><a id="af6734c7621ec2a67aae7a3fc3f5e3fc1"></a>
-Key&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#af6734c7621ec2a67aae7a3fc3f5e3fc1">state_to_idx</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state) const</td></tr>
+<a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#af6734c7621ec2a67aae7a3fc3f5e3fc1">state_to_idx</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state) const</td></tr>
 <tr class="memdesc:af6734c7621ec2a67aae7a3fc3f5e3fc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genegrate Key from state. <br /></td></tr>
 <tr class="separator:af6734c7621ec2a67aae7a3fc3f5e3fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b632721bdf26c5ecb450b066fe8e885"><td class="memItemLeft" align="right" valign="top"><a id="a5b632721bdf26c5ecb450b066fe8e885"></a>
@@ -120,8 +120,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:adae048de8be60e8b0fa3ad2312192fc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34df98cd4b6eb9cd80fe285630ffc403"><td class="memItemLeft" align="right" valign="top"><a id="a34df98cd4b6eb9cd80fe285630ffc403"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a34df98cd4b6eb9cd80fe285630ffc403">set_a_max</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> a)</td></tr>
-<tr class="memdesc:a34df98cd4b6eb9cd80fe285630ffc403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max acc in each axis, also the control input as acc. <br /></td></tr>
+<tr class="memdesc:a34df98cd4b6eb9cd80fe285630ffc403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max acc in each axis. <br /></td></tr>
 <tr class="separator:a34df98cd4b6eb9cd80fe285630ffc403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee8617fc86b63bb54a13fc7276f6eead"><td class="memItemLeft" align="right" valign="top"><a id="aee8617fc86b63bb54a13fc7276f6eead"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#aee8617fc86b63bb54a13fc7276f6eead">set_u_max</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> u)</td></tr>
+<tr class="memdesc:aee8617fc86b63bb54a13fc7276f6eead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max control in each axis. <br /></td></tr>
+<tr class="separator:aee8617fc86b63bb54a13fc7276f6eead"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe8415a652a8097b3ed89cf1f267d266"><td class="memItemLeft" align="right" valign="top"><a id="abe8415a652a8097b3ed89cf1f267d266"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#abe8415a652a8097b3ed89cf1f267d266">set_dt</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> dt)</td></tr>
 <tr class="memdesc:abe8415a652a8097b3ed89cf1f267d266"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set dt for primitive. <br /></td></tr>
@@ -158,9 +162,8 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a2249af817b9f8fdaae133f42473a1b1e">get_dt</a> ()</td></tr>
 <tr class="memdesc:a2249af817b9f8fdaae133f42473a1b1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve dt. <br /></td></tr>
 <tr class="separator:a2249af817b9f8fdaae133f42473a1b1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add85a24c2e7bcdbcfde00c80fee083d3"><td class="memItemLeft" align="right" valign="top"><a id="add85a24c2e7bcdbcfde00c80fee083d3"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#add85a24c2e7bcdbcfde00c80fee083d3">get_succ</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;curr, std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;succ, std::vector&lt; Key &gt; &amp;succ_idx, std::vector&lt; double &gt; &amp;succ_cost, std::vector&lt; int &gt; &amp;action_idx) const</td></tr>
-<tr class="memdesc:add85a24c2e7bcdbcfde00c80fee083d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get successor. <br /></td></tr>
+<tr class="memitem:add85a24c2e7bcdbcfde00c80fee083d3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#add85a24c2e7bcdbcfde00c80fee083d3">get_succ</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;curr, std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;succ, std::vector&lt; <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a> &gt; &amp;succ_idx, std::vector&lt; double &gt; &amp;succ_cost, std::vector&lt; int &gt; &amp;action_idx) const</td></tr>
+<tr class="memdesc:add85a24c2e7bcdbcfde00c80fee083d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get successor.  <a href="#add85a24c2e7bcdbcfde00c80fee083d3">More...</a><br /></td></tr>
 <tr class="separator:add85a24c2e7bcdbcfde00c80fee083d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ae5f217cacfe1fa2d578b15114d52db"><td class="memItemLeft" align="right" valign="top"><a id="a9ae5f217cacfe1fa2d578b15114d52db"></a>
 <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a9ae5f217cacfe1fa2d578b15114d52db">ps</a> ()</td></tr>
@@ -200,17 +203,20 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>u_max_</b> = 1</td>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>v_max_</b> = 2</td></tr>
 <tr class="separator:a8192abe5a7f4192050887794e31bcfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab00a839d6cd8a075ac01bc951eb7e6cb"><td class="memItemLeft" align="right" valign="top"><a id="ab00a839d6cd8a075ac01bc951eb7e6cb"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>a_max_</b> = 1</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>a_max_</b> = -1</td></tr>
 <tr class="separator:ab00a839d6cd8a075ac01bc951eb7e6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf7c0ad06bbb55d346d822c52af51a26"><td class="memItemLeft" align="right" valign="top"><a id="abf7c0ad06bbb55d346d822c52af51a26"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>dt_</b> = 1.0</td></tr>
 <tr class="separator:abf7c0ad06bbb55d346d822c52af51a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93c9a2bd16fefabc99ee2aee1bc2d445"><td class="memItemLeft" align="right" valign="top"><a id="a93c9a2bd16fefabc99ee2aee1bc2d445"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>ds_</b></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ds_</b> = 0.1</td></tr>
 <tr class="separator:a93c9a2bd16fefabc99ee2aee1bc2d445"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a4985a02d526c38b4e823b4e6815136"><td class="memItemLeft" align="right" valign="top"><a id="a8a4985a02d526c38b4e823b4e6815136"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>dv_</b></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>dv_</b> = 0.1</td></tr>
 <tr class="separator:a8a4985a02d526c38b4e823b4e6815136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a975a616c1e7ae43f1d92ba4f8baf7975"><td class="memItemLeft" align="right" valign="top"><a id="a975a616c1e7ae43f1d92ba4f8baf7975"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>da_</b> = 0.1</td></tr>
+<tr class="separator:a975a616c1e7ae43f1d92ba4f8baf7975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fec9eb45a2cf926c4833f5a25a7f8cc"><td class="memItemLeft" align="right" valign="top"><a id="a6fec9eb45a2cf926c4833f5a25a7f8cc"></a>
 <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a6fec9eb45a2cf926c4833f5a25a7f8cc">U_</a></td></tr>
 <tr class="memdesc:a6fec9eb45a2cf926c4833f5a25a7f8cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of constant control input. <br /></td></tr>
@@ -228,6 +234,74 @@ std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base environment class. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="add85a24c2e7bcdbcfde00c80fee083d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add85a24c2e7bcdbcfde00c80fee083d3">&#9670;&nbsp;</a></span>get_succ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void MPL::env_base::get_succ </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;&#160;</td>
+          <td class="paramname"><em>curr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>succ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>succ_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>succ_cost</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>action_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get successor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">curr</td><td>The node to expand </td></tr>
+    <tr><td class="paramname">succ</td><td>The array stores valid successors </td></tr>
+    <tr><td class="paramname">succ_idx</td><td>The array stores successors' Key </td></tr>
+    <tr><td class="paramname">succ_cost</td><td>The array stores cost along valid edges </td></tr>
+    <tr><td class="paramname">action_idx</td><td>The array stores corresponding idx of control for each successor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="classMPL_1_1env__map.html#aa01f25b506bb2e5af18046673ef87d43">MPL::env_map</a>, <a class="el" href="classMPL_1_1env__vision.html#afa75316eb65b53ed428cc9277a5a27dd">MPL::env_vision</a>, and <a class="el" href="classMPL_1_1env__sfc.html#a7b2dcc92e818522a2e8eca2e2f0b25c2">MPL::env_sfc</a>.</p>
+
+</div>
+</div>
 <a id="a5ed07e2437cf895eea9e4abc3531b3a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5ed07e2437cf895eea9e4abc3531b3a1">&#9670;&nbsp;</a></span>set_discretization()</h2>
 

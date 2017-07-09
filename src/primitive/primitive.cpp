@@ -133,15 +133,18 @@ Primitive::Primitive(const Waypoint& p1, const Waypoint& p2, decimal_t t) :
                               p2.pos(i), p2.vel(i), p2.acc(i), t_);
   }
   // Use vel only
-  else if(p1.use_pos && p1.use_vel &&
-          p2.use_pos && p2.use_vel) {
+  else if(p1.use_pos && p1.use_vel && !p1.use_acc &&
+          p2.use_pos && p2.use_vel && !p2.use_acc) {
     for(int i = 0; i < 3; i++)
       trajs_[i] = Primitive1D(p1.pos(i), p1.vel(i),
                               p2.pos(i), p2.vel(i), t_);
   }
   // Null
-  else
+  else {
     printf("Null Primitive!\n");
+    p1.print();
+    p2.print();
+  }
 }
 
 
@@ -180,6 +183,9 @@ decimal_t Primitive::max_acc(int k) const {
 }
 
 bool Primitive::valid_vel(decimal_t mv) const {
+  // ignore negative threshold
+  if(mv < 0)
+    return true;
   // check if max vel is violating the constraint
   for(int i = 0; i < 3; i++) {
     if(max_vel(i) > mv)
@@ -189,6 +195,9 @@ bool Primitive::valid_vel(decimal_t mv) const {
 }
 
 bool Primitive::valid_acc(decimal_t ma) const {
+  // ignore negative threshold
+  if(ma < 0)
+    return true;
   // check if max acc is violating the constraint
   for(int i = 0; i < 3; i++) {
     if(max_acc(i) > ma)

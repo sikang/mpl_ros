@@ -36,16 +36,22 @@ void MPBaseUtil::setMode(int n, bool use_3d) {
     printf("[MPBaseUtil] set n: %d, use_3d: %d\n", n, use_3d);
 }
 
+void MPBaseUtil::setVmax(decimal_t v_max) {
+  ENV_->set_v_max(v_max);
+  if(planner_verbose_)
+    printf("[MPBaseUtil] set v_max: %f\n", v_max);
+}
+
 void MPBaseUtil::setAmax(decimal_t a_max) {
   ENV_->set_a_max(a_max);
   if(planner_verbose_)
     printf("[MPBaseUtil] set a_max: %f\n", a_max);
 }
 
-void MPBaseUtil::setVmax(decimal_t v_max) {
-  ENV_->set_v_max(v_max);
+void MPBaseUtil::setUmax(decimal_t u_max) {
+  ENV_->set_u_max(u_max);
   if(planner_verbose_)
-    printf("[MPBaseUtil] set v_max: %f\n", v_max);
+    printf("[MPBaseUtil] set u_max: %f\n", u_max);
 }
 
 void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel) {
@@ -76,6 +82,7 @@ Trajectory MPBaseUtil::getTraj() {
     Waypoint nw1 = path_[i];
     Waypoint nw2 = path_[i+1];
 
+    /*
     nw1.use_pos = true;
     nw1.use_vel = true;
     nw1.use_acc = false;
@@ -83,6 +90,7 @@ Trajectory MPBaseUtil::getTraj() {
     nw2.use_pos = true;
     nw2.use_vel = true;
     nw2.use_acc = false;
+    */
 
     Primitive p(nw1, nw2, ENV_->get_dt());
     ps.push_back(p);

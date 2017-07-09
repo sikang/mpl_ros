@@ -51,8 +51,12 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
   }
 
   path_.push_back(start);
-  for (const auto &it_node : path)
+  for (auto &it_node : path) {
+    it_node.use_pos = start.use_pos;
+    it_node.use_vel = start.use_vel;
+    it_node.use_acc = start.use_acc;
     path_.push_back(it_node);
+  }
 
   //std::reverse(path_.begin(), path_.end());
   return true;

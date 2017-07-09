@@ -1,4 +1,8 @@
-# MRSL Motion Primitive for quadrotor
+MRSL Motion Primitive Library v0.1
+==================================
+## New Feature
+  - Add control in jerk space
+  - Change several API
 
 ## Compilation
 

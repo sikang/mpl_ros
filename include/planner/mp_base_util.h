@@ -33,6 +33,8 @@ class MPBaseUtil
     void setVmax(decimal_t v);
     ///Set max acc in each axis
     void setAmax(decimal_t a);
+    ///Set max control in each axis
+    void setUmax(decimal_t u);
     ///Set dt for each primitive
     void setDt(decimal_t dt);
     ///Set weight for cost in time

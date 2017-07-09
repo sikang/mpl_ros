@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mrsl_20motion_20primitive_20for_20quadrotor',['MRSL Motion Primitive for quadrotor',['../index.html',1,'']]]
+  ['mrsl_20motion_20primitive_20library_20v0_2e1',['MRSL Motion Primitive Library v0.1',['../index.html',1,'']]]
 ];

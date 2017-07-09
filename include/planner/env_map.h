@@ -67,6 +67,11 @@ class env_map : public env_base
 
     /**
      * @brief Get successor
+     * @param curr The node to expand
+     * @param succ The array stores valid successors
+     * @param succ_idx The array stores successors' Key
+     * @param succ_cost The array stores cost along valid edges
+     * @param action_idx The array stores corresponding idx of control for each successor
      *
      * When goal is outside, extra step is needed for finding optimal trajectory
      * Here we use Heuristic function and multiply with 2
@@ -87,7 +92,7 @@ class env_map : public env_base
         succ.push_back(goal_node_);
         succ_idx.push_back(state_to_idx(goal_node_));
         succ_cost.push_back(2*get_heur(curr));
-        action_idx.push_back(-1);
+        action_idx.push_back(-1); // -1 indicates directlyconnecting to the goal 
       }
 
       if(map_util_->isOutSide(pn))
@@ -97,12 +102,12 @@ class env_map : public env_base
       for(int i = 0; i < (int)U_.size(); i++) {
         Primitive p(curr, U_[i], dt_);
         Waypoint tn = p.evaluate(dt_);
-        if(p.valid_vel(v_max_)) {
+        if(p.valid_vel(v_max_) && p.valid_acc(a_max_)) {
           if(!is_free(p))
             continue;
-          tn.use_pos = true;
-          tn.use_vel = true;
-          tn.use_acc = false;
+          tn.use_pos = curr.use_pos;
+          tn.use_vel = curr.use_vel;
+          tn.use_acc = curr.use_acc;
 
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));

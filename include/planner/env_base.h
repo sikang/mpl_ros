@@ -34,7 +34,7 @@ class env_base
     bool is_goal(const Waypoint& state) const
     {
       bool goaled = (state.pos - goal_node_.pos).norm() < tol_dis;
-      if(goaled && goal_node_.use_vel)
+      if(goaled && goal_node_.use_vel) 
         goaled = (state.vel - goal_node_.vel).norm() < tol_vel;
       return goaled;
     }
@@ -44,33 +44,38 @@ class env_base
     {
       //return 0;
       //return w_*(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
-      const Vec3f p0 = state.pos;
-      const Vec3f p1 = goal_node_.pos;
-      const Vec3f v0 = state.vel;
-      const Vec3f v1 = goal_node_.vel;
-      decimal_t c1 = -36*(p1-p0).dot(p1-p0);
-      decimal_t c2 = 24*(v0+v1).dot(p1-p0);
-      decimal_t c3 = -4*(v0.dot(v0)+v0.dot(v1)+v1.dot(v1));
-      decimal_t c4 = 0;
-      decimal_t c5 = w_;
+      //If in acceleration control space
+      if(state.use_pos && state.use_vel && !state.use_acc) {
+        const Vec3f p0 = state.pos;
+        const Vec3f p1 = goal_node_.pos;
+        const Vec3f v0 = state.vel;
+        const Vec3f v1 = goal_node_.vel;
+        decimal_t c1 = -36*(p1-p0).dot(p1-p0);
+        decimal_t c2 = 24*(v0+v1).dot(p1-p0);
+        decimal_t c3 = -4*(v0.dot(v0)+v0.dot(v1)+v1.dot(v1));
+        decimal_t c4 = 0;
+        decimal_t c5 = w_;
 
-      std::vector<decimal_t> ts = quartic(c5, c4, c3, c2, c1);
-      decimal_t t_bar =(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
-      ts.push_back(t_bar);
-      decimal_t cost = 1000000;
-      for(auto t: ts) {
-        if(t < t_bar)
-          continue;
-        decimal_t c = -c1/3/t/t/t-c2/2/t/t-c3/t+w_*t;
-        if(c < cost)
-          cost = c;
-        //printf("t: %f, cost: %f\n",t, cost);
+        std::vector<decimal_t> ts = quartic(c5, c4, c3, c2, c1);
+        decimal_t t_bar =(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
+        ts.push_back(t_bar);
+        decimal_t cost = 1000000;
+        for(auto t: ts) {
+          if(t < t_bar)
+            continue;
+          decimal_t c = -c1/3/t/t/t-c2/2/t/t-c3/t+w_*t;
+          if(c < cost)
+            cost = c;
+          //printf("t: %f, cost: %f\n",t, cost);
+        }
+        //printf("-----------\n");
+        if(ts.empty())
+          printf("wrong! no root fond!\n");
+
+        return cost;
       }
-      //printf("-----------\n");
-      if(ts.empty())
-        printf("wrong! no root fond!\n");
-
-      return cost;
+      else
+        return w_*(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
     }
 
     ///Genegrate Key from state
@@ -78,9 +83,16 @@ class env_base
     {
       Vec3i pi = (state.pos/ds_).cast<int>();
       Vec3i vi = (state.vel/dv_).cast<int>();
-      return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) +
-        std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2));
-    }
+      if(!state.use_acc )
+        return std::to_string(pi(0)) + std::to_string(pi(1)) + std::to_string(pi(2)) +
+          std::to_string(vi(0)) + std::to_string(vi(1)) + std::to_string(vi(2));
+      else {
+        Vec3i ai = (state.acc/da_).cast<int>();
+        return std::to_string(pi(0)) + std::to_string(pi(1)) + std::to_string(pi(2)) +
+          std::to_string(vi(0)) + std::to_string(vi(1)) + std::to_string(vi(2)) +
+          std::to_string(ai(0)) + std::to_string(ai(1)) + std::to_string(ai(2));
+      }
+   }
 
     ///Recover trajectory
     void forward_action( const Waypoint& curr, int action_id, 
@@ -103,8 +115,6 @@ class env_base
      */
     void set_discretization(int n, bool use_3d) {
       decimal_t du = u_max_ / n;
-      dv_ = std::min(0.2 * du * dt_, 0.4); //need to be small but not too much
-      ds_ = 0.5 * dv_ * dt_;
 
       U_.clear();
       if(use_3d) {
@@ -120,17 +130,19 @@ class env_base
       }
     }
 
-
-
     ///Set max vel in each axis
     void set_v_max(decimal_t v) {
       v_max_ = v;
     }
 
-    ///Set max acc in each axis, also the control input as acc
+    ///Set max acc in each axis
     void set_a_max(decimal_t a) {
       a_max_ = a;
-      u_max_ = a_max_;
+    }
+
+    ///Set max control in each axis
+    void set_u_max(decimal_t u) {
+      u_max_ = u;
     }
 
     ///Set dt for primitive
@@ -161,11 +173,11 @@ class env_base
       printf(ANSI_COLOR_YELLOW "\n");
       printf("++++++++++ PLANNER +++++++++++\n");
       printf("+       dt: %.2f               +\n", dt_);
-      printf("+       dv: %.2f               +\n", dv_);
       printf("+        w: %.2f               +\n", w_);
       printf("+       wi: %d                 +\n", wi_);
       printf("+    v_max: %.2f               +\n", v_max_);
       printf("+    a_max: %.2f               +\n", a_max_);
+      printf("+    u_max: %.2f               +\n", u_max_);
       printf("+    U num: %zu                +\n", U_.size());
       printf("+  tol_dis: %.2f               +\n", tol_dis);
       printf("+  tol_vel: %.2f               +\n", tol_vel);
@@ -190,7 +202,14 @@ class env_base
       return dt_;
     }
 
-    ///Get successor
+    /**
+     * @brief Get successor
+     * @param curr The node to expand
+     * @param succ The array stores valid successors
+     * @param succ_idx The array stores successors' Key
+     * @param succ_cost The array stores cost along valid edges
+     * @param action_idx The array stores corresponding idx of control for each successor
+     */
     virtual void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
@@ -229,9 +248,9 @@ class env_base
     double tol_vel = 1.0;
     double u_max_ = 1;
     double v_max_ = 2;
-    double a_max_ = 1;
+    double a_max_ = -1;
     double dt_ = 1.0;
-    double ds_, dv_;
+    double ds_ = 0.1, dv_ = 0.1, da_ = 0.1;
 
     ///Array of constant control input
     vec_Vec3f U_;
