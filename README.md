@@ -1,6 +1,7 @@
 MRSL Motion Primitive Library v0.1
 ==================================
 ## New Feature
+  - Add control in vel space
   - Add control in jerk space
   - Change several API
 
@@ -45,7 +46,7 @@ Vel | Acc | Jrk
 `use_acc = false` | `use_acc = false` | `use_acc = true`
 
 
-Here are several functions to set up a planning thread:
+After setting up start and goal states, a planning thread can be started as:
 ```c++
 std::unique_ptr<MPMapUtil> planner(new MPMapUtil(true)); // Declare a mp planner using voxel map
 planner->setMapUtil(map_util); // Set collision checking function
