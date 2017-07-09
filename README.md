@@ -37,6 +37,7 @@ goal.use_acc = start.use_acc;
 ```
 
 The flags `use_xxx` will adapt the planning in different control space. For example, the one above is control in acc space. Three options are provided by setting those flags as below:
+
 Vel | Acc | Jrk
 :-- | :-- | :--
 `use_pos = true` | `use_pos = true` | `use_pos = true`
