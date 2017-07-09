@@ -45,13 +45,52 @@ class env_base
       //return 0;
       //return w_*(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
       //If in acceleration control space
-      if(state.use_pos && state.use_vel && !state.use_acc) {
-        const Vec3f p0 = state.pos;
-        const Vec3f p1 = goal_node_.pos;
+      if(state.use_pos && state.use_vel && state.use_acc) {
+        const Vec3f dp = goal_node_.pos - state.pos;
         const Vec3f v0 = state.vel;
         const Vec3f v1 = goal_node_.vel;
-        decimal_t c1 = -36*(p1-p0).dot(p1-p0);
-        decimal_t c2 = 24*(v0+v1).dot(p1-p0);
+        const Vec3f a0 = state.acc;
+        const Vec3f a1 = goal_node_.acc;
+
+        decimal_t a = w_;
+        decimal_t b = 0;
+        decimal_t c = -9*a0.dot(a0)+6*a0.dot(a1)-9*a1.dot(a1);
+        decimal_t d = -144*a0.dot(v0)-96*a0.dot(v1)+96*a1.dot(v0)+144*a1.dot(v1);
+        decimal_t e = 360*(a0-a1).dot(dp)-576*v0.dot(v0)-1008*v0.dot(v1)-576*v1.dot(v1);
+        decimal_t f = 2880*dp.dot(v0+v1);
+        decimal_t g = -3600*dp.dot(dp);
+
+        std::vector<decimal_t> ts = solve(a, b, c, d, e, f, g);
+
+        decimal_t t_bar =(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
+        //ts.push_back(t_bar);
+        decimal_t min_cost = 1000000;
+        decimal_t t_star = 0;
+        for(auto t: ts) {
+          //printf("t: %f ", t);
+          if(t < 0)
+            continue;
+          decimal_t cost = a*t-c/t-d/2/t/t-e/3/t/t/t-f/4/t/t/t/t-g/5/t/t/t/t/t;
+          if(cost < min_cost) {
+            min_cost = cost;
+            t_star = t;
+          }
+          //printf("t: %f, cost: %f\n",t, cost);
+        }
+        //printf("-----------\n");
+        if(ts.empty())
+          printf("wrong! no root found!\n");
+
+        //printf("cost: %f, t: %f. t_bar: %f\n", min_cost, t_star, t_bar);
+
+        return min_cost;
+      }
+      else if(state.use_pos && state.use_vel && !state.use_acc) {
+        const Vec3f dp = goal_node_.pos - state.pos;
+        const Vec3f v0 = state.vel;
+        const Vec3f v1 = goal_node_.vel;
+        decimal_t c1 = -36*dp.dot(dp);
+        decimal_t c2 = 24*(v0+v1).dot(dp);
         decimal_t c3 = -4*(v0.dot(v0)+v0.dot(v1)+v1.dot(v1));
         decimal_t c4 = 0;
         decimal_t c5 = w_;
@@ -74,6 +113,8 @@ class env_base
 
         return cost;
       }
+      else if(state.use_pos && !state.use_vel && !state.use_acc)
+        return (w_ + 1) * (state.pos - goal_node_.pos).norm();
       else
         return w_*(state.pos - goal_node_.pos).lpNorm<Eigen::Infinity>() / v_max_;
     }
@@ -160,9 +201,14 @@ class env_base
       tol_vel = vel;
     }
 
-    ///Set weight for cost in time, usually no need to change
+    ///set weight for cost in time, usually no need to change
     void set_w(decimal_t w) {
       w_ = w;
+    }
+
+    ///set derivative order for cost in effort, dont need to set manually
+    void set_wi(int wi) {
+      wi_ = wi;
     }
 
     ///Set goal state
@@ -238,11 +284,10 @@ class env_base
       return goal_outside_;
     }
 
-
     bool goal_outside_;
     double w_ = 10; 
-    ///order of derivatives
-    int wi_ = 1; 
+    ///order of derivatives for effort
+    int wi_ = -1; 
 
     double tol_dis = 1.0;
     double tol_vel = 1.0;

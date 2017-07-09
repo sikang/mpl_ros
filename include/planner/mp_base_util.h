@@ -43,8 +43,8 @@ class MPBaseUtil
     void setEpsilon(decimal_t eps);
     ///Set max number of expansion
     void setMaxNum(int num);
-    ///Enable discretization
-    void setMode(int n, bool use_3d);
+    ///Enable discretization and set effort
+    void setMode(int n, bool use_3d, const Waypoint& p);
     ///Set tolerance in geometric and dynamic spaces
     void setTol(decimal_t tol_dis, decimal_t tol_vel);
 

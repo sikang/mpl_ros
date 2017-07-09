@@ -66,19 +66,27 @@ class Primitive1D {
      */
     Primitive1D(const Vec6f& coeff);
     /**
+     * @brief Construct 1D primitive from an initial state (p) and an input control (u)
+     */
+    Primitive1D(decimal_t p, decimal_t u);
+    /**
      * @brief Construct 1D primitive from an initial state (p, v) and an input control (u)
      */
-    Primitive1D(decimal_t p, decimal_t v, decimal_t u);
+    Primitive1D(Vec2f state, decimal_t u);
     /**
      * @brief Construct 1D primitive from an initial state (p, v, a) and an input control (u)
      */
-    Primitive1D(decimal_t p, decimal_t v, decimal_t a, decimal_t u);
+    Primitive1D(Vec3f state, decimal_t u);
     /**
-     * @brief Construct 1D primitive from an initial state (p1, v1) to a goal state (p2, v2), duration t is required
+     * @brief Construct 1D primitive from an initial state (p1) to a goal state (p2), given duration t
+     */
+    Primitive1D(decimal_t p1, decimal_t p2,  decimal_t t);
+    /**
+     * @brief Construct 1D primitive from an initial state (p1, v1) to a goal state (p2, v2), given duration t 
      */
     Primitive1D(decimal_t p1, decimal_t v1, decimal_t p2, decimal_t v2, decimal_t t);
     /**
-     * @brief Construct 1D primitive from an initial state (p1, v1, a1) to a goal state (p2, v2, a2), duration t is required
+     * @brief Construct 1D primitive from an initial state (p1, v1, a1) to a goal state (p2, v2, a2), given duration t
      */
     Primitive1D(decimal_t p1, decimal_t v1, decimal_t a1, decimal_t p2, decimal_t v2, decimal_t a2, decimal_t t);
     /**

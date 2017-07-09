@@ -30,10 +30,25 @@ void MPBaseUtil::setW(decimal_t w) {
     printf("[MPBaseUtil] set w: %f\n", w);
 }
 
-void MPBaseUtil::setMode(int n, bool use_3d) {
+void MPBaseUtil::setMode(int n, bool use_3d, const Waypoint& p) {
   ENV_->set_discretization(n, use_3d);
   if(planner_verbose_)
     printf("[MPBaseUtil] set n: %d, use_3d: %d\n", n, use_3d);
+  if(p.use_pos && p.use_vel && p.use_acc) {
+    ENV_->set_wi(2);
+    if(planner_verbose_)
+      printf("[MPBaseUtil] set effort in jrk\n");
+  }
+  else if(p.use_pos && p.use_vel && !p.use_acc) {
+    ENV_->set_wi(1);
+    if(planner_verbose_)
+      printf("[MPBaseUtil] set effort in acc\n");
+  }
+  else if(p.use_pos && !p.use_vel && !p.use_acc) {
+    ENV_->set_wi(0);
+    if(planner_verbose_)
+      printf("[MPBaseUtil] set effort in vel\n");
+  }
 }
 
 void MPBaseUtil::setVmax(decimal_t v_max) {

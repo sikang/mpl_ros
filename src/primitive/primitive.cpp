@@ -33,22 +33,35 @@ Primitive1D::Primitive1D(decimal_t p1, decimal_t v1,
   c << 0, 0, cc(0), cc(1), cc(2), cc(3);
 }
 
+Primitive1D::Primitive1D(decimal_t p1, decimal_t p2, decimal_t t) {
+ c << 0, 0, 0, 0, (p2-p1)/t, p1;
+}
+
 Vec3f Primitive1D::evaluate(decimal_t t) const {
   return Vec3f(c(0)/120*t*t*t*t*t+c(1)/24*t*t*t*t+c(2)/6*t*t*t+c(3)/2*t*t+c(4)*t+c(5),
                c(0)/24*t*t*t*t+c(1)/6*t*t*t+c(2)/2*t*t+c(3)*t+c(4),
                c(0)/6*t*t*t+c(1)/2*t*t+c(2)*t+c(3));
 }
 
+inline decimal_t power(decimal_t t, int n) {
+  return n <= 0 ? 1 : power(t, n-1);
+}
+
 decimal_t Primitive1D::J(decimal_t t, int i) const {
+  // i = 0, return integration of square of vel
+  if(i == 0)
+    return c(0)*c(0)/5184*power(t,9)+c(0)*c(1)/576*power(t,8)+(c(1)*c(1)/252+c(0)*c(2)/168)*power(t,7)+
+      (c(0)*c(3)/72+c(1)*c(2)/36)*power(t,6)+(c(2)*c(2)/20+c(0)*c(4)/60+c(1)*c(3)/15)*power(t,5)+
+      (c(2)*c(3)/4+c(1)*c(4)/12)*power(t,4)+(c(3)*c(3)/3+c(2)*c(4)/3)*t*t*t+c(3)*c(4)*t*t+c(4)*c(4)*t;
   // i = 1, return integration of square of acc
-  if(i == 1)
+  else if(i == 1)
     return c(0)*c(0)/252*t*t*t*t*t*t*t+c(0)*c(1)/36*t*t*t*t*t*t+(c(1)*c(1)/20+c(0)*c(2)/15)*t*t*t*t*t+
       (c(0)*c(3)/12+c(1)*c(2)/4)*t*t*t*t+(c(2)*c(2)/3+c(1)*c(3)/3)*t*t*t+
       c(2)*c(3)*t*t+c(3)*c(3)*t;
   // i = 2, return integration of square of jerk
   else if(i == 2)
-    return c(2)*c(2)*t+c(1)*c(2)*t*t+(c(1)*c(1)+c(0)*c(2))/3.*t*t*t+
-      c(0)*c(1)/4.*t*t*t*t+c(0)*c(0)/20.*t*t*t*t*t;
+    return c(2)*c(2)*t+c(1)*c(2)*t*t+(c(1)*c(1)+c(0)*c(2))/3*t*t*t+
+      c(0)*c(1)/4*t*t*t*t+c(0)*c(0)/20*t*t*t*t*t;
   // i = 3, return integration of square of snap
   else if(i == 3)
     return c(0)*c(0)/3.*t*t*t+c(0)*c(1)*t*t+c(1)*c(1)*t;
@@ -61,15 +74,18 @@ Vec6f Primitive1D::coeff() const {
 }
 
 //********** Primitive 1D Vel Class ***********
-Primitive1D::Primitive1D(decimal_t p1, decimal_t v1, decimal_t u) {
-  c << 0, 0, 0, u, v1, p1;
+Primitive1D::Primitive1D(decimal_t p, decimal_t u) {
+  c << 0, 0, 0, 0, u, p;
 }
 
-
-
 //********** Primitive 1D Acc Class ***********
-Primitive1D::Primitive1D(decimal_t p1, decimal_t v1, decimal_t a1, decimal_t u) {
-  c << 0, 0, u, a1, v1, p1;
+Primitive1D::Primitive1D(Vec2f state, decimal_t u) {
+  c << 0, 0, 0, u, state(1), state(0);
+}
+
+//********** Primitive 1D Jrk Class ***********
+Primitive1D::Primitive1D(Vec3f state, decimal_t u) {
+  c << 0, 0, u, state(2), state(1), state(0);
 }
 
 std::vector<decimal_t> Primitive1D::extrema_vel(decimal_t t) const {
@@ -111,14 +127,18 @@ Primitive::Primitive(const Waypoint& p, const Vec3f& u, decimal_t t) :
 {
   if(p.use_acc) {
     for(int i = 0; i < 3; i++)
-      trajs_[i] = Primitive1D(p.pos(i), p.vel(i), p.acc(i), u(i));
+      trajs_[i] = Primitive1D(Vec3f(p.pos(i), p.vel(i), p.acc(i)), u(i));
   }
   else if(p.use_vel) {
     for(int i = 0; i < 3; i++)
-      trajs_[i] = Primitive1D(p.pos(i), p.vel(i), u(i));
+      trajs_[i] = Primitive1D(Vec2f(p.pos(i), p.vel(i)), u(i));
+  }
+  else if(p.use_pos) {
+    for(int i = 0; i < 3; i++)
+      trajs_[i] = Primitive1D(p.pos(i), u(i));
   }
   else
-    printf("Null Primitive!\n");
+    printf("Null Primitive using control!\n");
 }
 
 Primitive::Primitive(const Waypoint& p1, const Waypoint& p2, decimal_t t) :
@@ -139,15 +159,20 @@ Primitive::Primitive(const Waypoint& p1, const Waypoint& p2, decimal_t t) :
       trajs_[i] = Primitive1D(p1.pos(i), p1.vel(i),
                               p2.pos(i), p2.vel(i), t_);
   }
+  // Use pos only
+  else if(p1.use_pos && !p1.use_vel && !p1.use_acc &&
+          p2.use_pos && !p2.use_vel && !p2.use_acc) {
+    for(int i = 0; i < 3; i++)
+      trajs_[i] = Primitive1D(p1.pos(i), p2.pos(i), t_);
+  }
+ 
   // Null
   else {
-    printf("Null Primitive!\n");
+    printf("Null Primitive using states!\n");
     p1.print();
     p2.print();
   }
 }
-
-
 
 decimal_t Primitive::max_vel(int k) const {
   std::vector<decimal_t> ts = trajs_[k].extrema_vel(t_);

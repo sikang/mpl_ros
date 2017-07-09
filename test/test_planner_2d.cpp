@@ -46,12 +46,12 @@ int main(int argc, char ** argv){
   std::unique_ptr<MPMapUtil> planner(new MPMapUtil(true)); // Declare a mp planner using voxel map
   planner->setMapUtil(map_util); // Set collision checking function
   planner->setEpsilon(1.0); // Set greedy param (default equal to 1)
-  planner->setVmax(2.0); // Set max velocity
+  planner->setVmax(3.0); // Set max velocity
   //planner->setAmax(1.0); // Set max acceleration 
   planner->setUmax(1.0); // Set max control input
   planner->setDt(1.0); // Set dt for each primitive
-  planner->setMaxNum(5000); // Set maximum allowed states
-  planner->setMode(1, false); // 2D discretization with 1
+  planner->setMaxNum(-1); // Set maximum allowed states
+  planner->setMode(1, false, start); // 2D discretization with 1
   planner->setTol(1, 1); // Tolerance for goal region
 
 
