@@ -91,3 +91,6 @@ Note that only control space in acceleration is available at this time!
 
 ## Doxygen
 For more details, please refer to https://sikang.github.io/motion_primitive_library/
+
+## ROS Warapper
+We also write the interface with ROS for planning using this library, [`mpl_ros`](https://github.com/sikang/mpl_ros.git)
