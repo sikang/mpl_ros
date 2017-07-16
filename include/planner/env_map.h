@@ -80,12 +80,14 @@ class env_map : public env_base
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
-        std::vector<int>& action_idx ) const
+        std::vector<int>& action_idx,
+        std::vector<double>& dts ) const
     {
       succ.clear();
       succ_idx.clear();
       succ_cost.clear();
       action_idx.clear();
+      dts.clear();
 
       const Vec3i pn = map_util_->floatToInt(curr.pos);
       if (goal_outside_ && map_util_->isOutSide(pn)) {
@@ -93,15 +95,20 @@ class env_map : public env_base
         succ_idx.push_back(state_to_idx(goal_node_));
         succ_cost.push_back(2*get_heur(curr));
         action_idx.push_back(-1); // -1 indicates directlyconnecting to the goal 
+        dts.push_back(dt_);
       }
 
       if(map_util_->isOutSide(pn))
         return;
 
       ps_.push_back(curr.pos);
+
+      decimal_t value = map_util_->getDistanceValue(pn);
+      decimal_t dt = dt_ * (value > 0.5 ? 1.0 : 0.5);
+      //decimal_t dt = dt_;
       for(int i = 0; i < (int)U_.size(); i++) {
-        Primitive p(curr, U_[i], dt_);
-        Waypoint tn = p.evaluate(dt_);
+        Primitive p(curr, U_[i], dt);
+        Waypoint tn = p.evaluate(dt);
         if(p.valid_vel(v_max_) && p.valid_acc(a_max_)) {
           if(!is_free(p))
             continue;
@@ -111,8 +118,9 @@ class env_map : public env_base
 
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));
-          succ_cost.push_back(p.J(wi_) + w_*dt_);
+          succ_cost.push_back(p.J(wi_) + w_*dt);
           action_idx.push_back(i);
+          dts.push_back(dt);
         }
 
       }

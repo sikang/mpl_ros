@@ -48,6 +48,7 @@ namespace MPL
     state coord;                            // discrete coordinates of this node
     std::shared_ptr<ARAState<state>> parent; // pointer to parent node
     int parent_action_id = -1;
+    double dt = 1.0;
     Key hashkey;
     // pointer to heap location
     typename priorityQueue<ARAState<state>>::handle_type heapkey;
@@ -89,7 +90,7 @@ namespace MPL
   {
   public:
     double Astar( const state& start_coord, Key start_idx, const env_base& ENV,
-                 std::list<state>& path, std::vector<int>& action_idx, double eps = 1 , int max_expand = -1);
+                 std::list<state>& path, std::vector<double>& action_dts, double eps = 1 , int max_expand = -1);
     double ARAstar( const state& start_coord, Key start_idx, const env_base& ENV,
                     std::list<state>& path, std::vector<int>& action_idx, double eps = 1,
                     double allocated_time_secs = std::numeric_limits<double>::infinity() );

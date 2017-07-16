@@ -28,6 +28,8 @@ class MPBaseUtil
     std::vector<Primitive> getPrimitives();
     ///Get expanded nodes
     vec_Vec3f getPs();
+    ///Get time allocation
+    std::vector<decimal_t> getDts();
  
     ///Set max vel in each axis
     void setVmax(decimal_t v);
@@ -55,6 +57,8 @@ class MPBaseUtil
     std::unique_ptr<MPL::env_base> ENV_;
     ///Intermediate nodes in optimal trajectory
     std::vector<Waypoint> path_;
+    ///Time allocation for each segment
+    std::vector<decimal_t> dts_;
     ///Greedy searching parameter
     decimal_t epsilon_ = 1.0;
     ///Maxmum number of expansion allowd, -1 means no limitation

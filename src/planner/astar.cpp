@@ -6,7 +6,7 @@
 template <class state>
 double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
                                   const env_base& ENV,
-                                  std::list<state>& path, std::vector<int>& action_idx,
+                                  std::list<state>& path, std::vector<double>& action_dts,
                                   double eps, int max_expand )
 {
   // Check if done
@@ -51,10 +51,12 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
   double pcost = currNode_pt->g;
   while( currNode_pt->parent )
   {
-    action_idx.push_back( currNode_pt->parent_action_id );
+    //action_idx.push_back( currNode_pt->parent_action_id );
+    int action_idx = currNode_pt->parent_action_id;
+    action_dts.push_back(currNode_pt->dt);
     currNode_pt = currNode_pt->parent;
     std::vector<state> next_micro;
-    ENV.forward_action( currNode_pt->coord, action_idx.back(), next_micro );
+    ENV.forward_action( currNode_pt->coord, action_idx, action_dts.back(), next_micro );
     for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
          it!=next_micro.rend(); ++it )
       path.push_front( *it );
@@ -129,9 +131,10 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
         while( currNode_pt->parent )
         {
           action_idx.push_back( currNode_pt->parent_action_id );
+          double dt = currNode_pt->dt;
           currNode_pt = currNode_pt->parent;
           std::vector<state> next_micro;
-          ENV.forward_action( currNode_pt->coord, action_idx.back(), next_micro );
+          ENV.forward_action( currNode_pt->coord, action_idx.back(), dt, next_micro);
           
           for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
                it!=next_micro.rend(); ++it )
@@ -181,7 +184,8 @@ void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
   std::vector<MPL::Key> succ_idx;
   std::vector<double> succ_cost;
   std::vector<int> succ_act_idx;
-  ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx );
+  std::vector<double> succ_act_dt;
+  ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx, succ_act_dt);
 
   //std::cout << "num succ=" << succ_coord.size() << std::endl;
   
@@ -207,6 +211,7 @@ void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
     {
       child_pt->parent = currNode_pt;  // Assign new parent
       child_pt->parent_action_id = succ_act_idx[s];
+      child_pt->dt = succ_act_dt[s];
       child_pt->g = tentative_gval;    // Update gval
       double fval = child_pt->g + (sss_ptr->eps) * child_pt->h;
       

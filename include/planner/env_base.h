@@ -133,10 +133,10 @@ class env_base
           std::to_string(vi(0)) + std::to_string(vi(1)) + std::to_string(vi(2)) +
           std::to_string(ai(0)) + std::to_string(ai(1)) + std::to_string(ai(2));
       }
-   }
+    }
 
     ///Recover trajectory
-    void forward_action( const Waypoint& curr, int action_id, 
+    void forward_action( const Waypoint& curr, int action_id, double dt,
         std::vector<Waypoint>& next_micro ) const
     {
       next_micro.clear();
@@ -144,8 +144,8 @@ class env_base
         next_micro.push_back(goal_node_);
       }
       else {
-        Primitive p(curr, U_[action_id], dt_);
-        next_micro.push_back(p.evaluate(dt_));
+        Primitive p(curr, U_[action_id], dt);
+        next_micro.push_back(p.evaluate(dt));
       }
     }
 
@@ -260,7 +260,8 @@ class env_base
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
-        std::vector<int>& action_idx ) const
+        std::vector<int>& action_idx,
+       std::vector<double>& dts ) const
     {
       printf("Used Null get_succ()\n");
       succ.push_back(curr);

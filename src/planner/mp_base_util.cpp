@@ -97,20 +97,15 @@ Trajectory MPBaseUtil::getTraj() {
     Waypoint nw1 = path_[i];
     Waypoint nw2 = path_[i+1];
 
-    /*
-    nw1.use_pos = true;
-    nw1.use_vel = true;
-    nw1.use_acc = false;
-
-    nw2.use_pos = true;
-    nw2.use_vel = true;
-    nw2.use_acc = false;
-    */
-
-    Primitive p(nw1, nw2, ENV_->get_dt());
+    //Primitive p(nw1, nw2, ENV_->get_dt());
+    Primitive p(nw1, nw2, dts_[i]);
     ps.push_back(p);
   }
 
   return Trajectory(ps);
+}
+
+std::vector<decimal_t> MPBaseUtil::getDts() {
+  return dts_;
 }
 

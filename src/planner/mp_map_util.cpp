@@ -37,12 +37,12 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
   }
  
   MPL::ARAStar<Waypoint> AA;
-  std::vector<int> action_idx;
+  std::vector<double> action_dts;
   std::list<Waypoint> path;
 
   ENV_->set_goal(goal);
 
-  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_idx, epsilon_, max_num_);
+  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, path, action_dts, epsilon_, max_num_);
 
   if (path.empty()) {
     if(planner_verbose_)
@@ -58,7 +58,8 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
     path_.push_back(it_node);
   }
 
-  //std::reverse(path_.begin(), path_.end());
+  dts_ = action_dts;
+  std::reverse(dts_.begin(), dts_.end());
   return true;
 }
 

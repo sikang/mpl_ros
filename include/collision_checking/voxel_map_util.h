@@ -77,15 +77,9 @@ public:
         }
       }
     }
-
-    /*
-    Vec3i pn = floatToInt(Vec3f::Zero());
-    for (const auto &it : dilate_neighbor_) {
-      if (!isOutSide(pn + it))
-        map_[getIndex(pn + it)] = val_occ;
-    }
-    */
   }
+
+  
 
   vec_Vec3f getFreeCloud() {
     vec_Vec3f cloud;
@@ -186,8 +180,65 @@ public:
         }
       }
     }
- 
   }
+
+  void generateDistanceMap(decimal_t r) {
+    dmap_.resize(dim_(0) * dim_(1) * dim_(2), 1.0);
+    int dilate_xy = std::ceil(r / res_);
+
+    std::vector<decimal_t> dists;
+    vec_Vec3i ns;
+    Vec3i n(0, 0, 0);
+    for (n(0) = -dilate_xy; n(0) <= dilate_xy; n(0)++) {
+      for (n(1) = -dilate_xy; n(1) <= dilate_xy; n(1)++) {
+        ns.push_back(n);
+        dists.push_back(std::min(1.0, n.cast<decimal_t>().norm() * res_ / r));
+      }
+    }
+ 
+    for (n(0) = 0; n(0) < dim_(0); n(0)++) {
+      for (n(1) = 0; n(1) < dim_(1); n(1)++) {
+        for (n(2) = 0; n(2) < dim_(2); n(2)++) {
+          if (isOccupied(n)) {
+            for(int i = 0; i < ns.size(); i++) {
+              if(!isOutSide(n+ns[i])) {
+                int idx = getIndex(n+ns[i]);
+                dmap_[idx] = std::min(dmap_[idx],  dists[i]);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void getDistanceMap(vec_Vec3f& pts, std::vector<decimal_t>& values) {
+    pts.resize(dim_(0) * dim_(1) * dim_(2));
+    values.resize(dim_(0) * dim_(1) * dim_(2));
+
+    Vec3i n(0, 0, 0);
+    for (n(0) = 0; n(0) < dim_(0); n(0)++) {
+      for (n(1) = 0; n(1) < dim_(1); n(1)++) {
+        for (n(2) = 0; n(2) < dim_(2); n(2)++) {
+          int idx = getIndex(n);
+          pts[idx] = intToFloat(n);
+          values[idx] = dmap_[idx];
+        }
+      }
+    }
+
+  }
+
+
+  decimal_t getDistanceValue(const Vec3i& pn) {
+    if(dmap_.empty())
+      return 1;
+    else 
+      return dmap_[getIndex(pn)];
+  }
+private:
+ std::vector<decimal_t> dmap_;
+
 
 };
   
