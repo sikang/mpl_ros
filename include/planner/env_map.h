@@ -72,6 +72,7 @@ class env_map : public env_base
      * @param succ_idx The array stores successors' Key
      * @param succ_cost The array stores cost along valid edges
      * @param action_idx The array stores corresponding idx of control for each successor
+     * @param action_dts The array stores corresponding dt of control for each successor
      *
      * When goal is outside, extra step is needed for finding optimal trajectory
      * Here we use Heuristic function and multiply with 2
@@ -81,13 +82,13 @@ class env_map : public env_base
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
         std::vector<int>& action_idx,
-        std::vector<double>& dts ) const
+        std::vector<double>& action_dts ) const
     {
       succ.clear();
       succ_idx.clear();
       succ_cost.clear();
       action_idx.clear();
-      dts.clear();
+      action_dts.clear();
 
       const Vec3i pn = map_util_->floatToInt(curr.pos);
       if (goal_outside_ && map_util_->isOutSide(pn)) {
@@ -95,7 +96,7 @@ class env_map : public env_base
         succ_idx.push_back(state_to_idx(goal_node_));
         succ_cost.push_back(2*get_heur(curr));
         action_idx.push_back(-1); // -1 indicates directlyconnecting to the goal 
-        dts.push_back(dt_);
+        action_dts.push_back(dt_);
       }
 
       if(map_util_->isOutSide(pn))
@@ -103,14 +104,13 @@ class env_map : public env_base
 
       ps_.push_back(curr.pos);
 
-      decimal_t value = map_util_->getDistanceValue(pn);
-      decimal_t dt = dt_ * (value > 0.5 ? 1.0 : 0.5);
-      //decimal_t dt = dt_;
+      decimal_t dt = dt_;
       for(int i = 0; i < (int)U_.size(); i++) {
+        decimal_t dt = dt_;
         Primitive p(curr, U_[i], dt);
         Waypoint tn = p.evaluate(dt);
         if(p.valid_vel(v_max_) && p.valid_acc(a_max_)) {
-          if(!is_free(p))
+          if(!is_free(p)) 
             continue;
           tn.use_pos = curr.use_pos;
           tn.use_vel = curr.use_vel;
@@ -120,11 +120,11 @@ class env_map : public env_base
           succ_idx.push_back(state_to_idx(tn));
           succ_cost.push_back(p.J(wi_) + w_*dt);
           action_idx.push_back(i);
-          dts.push_back(dt);
+          action_dts.push_back(dt);
         }
 
-      }
 
+      }
     }
 
 };

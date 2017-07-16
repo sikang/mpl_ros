@@ -13,7 +13,7 @@ IF(USE_ROS)
     DEPENDS Eigen3
     CATKIN_DEPENDS 
     INCLUDE_DIRS include 
-    LIBRARIES primitive poly_solver vision_util vision_queue_util mp_map_util mp_sfc_util mp_vision_util bfs
+    LIBRARIES primitive poly_solver mp_map_util bfs
     )
   INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
   LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
