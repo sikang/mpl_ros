@@ -137,10 +137,10 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#af6734c7621ec2a67aae7a3fc3f5e3fc1">state_to_idx</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state) const</td></tr>
 <tr class="memdesc:af6734c7621ec2a67aae7a3fc3f5e3fc1 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genegrate Key from state. <br /></td></tr>
 <tr class="separator:af6734c7621ec2a67aae7a3fc3f5e3fc1 inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b632721bdf26c5ecb450b066fe8e885 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a5b632721bdf26c5ecb450b066fe8e885"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a5b632721bdf26c5ecb450b066fe8e885">forward_action</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;curr, int action_id, std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;next_micro) const</td></tr>
-<tr class="memdesc:a5b632721bdf26c5ecb450b066fe8e885 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recover trajectory. <br /></td></tr>
-<tr class="separator:a5b632721bdf26c5ecb450b066fe8e885 inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d30be7b6a93ec925704a4b007a2270 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="af6d30be7b6a93ec925704a4b007a2270"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#af6d30be7b6a93ec925704a4b007a2270">forward_action</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;curr, int action_id, double dt, std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;next_micro) const</td></tr>
+<tr class="memdesc:af6d30be7b6a93ec925704a4b007a2270 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recover trajectory. <br /></td></tr>
+<tr class="separator:af6d30be7b6a93ec925704a4b007a2270 inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ed07e2437cf895eea9e4abc3531b3a1 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a5ed07e2437cf895eea9e4abc3531b3a1">set_discretization</a> (int n, bool use_3d)</td></tr>
 <tr class="memdesc:a5ed07e2437cf895eea9e4abc3531b3a1 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set discretization in control space.  <a href="classMPL_1_1env__base.html#a5ed07e2437cf895eea9e4abc3531b3a1">More...</a><br /></td></tr>
 <tr class="separator:a5ed07e2437cf895eea9e4abc3531b3a1 inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,6 +184,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a2249af817b9f8fdaae133f42473a1b1e">get_dt</a> ()</td></tr>
 <tr class="memdesc:a2249af817b9f8fdaae133f42473a1b1e inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve dt. <br /></td></tr>
 <tr class="separator:a2249af817b9f8fdaae133f42473a1b1e inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31d33e44f5a65b548037fd0e1faad8a inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#aa31d33e44f5a65b548037fd0e1faad8a">get_succ</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;curr, std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt; &amp;succ, std::vector&lt; <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a> &gt; &amp;succ_idx, std::vector&lt; double &gt; &amp;succ_cost, std::vector&lt; int &gt; &amp;action_idx, std::vector&lt; double &gt; &amp;dts) const</td></tr>
+<tr class="memdesc:aa31d33e44f5a65b548037fd0e1faad8a inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get successor.  <a href="classMPL_1_1env__base.html#aa31d33e44f5a65b548037fd0e1faad8a">More...</a><br /></td></tr>
+<tr class="separator:aa31d33e44f5a65b548037fd0e1faad8a inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ae5f217cacfe1fa2d578b15114d52db inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a9ae5f217cacfe1fa2d578b15114d52db"></a>
 <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a9ae5f217cacfe1fa2d578b15114d52db">ps</a> ()</td></tr>
 <tr class="memdesc:a9ae5f217cacfe1fa2d578b15114d52db inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns expanded nodes. <br /></td></tr>
@@ -307,15 +310,13 @@ std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Get successor. </p>
 <p>When goal is outside, extra step is needed for finding optimal trajectory Here we use Heuristic function and multiply with 2 </p>
-
-<p>Reimplemented from <a class="el" href="classMPL_1_1env__base.html#add85a24c2e7bcdbcfde00c80fee083d3">MPL::env_base</a>.</p>
 
 </div>
 </div>

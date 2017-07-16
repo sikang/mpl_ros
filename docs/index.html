@@ -90,7 +90,9 @@ $(function() {
 Visualization</div></div>
 <p> Run following command: </p><div class="fragment"><div class="line">$ ./build/test_planner_2d ../data/corridor.yaml</div></div><!-- fragment --><p> You should see following messages if it works properly: </p><div class="fragment"><div class="line">[MPPlanner] PLANNER VERBOSE ON</div><div class="line">[MPBaseUtil] set epsilon: 1.000000</div><div class="line">[MPBaseUtil] set v_max: 3.000000</div><div class="line">[MPBaseUtil] set u_max: 1.000000</div><div class="line">[MPBaseUtil] set dt: 1.000000</div><div class="line">[MPBaseUtil] set max num: -1</div><div class="line">[MPBaseUtil] set n: 1, use_3d: 0</div><div class="line">[MPBaseUtil] set effort in acc</div><div class="line">[MPBaseUtil] set tol_dis: 1.000000</div><div class="line">[MPBaseUtil] set tol_vel: 1.000000</div><div class="line">start pos: [2.500000, -3.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]</div><div class="line">goal pos: [35.000000, 2.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]</div><div class="line">MP Planner takes: 18.000000 ms</div><div class="line">MP Planner expanded states: 1426</div></div><!-- fragment --><p>Note that only control space in acceleration is available at this time!</p>
 <h2>Doxygen</h2>
-<p>For more details, please refer to <a href="https://sikang.github.io/motion_primitive_library/">https://sikang.github.io/motion_primitive_library/</a> </p>
+<p>For more details, please refer to <a href="https://sikang.github.io/motion_primitive_library/">https://sikang.github.io/motion_primitive_library/</a></p>
+<h2>ROS Warapper</h2>
+<p>We also write the interface with ROS for planning using this library, <a href="https://github.com/sikang/mpl_ros.git"><code>mpl_ros</code></a> </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
