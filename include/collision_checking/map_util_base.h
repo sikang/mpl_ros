@@ -117,11 +117,11 @@ protected:
   ///Pre-computed vector of neighboring cells for dilating
   vec_E<Ti> dilate_neighbor_;
   ///Assume occupied cell has value 100
-  char val_occ = 100;
+  int8_t val_occ = 100;
   ///Assume free cell has value 0
-  char val_free = 0;
+  int8_t val_free = 0;
   ///Assume unknown cell has value -1
-  char val_unknown = -1;
+  int8_t val_unknown = -1;
 };
 }
 

@@ -20,6 +20,9 @@ public:
     Vec3f dim_d = dim_.cast<decimal_t>() * res_;
     printf("   dim: [%f, %f, %f]\n", dim_d(0), dim_d(1), dim_d(2));
     printf("   size: [%d]\n", dim_(0) * dim_(1) *dim_(2));
+    printf("   val_free: [%d]\n", val_free);
+    printf("   val_occ: [%d]\n", val_occ);
+    printf("   val_unknown: [%d]\n", val_unknown);
   }
 
   Vec3f intToFloat(const Vec3i &pp) {
