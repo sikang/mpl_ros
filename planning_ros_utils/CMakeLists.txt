@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8.3)
 project(planning_ros_utils)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
-find_package(catkin REQUIRED COMPONENTS rviz roscpp)
+find_package(catkin REQUIRED COMPONENTS roscpp rviz topic_tools)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIRS})
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -30,15 +30,13 @@ catkin_simple()
 cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp
   src/mapping_utils/obstacle_grid.cpp)
 
-FIND_PACKAGE(VTK REQUIRED)
+FIND_PACKAGE(VTK)
 
 if(NOT VTK_FOUND)
-  set(DEFAULT FALSE)
-  set(REASON "VTK was not found.")
-  message("VTK was not found")
+  message(STATUS "VTK was not found")
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
-  message("VTK was found")
+  message(STATUS "VTK was found")
   cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
   target_link_libraries(mesh_sampling ${VTK_LIBRARIES})
 endif(NOT VTK_FOUND)
