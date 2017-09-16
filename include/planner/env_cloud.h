@@ -14,7 +14,7 @@ namespace MPL {
 /**
  * @brief Voxel map environment
  */
-class env_decomp : public env_base
+class env_cloud : public env_base
 {
   protected:
     std::unique_ptr<DecompUtil> map_util_;
