@@ -49,10 +49,11 @@ goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], 
 ================== Traj -- total J: 9.000000, total time: 10.000000
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
 ```
+Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`.
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
-<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> 
+<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> <img src="./test_node/samples/sample3.png" width="256"> 
 
 The built-in maps are listed as below:
 

@@ -1,7 +1,7 @@
 #ifndef MESH_VISUAL_H
 #define MESH_VISUAL_H
 
-#include <poly_utils/data_type.h>
+#include <motion_primitive_library/data_type.h>
 #include <Eigen/Eigenvalues>
 
 #include <OGRE/OgreVector3.h>

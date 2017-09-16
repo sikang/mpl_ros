@@ -14,9 +14,9 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
   poss_.clear();
   vels_.clear();
   accs_.clear();
+  jrks_.clear();
 
-  if (msg.primitives.empty() ||
-      num_ == 0)
+  if (msg.primitives.empty() || num_ == 0)
     return;
 
   poss_.resize(num_);
@@ -24,24 +24,25 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
     vels_.resize(num_);
   if(acc_vis_)
     accs_.resize(num_);
+  if(jrk_vis_)
+    jrks_.resize(num_);
+ 
   for (int i = 0; i < num_; i++) {
     poss_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(vel_vis_)
       vels_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(acc_vis_)
       accs_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
-
+    if(jrk_vis_)
+      jrks_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
   }
 
   Trajectory p = toTrajectory(msg);
 
   decimal_t theta = M_PI / 2;
-  Mat3f Rv, Ra;
-  Rv << cos(theta), -sin(theta), 0,
+  Mat3f R;
+  R << cos(theta), -sin(theta), 0,
     sin(theta), cos(theta), 0,
-    0, 0, 1;
-  Ra << cos(-theta), -sin(-theta), 0,
-    sin(-theta), cos(-theta), 0,
     0, 0, 1;
 
   std::vector<Waypoint> waypoints = p.sample(num_);
@@ -57,18 +58,26 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
     poss_[i-1]->addPoint(pos2);
 
     if(vel_vis_){
-      Vec3f p3 = p2.pos + Rv * p2.vel;
+      Vec3f p3 = p2.pos + R * p2.vel;
       Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
       vels_[i-1]->addPoint(pos2);
       vels_[i-1]->addPoint(pos3);
     }
 
     if(acc_vis_){
-      Vec3f p4 = p2.pos + Ra * p2.acc;
+      Vec3f p4 = p2.pos + R * p2.acc;
       Ogre::Vector3 pos4(p4(0), p4(1), p4(2));
       accs_[i-1]->addPoint(pos2);
       accs_[i-1]->addPoint(pos4);
     }
+
+    if(jrk_vis_){
+      Vec3f p4 = p2.pos + R * p2.jrk / 10;
+      Ogre::Vector3 pos4(p4(0), p4(1), p4(2));
+      jrks_[i-1]->addPoint(pos2);
+      jrks_[i-1]->addPoint(pos4);
+    }
+
   }
 }
 
@@ -80,23 +89,25 @@ void TrajectoryVisual::addMessage(const planning_ros_msgs::Trajectory &msg) {
     vels_.resize(num_ + prev_size);
   if(acc_vis_)
     accs_.resize(num_ + prev_size);
+ if(jrk_vis_)
+    jrks_.resize(num_ + prev_size);
+  
   for (int i = prev_size; i < (int)poss_.size(); i++) {
     poss_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(vel_vis_)
       vels_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(acc_vis_)
       accs_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
+    if(jrk_vis_)
+      jrks_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
   }
 
 
   Trajectory p = toTrajectory(msg);
   decimal_t theta = M_PI / 2;
-  Mat3f Rv, Ra;
-  Rv << cos(theta), -sin(theta), 0,
+  Mat3f R;
+  R << cos(theta), -sin(theta), 0,
     sin(theta), cos(theta), 0,
-    0, 0, 1;
-  Ra << cos(-theta), -sin(-theta), 0,
-    sin(-theta), cos(-theta), 0,
     0, 0, 1;
   std::vector<Waypoint> waypoints = p.sample(num_);
   for (int i = 1; i < (int) waypoints.size(); i++) {
@@ -109,17 +120,24 @@ void TrajectoryVisual::addMessage(const planning_ros_msgs::Trajectory &msg) {
     poss_[i-1 + prev_size]->addPoint(pos2);
 
     if(vel_vis_){
-      Vec3f p3 = p2.pos + Rv * p2.vel;
+      Vec3f p3 = p2.pos + R * p2.vel;
       Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
       vels_[i-1 + prev_size]->addPoint(pos2);
       vels_[i-1 + prev_size]->addPoint(pos3);
     }
 
     if(acc_vis_){
-      Vec3f p4 = p2.pos + Ra * p2.acc;
+      Vec3f p4 = p2.pos + R * p2.acc;
       Ogre::Vector3 pos4(p4(0), p4(1), p4(2));
       accs_[i-1 + prev_size]->addPoint(pos2);
       accs_[i-1 + prev_size]->addPoint(pos4);
+    }
+
+    if(jrk_vis_){
+      Vec3f p4 = p2.pos + R * p2.jrk / 10;
+      Ogre::Vector3 pos4(p4(0), p4(1), p4(2));
+      jrks_[i-1]->addPoint(pos2);
+      jrks_[i-1]->addPoint(pos4);
     }
   }
 }
@@ -134,6 +152,10 @@ void TrajectoryVisual::setVelVis(bool vis) {
 
 void TrajectoryVisual::setAccVis(bool vis) {
   acc_vis_ = vis;
+}
+
+void TrajectoryVisual::setJrkVis(bool vis) {
+  jrk_vis_ = vis;
 }
 
 void TrajectoryVisual::setFramePosition(const Ogre::Vector3 &position) {
@@ -159,6 +181,11 @@ void TrajectoryVisual::setAccColor(float r, float g, float b, float a) {
     it->setColor(r, g, b, a);
 }
 
+void TrajectoryVisual::setJrkColor(float r, float g, float b, float a) {
+  for (auto &it : jrks_)
+    it->setColor(r, g, b, a);
+}
+
 void TrajectoryVisual::setPosScale(float s) {
   for (auto &it : poss_)
     it->setLineWidth(s);
@@ -173,4 +200,10 @@ void TrajectoryVisual::setAccScale(float s) {
   for (auto &it : accs_)
     it->setLineWidth(s);
 }
+
+void TrajectoryVisual::setJrkScale(float s) {
+  for (auto &it : jrks_)
+    it->setLineWidth(s);
+}
+
 }

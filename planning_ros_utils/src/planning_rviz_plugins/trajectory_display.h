@@ -32,11 +32,14 @@ namespace planning_rviz_plugins {
           void updatePosColorAndAlpha();
         void updateVelColorAndAlpha();
         void updateAccColorAndAlpha();
+        void updateJrkColorAndAlpha();
         void updatePosScale();
         void updateVelScale();
         void updateAccScale();
+        void updateJrkScale();
         void updateVelVis();
         void updateAccVis();
+        void updateJrkVis();
         void updateHistoryLength();
         void updateNum();
 
@@ -49,11 +52,14 @@ namespace planning_rviz_plugins {
         rviz::ColorProperty *pos_color_property_;
         rviz::ColorProperty *vel_color_property_;
         rviz::ColorProperty *acc_color_property_;
+        rviz::ColorProperty *jrk_color_property_;
         rviz::FloatProperty *pos_scale_property_;
         rviz::FloatProperty *vel_scale_property_;
         rviz::FloatProperty *acc_scale_property_;
+        rviz::FloatProperty *jrk_scale_property_;
         rviz::BoolProperty *vel_vis_property_;
         rviz::BoolProperty *acc_vis_property_;
+        rviz::BoolProperty *jrk_vis_property_;
         rviz::IntProperty *history_length_property_;
         rviz::IntProperty *num_property_;
 

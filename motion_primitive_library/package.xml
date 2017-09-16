@@ -1,6 +1,6 @@
 <package format="2">
   <name>motion_primitive_library</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description> search-based motion primitive planning library</description>
   <author>Sikang Liu</author>
   <maintainer email="sikang@seas.upenn.edu">Sikang Liu</maintainer>

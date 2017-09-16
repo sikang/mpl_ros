@@ -25,16 +25,20 @@ namespace planning_rviz_plugins {
       void setPosColor(float r, float g, float b, float a);
       void setVelColor(float r, float g, float b, float a);
       void setAccColor(float r, float g, float b, float a);
+      void setJrkColor(float r, float g, float b, float a);
       void setPosScale(float s);
       void setVelScale(float s);
       void setAccScale(float s);
+      void setJrkScale(float s);
       void setVelVis(bool vis);
       void setAccVis(bool vis);
+      void setJrkVis(bool vis);
 
     private:
       std::vector<std::unique_ptr<rviz::BillboardLine>> poss_;
       std::vector<std::unique_ptr<rviz::BillboardLine>> vels_;
       std::vector<std::unique_ptr<rviz::BillboardLine>> accs_;
+      std::vector<std::unique_ptr<rviz::BillboardLine>> jrks_;
 
       Ogre::SceneNode *frame_node_;
       Ogre::SceneManager *scene_manager_;
@@ -42,6 +46,7 @@ namespace planning_rviz_plugins {
       int num_;
       bool vel_vis_;
       bool acc_vis_;
+      bool jrk_vis_;
   };
 }
 
