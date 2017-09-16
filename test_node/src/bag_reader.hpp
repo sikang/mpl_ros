@@ -3,9 +3,9 @@
 #include <rosbag/view.h>
 
 #include <boost/foreach.hpp>
-#include <planning_ros_msgs/VoxelMap.h>
 
-planning_ros_msgs::VoxelMap read_bag(std::string file_name, std::string topic) {
+template<class T>
+T read_bag(std::string file_name, std::string topic) {
   rosbag::Bag bag;
   bag.open(file_name, rosbag::bagmode::Read);
 
@@ -15,11 +15,10 @@ planning_ros_msgs::VoxelMap read_bag(std::string file_name, std::string topic) {
   rosbag::View view(bag, rosbag::TopicQuery(topics));
 
   bool find = false;
-  planning_ros_msgs::VoxelMap map;
+  T msg;
   BOOST_FOREACH (rosbag::MessageInstance const m, view) {
-    planning_ros_msgs::VoxelMap::ConstPtr map_ptr = m.instantiate<planning_ros_msgs::VoxelMap>();
-    if (map_ptr != NULL) {
-      map = *map_ptr;
+    if (m.instantiate<T>() != NULL) {
+      msg = *m.instantiate<T>();
       ROS_WARN("Get data!");
       find = true;
       break;
@@ -28,5 +27,5 @@ planning_ros_msgs::VoxelMap read_bag(std::string file_name, std::string topic) {
   bag.close();
   if (!find)
     ROS_WARN("Fail to find '%s' in '%s'", topic.c_str(), file_name.c_str());
-  return map;
+  return msg;
 }

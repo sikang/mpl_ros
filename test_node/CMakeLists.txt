@@ -12,9 +12,6 @@ catkin_simple()
 
 cs_add_executable(test_primitive_map src/test_primitive_map.cpp)
 #cs_add_executable(test_primitive_sfc src/test_primitive_sfc.cpp)
-#cs_add_executable(test_sfc src/test_sfc.cpp)
-#cs_add_executable(sfc_server src/sfc_server.cpp)
-#cs_add_executable(test_bfs src/test_bfs.cpp)
 
 cs_install()
 
