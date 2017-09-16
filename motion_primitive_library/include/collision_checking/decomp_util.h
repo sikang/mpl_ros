@@ -6,7 +6,6 @@
 #define SFC_UTIL_H
 #include <primitive/primitive.h>
 #include <primitive/primitive_util.h>
-//#include <decomp_util/seed_decomp.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
 #include <boost/make_shared.hpp>
@@ -38,14 +37,7 @@ class DecompUtil {
     PCLPointCloud toPCL(const vec_Vec3f &obs);
 
     void set_region(const Vec3f& ori, const Vec3f& dim);
-    /**
-     * @brief Check if a primitive is inside given poly for a period
-     * @param pr Input primitive
-     * @param poly Input polyhedron
-     * @param t1 Start time
-     * @param dt Time of intersection
-     */
-  private:
+ private:
     ///Check if a point is inside the given polyhedron
     bool insidePolyhedron(const Vec3f &pt, const Polyhedron &Vs);
     bool insideEllipsoid(const Ellipsoid& E, const vec_Vec3f& O);

@@ -6,11 +6,11 @@ MPCloudUtil::MPCloudUtil(bool verbose)
 {
   planner_verbose_= verbose;
   if(planner_verbose_)
-    printf(ANSI_COLOR_CYAN "[MPPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN "[MPCloudUtil] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
 }
 
 void MPCloudUtil::setMap(const vec_Vec3f& obs, decimal_t r, const Vec3f& ori, const Vec3f& dim) {
-  ENV_.reset(new MPL::env_decomp(obs, r, ori, dim));
+  ENV_.reset(new MPL::env_cloud(obs, r, ori, dim));
 }
 
 bool MPCloudUtil::plan(const Waypoint &start, const Waypoint &goal) {

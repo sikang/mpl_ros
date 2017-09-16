@@ -15,7 +15,7 @@ class MPCloudUtil : public MPBaseUtil
      * @brief Simple constructor
      * @param verbose enable print out
      */
-    MPDecompUtil(bool verbose);
+    MPCloudUtil(bool verbose);
     ///Planning from start to goal
     bool plan(const Waypoint &start, const Waypoint &goal);
     ///Set map util

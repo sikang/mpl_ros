@@ -12,7 +12,7 @@ IF(USE_ROS)
     DEPENDS EIGEN3
     CATKIN_DEPENDS
     INCLUDE_DIRS include
-    LIBRARIES primitive poly_solver mp_map_util 
+    LIBRARIES primitive poly_solver mp_map_util mp_cloud_util
     )
   INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
   LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
@@ -67,11 +67,11 @@ add_library(mp_map_util src/planner/mp_map_util.cpp
 target_link_libraries(mp_map_util primitive)
 
 
-#add_library(mp_cloud_util src/planner/mp_cloud_util.cpp
-#  src/planner/mp_base_util.cpp
-#  src/collision_checking/decomp_util.cpp
-#  src/planner/astar.cpp)
-#target_link_libraries(mp_decomp_util primitive ${PCL_LIBRARIES})
+add_library(mp_cloud_util src/planner/mp_cloud_util.cpp
+  src/planner/mp_base_util.cpp
+  src/collision_checking/decomp_util.cpp
+  src/planner/astar.cpp)
+target_link_libraries(mp_cloud_util primitive ${PCL_LIBRARIES})
 
 
 
