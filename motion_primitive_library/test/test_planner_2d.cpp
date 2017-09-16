@@ -35,23 +35,37 @@ int main(int argc, char ** argv){
   // Initialize planning mission 
   Waypoint start, goal;
   start.pos = Vec3f(2.5, -3.5, 0.0); 
+  start.vel = Vec3f::Zero(); 
+  start.acc = Vec3f::Zero(); 
+  start.jrk = Vec3f::Zero(); 
   start.use_pos = true;
-  start.use_vel = true;
-  start.use_acc = false; // Current lib only works for planning in accleration space
-  goal.pos = Vec3f(35, 2.5, 0.0);
+  start.use_vel = false;
+  start.use_acc = false; 
+  start.use_jrk = false; 
+
+  goal.pos = Vec3f(37, 2.5, 0.0);
+  goal.vel = Vec3f::Zero(); 
+  goal.acc = Vec3f::Zero(); 
+  goal.jrk = Vec3f::Zero(); 
+ 
   goal.use_pos = start.use_pos;
   goal.use_vel = start.use_vel;
   goal.use_acc = start.use_acc;
+  goal.use_jrk = start.use_jrk;
 
   std::unique_ptr<MPMapUtil> planner(new MPMapUtil(true)); // Declare a mp planner using voxel map
   planner->setMapUtil(map_util); // Set collision checking function
   planner->setEpsilon(1.0); // Set greedy param (default equal to 1)
-  planner->setVmax(2.0); // Set max velocity
-  planner->setAmax(1.0); // Set max acceleration (as control input)
+  planner->setVmax(1.0); // Set max velocity
+  planner->setAmax(1.0); // Set max acceleration 
+  planner->setJmax(1.0); // Set max jerk
+  planner->setUmax(1.0); // Set max control input
   planner->setDt(1.0); // Set dt for each primitive
-  planner->setMaxNum(5000); // Set maximum allowed states
-  planner->setMode(1, false); // 2D discretization with 1
-  planner->setTol(1, 1); // Tolerance for goal region
+  planner->setW(10); // Set dt for each primitive
+  planner->setMaxNum(-1); // Set maximum allowed states
+  planner->setU(1, false);// 2D discretization with 1
+  planner->setMode(start); // Set effort degree
+  planner->setTol(1, 1, 1); // Tolerance for goal region
 
 
   // Planning
@@ -94,6 +108,7 @@ int main(int argc, char ** argv){
   imageSource->SetDrawColor(255.0, 0.0, 0.0);
   imageSource->DrawCircle(goalI[0], goalI[1], 5);
 
+  //Plot expended states
   for(const auto& pt: planner->getPs()) {
     imageSource->SetDrawColor(155.0, 155.0, 155.0);
     const Vec3i pi = map_util->floatToInt(pt);
@@ -103,6 +118,9 @@ int main(int argc, char ** argv){
   if(valid) {
     Trajectory traj = planner->getTraj();
     decimal_t total_t = traj.getTotalTime();
+    printf("Total time T: %f\n", total_t);
+    printf("Total J:  J(0) = %f, J(1) = %f, J(2) = %f, J(3) = %f\n", 
+        traj.J(0), traj.J(1), traj.J(2), traj.J(3));
     int num = 1000; // number of points on trajectory to draw
     imageSource->SetDrawColor(0.0, 0.0, 0.0);
     for(int i = 0; i < num -1 ; i ++) {

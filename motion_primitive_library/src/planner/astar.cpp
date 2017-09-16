@@ -1,18 +1,18 @@
 #include <planner/astar.h>
 #include <planner/env_base.h>
-#include <primitive/primitive.h>
+//#include <primitive/primitive.h>
 
 
 template <class state>
 double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
                                   const env_base& ENV,
-                                  std::list<state>& path, std::vector<int>& action_idx,
+                                  Trajectory& traj, std::vector<double>& action_dts,
                                   double eps, int max_expand )
 {
   // Check if done
   if( ENV.is_goal(start_coord) )
   {
-    path.push_back(start_coord);
+    //path.push_back(start_coord);
     return 0;
   }
   // Initialize State Space
@@ -49,16 +49,24 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
   
   // Recover path
   double pcost = currNode_pt->g;
+  std::vector<Primitive> prs;
   while( currNode_pt->parent )
   {
-    action_idx.push_back( currNode_pt->parent_action_id );
+    //action_idx.push_back( currNode_pt->parent_action_id );
+    int action_idx = currNode_pt->parent_action_id;
+    action_dts.push_back(currNode_pt->dt);
     currNode_pt = currNode_pt->parent;
     std::vector<state> next_micro;
-    ENV.forward_action( currNode_pt->coord, action_idx.back(), next_micro );
+    Primitive pr;
+    ENV.forward_action( currNode_pt->coord, action_idx, action_dts.back(), next_micro, pr );
+    prs.push_back(pr);
     for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
-         it!=next_micro.rend(); ++it )
-      path.push_front( *it );
+         it!=next_micro.rend(); ++it ) {}
+      //path.push_front( *it );
   }
+
+  std::reverse(prs.begin(), prs.end());
+  traj = Trajectory(prs);
   return pcost;  
 }
 
@@ -66,7 +74,7 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
 template <class state>
 double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_idx,
                                     const env_base& ENV,
-                                    std::list<state>& path, std::vector<int>& action_idx,
+                                    Trajectory& traj, std::vector<int>& action_idx,
                                     double eps, double allocated_time_secs )
 {
   std::chrono::high_resolution_clock::time_point time_started = std::chrono::high_resolution_clock::now();
@@ -76,9 +84,8 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
   double eps_dec = 0.2;
   
   // Check if done
-  if( ENV.is_goal(start_coord) )
-  {
-    path.push_back(start_coord);
+  if( ENV.is_goal(start_coord) ) {
+    //path.push_back(start_coord);
     return 0;
   }
   
@@ -124,19 +131,26 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
       // Check if done
       if( ENV.is_goal(currNode_pt->coord) ) 
       { // Done! Recover path
-        path.clear(); action_idx.clear();
+        //path.clear(); 
+        action_idx.clear();
         pcost = currNode_pt->g;
+        std::vector<Primitive> prs;
         while( currNode_pt->parent )
         {
           action_idx.push_back( currNode_pt->parent_action_id );
+          double dt = currNode_pt->dt;
           currNode_pt = currNode_pt->parent;
           std::vector<state> next_micro;
-          ENV.forward_action( currNode_pt->coord, action_idx.back(), next_micro );
+          Primitive pr;
+          ENV.forward_action( currNode_pt->coord, action_idx.back(), dt, next_micro, pr);
           
           for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
-               it!=next_micro.rend(); ++it )
-            path.push_front( *it );          
+               it!=next_micro.rend(); ++it ) {}
+            //path.push_front( *it );
         }
+
+        std::reverse(prs.begin(), prs.end());
+        Trajectory traj(prs);
         break;
       }
       
@@ -181,7 +195,8 @@ void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
   std::vector<MPL::Key> succ_idx;
   std::vector<double> succ_cost;
   std::vector<int> succ_act_idx;
-  ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx );
+  std::vector<double> succ_act_dt;
+  ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx, succ_act_dt);
 
   //std::cout << "num succ=" << succ_coord.size() << std::endl;
   
@@ -207,6 +222,7 @@ void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
     {
       child_pt->parent = currNode_pt;  // Assign new parent
       child_pt->parent_action_id = succ_act_idx[s];
+      child_pt->dt = succ_act_dt[s];
       child_pt->g = tentative_gval;    // Update gval
       double fval = child_pt->g + (sss_ptr->eps) * child_pt->h;
       

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['operator_3d_3d',['operator==',['../structWaypoint.html#a78d55c82e0b9654ccc852a0c5971025d',1,'Waypoint']]]
+  ['quad',['quad',['../math_8h.html#a5b1ef571b298b14e320d7d9f31528871',1,'math.cpp']]],
+  ['quartic',['quartic',['../math_8h.html#a11e53038927f416e637df83d4a0b18bc',1,'math.cpp']]]
 ];

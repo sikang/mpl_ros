@@ -74,26 +74,6 @@ int main(int argc, char ** argv){
   map.header = header_;
   map_pub.publish(map);
 
-  //Initialize planner
-  double dt, v_max, a_max;
-  int max_num;
-  bool use_3d;
-  nh.param("dt", dt, 1.0);
-  nh.param("v_max", v_max, 2.0);
-  nh.param("a_max", a_max, 1.0);
-  nh.param("max_num", max_num, -1);
-  nh.param("use_3d", use_3d, false);
-
-  planner_.reset(new MPMapUtil(true));
-  planner_->setMapUtil(map_util); // Set collision checking function
-  planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
-  planner_->setVmax(v_max); // Set max velocity
-  planner_->setAmax(a_max); // Set max acceleration (as control input)
-  planner_->setDt(dt); // Set dt for each primitive
-  planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_->setMode(1, use_3d); // 2D discretization with 1
-  planner_->setTol(1, 1); // Tolerance for goal region
-
 
   //Set start and goal
   double start_x, start_y, start_z;
@@ -126,6 +106,29 @@ int main(int argc, char ** argv){
   goal.use_acc = start.use_acc;
 
 
+  //Initialize planner
+  double dt, v_max, a_max;
+  int max_num;
+  bool use_3d;
+  nh.param("dt", dt, 1.0);
+  nh.param("v_max", v_max, 2.0);
+  nh.param("a_max", a_max, 1.0);
+  nh.param("max_num", max_num, -1);
+  nh.param("use_3d", use_3d, false);
+
+  planner_.reset(new MPMapUtil(true));
+  planner_->setMapUtil(map_util); // Set collision checking function
+  planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
+  planner_->setVmax(v_max); // Set max velocity
+  planner_->setAmax(a_max); // Set max acceleration (as control input)
+  planner_->setUmax(a_max);// 2D discretization with 1
+  planner_->setDt(dt); // Set dt for each primitive
+  planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
+  planner_->setU(1, false);// 2D discretization with 1
+  planner_->setMode(start); // use acc as control
+  planner_->setTol(1, 1, 1); // Tolerance for goal region
+
+
   //Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
   sg_cloud.header = header_;
@@ -139,7 +142,7 @@ int main(int argc, char ** argv){
   if(solve(start, goal)) {
 
     //Get intermediate waypoints
-    std::vector<Waypoint> waypoints = planner_->getPath();
+    std::vector<Waypoint> waypoints = planner_->getWs();
     //Get time allocation
     std::vector<decimal_t> dts;
     dts.resize(waypoints.size() - 1, dt);

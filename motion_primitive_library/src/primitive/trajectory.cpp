@@ -181,7 +181,7 @@ bool Trajectory::scale_down(decimal_t mv, decimal_t ri, decimal_t rf) {
           ts.push_back(0);
         ts.push_back(segs[id].t());
         for(const auto& tv: ts){
-          Vec3f p = segs[id].traj(i).evaluate(tv);
+          Vec4f p = segs[id].traj(i).evaluate(tv);
           decimal_t v = p(1);
           decimal_t lambda_v = fabs(v) / mv;
           if(lambda_v <= 1)
@@ -274,10 +274,11 @@ bool Trajectory::evaluate(decimal_t time, Waypoint &p) const{
     if(tau >= taus[id] && tau <= taus[id+1]) {
       tau -= taus[id];
       for(int j = 0; j < 3; j++) {
-        Vec3f d = segs[id].traj(j).evaluate(tau);
+        Vec4f d = segs[id].traj(j).evaluate(tau);
         p.pos(j) = d(0);
         p.vel(j) = d(1)/lambda;
         p.acc(j) = d(2)/lambda/lambda-d(1)*lambda_dot/lambda/lambda/lambda;
+        p.jrk(j) = d(3); //TODO
       }
       return true;
 
@@ -300,7 +301,6 @@ std::vector<Waypoint> Trajectory::sample(int N) const {
 
   return ps;
 }
-
 
 
 Lambda Trajectory::lambda() const {

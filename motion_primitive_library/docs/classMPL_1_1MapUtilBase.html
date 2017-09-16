@@ -60,7 +60,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>MPL</b></li><li class="navelem"><a class="el" href="classMPL_1_1MapUtilBase.html">MapUtilBase</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceMPL.html">MPL</a></li><li class="navelem"><a class="el" href="classMPL_1_1MapUtilBase.html">MapUtilBase</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -73,8 +73,6 @@ $(function() {
 <div class="title">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="map__util__base_8h_source.html">map_util_base.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -192,32 +190,20 @@ Tmap&#160;</td><td class="memItemRight" valign="bottom"><b>map_</b></td></tr>
 <a class="el" href="data__type_8h.html#a6b9210d48a0a541940af71827aad1b41">vec_E</a>&lt; Ti &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#adddd683bedcd861183d90aacb41a29c7">dilate_neighbor_</a></td></tr>
 <tr class="memdesc:adddd683bedcd861183d90aacb41a29c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pre-computed vector of neighboring cells for dilating. <br /></td></tr>
 <tr class="separator:adddd683bedcd861183d90aacb41a29c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ee58872c57d013f0329dded926c368b"><td class="memItemLeft" align="right" valign="top"><a id="a8ee58872c57d013f0329dded926c368b"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#a8ee58872c57d013f0329dded926c368b">val_occ</a> = 100</td></tr>
-<tr class="memdesc:a8ee58872c57d013f0329dded926c368b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume occupied cell has value 100. <br /></td></tr>
-<tr class="separator:a8ee58872c57d013f0329dded926c368b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e1ec934165652377cf674cd544a7b73"><td class="memItemLeft" align="right" valign="top"><a id="a8e1ec934165652377cf674cd544a7b73"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#a8e1ec934165652377cf674cd544a7b73">val_free</a> = 0</td></tr>
-<tr class="memdesc:a8e1ec934165652377cf674cd544a7b73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume free cell has value 0. <br /></td></tr>
-<tr class="separator:a8e1ec934165652377cf674cd544a7b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82942a978af65c7942d4a5420d10e6c0"><td class="memItemLeft" align="right" valign="top"><a id="a82942a978af65c7942d4a5420d10e6c0"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#a82942a978af65c7942d4a5420d10e6c0">val_unknown</a> = -1</td></tr>
-<tr class="memdesc:a82942a978af65c7942d4a5420d10e6c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume unknown cell has value -1. <br /></td></tr>
-<tr class="separator:a82942a978af65c7942d4a5420d10e6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d179f83bf654aa9f234288588edb5ba"><td class="memItemLeft" align="right" valign="top"><a id="a5d179f83bf654aa9f234288588edb5ba"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#a5d179f83bf654aa9f234288588edb5ba">val_occ</a> = 100</td></tr>
+<tr class="memdesc:a5d179f83bf654aa9f234288588edb5ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume occupied cell has value 100. <br /></td></tr>
+<tr class="separator:a5d179f83bf654aa9f234288588edb5ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6722bbb01641d75983efadf362644877"><td class="memItemLeft" align="right" valign="top"><a id="a6722bbb01641d75983efadf362644877"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#a6722bbb01641d75983efadf362644877">val_free</a> = 0</td></tr>
+<tr class="memdesc:a6722bbb01641d75983efadf362644877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume free cell has value 0. <br /></td></tr>
+<tr class="separator:a6722bbb01641d75983efadf362644877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfc1811aa7e126258aee6f696df12d30"><td class="memItemLeft" align="right" valign="top"><a id="acfc1811aa7e126258aee6f696df12d30"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1MapUtilBase.html#acfc1811aa7e126258aee6f696df12d30">val_unknown</a> = -1</td></tr>
+<tr class="memdesc:acfc1811aa7e126258aee6f696df12d30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume unknown cell has value -1. <br /></td></tr>
+<tr class="separator:acfc1811aa7e126258aee6f696df12d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Ti, class Tf, class Tmap&gt;<br />
-class MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</h3>
-
-<p>The base class is provided by considering both 2D and 3D maps </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Ti</td><td>is integer index of cell/voxel </td></tr>
-    <tr><td class="paramname">Tf</td><td>is float position of cell/voxel </td></tr>
-    <tr><td class="paramname">Tmap</td><td>is defined as a 1D array </td></tr>
-  </table>
-  </dd>
-</dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4038d1970a8fa0420a4fcd26943a1ca2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4038d1970a8fa0420a4fcd26943a1ca2">&#9670;&nbsp;</a></span>MapUtilBase()</h2>
 

@@ -1,7 +1,6 @@
 var searchData=
 [
   ['mrsl_20motion_20primitive_20for_20quadrotor',['MRSL Motion Primitive for quadrotor',['../index.html',1,'']]],
-  ['map',['map',['../classMPL_1_1env__sfc.html#aef840ce1c4f9184d6f7ebf6ec9766016',1,'MPL::env_sfc']]],
   ['map_5futil_5fbase_2eh',['map_util_base.h',['../map__util__base_8h.html',1,'']]],
   ['mapreader',['MapReader',['../classMapReader.html',1,'']]],
   ['maputilbase',['MapUtilBase',['../classMPL_1_1MapUtilBase.html',1,'MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;'],['../classMPL_1_1MapUtilBase.html#a4038d1970a8fa0420a4fcd26943a1ca2',1,'MPL::MapUtilBase::MapUtilBase()']]],
@@ -14,14 +13,15 @@ var searchData=
   ['matdf',['MatDf',['../data__type_8h.html#a18e124bf36dc876ac69175bb51375c78',1,'data_type.h']]],
   ['math_2eh',['math.h',['../math_8h.html',1,'']]],
   ['max_5facc',['max_acc',['../classPrimitive.html#a25e5b4fa8b11ed0be84a5246f8d09215',1,'Primitive']]],
+  ['max_5fjrk',['max_jrk',['../classPrimitive.html#ac194f73b50d5ecc6e2c7c241720c9b4b',1,'Primitive']]],
   ['max_5fnum_5f',['max_num_',['../classMPBaseUtil.html#a2a98e75b4acfd38a6e3898b42d8fccf9',1,'MPBaseUtil']]],
   ['max_5fvel',['max_vel',['../classPrimitive.html#a14682cf852b57be7fa55a2429fc70306',1,'Primitive']]],
   ['mp_5fbase_5futil_2eh',['mp_base_util.h',['../mp__base__util_8h.html',1,'']]],
+  ['mp_5fcloud_5futil_2eh',['mp_cloud_util.h',['../mp__cloud__util_8h.html',1,'']]],
   ['mp_5fmap_5futil_2eh',['mp_map_util.h',['../mp__map__util_8h.html',1,'']]],
-  ['mp_5fsfc_5futil_2eh',['mp_sfc_util.h',['../mp__sfc__util_8h.html',1,'']]],
-  ['mp_5fvision_5futil_2eh',['mp_vision_util.h',['../mp__vision__util_8h.html',1,'']]],
   ['mpbaseutil',['MPBaseUtil',['../classMPBaseUtil.html',1,'MPBaseUtil'],['../classMPBaseUtil.html#a671f1f09b90b1a3f39f4a08685473d09',1,'MPBaseUtil::MPBaseUtil()']]],
-  ['mpmaputil',['MPMapUtil',['../classMPMapUtil.html',1,'MPMapUtil'],['../classMPMapUtil.html#ab5fc4ee70cc2b5ff7c893bf190ed074a',1,'MPMapUtil::MPMapUtil()']]],
-  ['mpsfcutil',['MPSFCUtil',['../classMPSFCUtil.html',1,'MPSFCUtil'],['../classMPSFCUtil.html#ad5fd15ef3f0c39d1dd84e614b30e3d02',1,'MPSFCUtil::MPSFCUtil()']]],
-  ['mpvisionutil',['MPVisionUtil',['../classMPVisionUtil.html',1,'MPVisionUtil'],['../classMPVisionUtil.html#a5e3eb2a86449e0bd7b86ab4c0180a7da',1,'MPVisionUtil::MPVisionUtil()']]]
+  ['mpcloudutil',['MPCloudUtil',['../classMPCloudUtil.html',1,'']]],
+  ['mpdecomputil',['MPDecompUtil',['../classMPCloudUtil.html#a9a42a37f4c39b198aad9952912a5ee3b',1,'MPCloudUtil']]],
+  ['mpl',['MPL',['../namespaceMPL.html',1,'']]],
+  ['mpmaputil',['MPMapUtil',['../classMPMapUtil.html',1,'MPMapUtil'],['../classMPMapUtil.html#ab5fc4ee70cc2b5ff7c893bf190ed074a',1,'MPMapUtil::MPMapUtil()']]]
 ];
