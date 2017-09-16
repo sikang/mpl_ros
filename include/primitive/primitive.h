@@ -18,25 +18,27 @@ struct Waypoint {
   Vec3f pos; 
   Vec3f vel;
   Vec3f acc;
+  Vec3f jrk;
 
   bool use_pos = false;///<If true, attribute pos will be used in primitive generation
   bool use_vel = false;///<If true, attribute vel will be used in primitive generation 
   bool use_acc = false;///<If true, attribute acc will be used in primitive generation 
+  bool use_jrk = false;///<If true, attribute acc will be used in primitive generation 
 
-  int n = 0;
-  decimal_t cost = 0;
-  decimal_t gcost = 0;
-
+  decimal_t t = 0;
   std::shared_ptr<Waypoint> parent;
   ///Print all the useful attributes
   void print() const {
+    std::cout << "t: " << t << std::endl;
     if(use_pos)
       std::cout << "pos: " << pos.transpose() << std::endl;
     if(use_vel)
       std::cout << "vel: " << vel.transpose() << std::endl;
     if(use_acc)
       std::cout << "acc: " << acc.transpose() << std::endl;
-    if(!use_pos && !use_vel && !use_acc)
+    if(use_jrk)
+      std::cout << "jrk: " << jrk.transpose() << std::endl;
+    if(!use_pos && !use_vel && !use_acc && !use_jrk)
       std::cout << "Nothing is used!" << std::endl;
   }
 
@@ -44,7 +46,8 @@ struct Waypoint {
   bool operator==(const Waypoint& n){
     return this->pos == n.pos &&
       this->vel == n.vel &&
-      this->acc == n.acc;
+      this->acc == n.acc &&
+      this->jrk == n.jrk;
   }
 };
 
@@ -66,19 +69,31 @@ class Primitive1D {
      */
     Primitive1D(const Vec6f& coeff);
     /**
+     * @brief Construct 1D primitive from an initial state (p) and an input control (u)
+     */
+    Primitive1D(decimal_t p, decimal_t u);
+    /**
      * @brief Construct 1D primitive from an initial state (p, v) and an input control (u)
      */
-    Primitive1D(decimal_t p, decimal_t v, decimal_t u);
+    Primitive1D(Vec2f state, decimal_t u);
     /**
      * @brief Construct 1D primitive from an initial state (p, v, a) and an input control (u)
      */
-    Primitive1D(decimal_t p, decimal_t v, decimal_t a, decimal_t u);
+    Primitive1D(Vec3f state, decimal_t u);
     /**
-     * @brief Construct 1D primitive from an initial state (p1, v1) to a goal state (p2, v2), duration t is required
+     * @brief Construct 1D primitive from an initial state (p, v, a, j) and an input control (u)
+     */
+    Primitive1D(Vec4f state, decimal_t u);
+    /**
+     * @brief Construct 1D primitive from an initial state (p1) to a goal state (p2), given duration t
+     */
+    Primitive1D(decimal_t p1, decimal_t p2,  decimal_t t);
+    /**
+     * @brief Construct 1D primitive from an initial state (p1, v1) to a goal state (p2, v2), given duration t 
      */
     Primitive1D(decimal_t p1, decimal_t v1, decimal_t p2, decimal_t v2, decimal_t t);
     /**
-     * @brief Construct 1D primitive from an initial state (p1, v1, a1) to a goal state (p2, v2, a2), duration t is required
+     * @brief Construct 1D primitive from an initial state (p1, v1, a1) to a goal state (p2, v2, a2), given duration t
      */
     Primitive1D(decimal_t p1, decimal_t v1, decimal_t a1, decimal_t p2, decimal_t v2, decimal_t a2, decimal_t t);
     /**
@@ -94,7 +109,7 @@ class Primitive1D {
     /** 
      * @brief Return (p, v, a) at t, deault v, a are zeros
      */
-    Vec3f evaluate(decimal_t t) const;
+    Vec4f evaluate(decimal_t t) const;
     /**
      * @brief Return extrema of velocity, velocities at both ends (0, t) are considered
      */
@@ -103,6 +118,11 @@ class Primitive1D {
      * @brief Return extrema of acceleration, accelerations at both ends (0, t) are considered
      */
     std::vector<decimal_t> extrema_acc(decimal_t t) const;
+    /**
+     * @brief Return extrema of jerk, jerk at both ends (0, t) are considered
+     */
+    std::vector<decimal_t> extrema_jrk(decimal_t t) const;
+ 
   private:
     /**@brief Coefficients*/
     Vec6f c;
@@ -156,15 +176,25 @@ class Primitive {
    */
   decimal_t max_acc(int k) const;
   /**
-   * @brief Check if the max velocity is below the theshold
+   * @brief Return max jerk along k-th dimension
+   */
+  decimal_t max_jrk(int k) const;
+  /**
+   * @brief Check if the max velocity is below the threshold
    * @param mv is the max threshold for velocity
    */
   bool valid_vel(decimal_t mv) const;
   /**
-   * @brief Check if the max acceleration is below the theshold
+   * @brief Check if the max acceleration is below the threshold
    * @param ma is the max threshold for acceleration
    */
   bool valid_acc(decimal_t ma) const;
+  /**
+   * @brief Check if the max jerk is below the threshold
+   * @param mj is the max threshold for jerk
+   */
+  bool valid_jrk(decimal_t mj) const;
+ 
   /**
    * @brief Return total efforts of primitive for the given duration: \f$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt\f$
    *

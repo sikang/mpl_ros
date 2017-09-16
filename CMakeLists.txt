@@ -12,7 +12,7 @@ IF(USE_ROS)
     DEPENDS EIGEN3
     CATKIN_DEPENDS
     INCLUDE_DIRS include
-    LIBRARIES primitive poly_solver vision_util vision_queue_util mp_map_util mp_sfc_util mp_vision_util bfs
+    LIBRARIES primitive poly_solver mp_map_util 
     )
   INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
   LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
@@ -27,12 +27,18 @@ ELSE()
   MESSAGE(STATUS "VTK was found")
 ENDIF()
 
+FIND_PACKAGE(PCL REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
 FIND_PACKAGE(Eigen3 REQUIRED)
-FIND_PACKAGE(OpenCV REQUIRED )
+#FIND_PACKAGE(OpenCV REQUIRED )
 FIND_PACKAGE(PkgConfig REQUIRED)
 PKG_CHECK_MODULES(YAMLCPP REQUIRED yaml-cpp)
 #FIND_PACKAGE( Boost COMPONENTS filesystem system REQUIRED )
-include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} include)
+include_directories(${EIGEN3_INCLUDE_DIR} include)
+#include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} include)
 
 
 IF(YAMLCPP_FOUND)
@@ -57,28 +63,37 @@ target_link_libraries(poly_solver primitive)
 
 add_library(mp_map_util src/planner/mp_map_util.cpp
   src/planner/mp_base_util.cpp
-    src/planner/astar.cpp)
+  src/planner/astar.cpp)
 target_link_libraries(mp_map_util primitive)
 
-add_library(mp_sfc_util src/planner/mp_sfc_util.cpp
-  src/planner/mp_base_util.cpp
-  src/collision_checking/sfc_util.cpp
-  src/planner/astar.cpp)
-target_link_libraries(mp_sfc_util primitive)
+
+#add_library(mp_cloud_util src/planner/mp_cloud_util.cpp
+#  src/planner/mp_base_util.cpp
+#  src/collision_checking/decomp_util.cpp
+#  src/planner/astar.cpp)
+#target_link_libraries(mp_decomp_util primitive ${PCL_LIBRARIES})
 
 
-add_library(vision_util src/collision_checking/vision_util.cpp)
-target_link_libraries(vision_util ${OpenCV_LIBS} primitive)
-add_library(vision_queue_util src/collision_checking/vision_queue_util.cpp)
-target_link_libraries(vision_queue_util vision_util)
 
-add_library(mp_vision_util src/planner/mp_vision_util.cpp
-  src/planner/mp_base_util.cpp
-  src/planner/astar.cpp)
-target_link_libraries(mp_vision_util primitive vision_queue_util)
+#add_library(mp_sfc_util src/planner/mp_sfc_util.cpp
+#  src/planner/mp_base_util.cpp
+#  src/collision_checking/sfc_util.cpp
+#  src/planner/astar.cpp)
+#target_link_libraries(mp_sfc_util primitive)
 
-add_library(bfs src/planner/bfs.cpp)
-target_link_libraries(bfs primitive)
+
+#add_library(vision_util src/collision_checking/vision_util.cpp)
+#target_link_libraries(vision_util ${OpenCV_LIBS} primitive)
+#add_library(vision_queue_util src/collision_checking/vision_queue_util.cpp)
+#target_link_libraries(vision_queue_util vision_util)
+
+#add_library(mp_vision_util src/planner/mp_vision_util.cpp
+#  src/planner/mp_base_util.cpp
+#  src/planner/astar.cpp)
+#target_link_libraries(mp_vision_util primitive vision_queue_util)
+
+#add_library(bfs src/planner/bfs.cpp)
+#target_link_libraries(bfs primitive)
 
 add_executable(test_planner_2d test/test_planner_2d.cpp)
 target_link_libraries(test_planner_2d mp_map_util ${YAMLCPP_LIBRARIES} ${Boost_LIBRARIES} ${VTK_LIBRARIES})

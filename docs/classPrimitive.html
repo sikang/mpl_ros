@@ -110,12 +110,19 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#a25e5b4fa8b11ed0be84a5246f8d09215">max_acc</a> (int k) const</td></tr>
 <tr class="memdesc:a25e5b4fa8b11ed0be84a5246f8d09215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return max accleration along k-th dimension. <br /></td></tr>
 <tr class="separator:a25e5b4fa8b11ed0be84a5246f8d09215"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac194f73b50d5ecc6e2c7c241720c9b4b"><td class="memItemLeft" align="right" valign="top"><a id="ac194f73b50d5ecc6e2c7c241720c9b4b"></a>
+<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#ac194f73b50d5ecc6e2c7c241720c9b4b">max_jrk</a> (int k) const</td></tr>
+<tr class="memdesc:ac194f73b50d5ecc6e2c7c241720c9b4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return max jerk along k-th dimension. <br /></td></tr>
+<tr class="separator:ac194f73b50d5ecc6e2c7c241720c9b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4687bbf212724b70a40166f29220eede"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#a4687bbf212724b70a40166f29220eede">valid_vel</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> mv) const</td></tr>
-<tr class="memdesc:a4687bbf212724b70a40166f29220eede"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max velocity is below the theshold.  <a href="#a4687bbf212724b70a40166f29220eede">More...</a><br /></td></tr>
+<tr class="memdesc:a4687bbf212724b70a40166f29220eede"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max velocity is below the threshold.  <a href="#a4687bbf212724b70a40166f29220eede">More...</a><br /></td></tr>
 <tr class="separator:a4687bbf212724b70a40166f29220eede"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc0a67e77856ad40d477b3e212078bc5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#abc0a67e77856ad40d477b3e212078bc5">valid_acc</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> ma) const</td></tr>
-<tr class="memdesc:abc0a67e77856ad40d477b3e212078bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max acceleration is below the theshold.  <a href="#abc0a67e77856ad40d477b3e212078bc5">More...</a><br /></td></tr>
+<tr class="memdesc:abc0a67e77856ad40d477b3e212078bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max acceleration is below the threshold.  <a href="#abc0a67e77856ad40d477b3e212078bc5">More...</a><br /></td></tr>
 <tr class="separator:abc0a67e77856ad40d477b3e212078bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f5bab76f0406a1d6cb6cd3f63cd0f16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#a2f5bab76f0406a1d6cb6cd3f63cd0f16">valid_jrk</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> mj) const</td></tr>
+<tr class="memdesc:a2f5bab76f0406a1d6cb6cd3f63cd0f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max jerk is below the threshold.  <a href="#a2f5bab76f0406a1d6cb6cd3f63cd0f16">More...</a><br /></td></tr>
+<tr class="separator:a2f5bab76f0406a1d6cb6cd3f63cd0f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a91a66cdc103d66926aae7da24939b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#a7a91a66cdc103d66926aae7da24939b3">J</a> (int i) const</td></tr>
 <tr class="memdesc:a7a91a66cdc103d66926aae7da24939b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_8.png"/>.  <a href="#a7a91a66cdc103d66926aae7da24939b3">More...</a><br /></td></tr>
 <tr class="separator:a7a91a66cdc103d66926aae7da24939b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,10 +239,36 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Check if the max acceleration is below the theshold. </p>
+<p>Check if the max acceleration is below the threshold. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ma</td><td>is the max threshold for acceleration </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2f5bab76f0406a1d6cb6cd3f63cd0f16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f5bab76f0406a1d6cb6cd3f63cd0f16">&#9670;&nbsp;</a></span>valid_jrk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Primitive::valid_jrk </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td>
+          <td class="paramname"><em>mj</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if the max jerk is below the threshold. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mj</td><td>is the max threshold for jerk </td></tr>
   </table>
   </dd>
 </dl>
@@ -258,7 +291,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Check if the max velocity is below the theshold. </p>
+<p>Check if the max velocity is below the threshold. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mv</td><td>is the max threshold for velocity </td></tr>

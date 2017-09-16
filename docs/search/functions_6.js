@@ -1,21 +1,14 @@
 var searchData=
 [
-  ['get_5fdt',['get_dt',['../classMPL_1_1env__base.html#a2249af817b9f8fdaae133f42473a1b1e',1,'MPL::env_base']]],
-  ['get_5fheur',['get_heur',['../classMPL_1_1env__base.html#ac9e994df3ed3c123cb01c6ce3411823d',1,'MPL::env_base']]],
-  ['get_5fsucc',['get_succ',['../classMPL_1_1env__base.html#add85a24c2e7bcdbcfde00c80fee083d3',1,'MPL::env_base::get_succ()'],['../classMPL_1_1env__map.html#aa01f25b506bb2e5af18046673ef87d43',1,'MPL::env_map::get_succ()'],['../classMPL_1_1env__sfc.html#a7b2dcc92e818522a2e8eca2e2f0b25c2',1,'MPL::env_sfc::get_succ()'],['../classMPL_1_1env__vision.html#afa75316eb65b53ed428cc9277a5a27dd',1,'MPL::env_vision::get_succ()']]],
-  ['getcloud',['getCloud',['../classMPL_1_1MapUtilBase.html#a7484fbb0e2c3ed12ffa0cace39f8992a',1,'MPL::MapUtilBase::getCloud()'],['../classMPL_1_1VoxelMapUtil.html#adc88aec63828933d6d1e8e4f17b3d40f',1,'MPL::VoxelMapUtil::getCloud()']]],
-  ['getdim',['getDim',['../classMPL_1_1MapUtilBase.html#ad151ae14062bbbac2f5270d6697d9286',1,'MPL::MapUtilBase']]],
-  ['getimage',['getImage',['../classMPVisionUtil.html#a44533db5170235ad7f20fa9aee84ef30',1,'MPVisionUtil']]],
-  ['getindex',['getIndex',['../classMPL_1_1MapUtilBase.html#af75ee4a39fde320876c37f52050ef3f3',1,'MPL::MapUtilBase::getIndex()'],['../classMPL_1_1VoxelMapUtil.html#a5061722661d22fd8f615fd98c5708914',1,'MPL::VoxelMapUtil::getIndex()']]],
-  ['getmap',['getMap',['../classMPL_1_1MapUtilBase.html#ad121768e086ec3d31e49cba615709ffc',1,'MPL::MapUtilBase']]],
-  ['getorigin',['getOrigin',['../classMPL_1_1MapUtilBase.html#ab61c6dcb2b2a1a7345c79c67c3b4c338',1,'MPL::MapUtilBase']]],
-  ['getpath',['getPath',['../classMPBaseUtil.html#a360485cb1b95b65db1686749b0ad76d6',1,'MPBaseUtil']]],
-  ['getprimitives',['getPrimitives',['../classMPL_1_1BFS.html#a98da4c68f2240881d670c4c278051880',1,'MPL::BFS::getPrimitives()'],['../classMPBaseUtil.html#a81f67cb3ab47a252790794644fe2cb72',1,'MPBaseUtil::getPrimitives()']]],
-  ['getps',['getPs',['../classMPL_1_1BFS.html#ac54c69c59e5e95fab797e77914a36013',1,'MPL::BFS::getPs()'],['../classMPBaseUtil.html#adf24eba4e80dbd21a6e543e678de166c',1,'MPBaseUtil::getPs()']]],
-  ['getres',['getRes',['../classMPL_1_1MapUtilBase.html#a58aae164dcfc96d689743efe5e2038ff',1,'MPL::MapUtilBase']]],
-  ['gettotaltime',['getTotalTime',['../classPolyTraj.html#a6855a989ddf5ad5d922e69f7cf7440dd',1,'PolyTraj::getTotalTime()'],['../classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f',1,'Trajectory::getTotalTime()']]],
-  ['gettraj',['getTraj',['../classMPBaseUtil.html#a4690352b033fe627db0565802d4a966c',1,'MPBaseUtil']]],
-  ['gettrajectory',['getTrajectory',['../classPolySolver.html#a0ba6ebeaf03052445baa1702ef531988',1,'PolySolver']]],
-  ['goal_5foutside',['goal_outside',['../classMPL_1_1env__base.html#a18d8dfe720dafe2fde2d4e2acef00d33',1,'MPL::env_base']]],
-  ['graph',['Graph',['../classMPL_1_1Graph.html#ae4c72b8ac4d693c49800a4c7e273654f',1,'MPL::Graph']]]
+  ['info',['info',['../classMPL_1_1MapUtilBase.html#a5722e0c3f2f41590d0749ab8b4becc1c',1,'MPL::MapUtilBase::info()'],['../classMPL_1_1SubVoxelMapUtil.html#a45e8ad321659adaa4558838191222759',1,'MPL::SubVoxelMapUtil::info()'],['../classMPL_1_1VoxelMapUtil.html#a0c3b85dd284604da4311887f923ecf2b',1,'MPL::VoxelMapUtil::info()'],['../classMPL_1_1env__base.html#a000b1c48aaafbf9784ce5d6c12ad8cd6',1,'MPL::env_base::info()']]],
+  ['insidepolyhedron',['insidePolyhedron',['../classDecompUtil.html#a6047f9036992d27f5769697b02f2ad49',1,'DecompUtil']]],
+  ['inttofloat',['intToFloat',['../classMPL_1_1MapUtilBase.html#a66c4bf16bda97636fa96e07d4862d7af',1,'MPL::MapUtilBase::intToFloat()'],['../classMPL_1_1VoxelMapUtil.html#a0f4ff17b5f846950ce131efaae6e3b30',1,'MPL::VoxelMapUtil::intToFloat()']]],
+  ['is_5ffree',['is_free',['../classMPL_1_1env__base.html#a35ba45f39992e0abea49042586ba57ac',1,'MPL::env_base::is_free(const Vec3f &amp;pt) const'],['../classMPL_1_1env__base.html#a20ec1d3bd97b56dc5dcd04fa39d79e8f',1,'MPL::env_base::is_free(const Primitive &amp;pr) const'],['../classMPL_1_1env__decomp.html#af934943c3606addc5a83e9d2980072f2',1,'MPL::env_decomp::is_free()'],['../classMPL_1_1env__map.html#a8e778e2fea8a431094753ef09b86c3d3',1,'MPL::env_map::is_free(const Vec3f &amp;pt) const'],['../classMPL_1_1env__map.html#a87fa1cb235a7f05da02c8aa756ca8e32',1,'MPL::env_map::is_free(const Primitive &amp;p, int n=5) const']]],
+  ['is_5fgoal',['is_goal',['../classMPL_1_1env__base.html#ac021c7fb2eaa7cc6aad799edda92f0d6',1,'MPL::env_base']]],
+  ['isblocked',['isBlocked',['../classMPL_1_1MapUtilBase.html#a6e8ddc978a212b8570523091b51df2c2',1,'MPL::MapUtilBase']]],
+  ['isfree',['isFree',['../classDecompUtil.html#a6cc47e76846c86c150aab67116b385d0',1,'DecompUtil::isFree()'],['../classMPL_1_1MapUtilBase.html#accbe27fdc54c656af07e4bcaa9457599',1,'MPL::MapUtilBase::isFree(int idx)'],['../classMPL_1_1MapUtilBase.html#ad6ce670f970421365b46497eecb3c514',1,'MPL::MapUtilBase::isFree(const Ti &amp;pn)']]],
+  ['isoccupied',['isOccupied',['../classMPL_1_1MapUtilBase.html#abcd4f40dc9fb27b155445a4477343a94',1,'MPL::MapUtilBase::isOccupied(int idx)'],['../classMPL_1_1MapUtilBase.html#a42e25d24028fdd230edeb84ca306b927',1,'MPL::MapUtilBase::isOccupied(const Ti &amp;pn)']]],
+  ['isoutside',['isOutSide',['../classMPL_1_1MapUtilBase.html#a8c6cf469504b94b04923c7b053825308',1,'MPL::MapUtilBase::isOutSide()'],['../classMPL_1_1SubVoxelMapUtil.html#ab9e65e19c20d3dcf0ef1d42adf278dbe',1,'MPL::SubVoxelMapUtil::isOutSide()'],['../classMPL_1_1VoxelMapUtil.html#ad05a9bdb32d721758181940f7bddc169',1,'MPL::VoxelMapUtil::isOutSide()']]],
+  ['isoutsidexyz',['isOutSideXYZ',['../classMPL_1_1MapUtilBase.html#a11c41502b24a335da24f7f63a44f26fe',1,'MPL::MapUtilBase']]],
+  ['isunknown',['isUnKnown',['../classMPL_1_1MapUtilBase.html#ae1ffeff0787d38cafdfe56ccef710958',1,'MPL::MapUtilBase::isUnKnown(int idx)'],['../classMPL_1_1MapUtilBase.html#a13b4fd27f64af3120c94a9bee6261952',1,'MPL::MapUtilBase::isUnKnown(const Ti &amp;pn)']]]
 ];
