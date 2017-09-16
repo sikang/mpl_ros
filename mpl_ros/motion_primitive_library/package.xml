@@ -1,0 +1,35 @@
+<package format="2">
+  <name>motion_primitive_library</name>
+  <version>0.1.0</version>
+  <description> search-based motion primitive planning library</description>
+  <author>Sikang Liu</author>
+  <maintainer email="sikang@seas.upenn.edu">Sikang Liu</maintainer>
+  <license>GPLv3</license>
+  
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!-- specifies that a dependency is a build, export, and execution -->
+  <!--
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  -->
+  
+  <!-- Dependencies needed to compile this package. -->
+  <!--
+  <build_depend>message_generation</build_depend>
+  -->
+  
+  <!-- Dependencies needed after this package is compiled. -->
+  <!--
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <test_depend>python-mock</test_depend>
+  <doc_depend>doxygen</doc_depend>
+  -->
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+  </export>  
+</package>
