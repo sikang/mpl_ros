@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -124,7 +124,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2f5bab76f0406a1d6cb6cd3f63cd0f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the max jerk is below the threshold.  <a href="#a2f5bab76f0406a1d6cb6cd3f63cd0f16">More...</a><br /></td></tr>
 <tr class="separator:a2f5bab76f0406a1d6cb6cd3f63cd0f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a91a66cdc103d66926aae7da24939b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#a7a91a66cdc103d66926aae7da24939b3">J</a> (int i) const</td></tr>
-<tr class="memdesc:a7a91a66cdc103d66926aae7da24939b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_8.png"/>.  <a href="#a7a91a66cdc103d66926aae7da24939b3">More...</a><br /></td></tr>
+<tr class="memdesc:a7a91a66cdc103d66926aae7da24939b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_10.png"/>.  <a href="#a7a91a66cdc103d66926aae7da24939b3">More...</a><br /></td></tr>
 <tr class="separator:a7a91a66cdc103d66926aae7da24939b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15ac4cb4b646446c858bf52ef3a06cf"><td class="memItemLeft" align="right" valign="top"><a id="aa15ac4cb4b646446c858bf52ef3a06cf"></a>
 std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive.html#aa15ac4cb4b646446c858bf52ef3a06cf">sample</a> (int N) const</td></tr>
@@ -187,7 +187,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_8.png"/>. </p>
+<p>Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_10.png"/>. </p>
 <p>Return J is the summation of efforts in all three dimensions </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">i</td><td>effort is defined as (i+1)-th derivative of polynomial </td></tr>

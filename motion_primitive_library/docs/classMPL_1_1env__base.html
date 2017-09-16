@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -83,8 +83,8 @@ Inheritance diagram for MPL::env_base:</div>
  <div class="center">
   <img src="classMPL_1_1env__base.png" usemap="#MPL::env_5Fbase_map" alt=""/>
   <map id="MPL::env_5Fbase_map" name="MPL::env_5Fbase_map">
-<area href="classMPL_1_1env__decomp.html" title="Voxel map environment. " alt="MPL::env_decomp" shape="rect" coords="0,56,116,80"/>
-<area href="classMPL_1_1env__map.html" title="Voxel map environment. " alt="MPL::env_map" shape="rect" coords="126,56,242,80"/>
+<area href="classMPL_1_1env__cloud.html" title="Voxel map environment. " alt="MPL::env_cloud" shape="rect" coords="0,56,103,80"/>
+<area href="classMPL_1_1env__map.html" title="Voxel map environment. " alt="MPL::env_map" shape="rect" coords="113,56,216,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -364,7 +364,7 @@ std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classMPL_1_1env__map.html#a5f2594c7e838309ef9383c8630cbb519">MPL::env_map</a>, and <a class="el" href="classMPL_1_1env__decomp.html#accae4d8c693f7d548a2f8142eb4f2254">MPL::env_decomp</a>.</p>
+<p>Reimplemented in <a class="el" href="classMPL_1_1env__map.html#a5f2594c7e838309ef9383c8630cbb519">MPL::env_map</a>, and <a class="el" href="classMPL_1_1env__cloud.html#aa70d9986ca84bb12ada06ead5d03b63a">MPL::env_cloud</a>.</p>
 
 </div>
 </div>
@@ -405,7 +405,7 @@ std::vector&lt; <a class="el" href="classPrimitive.html">Primitive</a> &gt;&#160
 <p>Set discretization in control space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">n</td><td>indicates how many samples on each semi-axes, eq: <img class="formulaInl" alt="$ du = \frac{u_{max}}{n}$" src="form_10.png"/> </td></tr>
+    <tr><td class="paramname">n</td><td>indicates how many samples on each semi-axes, eq: <img class="formulaInl" alt="$ du = \frac{u_{max}}{n}$" src="form_1.png"/> </td></tr>
     <tr><td class="paramname">use_3d</td><td>if true, we also expand in z-axis </td></tr>
   </table>
   </dd>

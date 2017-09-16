@@ -40,7 +40,6 @@ PKG_CHECK_MODULES(YAMLCPP REQUIRED yaml-cpp)
 include_directories(${EIGEN3_INCLUDE_DIR} include)
 #include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} include)
 
-
 IF(YAMLCPP_FOUND)
   MESSAGE(STATUS "Found yaml-cpp.")
   #MESSAGE("YAMLCPP_INCLUDE_DIRS: ${YAMLCPP_INCLUDE_DIRS}")
@@ -81,19 +80,6 @@ target_link_libraries(mp_cloud_util primitive ${PCL_LIBRARIES})
 #  src/planner/astar.cpp)
 #target_link_libraries(mp_sfc_util primitive)
 
-
-#add_library(vision_util src/collision_checking/vision_util.cpp)
-#target_link_libraries(vision_util ${OpenCV_LIBS} primitive)
-#add_library(vision_queue_util src/collision_checking/vision_queue_util.cpp)
-#target_link_libraries(vision_queue_util vision_util)
-
-#add_library(mp_vision_util src/planner/mp_vision_util.cpp
-#  src/planner/mp_base_util.cpp
-#  src/planner/astar.cpp)
-#target_link_libraries(mp_vision_util primitive vision_queue_util)
-
-#add_library(bfs src/planner/bfs.cpp)
-#target_link_libraries(bfs primitive)
 
 add_executable(test_planner_2d test/test_planner_2d.cpp)
 target_link_libraries(test_planner_2d mp_map_util ${YAMLCPP_LIBRARIES} ${Boost_LIBRARIES} ${VTK_LIBRARIES})

@@ -62,7 +62,6 @@ class MPBaseUtil
 
     ///Set tolerance in geometric and dynamic spaces
     void setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc = 0.0);
-
     ///Planning thread
     virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
 
@@ -72,7 +71,7 @@ class MPBaseUtil
     ///Intermediate nodes in optimal trajectory
     //std::vector<Waypoint> path_;
     Trajectory traj_;
-    ///Time allocation for each segment
+   ///Time allocation for each segment
     std::vector<decimal_t> dts_;
     ///Greedy searching parameter
     decimal_t epsilon_ = 1.0;

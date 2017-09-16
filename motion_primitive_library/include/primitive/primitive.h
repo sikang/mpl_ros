@@ -23,14 +23,14 @@ struct Waypoint {
   bool use_pos = false;///<If true, attribute pos will be used in primitive generation
   bool use_vel = false;///<If true, attribute vel will be used in primitive generation 
   bool use_acc = false;///<If true, attribute acc will be used in primitive generation 
-  bool use_jrk = false;///<If true, attribute acc will be used in primitive generation 
+  bool use_jrk = false;///<If true, attribute jrk will be used in primitive generation 
 
   decimal_t t = 0;
   std::shared_ptr<Waypoint> parent;
   ///Print all the useful attributes
   void print() const {
     std::cout << "t: " << t << std::endl;
-    if(use_pos)
+   if(use_pos)
       std::cout << "pos: " << pos.transpose() << std::endl;
     if(use_vel)
       std::cout << "vel: " << vel.transpose() << std::endl;
@@ -85,7 +85,7 @@ class Primitive1D {
      */
     Primitive1D(Vec4f state, decimal_t u);
     /**
-     * @brief Construct 1D primitive from an initial state (p1) to a goal state (p2), given duration t
+    * @brief Construct 1D primitive from an initial state (p1) to a goal state (p2), given duration t
      */
     Primitive1D(decimal_t p1, decimal_t p2,  decimal_t t);
     /**

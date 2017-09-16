@@ -52,7 +52,7 @@ void MPBaseUtil::setMode(const Waypoint& p) {
       printf("[MPBaseUtil] set effort in snap\n");
   }
   else if(p.use_pos && p.use_vel && p.use_acc && !p.use_jrk) {
-    ENV_->set_wi(2);
+   ENV_->set_wi(2);
     if(planner_verbose_)
       printf("[MPBaseUtil] set effort in jrk\n");
   }
@@ -67,7 +67,6 @@ void MPBaseUtil::setMode(const Waypoint& p) {
       printf("[MPBaseUtil] set effort in vel\n");
   }
 }
-
 
 void MPBaseUtil::setVmax(decimal_t v_max) {
   ENV_->set_v_max(v_max);
@@ -86,8 +85,6 @@ void MPBaseUtil::setJmax(decimal_t j_max) {
   if(planner_verbose_)
     printf("[MPBaseUtil] set j_max: %f\n", j_max);
 }
-
-
 
 void MPBaseUtil::setUmax(decimal_t u_max) {
   ENV_->set_u_max(u_max);

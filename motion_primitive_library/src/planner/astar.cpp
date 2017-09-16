@@ -1,6 +1,6 @@
 #include <planner/astar.h>
 #include <planner/env_base.h>
-//#include <primitive/primitive.h>
+#include <primitive/primitive.h>
 
 
 template <class state>
@@ -11,10 +11,7 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
 {
   // Check if done
   if( ENV.is_goal(start_coord) )
-  {
-    //path.push_back(start_coord);
     return 0;
-  }
   // Initialize State Space
   std::shared_ptr<ARAStateSpace<state>> sss_ptr( new ARAStateSpace<state>(eps) );
   
@@ -82,28 +79,26 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
   int prevexpands = 0;
   double eps_final = 1;
   double eps_dec = 0.2;
-  
+
   // Check if done
-  if( ENV.is_goal(start_coord) ) {
-    //path.push_back(start_coord);
+  if( ENV.is_goal(start_coord) ) 
     return 0;
-  }
-  
+
   // Initialize State Space
   std::shared_ptr<ARAStateSpace<state>> sss_ptr( new ARAStateSpace<state>(eps) );
   sss_ptr->use_il = true;
   std::shared_ptr<ARAState<state>> currNode_pt = sss_ptr->hm[start_idx];
 
 
-  
+
   //the main loop of ARA*
   double pcost = std::numeric_limits<double>::infinity();
   std::chrono::high_resolution_clock::time_point loop_time;
   while( sss_ptr->eps_satisfied > eps_final+0.00001 &&
-         toc(time_started) < allocated_time_secs )
+      toc(time_started) < allocated_time_secs )
   {
     loop_time = std::chrono::high_resolution_clock::now();
-    
+
     //decrease eps for all subsequent iterations
     if (std::abs(sss_ptr->eps_satisfied - sss_ptr->eps) < 0.00001) 
     {
@@ -111,7 +106,7 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
       ReevaluateFVals(sss_ptr);   //the priorities need to be updated
       MoveInconsToOpen(sss_ptr);  // starting a new search
     }
-    
+
     //improve or compute path
     int expands = 0;
     while( toc(time_started) < allocated_time_secs )
@@ -127,7 +122,7 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
       }
       else
         currNode_pt = sss_ptr->pq.top().second;
-       
+
       // Check if done
       if( ENV.is_goal(currNode_pt->coord) ) 
       { // Done! Recover path
@@ -143,17 +138,17 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
           std::vector<state> next_micro;
           Primitive pr;
           ENV.forward_action( currNode_pt->coord, action_idx.back(), dt, next_micro, pr);
-          
+
           for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
-               it!=next_micro.rend(); ++it ) {}
-            //path.push_front( *it );
+              it!=next_micro.rend(); ++it ) {}
+          //path.push_front( *it );
         }
 
         std::reverse(prs.begin(), prs.end());
         Trajectory traj(prs);
         break;
       }
-      
+
       // Add to closed list
       if( !sss_ptr->pq.empty() )
         sss_ptr->pq.pop();
@@ -168,14 +163,14 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
     }
     sss_ptr->eps_satisfied = sss_ptr->eps;
     searchexpands += expands;
-    
+
     /*
     //print the solution cost and eps bound
     std::cout << "eps= " << sss_ptr->eps_satisfied << " "
-              << "expands= " << searchexpands - prevexpands << " "
-              << "g(goal)= " << pcost << " "
-              << "time= " << toc(loop_time) << " "
-              << "time(total)= " << toc(time_started) << std::endl;
+    << "expands= " << searchexpands - prevexpands << " "
+    << "g(goal)= " << pcost << " "
+    << "time= " << toc(loop_time) << " "
+    << "time(total)= " << toc(time_started) << std::endl;
     */
     prevexpands = searchexpands;
     sss_ptr->searchiteration++;
@@ -184,11 +179,10 @@ double MPL::ARAStar<state>::ARAstar( const state& start_coord, MPL::Key start_id
 }
 
 
-
 template <class state>
 void MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
-                               std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-                               const env_base& ENV )
+    std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
+    const env_base& ENV )
 {
   // Get successors
   std::vector<state> succ_coord;

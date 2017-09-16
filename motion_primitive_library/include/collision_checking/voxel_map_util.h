@@ -90,7 +90,7 @@ public:
     */
   }
 
-  vec_Vec3f getFreeCloud() {
+ vec_Vec3f getFreeCloud() {
     vec_Vec3f cloud;
     Vec3i n;
     for (n(0) = 0; n(0) < dim_(0); n(0)++) {
@@ -189,8 +189,7 @@ public:
         }
       }
     }
- 
-  }
+ }
 
 };
   
