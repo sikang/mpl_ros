@@ -17,9 +17,6 @@ void MPMapUtil::setMapUtil(std::shared_ptr<SubVoxelMapUtil> map_util) {
 }
 
 bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
-  //path_.clear();
-  //primitives_.clear();
-
   if(planner_verbose_) {
     printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
         start.pos(0), start.pos(1), start.pos(2),
@@ -51,17 +48,7 @@ bool MPMapUtil::plan(const Waypoint &start, const Waypoint &goal) {
     return false;
   }
 
-  /*
-  path_.push_back(start);
-  for (auto &it_node : path) {
-    it_node.use_pos = start.use_pos;
-    it_node.use_vel = start.use_vel;
-    it_node.use_acc = start.use_acc;
-    path_.push_back(it_node);
-  }
-  */
-
-  //dts_ = action_dts;
+  dts_ = action_dts;
   //std::reverse(dts_.begin(), dts_.end());
   return true;
 }

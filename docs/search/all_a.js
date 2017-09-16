@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['mrsl_20motion_20primitive_20for_20quadrotor',['MRSL Motion Primitive for quadrotor',['../index.html',1,'']]],
   ['map_5futil_5fbase_2eh',['map_util_base.h',['../map__util__base_8h.html',1,'']]],
   ['mapreader',['MapReader',['../classMapReader.html',1,'']]],
   ['maputilbase',['MapUtilBase',['../classMPL_1_1MapUtilBase.html',1,'MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;'],['../classMPL_1_1MapUtilBase.html#a4038d1970a8fa0420a4fcd26943a1ca2',1,'MPL::MapUtilBase::MapUtilBase()']]],
@@ -20,8 +19,7 @@ var searchData=
   ['mp_5fcloud_5futil_2eh',['mp_cloud_util.h',['../mp__cloud__util_8h.html',1,'']]],
   ['mp_5fmap_5futil_2eh',['mp_map_util.h',['../mp__map__util_8h.html',1,'']]],
   ['mpbaseutil',['MPBaseUtil',['../classMPBaseUtil.html',1,'MPBaseUtil'],['../classMPBaseUtil.html#a671f1f09b90b1a3f39f4a08685473d09',1,'MPBaseUtil::MPBaseUtil()']]],
-  ['mpcloudutil',['MPCloudUtil',['../classMPCloudUtil.html',1,'']]],
-  ['mpdecomputil',['MPDecompUtil',['../classMPCloudUtil.html#a9a42a37f4c39b198aad9952912a5ee3b',1,'MPCloudUtil']]],
+  ['mpcloudutil',['MPCloudUtil',['../classMPCloudUtil.html',1,'MPCloudUtil'],['../classMPCloudUtil.html#ad0e222578d07de46343703308ef9e7dd',1,'MPCloudUtil::MPCloudUtil()']]],
   ['mpl',['MPL',['../namespaceMPL.html',1,'']]],
   ['mpmaputil',['MPMapUtil',['../classMPMapUtil.html',1,'MPMapUtil'],['../classMPMapUtil.html#ab5fc4ee70cc2b5ff7c893bf190ed074a',1,'MPMapUtil::MPMapUtil()']]]
 ];

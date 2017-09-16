@@ -110,7 +110,7 @@ class env_map : public env_base
         Primitive p(curr, U_[i], dt_);
         Waypoint tn = p.evaluate(dt_);
         if(p.valid_vel(v_max_) && p.valid_acc(a_max_) && p.valid_jrk(j_max_)) {
-          if(!is_free(p)) 
+         if(!is_free(p)) 
             continue;
           tn.use_pos = curr.use_pos;
           tn.use_vel = curr.use_vel;
@@ -123,7 +123,7 @@ class env_map : public env_base
           succ_cost.push_back(p.J(wi_) + w_*dt_);
           action_idx.push_back(i);
           action_dts.push_back(dt_);
-        }
+       }
 
 
       }

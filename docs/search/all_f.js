@@ -7,7 +7,7 @@ var searchData=
   ['set_5falpha',['set_alpha',['../classMPL_1_1env__base.html#a571e0fd8f6142ab271523050ef1c1e69',1,'MPL::env_base']]],
   ['set_5fdiscretization',['set_discretization',['../classMPL_1_1env__base.html#a5ed07e2437cf895eea9e4abc3531b3a1',1,'MPL::env_base']]],
   ['set_5fdt',['set_dt',['../classMPL_1_1env__base.html#abe8415a652a8097b3ed89cf1f267d266',1,'MPL::env_base']]],
-  ['set_5fgoal',['set_goal',['../classMPL_1_1env__base.html#a741952175a2a4641ba0c96e4b770bd50',1,'MPL::env_base::set_goal()'],['../classMPL_1_1env__decomp.html#a73d01e036fdb43bf4d6593ccbc160144',1,'MPL::env_decomp::set_goal()'],['../classMPL_1_1env__map.html#a375e30567aaf1e940e99ef440ae0d10a',1,'MPL::env_map::set_goal()']]],
+  ['set_5fgoal',['set_goal',['../classMPL_1_1env__base.html#a741952175a2a4641ba0c96e4b770bd50',1,'MPL::env_base::set_goal()'],['../classMPL_1_1env__cloud.html#a9e0692d52d6b27f1351964fa0f572056',1,'MPL::env_cloud::set_goal()'],['../classMPL_1_1env__map.html#a375e30567aaf1e940e99ef440ae0d10a',1,'MPL::env_map::set_goal()']]],
   ['set_5fj_5fmax',['set_j_max',['../classMPL_1_1env__base.html#a2e13a06e7d9fcc2bad324ec21cde78be',1,'MPL::env_base']]],
   ['set_5fprior_5ftrajectory',['set_prior_trajectory',['../classMPL_1_1env__base.html#a331bdc6b76375183e8263b2b5151fc21',1,'MPL::env_base']]],
   ['set_5ft_5fmax',['set_t_max',['../classMPL_1_1env__base.html#a7dc1fc9ee0b976be82cac27d304cd7ba',1,'MPL::env_base']]],

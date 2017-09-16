@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -112,7 +112,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2b2f041e1dc06803e3817c0ccd068afa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct 1D primitive from an initial state (p1, v1, a1) to a goal state (p2, v2, a2), given duration t. <br /></td></tr>
 <tr class="separator:a2b2f041e1dc06803e3817c0ccd068afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3aad54db9f13729ea5af5ff608ee3ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive1D.html#ad3aad54db9f13729ea5af5ff608ee3ab">J</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t, int i) const</td></tr>
-<tr class="memdesc:ad3aad54db9f13729ea5af5ff608ee3ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of 1D primitive for the given duration: <img class="formulaInl" alt="$J(t, i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_7.png"/>.  <a href="#ad3aad54db9f13729ea5af5ff608ee3ab">More...</a><br /></td></tr>
+<tr class="memdesc:ad3aad54db9f13729ea5af5ff608ee3ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of 1D primitive for the given duration: <img class="formulaInl" alt="$J(t, i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_9.png"/>.  <a href="#ad3aad54db9f13729ea5af5ff608ee3ab">More...</a><br /></td></tr>
 <tr class="separator:ad3aad54db9f13729ea5af5ff608ee3ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72caa53b8186c20682493f36933fea6e"><td class="memItemLeft" align="right" valign="top"><a id="a72caa53b8186c20682493f36933fea6e"></a>
 <a class="el" href="data__type_8h.html#a0d5d8b43b7b87d7dde4c803a341d14af">Vec6f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrimitive1D.html#a72caa53b8186c20682493f36933fea6e">coeff</a> () const</td></tr>
@@ -144,7 +144,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classPrimitive1D.html" title="Primitive1D class. ">Primitive1D</a> class. </p>
-<p>Assume the 1D primitive is the n-th order polynomial with n = 5 as <img class="formulaInl" alt="$p(t) = \frac{c(0)}{120}t^5+\frac{c(1)}{24}t^4+\frac{c(2)}{6}t^3+\frac{c(3)}{2}t^2+c(4)t+c(5) = 0$" src="form_6.png"/> </p>
+<p>Assume the 1D primitive is the n-th order polynomial with n = 5 as <img class="formulaInl" alt="$p(t) = \frac{c(0)}{120}t^5+\frac{c(1)}{24}t^4+\frac{c(2)}{6}t^3+\frac{c(3)}{2}t^2+c(4)t+c(5) = 0$" src="form_8.png"/> </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab9d25d6f3ffcfad2bb81f9e35e033531"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab9d25d6f3ffcfad2bb81f9e35e033531">&#9670;&nbsp;</a></span>Primitive1D()</h2>
@@ -199,7 +199,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return total efforts of 1D primitive for the given duration: <img class="formulaInl" alt="$J(t, i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_7.png"/>. </p>
+<p>Return total efforts of 1D primitive for the given duration: <img class="formulaInl" alt="$J(t, i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_9.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t</td><td>assume the duration is from 0 to t </td></tr>

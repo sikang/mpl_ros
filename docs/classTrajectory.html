@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -108,7 +108,7 @@ std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;
 <tr class="memdesc:a642225510c88c8eb8137faaff92c2fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample N states using uniformed time. <br /></td></tr>
 <tr class="separator:a642225510c88c8eb8137faaff92c2fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9de3103dbebd1e425bfb5d247905582e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTrajectory.html#a9de3103dbebd1e425bfb5d247905582e">J</a> (int i) const</td></tr>
-<tr class="memdesc:a9de3103dbebd1e425bfb5d247905582e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_8.png"/>.  <a href="#a9de3103dbebd1e425bfb5d247905582e">More...</a><br /></td></tr>
+<tr class="memdesc:a9de3103dbebd1e425bfb5d247905582e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_10.png"/>.  <a href="#a9de3103dbebd1e425bfb5d247905582e">More...</a><br /></td></tr>
 <tr class="separator:a9de3103dbebd1e425bfb5d247905582e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13c112898c1f72e8a27fc67b3cdef211"><td class="memItemLeft" align="right" valign="top"><a id="a13c112898c1f72e8a27fc67b3cdef211"></a>
 std::vector&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getSegsT</b> () const</td></tr>
@@ -163,7 +163,7 @@ std::vector&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e
 </div><div class="memdoc">
 
 <p>Evaluate state at t, return false if fails to evaluate. </p>
-<p>The failure cases involve: 1) t is out of scope; 2) lambda is ill-posed such that <img class="formulaInl" alt="$t = \lambda(\tau)^{-1}$" src="form_9.png"/> has no solution </p>
+<p>The failure cases involve: 1) t is out of scope; 2) lambda is ill-posed such that <img class="formulaInl" alt="$t = \lambda(\tau)^{-1}$" src="form_11.png"/> has no solution </p>
 
 </div>
 </div>
@@ -183,7 +183,7 @@ std::vector&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e
       </table>
 </div><div class="memdoc">
 
-<p>Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_8.png"/>. </p>
+<p>Return total efforts of primitive for the given duration: <img class="formulaInl" alt="$J(i) = \int_0^t |p^{(i+1)}(t)|^2dt$" src="form_10.png"/>. </p>
 <p>Return J is the summation of efforts in all three dimensions </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">i</td><td>effort is defined as (i+1)-th derivative of polynomial </td></tr>

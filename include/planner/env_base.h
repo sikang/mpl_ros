@@ -39,7 +39,7 @@ class env_base
         goaled = (state.vel - goal_node_.vel).lpNorm<Eigen::Infinity>() < tol_vel;
       if(goaled && goal_node_.use_acc) 
         goaled = (state.acc - goal_node_.acc).lpNorm<Eigen::Infinity>() < tol_acc;
-      return goaled;
+     return goaled;
     }
 
     ///Heuristic function 
@@ -74,7 +74,6 @@ class env_base
         const Vec3f v1 = goal.vel;
         const Vec3f a0 = state.acc;
         const Vec3f a1 = goal.acc;
-
         decimal_t a = w_;
         decimal_t b = 0;
         decimal_t c = -9*a0.dot(a0)+6*a0.dot(a1)-9*a1.dot(a1);
@@ -92,7 +91,7 @@ class env_base
         for(auto t: ts) {
           //printf("t: %f ", t);
           if(t < t_bar)
-            continue;
+           continue;
           decimal_t cost = a*t-c/t-d/2/t/t-e/3/t/t/t-f/4/t/t/t/t-g/5/t/t/t/t/t;
           if(cost < min_cost) {
             min_cost = cost;
@@ -103,7 +102,6 @@ class env_base
         //printf("-----------\n");
         //if(ts.empty())
           //printf("wrong! no root found!\n");
-
         //printf("cost: %f, t: %f. t_bar: %f\n", min_cost, t_star, t_bar);
 
         return min_cost;
@@ -196,7 +194,7 @@ class env_base
         ts.push_back(t_bar);
 
         decimal_t cost = std::numeric_limits<decimal_t>::max();
-        for(auto t: ts) {
+       for(auto t: ts) {
           if(t < t_bar)
             continue;
           decimal_t c = -c1/3/t/t/t-c2/2/t/t-c3/t+w_*t;
@@ -246,7 +244,7 @@ class env_base
         return (w_ + 1) * (state.pos - goal.pos).norm();
       else
         return w_*(state.pos - goal.pos).norm() / v_max_;
-    }
+   }
 
     ///Genegrate Key from state
     Key state_to_idx(const Waypoint& state) const
@@ -261,13 +259,13 @@ class env_base
         return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) + "-" +
           std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2)) + "-" +
           std::to_string(ai(0)) + "-" + std::to_string(ai(1)) + "-" + std::to_string(ai(2));
-      }
+     }
     }
 
     ///Recover trajectory
     void forward_action( const Waypoint& curr, int action_id, double dt,
         std::vector<Waypoint>& next_micro, Primitive& pr) const
-    {
+   {
       next_micro.clear();
       if(action_id < 0) {
         next_micro.push_back(goal_node_);
@@ -275,7 +273,7 @@ class env_base
       else {
         pr = Primitive(curr, U_[action_id], dt);
         next_micro.push_back(pr.evaluate(dt));
-      }
+     }
     }
 
     /**
@@ -287,12 +285,12 @@ class env_base
       decimal_t du = u_max_ / n;
 
       vec_Vec3f U;
-      if(use_3d) {
+     if(use_3d) {
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
             for(decimal_t dz = -u_max_; dz <= u_max_; dz += u_max_ ) //here we reduce the z control
               U.push_back(Vec3f(dx, dy, dz));
-      }
+     }
       else{
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
@@ -303,7 +301,7 @@ class env_base
 
     void set_U(const vec_Vec3f& U) {
       U_ = U;
-    }
+   }
 
     ///Set max vel in each axis
     void set_v_max(decimal_t v) {

@@ -67,7 +67,6 @@ int main(int argc, char ** argv){
   planner->setMode(start); // Set effort degree
   planner->setTol(1, 1, 1); // Tolerance for goal region
 
-
   // Planning
   Timer time(true);
   bool valid = planner->plan(start, goal); // Plan from start to goal

@@ -134,7 +134,6 @@ std::vector<decimal_t> Primitive1D::extrema_jrk(decimal_t t) const {
 }
 
 
-
 //********** Primitive Main Class *************
 Primitive::Primitive() {}
 
@@ -156,7 +155,7 @@ Primitive::Primitive(const Waypoint& p, const Vec3f& u, decimal_t t) : t_(t)
     }
   }
   else if(p.use_acc) {
-    for(int i = 0; i < 3; i++)
+   for(int i = 0; i < 3; i++)
       trajs_[i] = Primitive1D(Vec3f(p.pos(i), p.vel(i), p.acc(i)), u(i));
   }
   else if(p.use_vel) {
@@ -291,7 +290,6 @@ bool Primitive::valid_jrk(decimal_t mj) const {
 }
 
 
-
 Waypoint Primitive::evaluate(decimal_t t) const {
   Waypoint p;
   for(int j = 0; j < 3; j++) {
@@ -312,7 +310,6 @@ std::vector<Waypoint> Primitive::sample(int N) const {
       ps.push_back(evaluate(t));
   return ps;
 }
-
 
 Primitive1D Primitive::traj(int k) const { return trajs_[k]; }
 

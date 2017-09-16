@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.0</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -93,7 +93,7 @@ Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr class="separator:a2d6f9eeb5dc43f6de3bec69a0d9f0c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc47e76846c86c150aab67116b385d0"><td class="memItemLeft" align="right" valign="top"><a id="a6cc47e76846c86c150aab67116b385d0"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDecompUtil.html#a6cc47e76846c86c150aab67116b385d0">isFree</a> (const <a class="el" href="classPrimitive.html">Primitive</a> &amp;pr, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> &amp;dt)</td></tr>
-<tr class="memdesc:a6cc47e76846c86c150aab67116b385d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a primitive is inside the SFC from <img class="formulaInl" alt="$t: 0 \rightarrow dt$" src="form_11.png"/>. <br /></td></tr>
+<tr class="memdesc:a6cc47e76846c86c150aab67116b385d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a primitive is inside the SFC from <img class="formulaInl" alt="$t: 0 \rightarrow dt$" src="form_0.png"/>. <br /></td></tr>
 <tr class="separator:a6cc47e76846c86c150aab67116b385d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee70de96e74159e6af61681a41da5d1c"><td class="memItemLeft" align="right" valign="top"><a id="aee70de96e74159e6af61681a41da5d1c"></a>
 PCLPointCloud&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDecompUtil.html#aee70de96e74159e6af61681a41da5d1c">toPCL</a> (const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;obs)</td></tr>
@@ -105,8 +105,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_region</b> (const
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a6047f9036992d27f5769697b02f2ad49"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDecompUtil.html#a6047f9036992d27f5769697b02f2ad49">insidePolyhedron</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt, const Polyhedron &amp;Vs)</td></tr>
-<tr class="memdesc:a6047f9036992d27f5769697b02f2ad49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a primitive is inside given poly for a period.  <a href="#a6047f9036992d27f5769697b02f2ad49">More...</a><br /></td></tr>
+<tr class="memitem:a6047f9036992d27f5769697b02f2ad49"><td class="memItemLeft" align="right" valign="top"><a id="a6047f9036992d27f5769697b02f2ad49"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDecompUtil.html#a6047f9036992d27f5769697b02f2ad49">insidePolyhedron</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;pt, const Polyhedron &amp;Vs)</td></tr>
+<tr class="memdesc:a6047f9036992d27f5769697b02f2ad49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a point is inside the given polyhedron. <br /></td></tr>
 <tr class="separator:a6047f9036992d27f5769697b02f2ad49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d8699b5fefce36a43f5f5013136eddb"><td class="memItemLeft" align="right" valign="top"><a id="a6d8699b5fefce36a43f5f5013136eddb"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>insideEllipsoid</b> (const <a class="el" href="data__type_8h.html#ab79f3b8f2deea3f9f977cdc99cfc4a76">Ellipsoid</a> &amp;E, const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;O)</td></tr>
@@ -133,55 +134,7 @@ boost::optional&lt; Polyhedron &gt;&#160;</td><td class="memItemRight" valign="b
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Collision checking inside a Safe Flight Corridor (SFC) </p>
 <p>SFC is an ordered collection of convex polyhedra that models free space </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6047f9036992d27f5769697b02f2ad49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6047f9036992d27f5769697b02f2ad49">&#9670;&nbsp;</a></span>insidePolyhedron()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool DecompUtil::insidePolyhedron </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;&#160;</td>
-          <td class="paramname"><em>pt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Polyhedron &amp;&#160;</td>
-          <td class="paramname"><em>Vs</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check if a primitive is inside given poly for a period. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pr</td><td>Input primitive </td></tr>
-    <tr><td class="paramname">poly</td><td>Input polyhedron </td></tr>
-    <tr><td class="paramname">t1</td><td>Start time </td></tr>
-    <tr><td class="paramname">dt</td><td>Time of intersectionCheck if a point is inside the given polyhedron </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/collision_checking/<a class="el" href="decomp__util_8h_source.html">decomp_util.h</a></li>
 <li>src/collision_checking/decomp_util.cpp</li>
 </ul>
