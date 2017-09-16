@@ -39,7 +39,7 @@ int main(int argc, char ** argv){
   start.acc = Vec3f::Zero(); 
   start.jrk = Vec3f::Zero(); 
   start.use_pos = true;
-  start.use_vel = false;
+  start.use_vel = true;
   start.use_acc = false; 
   start.use_jrk = false; 
 
@@ -59,7 +59,7 @@ int main(int argc, char ** argv){
   planner->setVmax(1.0); // Set max velocity
   planner->setAmax(1.0); // Set max acceleration 
   planner->setJmax(1.0); // Set max jerk
-  planner->setUmax(1.0); // Set max control input
+  planner->setUmax(0.5); // Set max control input
   planner->setDt(1.0); // Set dt for each primitive
   planner->setW(10); // Set dt for each primitive
   planner->setMaxNum(-1); // Set maximum allowed states

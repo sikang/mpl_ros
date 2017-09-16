@@ -66,6 +66,7 @@ planner->setTol(1, 1, 1); // Tolerance for goal region
 bool valid = planner->plan(start, goal); // Plan from start to goal
 ```
 
+
 The results from ```MPMapUtil``` are plotted in [output.jpg](https://github.com/sikang/motion_primitive_library/blob/master/data/output.jpg). Grey dots show the expended nodes.
 ![Visualization](./data/output.jpg)
 
@@ -80,22 +81,21 @@ You should see following messages if it works properly:
 [MPBaseUtil] set v_max: 1.000000
 [MPBaseUtil] set a_max: 1.000000
 [MPBaseUtil] set j_max: 1.000000
-[MPBaseUtil] set u_max: 1.000000
+[MPBaseUtil] set u_max: 0.500000
 [MPBaseUtil] set dt: 1.000000
 [MPBaseUtil] set w: 10.000000
 [MPBaseUtil] set max num: -1
-[MPBaseUtil] set effort in vel
+[MPBaseUtil] set effort in acc
 [MPBaseUtil] set tol_dis: 1.000000
 [MPBaseUtil] set tol_vel: 1.000000
 [MPBaseUtil] set tol_acc: 1.000000
 start pos: [2.500000, -3.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
 goal pos: [37.000000, 2.500000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
-MP Planner takes: 2.000000 ms
-MP Planner expanded states: 123
-Total time T: 34.000000
-Total J:  J(0) = 42.000000, J(1) = 0.000000, J(2) = 0.000000, J(3) = 0.000000
+MP Planner takes: 87.000000 ms
+MP Planner expanded states: 4033
+Total time T: 35.000000
+Total J:  J(0) = 36.000000, J(1) = 2.250000, J(2) = 0.000000, J(3) = 0.000000
 ```
-
 
 ## Doxygen
 For more details, please refer to https://sikang.github.io/motion_primitive_library/
