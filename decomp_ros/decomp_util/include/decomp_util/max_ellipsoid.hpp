@@ -40,7 +40,7 @@ static inline bool max_ellipsoid(const LinearConstraint3f& C,
   }
 
   //**** F_blkszs
-  int F_blkszs[L] = {};
+  int F_blkszs[L];
   for(int i = 0; i < L; i++)
     F_blkszs[i] = 4;
 
@@ -74,11 +74,14 @@ static inline bool max_ellipsoid(const LinearConstraint3f& C,
   init_d(0), init_d(1), init_d(2)};
 
   //**** dual matrix, not used
-  double Z[nn*L] = {};
+  double Z[nn*L];
+  for(int i = 0; i < nn*L; ++i)
+    Z[i] = 0;
+
   double W[6] = {};
 
   //**** obj value
-  double ul[2] = {};
+  double ul[2];
 
   //**** params for optimization
   int NTiters = 15;
@@ -86,7 +89,7 @@ static inline bool max_ellipsoid(const LinearConstraint3f& C,
   constexpr double abstol = 1e-2;
   constexpr double reltol = 1e-2;
 
-  double hist[3*NTiters] = {};
+  double hist[3*NTiters];
 
   //***** params for calculating lwork
   int Fpd = L*nn;
