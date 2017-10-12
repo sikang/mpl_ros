@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['max_5fnum_5f',['max_num_',['../classMPBaseUtil.html#a2a98e75b4acfd38a6e3898b42d8fccf9',1,'MPBaseUtil']]]
+  ['lambda_5f',['lambda_',['../classTrajectory.html#a1556cdfd7511e2fca4f0a7d6b504fdc1',1,'Trajectory']]]
 ];

@@ -152,8 +152,9 @@ Trajectory::Trajectory(const std::vector<Primitive>& trajs) {
   segs = trajs;
 
   taus.push_back(0);
-  for(const auto& traj: trajs)
+  for(const auto& traj: trajs) 
     taus.push_back(traj.t()+taus.back());
+  Ts = taus;
   total_t_ = taus.back();
 }
 

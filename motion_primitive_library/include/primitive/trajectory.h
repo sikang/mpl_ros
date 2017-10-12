@@ -99,11 +99,18 @@ class Trajectory {
      * @param i effort is defined as (i+1)-th derivative of polynomial
      */
     decimal_t J(int i) const;
+    ///Get time for each segment
     std::vector<decimal_t> getSegsT() const;
+
+    ///Segments of primitives
     std::vector<Primitive> segs;
+    ///Time in virtual domain
     std::vector<decimal_t> taus;
+    ///Time in actual domain
     std::vector<decimal_t> Ts;
+    ///Total time of the trajectory
     decimal_t total_t_;
+    ///Scaling object
     Lambda lambda_;
 };
 

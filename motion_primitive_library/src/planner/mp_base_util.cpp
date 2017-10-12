@@ -153,12 +153,11 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
   }
  
   MPL::ARAStar<Waypoint> AA;
-  std::vector<double> action_dts;
   Trajectory traj;
 
   ENV_->set_goal(goal);
 
-  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, traj, action_dts, epsilon_, max_num_);
+  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, traj, epsilon_, max_num_);
 
   traj_ = traj;
   if (traj.segs.empty()) {
@@ -170,7 +169,8 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
   ws_.clear();
   ws_.push_back(start);
   double time = 0;
-  for (const auto &t : action_dts) {
+  std::vector<decimal_t> dts = traj.getSegsT();
+  for (const auto &t : dts) {
     time += t;
     Waypoint waypoint;
     traj_.evaluate(time, waypoint);

@@ -13,5 +13,7 @@ var searchData=
   ['ansi_5fcolor_5fyellow',['ANSI_COLOR_YELLOW',['../data__type_8h.html#a5a123b382640b3aa65dd5db386002fbc',1,'data_type.h']]],
   ['arastar',['ARAStar',['../classMPL_1_1ARAStar.html',1,'MPL']]],
   ['arastate',['ARAState',['../structMPL_1_1ARAState.html',1,'MPL']]],
-  ['arastatespace',['ARAStateSpace',['../structMPL_1_1ARAStateSpace.html',1,'MPL']]]
+  ['arastatespace',['ARAStateSpace',['../structMPL_1_1ARAStateSpace.html',1,'MPL']]],
+  ['astar',['Astar',['../classMPL_1_1ARAStar.html#ad42c05d962b6b7d4eecc2e5d34964dcb',1,'MPL::ARAStar']]],
+  ['astar_2eh',['astar.h',['../astar_8h.html',1,'']]]
 ];

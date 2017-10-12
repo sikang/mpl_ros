@@ -71,12 +71,16 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1ARAStar.html">ARAStar</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classMPL_1_1ARAStar.html" title="ARAStar class. ">ARAStar</a> class.  <a href="classMPL_1_1ARAStar.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1ARAState.html">ARAState</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ARA state definition.  <a href="structMPL_1_1ARAState.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1ARAStateSpace.html">ARAStateSpace</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">State space.  <a href="structMPL_1_1ARAStateSpace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1compare__pair.html">compare_pair</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap element comparison.  <a href="structMPL_1_1compare__pair.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html">env_base</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base environment class.  <a href="classMPL_1_1env__base.html#details">More...</a><br /></td></tr>
@@ -99,15 +103,17 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ac469f005b0bd9eccdf4b379519e3143e"><td class="memItemLeft" align="right" valign="top">typedef std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a></td></tr>
-<tr class="memdesc:ac469f005b0bd9eccdf4b379519e3143e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key for node.  <a href="#ac469f005b0bd9eccdf4b379519e3143e">More...</a><br /></td></tr>
+<tr class="memdesc:ac469f005b0bd9eccdf4b379519e3143e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key for hashmap.  <a href="#ac469f005b0bd9eccdf4b379519e3143e">More...</a><br /></td></tr>
 <tr class="separator:ac469f005b0bd9eccdf4b379519e3143e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea131d0be35614ed539f1e7fdf6847eb"><td class="memTemplParams" colspan="2"><a id="aea131d0be35614ed539f1e7fdf6847eb"></a>
 template&lt;class arastate &gt; </td></tr>
-<tr class="memitem:aea131d0be35614ed539f1e7fdf6847eb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>hashMap</b> = std::unordered_map&lt; <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a>, std::shared_ptr&lt; arastate &gt; &gt;</td></tr>
+<tr class="memitem:aea131d0be35614ed539f1e7fdf6847eb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#aea131d0be35614ed539f1e7fdf6847eb">hashMap</a> = std::unordered_map&lt; <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a>, std::shared_ptr&lt; arastate &gt; &gt;</td></tr>
+<tr class="memdesc:aea131d0be35614ed539f1e7fdf6847eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define hashmap type. <br /></td></tr>
 <tr class="separator:aea131d0be35614ed539f1e7fdf6847eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10b0dac04495f8fa3300db27366896bb"><td class="memTemplParams" colspan="2"><a id="a10b0dac04495f8fa3300db27366896bb"></a>
 template&lt;class arastate &gt; </td></tr>
-<tr class="memitem:a10b0dac04495f8fa3300db27366896bb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>priorityQueue</b> = boost::heap::d_ary_heap&lt; std::pair&lt; double, std::shared_ptr&lt; arastate &gt; &gt;, boost::heap::mutable_&lt; true &gt;, boost::heap::arity&lt; 2 &gt;, boost::heap::compare&lt; <a class="el" href="structMPL_1_1compare__pair.html">compare_pair</a>&lt; arastate &gt; &gt; &gt;</td></tr>
+<tr class="memitem:a10b0dac04495f8fa3300db27366896bb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#a10b0dac04495f8fa3300db27366896bb">priorityQueue</a> = boost::heap::d_ary_heap&lt; std::pair&lt; double, std::shared_ptr&lt; arastate &gt; &gt;, boost::heap::mutable_&lt; true &gt;, boost::heap::arity&lt; 2 &gt;, boost::heap::compare&lt; <a class="el" href="structMPL_1_1compare__pair.html">compare_pair</a>&lt; arastate &gt; &gt; &gt;</td></tr>
+<tr class="memdesc:a10b0dac04495f8fa3300db27366896bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define priority queue. <br /></td></tr>
 <tr class="separator:a10b0dac04495f8fa3300db27366896bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -132,7 +138,8 @@ template&lt;class arastate &gt; </td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Key for node. </p>
+<p>Key for hashmap. </p>
+<p>Key for node.</p>
 <p>We use string as the Key for indexing, by default the Key refers to 'pos-vel-acc-...' </p>
 
 </div>

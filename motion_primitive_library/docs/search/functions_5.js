@@ -13,6 +13,7 @@ var searchData=
   ['getprimitives',['getPrimitives',['../classMPBaseUtil.html#a81f67cb3ab47a252790794644fe2cb72',1,'MPBaseUtil']]],
   ['getps',['getPs',['../classMPBaseUtil.html#adf24eba4e80dbd21a6e543e678de166c',1,'MPBaseUtil']]],
   ['getres',['getRes',['../classMPL_1_1MapUtilBase.html#a58aae164dcfc96d689743efe5e2038ff',1,'MPL::MapUtilBase']]],
+  ['getsegst',['getSegsT',['../classTrajectory.html#a13c112898c1f72e8a27fc67b3cdef211',1,'Trajectory']]],
   ['gettotaltime',['getTotalTime',['../classPolyTraj.html#a6855a989ddf5ad5d922e69f7cf7440dd',1,'PolyTraj::getTotalTime()'],['../classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f',1,'Trajectory::getTotalTime()']]],
   ['gettraj',['getTraj',['../classMPBaseUtil.html#a4690352b033fe627db0565802d4a966c',1,'MPBaseUtil']]],
   ['gettrajectory',['getTrajectory',['../classPolySolver.html#a0ba6ebeaf03052445baa1702ef531988',1,'PolySolver']]],

@@ -4,9 +4,9 @@
 
 
 template <class state>
-double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
+double MPL::ARAStar<state>::Astar(const state& start_coord, MPL::Key start_idx,
                                   const env_base& ENV,
-                                  Trajectory& traj, std::vector<double>& action_dts,
+                                  Trajectory& traj, 
                                   double eps, int max_expand )
 {
   // Check if done
@@ -51,11 +51,10 @@ double MPL::ARAStar<state>::Astar( const state& start_coord, MPL::Key start_idx,
   {
     //action_idx.push_back( currNode_pt->parent_action_id );
     int action_idx = currNode_pt->parent_action_id;
-    action_dts.push_back(currNode_pt->dt);
     currNode_pt = currNode_pt->parent;
     std::vector<state> next_micro;
     Primitive pr;
-    ENV.forward_action( currNode_pt->coord, action_idx, action_dts.back(), next_micro, pr );
+    ENV.forward_action( currNode_pt->coord, action_idx, currNode_pt->dt, next_micro, pr );
     prs.push_back(pr);
     for( typename std::vector<state>::reverse_iterator it = next_micro.rbegin(); 
          it!=next_micro.rend(); ++it ) {}
