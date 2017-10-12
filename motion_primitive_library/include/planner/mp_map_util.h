@@ -16,8 +16,6 @@ class MPMapUtil : public MPBaseUtil
      * @param verbose enable print out
      */
     MPMapUtil(bool verbose);
-    ///Planning from start to goal
-    bool plan(const Waypoint &start, const Waypoint &goal);
     ///Set map util
     void setMapUtil(std::shared_ptr<MPL::VoxelMapUtil> map_util);
     ///Set sub map util

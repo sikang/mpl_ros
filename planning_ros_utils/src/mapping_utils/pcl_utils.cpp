@@ -45,11 +45,16 @@ namespace PCLUtils
   sensor_msgs::PointCloud toROS(const PCLPointCloud& cloud_pcl) {
     sensor_msgs::PointCloud cloud;
     cloud.points.resize(cloud_pcl.points.size());
+    cloud.channels.resize(1);
+    cloud.channels[0].name = "rgb";
+    cloud.channels[0].values.resize(cloud.points.size());
+
     for(unsigned int i = 0; i < cloud_pcl.points.size(); i++)
     {
       cloud.points[i].x = cloud_pcl.points[i].x;
       cloud.points[i].y = cloud_pcl.points[i].y;
       cloud.points[i].z = cloud_pcl.points[i].z;
+      cloud.channels[0].values[i] = cloud_pcl.points[i].rgb;
     }
     return cloud;
   }

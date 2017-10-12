@@ -87,10 +87,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab5fc4ee70cc2b5ff7c893bf190ed074a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPMapUtil.html#ab5fc4ee70cc2b5ff7c893bf190ed074a">MPMapUtil</a> (bool verbose)</td></tr>
 <tr class="memdesc:ab5fc4ee70cc2b5ff7c893bf190ed074a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple constructor.  <a href="#ab5fc4ee70cc2b5ff7c893bf190ed074a">More...</a><br /></td></tr>
 <tr class="separator:ab5fc4ee70cc2b5ff7c893bf190ed074a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6eb4881ba7d5dedfe7e8bc6f3f53ea9"><td class="memItemLeft" align="right" valign="top"><a id="ae6eb4881ba7d5dedfe7e8bc6f3f53ea9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPMapUtil.html#ae6eb4881ba7d5dedfe7e8bc6f3f53ea9">plan</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)</td></tr>
-<tr class="memdesc:ae6eb4881ba7d5dedfe7e8bc6f3f53ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Planning from start to goal. <br /></td></tr>
-<tr class="separator:ae6eb4881ba7d5dedfe7e8bc6f3f53ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0384f13ee684e0be0e5f59df1a8002ae"><td class="memItemLeft" align="right" valign="top"><a id="a0384f13ee684e0be0e5f59df1a8002ae"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPMapUtil.html#a0384f13ee684e0be0e5f59df1a8002ae">setMapUtil</a> (std::shared_ptr&lt; <a class="el" href="classMPL_1_1VoxelMapUtil.html">MPL::VoxelMapUtil</a> &gt; map_util)</td></tr>
 <tr class="memdesc:a0384f13ee684e0be0e5f59df1a8002ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set map util. <br /></td></tr>
@@ -184,6 +180,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ae3fa1886d1d5d75ca5f4e73948761a04">setTol</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_dis, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_vel, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_acc=0.0)</td></tr>
 <tr class="memdesc:ae3fa1886d1d5d75ca5f4e73948761a04 inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tolerance in geometric and dynamic spaces. <br /></td></tr>
 <tr class="separator:ae3fa1886d1d5d75ca5f4e73948761a04 inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ee4dac26b0999dd4241de79421c72a inherit pub_methods_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="ae0ee4dac26b0999dd4241de79421c72a"></a>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ae0ee4dac26b0999dd4241de79421c72a">plan</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)</td></tr>
+<tr class="memdesc:ae0ee4dac26b0999dd4241de79421c72a inherit pub_methods_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Planning thread. <br /></td></tr>
+<tr class="separator:ae0ee4dac26b0999dd4241de79421c72a inherit pub_methods_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -192,9 +192,13 @@ Additional Inherited Members</h2></td></tr>
 std::unique_ptr&lt; <a class="el" href="classMPL_1_1env__base.html">MPL::env_base</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a97f2b1a152eff92b778fe838cd50d32b">ENV_</a></td></tr>
 <tr class="memdesc:a97f2b1a152eff92b778fe838cd50d32b inherit pro_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Env class. <br /></td></tr>
 <tr class="separator:a97f2b1a152eff92b778fe838cd50d32b inherit pro_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c782fd77d04cd438fb6e82246bbfd7 inherit pro_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a28c782fd77d04cd438fb6e82246bbfd7"></a>
+std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a28c782fd77d04cd438fb6e82246bbfd7">ws_</a></td></tr>
+<tr class="memdesc:a28c782fd77d04cd438fb6e82246bbfd7 inherit pro_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate nodes in optimal trajectory. <br /></td></tr>
+<tr class="separator:a28c782fd77d04cd438fb6e82246bbfd7 inherit pro_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4a0b20f7730a9d194d0416f3dea1133 inherit pro_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="ac4a0b20f7730a9d194d0416f3dea1133"></a>
 <a class="el" href="classTrajectory.html">Trajectory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ac4a0b20f7730a9d194d0416f3dea1133">traj_</a></td></tr>
-<tr class="memdesc:ac4a0b20f7730a9d194d0416f3dea1133 inherit pro_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate nodes in optimal trajectory. <br /></td></tr>
+<tr class="memdesc:ac4a0b20f7730a9d194d0416f3dea1133 inherit pro_attribs_classMPBaseUtil"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimal trajectory. <br /></td></tr>
 <tr class="separator:ac4a0b20f7730a9d194d0416f3dea1133 inherit pro_attribs_classMPBaseUtil"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e6f325b315490755dada4d37787d5f7 inherit pro_attribs_classMPBaseUtil"><td class="memItemLeft" align="right" valign="top"><a id="a5e6f325b315490755dada4d37787d5f7"></a>
 std::vector&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a5e6f325b315490755dada4d37787d5f7">dts_</a></td></tr>

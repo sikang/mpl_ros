@@ -65,7 +65,7 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classMPBaseUtil-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">MPBaseUtil Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">MPBaseUtil Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -170,10 +170,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ae3fa1886d1d5d75ca5f4e73948761a04">setTol</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_dis, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_vel, <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> tol_acc=0.0)</td></tr>
 <tr class="memdesc:ae3fa1886d1d5d75ca5f4e73948761a04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set tolerance in geometric and dynamic spaces. <br /></td></tr>
 <tr class="separator:ae3fa1886d1d5d75ca5f4e73948761a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f7d2dd6cd2f486738622e0145f874ae"><td class="memItemLeft" align="right" valign="top"><a id="a2f7d2dd6cd2f486738622e0145f874ae"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a2f7d2dd6cd2f486738622e0145f874ae">plan</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)=0</td></tr>
-<tr class="memdesc:a2f7d2dd6cd2f486738622e0145f874ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Planning thread. <br /></td></tr>
-<tr class="separator:a2f7d2dd6cd2f486738622e0145f874ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ee4dac26b0999dd4241de79421c72a"><td class="memItemLeft" align="right" valign="top"><a id="ae0ee4dac26b0999dd4241de79421c72a"></a>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ae0ee4dac26b0999dd4241de79421c72a">plan</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;start, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal)</td></tr>
+<tr class="memdesc:ae0ee4dac26b0999dd4241de79421c72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Planning thread. <br /></td></tr>
+<tr class="separator:ae0ee4dac26b0999dd4241de79421c72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -181,9 +181,13 @@ Protected Attributes</h2></td></tr>
 std::unique_ptr&lt; <a class="el" href="classMPL_1_1env__base.html">MPL::env_base</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a97f2b1a152eff92b778fe838cd50d32b">ENV_</a></td></tr>
 <tr class="memdesc:a97f2b1a152eff92b778fe838cd50d32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Env class. <br /></td></tr>
 <tr class="separator:a97f2b1a152eff92b778fe838cd50d32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c782fd77d04cd438fb6e82246bbfd7"><td class="memItemLeft" align="right" valign="top"><a id="a28c782fd77d04cd438fb6e82246bbfd7"></a>
+std::vector&lt; <a class="el" href="structWaypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a28c782fd77d04cd438fb6e82246bbfd7">ws_</a></td></tr>
+<tr class="memdesc:a28c782fd77d04cd438fb6e82246bbfd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate nodes in optimal trajectory. <br /></td></tr>
+<tr class="separator:a28c782fd77d04cd438fb6e82246bbfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4a0b20f7730a9d194d0416f3dea1133"><td class="memItemLeft" align="right" valign="top"><a id="ac4a0b20f7730a9d194d0416f3dea1133"></a>
 <a class="el" href="classTrajectory.html">Trajectory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#ac4a0b20f7730a9d194d0416f3dea1133">traj_</a></td></tr>
-<tr class="memdesc:ac4a0b20f7730a9d194d0416f3dea1133"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate nodes in optimal trajectory. <br /></td></tr>
+<tr class="memdesc:ac4a0b20f7730a9d194d0416f3dea1133"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimal trajectory. <br /></td></tr>
 <tr class="separator:ac4a0b20f7730a9d194d0416f3dea1133"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e6f325b315490755dada4d37787d5f7"><td class="memItemLeft" align="right" valign="top"><a id="a5e6f325b315490755dada4d37787d5f7"></a>
 std::vector&lt; <a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPBaseUtil.html#a5e6f325b315490755dada4d37787d5f7">dts_</a></td></tr>

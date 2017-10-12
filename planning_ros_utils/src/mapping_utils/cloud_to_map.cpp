@@ -1,10 +1,10 @@
 #include <ros/ros.h>
 #include <ros_utils/data_ros_utils.h>
 #include <topic_tools/shape_shifter.h>
-#include <mapping_utils/obstacle_grid.h>
+#include <mapping_utils/voxel_grid.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 
-std::unique_ptr<ObstacleGrid> voxel_grid_;
+std::unique_ptr<VoxelGrid> voxel_grid_;
 ros::Publisher map_pub;
 
 void processCloud(const sensor_msgs::PointCloud& cloud) {
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   dim(1) = range_y;
   dim(2) = range_z;
 
-  voxel_grid_.reset(new ObstacleGrid(origin, dim, res));
+  voxel_grid_.reset(new VoxelGrid(origin, dim, res));
 
   ros::spin();
   return 0;

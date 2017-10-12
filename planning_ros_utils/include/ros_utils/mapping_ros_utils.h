@@ -8,6 +8,7 @@
 //#include <collision_checking/jps_voxel_map_util.h>
 //#include <collision_checking/jps_sub_voxel_map_util.h>
 #include <planning_ros_msgs/VoxelMap.h>
+#include <sensor_msgs/PointCloud.h>
 
 void setMap(MPL::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg);
 void getMap(MPL::VoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map);

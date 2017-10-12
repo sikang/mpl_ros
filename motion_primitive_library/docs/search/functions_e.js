@@ -14,6 +14,7 @@ var searchData=
   ['set_5ftol_5facc',['set_tol_acc',['../classMPL_1_1env__base.html#aa6cfa8599dd96e7a0afc55ff1f953741',1,'MPL::env_base']]],
   ['set_5ftol_5fdis',['set_tol_dis',['../classMPL_1_1env__base.html#ac721bdd95487f95c49c22c74394ec5a3',1,'MPL::env_base']]],
   ['set_5ftol_5fvel',['set_tol_vel',['../classMPL_1_1env__base.html#a2dc21e86a239456208d4c4ca77f497ed',1,'MPL::env_base']]],
+  ['set_5fu',['set_U',['../classMPL_1_1env__base.html#a6a60fd89ca9b6ed76af009ae73e973ef',1,'MPL::env_base']]],
   ['set_5fu_5fmax',['set_u_max',['../classMPL_1_1env__base.html#aee8617fc86b63bb54a13fc7276f6eead',1,'MPL::env_base']]],
   ['set_5fv_5fmax',['set_v_max',['../classMPL_1_1env__base.html#adae048de8be60e8b0fa3ad2312192fc8',1,'MPL::env_base']]],
   ['set_5fw',['set_w',['../classMPL_1_1env__base.html#a8f00ee33e71b0baf15d274b9da3c6b72',1,'MPL::env_base']]],

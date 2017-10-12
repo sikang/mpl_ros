@@ -124,7 +124,7 @@ vec_Vec3f MPBaseUtil::getPs() {
 }
 
 std::vector<Waypoint> MPBaseUtil::getWs() {
-  return ENV_->ws(); 
+  return ws_; 
 }
 
 Trajectory MPBaseUtil::getTraj() {
@@ -135,3 +135,51 @@ std::vector<decimal_t> MPBaseUtil::getDts() {
   return dts_;
 }
 
+bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
+  if(planner_verbose_) {
+    printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
+        start.pos(0), start.pos(1), start.pos(2),
+        start.vel(0), start.vel(1), start.vel(2),
+        start.acc(0), start.acc(1), start.acc(2));
+    printf("goal pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
+        goal.pos(0), goal.pos(1), goal.pos(2),
+        goal.vel(0), goal.vel(1), goal.vel(2),
+        goal.acc(0), goal.acc(1), goal.acc(2));
+  }
+
+  if(!ENV_->is_free(start.pos)) {
+    printf(ANSI_COLOR_RED "[MPPlanner] start is not free!" ANSI_COLOR_RESET "\n");
+    return false;
+  }
+ 
+  MPL::ARAStar<Waypoint> AA;
+  std::vector<double> action_dts;
+  Trajectory traj;
+
+  ENV_->set_goal(goal);
+
+  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, traj, action_dts, epsilon_, max_num_);
+
+  traj_ = traj;
+  if (traj.segs.empty()) {
+    if(planner_verbose_)
+      printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a traj!" ANSI_COLOR_RESET "\n");
+    return false;
+  }
+
+  ws_.clear();
+  ws_.push_back(start);
+  double time = 0;
+  for (const auto &t : action_dts) {
+    time += t;
+    Waypoint waypoint;
+    traj_.evaluate(time, waypoint);
+    waypoint.use_pos = start.use_pos;
+    waypoint.use_vel = start.use_vel;
+    waypoint.use_acc = start.use_acc;
+    waypoint.use_jrk = start.use_jrk;
+    ws_.push_back(waypoint);
+  }
+
+  return true;
+}
