@@ -63,15 +63,16 @@ class MPBaseUtil
     ///Set tolerance in geometric and dynamic spaces
     void setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc = 0.0);
     ///Planning thread
-    virtual bool plan(const Waypoint &start, const Waypoint &goal) = 0;
+    virtual bool plan(const Waypoint &start, const Waypoint &goal);
 
   protected:
     ///Env class
     std::unique_ptr<MPL::env_base> ENV_;
     ///Intermediate nodes in optimal trajectory
-    //std::vector<Waypoint> path_;
+    std::vector<Waypoint> ws_;
+    ///Optimal trajectory
     Trajectory traj_;
-   ///Time allocation for each segment
+    ///Time allocation for each segment
     std::vector<decimal_t> dts_;
     ///Greedy searching parameter
     decimal_t epsilon_ = 1.0;

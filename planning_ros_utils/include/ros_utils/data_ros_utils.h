@@ -2,7 +2,6 @@
 #define DATA_ROS_UTILS_H
 
 #include <motion_primitive_library/data_type.h>
-#include <poly_utils/data_type.h>
 #include <sensor_msgs/PointCloud.h>
 #include <planning_ros_msgs/Polyhedra.h>
 #include <planning_ros_msgs/Path.h>

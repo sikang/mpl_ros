@@ -16,8 +16,6 @@ class MPCloudUtil : public MPBaseUtil
      * @param verbose enable print out
      */
     MPCloudUtil(bool verbose);
-    ///Planning from start to goal
-    bool plan(const Waypoint &start, const Waypoint &goal);
     ///Set map util
     void setMap(const vec_Vec3f& obs, decimal_t r, const Vec3f& ori, const Vec3f& dim);
     ///Get polyhedra

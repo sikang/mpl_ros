@@ -299,6 +299,7 @@ class env_base
       set_U(U);
     }
 
+    ///Set max U in each axis
     void set_U(const vec_Vec3f& U) {
       U_ = U;
    }
@@ -395,13 +396,13 @@ class env_base
     ///Check if a point is in free space
     virtual bool is_free(const Vec3f& pt) const { 
       printf("Used Null is_free() for pt\n");
-      return false; 
+      return true; 
     }
 
     ///Check if a primitive is in free space
     virtual bool is_free(const Primitive& pr) const { 
       printf("Used Null is_free() for pr\n");
-      return false; 
+      return true; 
     }
 
     ///Retrieve dt
@@ -431,10 +432,7 @@ class env_base
       action_idx.push_back(0);
     }
 
-    std::vector<Waypoint> ws() {
-      return ws_;
-    }
-    ///Returns expanded n odes
+    ///Returns expanded nodes
     vec_Vec3f ps() {
       return ps_;
     }

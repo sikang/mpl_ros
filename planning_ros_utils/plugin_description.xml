@@ -1,30 +1,4 @@
 <library path="lib/libplanning_rviz_plugins">
-  <class name="planning_rviz_plugins/Ellipsoids"
-    type="planning_rviz_plugins::EllipsoidsDisplay"
-    base_class_type="rviz::Display">
-    <description>
-      visualize planning_ros_msgs/Ellipsoids msg.
-    </description>
-  </class>
-
-
-  <class name="planning_rviz_plugins/Polyhedra"
-    type="planning_rviz_plugins::PolyhedraDisplay"
-    base_class_type="rviz::Display">
-    <description>
-      visualize planning_ros_msgs/Polyhedra msg.
-    </description>
-  </class>
-
-  <class name="planning_rviz_plugins/Mesh"
-    type="planning_rviz_plugins::MeshDisplay"
-    base_class_type="rviz::Display">
-    <description>
-      visualize planning_ros_msgs/Mesh.msg.
-    </description>
-  </class>
-
-
   <class name="planning_rviz_plugins/VoxelMap"
     type="planning_rviz_plugins::MapDisplay"
     base_class_type="rviz::Display">

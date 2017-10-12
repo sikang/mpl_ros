@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8.3)
 project(planning_ros_utils)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
-find_package(catkin REQUIRED COMPONENTS roscpp rviz topic_tools)
+find_package(catkin REQUIRED COMPONENTS rviz roscpp)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${EIGEN3_INCLUDE_DIRS})
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -27,38 +27,46 @@ endif()
 
 catkin_simple()
 
-cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp
-  src/mapping_utils/obstacle_grid.cpp)
-
-FIND_PACKAGE(VTK)
+FIND_PACKAGE(VTK REQUIRED)
 
 if(NOT VTK_FOUND)
-  message(STATUS "VTK was not found")
+  set(DEFAULT FALSE)
+  set(REASON "VTK was not found.")
+  message("VTK was not found")
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
-  message(STATUS "VTK was found")
+  message("VTK was found")
   cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
   target_link_libraries(mesh_sampling ${VTK_LIBRARIES})
 endif(NOT VTK_FOUND)
 
 
+cs_add_executable(color_map_server src/mapping_utils/color_map_server.cpp
+  src/mapping_utils/voxel_grid_rgb.cpp)
+
+cs_add_executable(image_to_cloud src/mapping_utils/image_to_cloud.cpp
+  src/mapping_utils/pcl_utils.cpp)
+target_link_libraries(image_to_cloud ${OpenCV_LIBS})
+
+cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
+
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
-  src/planning_rviz_plugins/mesh_visual.cpp
-  src/planning_rviz_plugins/vector_visual.cpp
+  #src/planning_rviz_plugins/mesh_visual.cpp
+  #src/planning_rviz_plugins/vector_visual.cpp
   src/planning_rviz_plugins/trajectory_visual.cpp
   src/planning_rviz_plugins/path_visual.cpp
-  src/planning_rviz_plugins/mesh_display.cpp
-  src/planning_rviz_plugins/polyhedra_display.cpp
+  #src/planning_rviz_plugins/mesh_display.cpp
+  #src/planning_rviz_plugins/polyhedra_display.cpp
   #src/planning_rviz_plugins/vector_display.cpp
   src/planning_rviz_plugins/path_display.cpp
   src/planning_rviz_plugins/paths_display.cpp
   src/planning_rviz_plugins/trajectories_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
   src/planning_rviz_plugins/map_display.cpp
-  src/planning_rviz_plugins/ellipsoids_visual.cpp
-  src/planning_rviz_plugins/ellipsoids_display.cpp
-  src/poly_utils/geometry_utils.cpp
+  #src/planning_rviz_plugins/ellipsoids_visual.cpp
+  #src/planning_rviz_plugins/ellipsoids_display.cpp
+  #src/poly_utils/geometry_utils.cpp
   src/ros_utils/primitive_ros_utils.cpp
   src/ros_utils/mapping_ros_utils.cpp
   ${MOC_FILES})

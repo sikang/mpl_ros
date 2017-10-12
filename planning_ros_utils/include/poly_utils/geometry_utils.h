@@ -2,7 +2,6 @@
 #define GEOMETRIC_UTILS_H
 
 #include <motion_primitive_library/data_utils.h>
-#include <poly_utils/data_type.h>
 
 //**** Sort poits in an order
 vec_Vec3f sort_pts(const vec_Vec3f &pts);
