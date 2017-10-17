@@ -2,27 +2,60 @@
 #include <planner/env_base.h>
 #include <primitive/primitive.h>
 
+using namespace MPL;
 
 template <class state>
-double MPL::ARAStar<state>::Astar(const state& start_coord, MPL::Key start_idx,
-                                  const env_base& ENV,
-                                  Trajectory& traj, 
-                                  double eps, int max_expand, bool replan )
+void ARAStateSpace<state>::getSubStateSpace(int ref_idx) {
+  // Prune hashmap and priority queue
+  hashMap<ARAState<state>> new_hm;
+  priorityQueue<ARAState<state>> new_pq;
+
+  for(const auto& it: this->hm) {
+    // Check if the node exist
+    if(it.second) {
+      // Check if the node has already been added
+      auto search = new_hm.find(it.first);
+      if(search != new_hm.end()) 
+        continue;
+      // Check if the action idx matches the ref 
+      if(!it.second->actions.empty() && it.second->actions.front() == ref_idx) {
+        ARAState<state> currNode = *(it.second);
+        currNode.actions.pop_front();
+        currNode.coord.t -= currNode.dt;
+        if(currNode.actions.empty())
+          currNode.parent = NULL;
+        // Add current node
+        new_hm[currNode.hashkey] = std::make_shared<ARAState<state>>(currNode);
+        // If it is in open set, add to pq
+        if(currNode.iterationopened > currNode.iterationclosed)
+          new_pq.push(*currNode.heapkey);
+      }
+    }
+  }
+  this->hm = new_hm;
+  this->pq = new_pq;
+}
+
+
+template <class state>
+double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
+    const env_base& ENV, std::shared_ptr<ARAStateSpace<state>> sss_ptr, 
+    Trajectory& traj, int max_expand )
 {
+  traj.segs.clear();
   // Check if done
   if( ENV.is_goal(start_coord) )
     return 0;
-  // Initialize State Space
-  if(!replan)
-    sss_ptr.reset(new ARAStateSpace<state>(eps) );
   
   // Initialize start node
   std::shared_ptr<ARAState<state>> currNode_pt = sss_ptr->hm[start_idx];
-  currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
-  currNode_pt->g = 0;
-  currNode_pt->h = ENV.get_heur(start_coord);
-  currNode_pt->iterationopened = sss_ptr->searchiteration;
-  currNode_pt->iterationclosed = sss_ptr->searchiteration;
+  if( !currNode_pt ) {
+    currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
+    currNode_pt->g = 0;
+    currNode_pt->h = ENV.get_heur(start_coord);
+    currNode_pt->iterationopened = sss_ptr->searchiteration;
+    currNode_pt->iterationclosed = sss_ptr->searchiteration;
+  }
 
   int expands = 0;
   bool reachedGoal = false;
@@ -44,16 +77,17 @@ double MPL::ARAStar<state>::Astar(const state& start_coord, MPL::Key start_idx,
     currNode_pt->iterationclosed = sss_ptr->searchiteration; // Add to closed list
   }
   
-  // Recover path
+  // Recover trajectory
   double pcost = currNode_pt->g;
   std::vector<Primitive> prs;
   while( currNode_pt->parent )
   {
     int action_idx = currNode_pt->parent_action_id;
     currNode_pt = currNode_pt->parent;
-    if(action_idx > 0) {
+    if(action_idx >= 0) {
       Primitive pr;
       ENV.forward_action( currNode_pt->coord, action_idx, currNode_pt->dt, pr );
+      printf("action id: %d\n",  action_idx);
       prs.push_back(pr);
     }
   }
@@ -65,7 +99,7 @@ double MPL::ARAStar<state>::Astar(const state& start_coord, MPL::Key start_idx,
 
 
 template <class state>
-bool MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
+bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
     std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
     const env_base& ENV )
 {
@@ -98,6 +132,8 @@ bool MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
     if( tentative_gval < child_pt->g )
     {
       child_pt->parent = currNode_pt;  // Assign new parent
+      child_pt->actions = currNode_pt->actions;
+      child_pt->actions.push_back(succ_act_idx[s]);
       child_pt->parent_action_id = succ_act_idx[s];
       child_pt->dt = succ_act_dt[s];
       child_pt->g = tentative_gval;    // Update gval
@@ -132,26 +168,8 @@ bool MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
   return reached;
 }
 
-template <class state>
-std::vector<state> MPL::ARAStar<state>::getOpenSet() const {
-  std::vector<state> ss;
-  for(const auto& it: sss_ptr->pq)
-    ss.push_back(it.second->coord);
-  return ss;
-}
-
-template <class state>
-std::vector<state> MPL::ARAStar<state>::getCloseSet() const {
-  std::vector<state> ss;
-  for(const auto& it: sss_ptr->hm) {
-    if(it.second && it.second->iterationclosed == sss_ptr->searchiteration)
-      ss.push_back(it.second->coord);
-  }
-  return ss;
-}
-
-
 
 // explicit instantiations
+template class MPL::ARAStateSpace<Waypoint>;
 template class MPL::ARAStar<Waypoint>;
 

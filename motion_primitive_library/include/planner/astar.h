@@ -53,11 +53,12 @@ namespace MPL
   struct ARAState
   {
     // location data
+    Key hashkey;
     state coord;                            // discrete coordinates of this node
     std::shared_ptr<ARAState<state>> parent; // pointer to parent node
     int parent_action_id = -1;
+    std::list<int> actions;
     double dt = 1.0;
-    Key hashkey;
     // pointer to heap location
     typename priorityQueue<ARAState<state>>::handle_type heapkey;
     
@@ -70,6 +71,7 @@ namespace MPL
     ARAState( Key hashkey, const state& coord )
       : hashkey(hashkey), coord(coord)//, parent(nullptr)
     {}
+
   };
   
   ///State space
@@ -79,15 +81,17 @@ namespace MPL
     //std::list<std::shared_ptr<ARAState<state>>> il;
     priorityQueue<ARAState<state>> pq;
     hashMap<ARAState<state>> hm;
-    
     double eps;
+
     //double eps_satisfied = std::numeric_limits<double>::infinity();
     const unsigned int searchiteration = 1;
     //bool use_il = false;    
     //bool reopen_nodes = false;
 
     ARAStateSpace(double eps = 1): eps(eps){}
+    void getSubStateSpace(int ref_idx);
   };
+
   
   /**
    * @brief ARAStar class
@@ -104,24 +108,21 @@ namespace MPL
        * @param start_coord start state
        * @param start_idx index for the start state 
        * @param ENV object of `env_base' class
+       * @param sss_ptr workspace input
        * @param traj output trajectory
-       * @param eps weight of heuristic, default value is 1
        * @param max_expand max number of expanded states, default value is -1 which means there is no limitation
        */
-      double Astar(const state& start_coord, Key start_idx, const env_base& ENV,
-          Trajectory& traj, double eps = 1 , int max_expand = -1, bool replan = false);
+      double Astar(const state& start_coord, Key start_idx, const env_base& ENV, std::shared_ptr<ARAStateSpace<state>> sss_ptr, 
+          Trajectory& traj, int max_expand = -1);
       /*
       double ARAstar(const state& start_coord, Key start_idx, const env_base& ENV,
           Trajectory& traj, std::vector<int>& action_idx, double eps = 1,
           double allocated_time_secs = std::numeric_limits<double>::infinity() );
           */
-      std::vector<state> getOpenSet() const;
-      std::vector<state> getCloseSet() const;
     private:
       bool spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
           std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
           const env_base& ENV );
-      std::shared_ptr<ARAStateSpace<state>> sss_ptr;
   };
 }
 #endif

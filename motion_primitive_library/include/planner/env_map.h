@@ -122,7 +122,6 @@ class env_map : public env_base
           succ_cost.push_back(pr.J(wi_) + w_*dt_);
           action_idx.push_back(i);
           action_dts.push_back(dt_);
-          primitives_.push_back(pr);
        }
       }
 

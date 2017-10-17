@@ -72,6 +72,8 @@ class MPBaseUtil
     std::unique_ptr<MPL::env_base> ENV_;
     ///Planner class
     std::unique_ptr<MPL::ARAStar<Waypoint>> planner_ptr_;
+    ///Planner workspace
+    std::shared_ptr<MPL::ARAStateSpace<Waypoint>> sss_ptr_;
     ///Intermediate nodes in optimal trajectory
     std::vector<Waypoint> ws_;
     ///Optimal trajectory

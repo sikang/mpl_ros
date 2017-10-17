@@ -116,7 +116,16 @@ void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc)
 }
 
 std::vector<Primitive> MPBaseUtil::getPrimitives() const { 
-  return ENV_->primitives(); 
+  //return ENV_->primitives(); 
+  std::vector<Primitive> prs;
+  for(const auto& it: sss_ptr_->hm) {
+    if(it.second && it.second->parent && it.second->parent_action_id >= 0) {
+      Primitive pr;
+      ENV_->forward_action( it.second->parent->coord, it.second->parent_action_id, it.second->dt, pr );
+      prs.push_back(pr);
+    }
+  }
+  return prs;
 }
 
 std::vector<Waypoint> MPBaseUtil::getWs() const {
@@ -132,20 +141,18 @@ std::vector<decimal_t> MPBaseUtil::getDts() const {
 }
 
 vec_Vec3f MPBaseUtil::getOpenSet() const {
-  const std::vector<Waypoint> ws = planner_ptr_->getOpenSet();
   vec_Vec3f ps;
-  for(const auto& it: ws)
-    ps.push_back(it.pos);
-
+  for(const auto& it: sss_ptr_->pq)
+    ps.push_back(it.second->coord.pos);
   return ps;
 }
 
 vec_Vec3f MPBaseUtil::getCloseSet() const {
-  const std::vector<Waypoint> ws = planner_ptr_->getCloseSet();
   vec_Vec3f ps;
-  for(const auto& it: ws)
-    ps.push_back(it.pos);
-
+  for(const auto& it: sss_ptr_->hm) {
+    if(it.second && it.second->iterationclosed == sss_ptr_->searchiteration)
+      ps.push_back(it.second->coord.pos);
+  }
   return ps;
 }
 
@@ -167,14 +174,15 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
   }
  
   planner_ptr_.reset(new MPL::ARAStar<Waypoint>());
-  Trajectory traj;
+  sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
 
   ENV_->set_goal(goal);
 
-  planner_ptr_->Astar(start, ENV_->state_to_idx(start), *ENV_, traj, epsilon_, max_num_);
+  planner_ptr_->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
 
-  traj_ = traj;
-  if (traj.segs.empty()) {
+  sss_ptr_->getSubStateSpace(5);
+
+  if (traj_.segs.empty()) {
     if(planner_verbose_)
       printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a traj!" ANSI_COLOR_RESET "\n");
     return false;
@@ -183,7 +191,7 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
   ws_.clear();
   ws_.push_back(start);
   double time = 0;
-  std::vector<decimal_t> dts = traj.getSegsT();
+  std::vector<decimal_t> dts = traj_.getSegsT();
   for (const auto &t : dts) {
     time += t;
     Waypoint waypoint;

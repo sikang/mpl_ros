@@ -87,17 +87,13 @@ class env_base
         decimal_t t_bar =(state.pos - goal.pos).lpNorm<Eigen::Infinity>() / v_max_;
         ts.push_back(t_bar);
         decimal_t min_cost = std::numeric_limits<decimal_t>::max();
-        decimal_t t_star = 0;
         for(auto t: ts) {
           //printf("t: %f ", t);
           if(t < t_bar)
            continue;
           decimal_t cost = a*t-c/t-d/2/t/t-e/3/t/t/t-f/4/t/t/t/t-g/5/t/t/t/t/t;
-          if(cost < min_cost) {
+          if(cost < min_cost) 
             min_cost = cost;
-            t_star = t;
-          }
-          //printf("t: %f, cost: %f\n",t, cost);
         }
         //printf("-----------\n");
         //if(ts.empty())
@@ -127,16 +123,13 @@ class env_base
         decimal_t t_bar =(state.pos - goal.pos).lpNorm<Eigen::Infinity>() / v_max_;
         ts.push_back(t_bar);
         decimal_t min_cost = std::numeric_limits<decimal_t>::max();
-        decimal_t t_star = 0;
         for(auto t: ts) {
           //printf("t: %f ", t);
           if(t < t_bar)
             continue;
           decimal_t cost = a*t-c/t-d/2/t/t-e/3/t/t/t-f/4/t/t/t/t-g/5/t/t/t/t/t;
-          if(cost < min_cost) {
+          if(cost < min_cost)
             min_cost = cost;
-            t_star = t;
-          }
           //printf("t: %f, cost: %f\n",t, cost);
         }
         return min_cost;
@@ -162,17 +155,12 @@ class env_base
         ts.push_back(t_bar);
 
         decimal_t min_cost = std::numeric_limits<decimal_t>::max();
-        decimal_t t_star = 0;
         for(auto t: ts) {
-          //printf("t: %f ", t);
           if(t < t_bar)
             continue;
           decimal_t cost = a*t-c/t-d/2/t/t-e/3/t/t/t-f/4/t/t/t/t-g/5/t/t/t/t/t;
-          if(cost < min_cost) {
+          if(cost < min_cost) 
             min_cost = cost;
-            t_star = t;
-          }
-          //printf("t: %f, cost: %f\n",t, cost);
         }
         return min_cost;
       }
@@ -265,8 +253,7 @@ class env_base
     ///Recover trajectory
     void forward_action( const Waypoint& curr, int action_id, double dt, Primitive& pr) const
     {
-      if(action_id > 0) 
-        pr = Primitive(curr, U_[action_id], dt);
+      pr = Primitive(curr, U_[action_id], dt);
     }
 
     /**
@@ -278,12 +265,12 @@ class env_base
       decimal_t du = u_max_ / n;
 
       vec_Vec3f U;
-     if(use_3d) {
+      if(use_3d) {
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
             for(decimal_t dz = -u_max_; dz <= u_max_; dz += u_max_ ) //here we reduce the z control
               U.push_back(Vec3f(dx, dy, dz));
-     }
+      }
       else{
         for(decimal_t dx = -u_max_; dx <= u_max_; dx += du )
           for(decimal_t dy = -u_max_; dy <= u_max_; dy += du )
@@ -295,7 +282,7 @@ class env_base
     ///Set max U in each axis
     void set_U(const vec_Vec3f& U) {
       U_ = U;
-   }
+    }
 
     ///Set max vel in each axis
     void set_v_max(decimal_t v) {
@@ -423,11 +410,7 @@ class env_base
       succ_idx.push_back( state_to_idx(curr) );
       succ_cost.push_back(0);
       action_idx.push_back(0);
-    }
-
-    ///Returns expanded edges
-    std::vector<Primitive> primitives() {
-      return primitives_;
+      return false;
     }
 
     ///Flag shows that if the goal is outside map
@@ -466,8 +449,6 @@ class env_base
     vec_Vec3f U_;
     Waypoint goal_node_;
     Trajectory prior_traj_;
- 
-    mutable std::vector<Primitive> primitives_;
 };
 }
 
