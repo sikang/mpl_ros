@@ -67,11 +67,6 @@ namespace MPL
     unsigned int iterationopened = 0;
     unsigned int iterationclosed = 0;
     
-    // ARA* info:
-    double v = std::numeric_limits<double>::infinity();
-    bool bInconsistent = false;
-    //ARAState(){}
-    
     ARAState( Key hashkey, const state& coord )
       : hashkey(hashkey), coord(coord)//, parent(nullptr)
     {}
@@ -81,15 +76,15 @@ namespace MPL
   template <class state>
   struct ARAStateSpace
   {
-    std::list<std::shared_ptr<ARAState<state>>> il;
+    //std::list<std::shared_ptr<ARAState<state>>> il;
     priorityQueue<ARAState<state>> pq;
     hashMap<ARAState<state>> hm;
     
     double eps;
-    double eps_satisfied = std::numeric_limits<double>::infinity();
-    unsigned int searchiteration = 1;
-    bool use_il = false;    
-    bool reopen_nodes = false;
+    //double eps_satisfied = std::numeric_limits<double>::infinity();
+    const unsigned int searchiteration = 1;
+    //bool use_il = false;    
+    //bool reopen_nodes = false;
 
     ARAStateSpace(double eps = 1): eps(eps){}
   };
@@ -114,20 +109,17 @@ namespace MPL
        * @param max_expand max number of expanded states, default value is -1 which means there is no limitation
        */
       double Astar(const state& start_coord, Key start_idx, const env_base& ENV,
-          Trajectory& traj, double eps = 1 , int max_expand = -1);
+          Trajectory& traj, double eps = 1 , int max_expand = -1, bool replan = false);
+      /*
       double ARAstar(const state& start_coord, Key start_idx, const env_base& ENV,
           Trajectory& traj, std::vector<int>& action_idx, double eps = 1,
           double allocated_time_secs = std::numeric_limits<double>::infinity() );
+          */
     private:
-      void spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
+      bool spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
           std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
           const env_base& ENV );
-      void MoveInconsToOpen(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
-      void ReevaluateFVals(std::shared_ptr<ARAStateSpace<state>>& sss_ptr);
-      static double toc(std::chrono::high_resolution_clock::time_point& t2){
-        return std::chrono::duration<double>( std::chrono::high_resolution_clock::now()
-            - t2 ).count();
-      }
+      std::shared_ptr<ARAStateSpace<state>> sss_ptr;
   };
 }
 #endif

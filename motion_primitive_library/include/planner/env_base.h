@@ -263,17 +263,10 @@ class env_base
     }
 
     ///Recover trajectory
-    void forward_action( const Waypoint& curr, int action_id, double dt,
-        std::vector<Waypoint>& next_micro, Primitive& pr) const
-   {
-      next_micro.clear();
-      if(action_id < 0) {
-        next_micro.push_back(goal_node_);
-      }
-      else {
+    void forward_action( const Waypoint& curr, int action_id, double dt, Primitive& pr) const
+    {
+      if(action_id > 0) 
         pr = Primitive(curr, U_[action_id], dt);
-        next_micro.push_back(pr.evaluate(dt));
-     }
     }
 
     /**
@@ -418,7 +411,7 @@ class env_base
      * @param succ_cost The array stores cost along valid edges
      * @param action_idx The array stores corresponding idx of control for each successor
      */
-    virtual void get_succ( const Waypoint& curr, 
+    virtual bool get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
