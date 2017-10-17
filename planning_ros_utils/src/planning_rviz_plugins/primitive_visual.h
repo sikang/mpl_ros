@@ -1,5 +1,5 @@
-#ifndef TRAJECTORY_VISUAL_H
-#define TRAJECTORY_VISUAL_H
+#ifndef PRIMITIVE_VISUAL_H
+#define PRIMITIVE_VISUAL_H
 
 #include <ros_utils/primitive_ros_utils.h>
 #include <OGRE/OgreVector3.h>
@@ -9,15 +9,15 @@
 #include <rviz/ogre_helpers/billboard_line.h>
 
 namespace planning_rviz_plugins {
-  class TrajectoryVisual {
+  class PrimitiveVisual {
     public:
-      TrajectoryVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);
+      PrimitiveVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);
 
-      virtual ~TrajectoryVisual();
+      virtual ~PrimitiveVisual();
 
       void setNum(int n);
-      void setMessage(const planning_ros_msgs::Trajectory &msg);
-      void addMessage(const planning_ros_msgs::Trajectory &msg);
+      void setMessage(const planning_ros_msgs::Primitive &msg);
+      void addMessage(const planning_ros_msgs::Primitive &msg);
 
       void setFramePosition(const Ogre::Vector3 &position);
       void setFrameOrientation(const Ogre::Quaternion &orientation);

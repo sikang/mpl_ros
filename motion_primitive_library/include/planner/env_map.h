@@ -53,8 +53,8 @@ class env_map : public env_base
      *
      * We sample n (default as 5) points along a primitive, and check each point for collision
      */
-    bool is_free(const Primitive& p, int n = 5) const {
-      std::vector<Waypoint> pts = p.sample(n);
+    bool is_free(const Primitive& pr, int n = 5) const {
+      std::vector<Waypoint> pts = pr.sample(n);
       for(const auto& pt: pts){
         Vec3i pn = map_util_->floatToInt(pt.pos);
         if(map_util_->isOccupied(pn) ||
@@ -110,10 +110,10 @@ class env_map : public env_base
         return true;
 
       for(int i = 0; i < (int)U_.size(); i++) {
-        Primitive p(curr, U_[i], dt_);
-        Waypoint tn = p.evaluate(dt_);
-        if(p.valid_vel(v_max_) && p.valid_acc(a_max_) && p.valid_jrk(j_max_)) {
-         if(!is_free(p)) 
+        Primitive pr(curr, U_[i], dt_);
+        Waypoint tn = pr.evaluate(dt_);
+        if(pr.valid_vel(v_max_) && pr.valid_acc(a_max_) && pr.valid_jrk(j_max_)) {
+         if(!is_free(pr)) 
             continue;
           tn.use_pos = curr.use_pos;
           tn.use_vel = curr.use_vel;
@@ -123,9 +123,10 @@ class env_map : public env_base
 
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));
-          succ_cost.push_back(p.J(wi_) + w_*dt_);
+          succ_cost.push_back(pr.J(wi_) + w_*dt_);
           action_idx.push_back(i);
           action_dts.push_back(dt_);
+          primitives_.push_back(pr);
        }
       }
       return true;

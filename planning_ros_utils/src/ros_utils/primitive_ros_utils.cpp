@@ -7,11 +7,11 @@
 /**
  * @brief Primitive class to primitive ros message
  */
-planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive& p) {
+planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive& pr) {
   planning_ros_msgs::Primitive msg;
-  const Vec6f cx = p.traj(0).coeff();
-  const Vec6f cy = p.traj(1).coeff();
-  const Vec6f cz = p.traj(2).coeff();
+  const Vec6f cx = pr.traj(0).coeff();
+  const Vec6f cy = pr.traj(1).coeff();
+  const Vec6f cz = pr.traj(2).coeff();
   msg.cx.resize(6);
   msg.cy.resize(6);
   msg.cz.resize(6);
@@ -20,7 +20,7 @@ planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive& p) {
     msg.cy[i] = cy(i);
     msg.cz[i] = cz(i);
   }
-  msg.t = p.t();
+  msg.t = pr.t();
 
   return msg;
 }
@@ -53,54 +53,54 @@ planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory& traj) {
 /**
  * @brief Multiple trajectories class to trajectories ros message for visualization
  */
-planning_ros_msgs::Trajectories toTrajectoriesROSMsg(const std::vector<Trajectory>& trajs) {
-  planning_ros_msgs::Trajectories msg;
-  for(const auto& seg: trajs)
-    msg.trajectories.push_back(toTrajectoryROSMsg(seg));
+planning_ros_msgs::Primitives toPrimitivesROSMsg(const std::vector<Primitive>& prs) {
+  planning_ros_msgs::Primitives msg;
+  for(const auto& pr: prs)
+    msg.primitives.push_back(toPrimitiveROSMsg(pr));
   return msg;
 }
 
 /**
  * @brief Ros message to primitive class
  */
-Primitive toPrimitive(const planning_ros_msgs::Primitive& p) {
+Primitive toPrimitive(const planning_ros_msgs::Primitive& pr) {
   Vec6f cx, cy, cz;
   for(int i = 0; i < 6; i++) {
-    cx(i) = p.cx[i];
-    cy(i) = p.cy[i];
-    cz(i) = p.cz[i];
+    cx(i) = pr.cx[i];
+    cy(i) = pr.cy[i];
+    cz(i) = pr.cz[i];
   }
   vec_E<Vec6f> cs;
   cs.push_back(cx);
   cs.push_back(cy);
   cs.push_back(cz);
 
-  return Primitive(cs, p.t);
+  return Primitive(cs, pr.t);
 }
 
 /**
  * @brief Ros message to trajectory class 
  */
-Trajectory toTrajectory(const planning_ros_msgs::Trajectory & ps) {
+Trajectory toTrajectory(const planning_ros_msgs::Trajectory & traj_msg) {
   // Constructor from ros msg
   Trajectory traj;
   traj.taus.push_back(0);
-  for(const auto& it: ps.primitives) {
+  for(const auto& it: traj_msg.primitives) {
     traj.segs.push_back(toPrimitive(it));
     traj.taus.push_back(traj.taus.back() + it.t);
   }
 
-  if(!ps.lambda.empty()) {
+  if(!traj_msg.lambda.empty()) {
     Lambda l;
-    for(int i = 0; i < (int)ps.lambda.size(); i++) {
+    for(int i = 0; i < (int)traj_msg.lambda.size(); i++) {
       LambdaSeg seg;
-      seg.a(0) = ps.lambda[i].ca[0];
-      seg.a(1) = ps.lambda[i].ca[1];
-      seg.a(2) = ps.lambda[i].ca[2];
-      seg.a(3) = ps.lambda[i].ca[3];
-      seg.ti = ps.lambda[i].ti;
-      seg.tf = ps.lambda[i].tf;
-      seg.dT = ps.lambda[i].dT;
+      seg.a(0) = traj_msg.lambda[i].ca[0];
+      seg.a(1) = traj_msg.lambda[i].ca[1];
+      seg.a(2) = traj_msg.lambda[i].ca[2];
+      seg.a(3) = traj_msg.lambda[i].ca[3];
+      seg.ti = traj_msg.lambda[i].ti;
+      seg.tf = traj_msg.lambda[i].tf;
+      seg.dT = traj_msg.lambda[i].dT;
       l.segs.push_back(seg);
       traj.total_t_ += seg.dT;
     }

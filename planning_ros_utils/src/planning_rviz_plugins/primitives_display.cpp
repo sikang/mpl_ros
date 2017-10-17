@@ -1,10 +1,9 @@
-#include <tf/transform_listener.h>
-#include "trajectories_display.h"
+#include "primitives_display.h"
 
 namespace planning_rviz_plugins {
-  TrajectoriesDisplay::TrajectoriesDisplay() {
+  PrimitivesDisplay::PrimitivesDisplay() {
     num_property_ =
-      new rviz::IntProperty("Num of samples", 20, "Number of samples to display.",
+      new rviz::IntProperty("Num of samples", 4, "Number of samples to display.",
           this, SLOT(updateNum()));
     pos_color_property_ =
       new rviz::ColorProperty("PosColor", QColor(204, 51, 204), "Color to draw the Pos.",
@@ -46,96 +45,96 @@ namespace planning_rviz_plugins {
     history_length_property_->setMax(10000);
  }
 
-  void TrajectoriesDisplay::onInitialize() {
+  void PrimitivesDisplay::onInitialize() {
     MFDClass::onInitialize();
     updateHistoryLength();
   }
 
-  TrajectoriesDisplay::~TrajectoriesDisplay() {}
+  PrimitivesDisplay::~PrimitivesDisplay() {}
 
-  void TrajectoriesDisplay::reset() {
+  void PrimitivesDisplay::reset() {
     MFDClass::reset();
     visuals_.clear();
   }
 
-  void TrajectoriesDisplay::updateVelVis() {
+  void PrimitivesDisplay::updateVelVis() {
     bool vis = vel_vis_property_->getBool();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setVelVis(vis);
     visualizeMessage();
   }
 
-  void TrajectoriesDisplay::updateAccVis() {
+  void PrimitivesDisplay::updateAccVis() {
     bool vis = acc_vis_property_->getBool();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setAccVis(vis);
     visualizeMessage();
   }
 
-  void TrajectoriesDisplay::updateJrkVis() {
+  void PrimitivesDisplay::updateJrkVis() {
     bool vis = jrk_vis_property_->getBool();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setJrkVis(vis);
     visualizeMessage();
   }
 
-  void TrajectoriesDisplay::updatePosColorAndAlpha() {
+  void PrimitivesDisplay::updatePosColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = pos_color_property_->getOgreColor();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setPosColor(color.r, color.g, color.b, alpha);
   }
 
-  void TrajectoriesDisplay::updateVelColorAndAlpha() {
+  void PrimitivesDisplay::updateVelColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = vel_color_property_->getOgreColor();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setVelColor(color.r, color.g, color.b, alpha);
   }
 
-  void TrajectoriesDisplay::updateAccColorAndAlpha() {
+  void PrimitivesDisplay::updateAccColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = acc_color_property_->getOgreColor();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setAccColor(color.r, color.g, color.b, alpha);
   }
 
-  void TrajectoriesDisplay::updateJrkColorAndAlpha() {
+  void PrimitivesDisplay::updateJrkColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = jrk_color_property_->getOgreColor();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setJrkColor(color.r, color.g, color.b, alpha);
   }
 
-  void TrajectoriesDisplay::updatePosScale() {
+  void PrimitivesDisplay::updatePosScale() {
     float s = pos_scale_property_->getFloat();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setPosScale(s);
   }
 
-  void TrajectoriesDisplay::updateVelScale() {
+  void PrimitivesDisplay::updateVelScale() {
     float s = vel_scale_property_->getFloat();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setVelScale(s);
   }
 
-  void TrajectoriesDisplay::updateAccScale() {
+  void PrimitivesDisplay::updateAccScale() {
     float s = acc_scale_property_->getFloat();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setAccScale(s);
   }
 
-  void TrajectoriesDisplay::updateJrkScale() {
+  void PrimitivesDisplay::updateJrkScale() {
     float s = jrk_scale_property_->getFloat();
     for (size_t i = 0; i < visuals_.size(); i++)
       visuals_[i]->setJrkScale(s);
   }
 
-  void TrajectoriesDisplay::updateHistoryLength() {
+  void PrimitivesDisplay::updateHistoryLength() {
     visuals_.rset_capacity(history_length_property_->getInt());
   }
 
-  void TrajectoriesDisplay::processMessage(const planning_ros_msgs::Trajectories::ConstPtr &msg) {
+  void PrimitivesDisplay::processMessage(const planning_ros_msgs::Primitives::ConstPtr &msg) {
     if (!context_->getFrameManager()->getTransform(
           msg->header.frame_id, msg->header.stamp, position_, orientation_)) {
       ROS_DEBUG("Error transforming from frame '%s' to frame '%s'",
@@ -143,24 +142,24 @@ namespace planning_rviz_plugins {
       return;
     }
 
-    trajectories_ = *msg;
+    prs_msg_ = *msg;
 
     visualizeMessage();
   }
 
-  void TrajectoriesDisplay::updateNum() {
+  void PrimitivesDisplay::updateNum() {
     visualizeMessage();
   }
 
-  void TrajectoriesDisplay::visualizeMessage() {
-    if (trajectories_.trajectories.empty())
+  void PrimitivesDisplay::visualizeMessage() {
+    if (prs_msg_.primitives.empty())
       return;
 
-    boost::shared_ptr<TrajectoryVisual> visual;
+    boost::shared_ptr<PrimitiveVisual> visual;
     if (visuals_.full())
       visual = visuals_.front();
     else
-      visual.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
+      visual.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
 
     float n = num_property_->getInt();
     visual->setNum(n);
@@ -174,9 +173,9 @@ namespace planning_rviz_plugins {
     bool jrk_vis = jrk_vis_property_->getBool();
     visual->setJrkVis(jrk_vis);
 
-    visual->setMessage(trajectories_.trajectories.front());
-    for(int i = 1; i < (int)trajectories_.trajectories.size(); i++)
-      visual->addMessage(trajectories_.trajectories[i]);
+    visual->setMessage(prs_msg_.primitives.front());
+    for(int i = 1; i < (int) prs_msg_.primitives.size(); i++)
+      visual->addMessage(prs_msg_.primitives[i]);
 
     visual->setFramePosition(position_);
     visual->setFrameOrientation(orientation_);
@@ -205,4 +204,4 @@ namespace planning_rviz_plugins {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::TrajectoriesDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::PrimitivesDisplay, rviz::Display)

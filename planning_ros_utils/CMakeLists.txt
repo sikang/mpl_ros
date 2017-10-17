@@ -52,21 +52,14 @@ cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
-  #src/planning_rviz_plugins/mesh_visual.cpp
-  #src/planning_rviz_plugins/vector_visual.cpp
+  src/planning_rviz_plugins/primitive_visual.cpp
   src/planning_rviz_plugins/trajectory_visual.cpp
   src/planning_rviz_plugins/path_visual.cpp
-  #src/planning_rviz_plugins/mesh_display.cpp
-  #src/planning_rviz_plugins/polyhedra_display.cpp
-  #src/planning_rviz_plugins/vector_display.cpp
+  src/planning_rviz_plugins/map_display.cpp
   src/planning_rviz_plugins/path_display.cpp
   src/planning_rviz_plugins/paths_display.cpp
-  src/planning_rviz_plugins/trajectories_display.cpp
+  src/planning_rviz_plugins/primitives_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
-  src/planning_rviz_plugins/map_display.cpp
-  #src/planning_rviz_plugins/ellipsoids_visual.cpp
-  #src/planning_rviz_plugins/ellipsoids_display.cpp
-  #src/poly_utils/geometry_utils.cpp
   src/ros_utils/primitive_ros_utils.cpp
   src/ros_utils/mapping_ros_utils.cpp
   ${MOC_FILES})

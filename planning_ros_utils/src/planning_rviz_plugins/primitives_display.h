@@ -10,18 +10,18 @@
 
 #include <rviz/load_resource.h>
 
-#include <planning_ros_msgs/Trajectories.h>
+#include <planning_ros_msgs/Primitives.h>
 #include <rviz/message_filter_display.h>
 
-#include "trajectory_visual.h"
+#include "primitive_visual.h"
 
 namespace planning_rviz_plugins {
-  class TrajectoriesDisplay
-    : public rviz::MessageFilterDisplay<planning_ros_msgs::Trajectories> {
+  class PrimitivesDisplay
+    : public rviz::MessageFilterDisplay<planning_ros_msgs::Primitives> {
       Q_OBJECT
       public:
-        TrajectoriesDisplay();
-        virtual ~TrajectoriesDisplay();
+        PrimitivesDisplay();
+        virtual ~PrimitivesDisplay();
 
       protected:
         virtual void onInitialize();
@@ -44,10 +44,10 @@ namespace planning_rviz_plugins {
         void updateNum();
 
       private:
-        void processMessage(const planning_ros_msgs::Trajectories::ConstPtr &msg);
+        void processMessage(const planning_ros_msgs::Primitives::ConstPtr &msg);
         void visualizeMessage();
 
-        boost::circular_buffer<boost::shared_ptr<TrajectoryVisual>> visuals_;
+        boost::circular_buffer<boost::shared_ptr<PrimitiveVisual>> visuals_;
 
         rviz::ColorProperty *pos_color_property_;
         rviz::ColorProperty *vel_color_property_;
@@ -66,7 +66,7 @@ namespace planning_rviz_plugins {
         Ogre::Vector3 position_;
         Ogre::Quaternion orientation_;
 
-        planning_ros_msgs::Trajectories trajectories_;
+        planning_ros_msgs::Primitives prs_msg_;
     };
 
 }

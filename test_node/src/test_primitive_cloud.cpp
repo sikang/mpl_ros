@@ -18,7 +18,6 @@ int main(int argc, char ** argv){
   ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher prior_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("prior_trajectory", 1, true);
-  ros::Publisher trajs_pub = nh.advertise<planning_ros_msgs::Trajectories>("trajectories", 1, true);
   ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
   ros::Publisher ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
 

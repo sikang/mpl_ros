@@ -14,6 +14,7 @@ int main(int argc, char ** argv){
 
   ros::Publisher map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
+  ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
 
@@ -128,6 +129,10 @@ int main(int argc, char ** argv){
     traj_pub.publish(traj_msg);
 
     printf("================== Traj -- total J: %f, total time: %f\n", traj.J(1), traj.getTotalTime());
+
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
+    prs_msg.header =  header;
+    prs_pub.publish(prs_msg);
   }
 
 

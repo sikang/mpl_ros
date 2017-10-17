@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Primitives1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -166,6 +167,25 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      Class: planning_rviz_plugins/Primitives
+      Enabled: true
+      History Length: 1
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      Name: Primitives
+      Num of samples: 4
+      PosColor: 204; 51; 204
+      PosScale: 0.0199999996
+      Topic: /test_primitive/primitives
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      Visualize Acc: false
+      Visualize Jrk: false
+      Visualize Vel: false
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -205,10 +225,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.29979658
+      Pitch: 1.36979628
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 4.71542072
+      Yaw: 4.66042328
     Saved: ~
 Window Geometry:
   Displays:
@@ -226,5 +246,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 2560
+  X: 0
   Y: 24

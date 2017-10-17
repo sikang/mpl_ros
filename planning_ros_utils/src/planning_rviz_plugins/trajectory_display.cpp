@@ -1,4 +1,3 @@
-#include <tf/transform_listener.h>
 #include "trajectory_display.h"
 
 namespace planning_rviz_plugins {

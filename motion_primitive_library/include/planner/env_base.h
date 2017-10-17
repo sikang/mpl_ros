@@ -472,7 +472,6 @@ class env_base
     Waypoint goal_node_;
     Trajectory prior_traj_;
  
-    mutable std::vector<Waypoint> ws_;
     mutable vec_Vec3f ps_;
     mutable std::vector<Primitive> primitives_;
 };
