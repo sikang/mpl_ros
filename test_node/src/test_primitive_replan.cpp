@@ -16,7 +16,8 @@ int main(int argc, char ** argv){
   ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
-  ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
+  ros::Publisher close_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("close_cloud", 1, true);
+  ros::Publisher open_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("open_set", 1, true);
 
   std_msgs::Header header;
   header.frame_id = std::string("map");
@@ -113,14 +114,20 @@ int main(int argc, char ** argv){
   bool valid = planner_->plan(start, goal);
 
   //Publish expanded nodes
-  sensor_msgs::PointCloud ps = vec_to_cloud(planner_->getPs());
-  ps.header = header;
-  cloud_pub.publish(ps);
+  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
+  close_ps.header = header;
+  close_cloud_pub.publish(close_ps);
+
+  //Publish nodes in open set
+  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
+  open_ps.header = header;
+  open_cloud_pub.publish(open_ps);
+
 
   if(!valid) 
-    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getPs().size());
+    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
   else{
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getPs().size());
+    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
     //Publish trajectory
     Trajectory traj = planner_->getTraj();

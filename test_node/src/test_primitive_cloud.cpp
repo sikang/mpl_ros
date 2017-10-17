@@ -161,15 +161,15 @@ int main(int argc, char ** argv){
   bool valid = planner_->plan(start, goal);
 
   //Publish expanded nodes
-  sensor_msgs::PointCloud ps = vec_to_cloud(planner_->getPs());
+  sensor_msgs::PointCloud ps = vec_to_cloud(planner_->getCloseSet());
   ps.header.frame_id = "map";
   ps_pub.publish(ps);
 
   if(!valid) {
-    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getPs().size());
+    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
   }
   else {
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getPs().size());
+    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
     //Publish trajectory
     Trajectory traj = planner_->getTraj();

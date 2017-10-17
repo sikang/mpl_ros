@@ -90,8 +90,6 @@ class env_map : public env_base
       action_idx.clear();
       action_dts.clear();
 
-      ps_.push_back(curr.pos);
-
       const Vec3i pn = map_util_->floatToInt(curr.pos);
       if ((goal_outside_ && map_util_->isOutSide(pn)) ||
          (t_max_ > 0 && curr.t >= t_max_)) {
@@ -103,8 +101,6 @@ class env_map : public env_base
         printf("connect to the goal!\n");
         return false;
       }
-
-      //printf("current t: %f\n", curr.t);
 
       if(map_util_->isOutSide(pn))
         return true;
@@ -129,6 +125,7 @@ class env_map : public env_base
           primitives_.push_back(pr);
        }
       }
+
       return true;
     }
 

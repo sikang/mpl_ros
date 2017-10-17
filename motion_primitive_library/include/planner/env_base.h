@@ -425,11 +425,6 @@ class env_base
       action_idx.push_back(0);
     }
 
-    ///Returns expanded nodes
-    vec_Vec3f ps() {
-      return ps_;
-    }
-
     ///Returns expanded edges
     std::vector<Primitive> primitives() {
       return primitives_;
@@ -472,7 +467,6 @@ class env_base
     Waypoint goal_node_;
     Trajectory prior_traj_;
  
-    mutable vec_Vec3f ps_;
     mutable std::vector<Primitive> primitives_;
 };
 }

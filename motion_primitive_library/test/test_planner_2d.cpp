@@ -72,7 +72,7 @@ int main(int argc, char ** argv){
   bool valid = planner->plan(start, goal); // Plan from start to goal
   double dt = time.Elapsed().count();
   printf("MP Planner takes: %f ms\n", dt);
-  printf("MP Planner expanded states: %zu\n", planner->getPs().size());
+  printf("MP Planner expanded states: %zu\n", planner->getCloseSet().size());
 
 #if VISUALIZE
   // Plot the result in image
@@ -108,7 +108,7 @@ int main(int argc, char ** argv){
   imageSource->DrawCircle(goalI[0], goalI[1], 5);
 
   //Plot expended states
-  for(const auto& pt: planner->getPs()) {
+  for(const auto& pt: planner->getCloseSet()) {
     imageSource->SetDrawColor(155.0, 155.0, 155.0);
     const Vec3i pi = map_util->floatToInt(pt);
     imageSource->DrawCircle(pi[0], pi[1], 2);

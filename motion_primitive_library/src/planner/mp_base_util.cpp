@@ -115,24 +115,38 @@ void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc)
   }
 }
 
-std::vector<Primitive> MPBaseUtil::getPrimitives() { 
+std::vector<Primitive> MPBaseUtil::getPrimitives() const { 
   return ENV_->primitives(); 
 }
 
-vec_Vec3f MPBaseUtil::getPs() { 
-  return ENV_->ps(); 
-}
-
-std::vector<Waypoint> MPBaseUtil::getWs() {
+std::vector<Waypoint> MPBaseUtil::getWs() const {
   return ws_; 
 }
 
-Trajectory MPBaseUtil::getTraj() {
+Trajectory MPBaseUtil::getTraj() const {
   return traj_;
 }
 
-std::vector<decimal_t> MPBaseUtil::getDts() {
+std::vector<decimal_t> MPBaseUtil::getDts() const {
   return dts_;
+}
+
+vec_Vec3f MPBaseUtil::getOpenSet() const {
+  const std::vector<Waypoint> ws = planner_ptr_->getOpenSet();
+  vec_Vec3f ps;
+  for(const auto& it: ws)
+    ps.push_back(it.pos);
+
+  return ps;
+}
+
+vec_Vec3f MPBaseUtil::getCloseSet() const {
+  const std::vector<Waypoint> ws = planner_ptr_->getCloseSet();
+  vec_Vec3f ps;
+  for(const auto& it: ws)
+    ps.push_back(it.pos);
+
+  return ps;
 }
 
 bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
@@ -152,12 +166,12 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
     return false;
   }
  
-  MPL::ARAStar<Waypoint> AA;
+  planner_ptr_.reset(new MPL::ARAStar<Waypoint>());
   Trajectory traj;
 
   ENV_->set_goal(goal);
 
-  AA.Astar(start, ENV_->state_to_idx(start), *ENV_, traj, epsilon_, max_num_);
+  planner_ptr_->Astar(start, ENV_->state_to_idx(start), *ENV_, traj, epsilon_, max_num_);
 
   traj_ = traj;
   if (traj.segs.empty()) {

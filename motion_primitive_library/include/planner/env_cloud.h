@@ -71,7 +71,6 @@ class env_cloud : public env_base
       //ws_.push_back(curr);
       if(t_max_ > 0 && curr.t >= t_max_)
         return false;
-      ps_.push_back(curr.pos);
 
       for(int i = 0; i < (int) U_.size(); i++) {
         if((U_[i] - curr.jrk).lpNorm<Eigen::Infinity>() > max_jrk_diff_ || (U_[i] - curr.jrk).norm() > max_jrk_diff_ * 1.414)

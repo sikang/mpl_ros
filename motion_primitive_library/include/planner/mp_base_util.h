@@ -21,15 +21,17 @@ class MPBaseUtil
     ///Simple constructor
     MPBaseUtil();
     ///Get nodes on the optimal trajectory
-    std::vector<Waypoint> getWs();
+    std::vector<Waypoint> getWs() const;
     ///Get optimal trajectory
-    Trajectory getTraj();
+    Trajectory getTraj() const;
     ///Get expanded primitives
-    std::vector<Primitive> getPrimitives();
-    ///Get expanded nodes
-    vec_Vec3f getPs();
+    std::vector<Primitive> getPrimitives() const;
     ///Get time allocation
-    std::vector<decimal_t> getDts();
+    std::vector<decimal_t> getDts() const;
+    ///Get ps in open set
+    vec_Vec3f getOpenSet() const;
+    ///Get ps in close set
+    vec_Vec3f getCloseSet() const;
  
     ///Set max vel in each axis
     void setVmax(decimal_t v);
@@ -68,6 +70,8 @@ class MPBaseUtil
   protected:
     ///Env class
     std::unique_ptr<MPL::env_base> ENV_;
+    ///Planner class
+    std::unique_ptr<MPL::ARAStar<Waypoint>> planner_ptr_;
     ///Intermediate nodes in optimal trajectory
     std::vector<Waypoint> ws_;
     ///Optimal trajectory

@@ -115,6 +115,8 @@ namespace MPL
           Trajectory& traj, std::vector<int>& action_idx, double eps = 1,
           double allocated_time_secs = std::numeric_limits<double>::infinity() );
           */
+      std::vector<state> getOpenSet() const;
+      std::vector<state> getCloseSet() const;
     private:
       bool spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
           std::shared_ptr<ARAStateSpace<state>>& sss_ptr,

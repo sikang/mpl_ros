@@ -132,6 +132,25 @@ bool MPL::ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode
   return reached;
 }
 
+template <class state>
+std::vector<state> MPL::ARAStar<state>::getOpenSet() const {
+  std::vector<state> ss;
+  for(const auto& it: sss_ptr->pq)
+    ss.push_back(it.second->coord);
+  return ss;
+}
+
+template <class state>
+std::vector<state> MPL::ARAStar<state>::getCloseSet() const {
+  std::vector<state> ss;
+  for(const auto& it: sss_ptr->hm) {
+    if(it.second && it.second->iterationclosed == sss_ptr->searchiteration)
+      ss.push_back(it.second->coord);
+  }
+  return ss;
+}
+
+
 
 // explicit instantiations
 template class MPL::ARAStar<Waypoint>;

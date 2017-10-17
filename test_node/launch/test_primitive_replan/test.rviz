@@ -6,7 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Primitives1
+        - /PointCloud2
+        - /openset1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -91,55 +92,6 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 116; 116; 116
-      Color Transformer: FlatColor
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.100000001
-      Style: Flat Squares
-      Topic: /test_primitive/cloud
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      Class: planning_rviz_plugins/Trajectory
-      Enabled: true
-      History Length: 1
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      Name: Trajectory
-      Num of samples: 200
-      PosColor: 204; 51; 204
-      PosScale: 0.100000001
-      Topic: /test_primitive/trajectory
-      Unreliable: false
-      Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      Visualize Acc: true
-      Visualize Jrk: false
-      Visualize Vel: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
         Max Value: 0
         Min Value: 0
         Value: true
@@ -167,6 +119,55 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud
+      Color: 0; 0; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.200000003
+      Style: Flat Squares
+      Topic: /test_primitive/cloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      Class: planning_rviz_plugins/Trajectory
+      Enabled: true
+      History Length: 1
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      Name: Trajectory
+      Num of samples: 200
+      PosColor: 204; 51; 204
+      PosScale: 0.100000001
+      Topic: /test_primitive/trajectory
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      Visualize Acc: false
+      Visualize Jrk: false
+      Visualize Vel: false
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
       Class: planning_rviz_plugins/Primitives
@@ -186,6 +187,36 @@ Visualization Manager:
       Visualize Acc: false
       Visualize Jrk: false
       Visualize Vel: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud
+      Color: 255; 0; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: openset
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.200000003
+      Style: Flat Squares
+      Topic: /test_primitive/open_set
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -210,25 +241,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 21.8303871
+      Distance: 24.2521496
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 9.4401474
-        Y: 2.37080812
+        X: 11.9789391
+        Y: 3.67434287
         Z: -1.47819519e-05
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.36979628
+      Pitch: 1.56979632
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 4.66042328
+      Yaw: 4.7054286
     Saved: ~
 Window Geometry:
   Displays:
@@ -246,5 +277,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 0
+  X: 2560
   Y: 24
