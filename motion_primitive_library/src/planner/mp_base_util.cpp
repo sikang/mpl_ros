@@ -155,6 +155,14 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
   return ps;
 }
 
+int MPBaseUtil::getBestActionID() const {
+  return best_action_id_;
+}
+
+void MPBaseUtil::pruneStateSpace(int action_id) {
+  sss_ptr_->getSubStateSpace(action_id);
+}
+
 bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) {
   if(planner_verbose_) {
     printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
@@ -174,15 +182,10 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
  
   std::unique_ptr<MPL::ARAStar<Waypoint>> planner_ptr(new MPL::ARAStar<Waypoint>());
 
-  static int previous_best_action = -1;
   if(!replan) {
     printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
     sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
   }
-  else {
-    sss_ptr_->getSubStateSpace(previous_best_action);
-  }
-
   ENV_->set_goal(goal);
 
   planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
@@ -193,8 +196,7 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
     return false;
   }
 
-  previous_best_action = planner_ptr->bestAction();
-  //sss_ptr_->getSubStateSpace(previous_best_action);
+  best_action_id_ = planner_ptr->bestAction();
 
   ws_.clear();
   ws_.push_back(start);

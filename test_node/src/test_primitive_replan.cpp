@@ -31,26 +31,16 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2); 
   sg_pub.publish(sg_cloud);
 
+  if(msg->data)
+    planner_->pruneStateSpace(planner_->getBestActionID());
   ros::Time t0 = ros::Time::now();
   bool valid = planner_->plan(start, goal, msg->data);
-
-  //Publish expanded nodes
-  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
-  close_ps.header = header;
-  close_cloud_pub.publish(close_ps);
-
-  //Publish nodes in open set
-  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
-  open_ps.header = header;
-  open_cloud_pub.publish(open_ps);
-
-
   if(!valid) {
-    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+    ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
     terminated = true;
   }
   else{
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+    ROS_WARN("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
     //Publish trajectory
     Trajectory traj = planner_->getTraj();
@@ -58,7 +48,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     traj_msg.header = header;
     traj_pub.publish(traj_msg);
 
-    printf("================== Traj -- total J: %f, total time: %f\n", traj.J(1), traj.getTotalTime());
+    printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
 
     planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
     prs_msg.header =  header;
@@ -72,6 +62,17 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
       start.t = 0;
     }
   }
+  //Publish expanded nodes
+  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
+  close_ps.header = header;
+  close_cloud_pub.publish(close_ps);
+
+  //Publish nodes in open set
+  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
+  open_ps.header = header;
+  open_cloud_pub.publish(open_ps);
+
+
 }
 
 int main(int argc, char ** argv){
@@ -131,7 +132,7 @@ int main(int argc, char ** argv){
   start.t = 0;
   start.use_pos = true;
   start.use_vel = true;
-  start.use_acc = false;
+  start.use_acc = true;
 
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
@@ -142,13 +143,14 @@ int main(int argc, char ** argv){
 
 
   //Initialize planner
-  double dt, v_max, a_max;
+  double dt, v_max, a_max, u_max;
   int max_num, ndt;
   bool use_3d;
   nh.param("dt", dt, 1.0);
   nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
+  nh.param("u_max", u_max, 1.0);
   nh.param("max_num", max_num, -1);
   nh.param("use_3d", use_3d, false);
 
@@ -157,7 +159,7 @@ int main(int argc, char ** argv){
   planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
   planner_->setVmax(v_max); // Set max velocity
   planner_->setAmax(a_max); // Set max acceleration (as control input)
-  planner_->setUmax(a_max);// 2D discretization with 1
+  planner_->setUmax(u_max);// 2D discretization with 1
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setTmax(ndt * dt); // Set dt for each primitive
   planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation

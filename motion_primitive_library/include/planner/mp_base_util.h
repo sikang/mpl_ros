@@ -32,6 +32,8 @@ class MPBaseUtil
     vec_Vec3f getOpenSet() const;
     ///Get ps in close set
     vec_Vec3f getCloseSet() const;
+    ///Get best action id
+    int getBestActionID() const;
  
     ///Set max vel in each axis
     void setVmax(decimal_t v);
@@ -61,10 +63,17 @@ class MPBaseUtil
     void setU(const vec_Vec3f& U);
     ///Set effort degree
     void setMode(const Waypoint& p);
-
     ///Set tolerance in geometric and dynamic spaces
     void setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc = 0.0);
-    ///Planning thread
+    /**
+     * @brief Prune state space
+     * @param action_id the pruned state space is the branch of corresponding action
+     */
+    void pruneStateSpace(int action_id);
+    /**
+     * @brief Planning thread
+     * @param replan default as false, such that plan from scratch; set to be true, the planner reuses the state space for planning
+     */
     virtual bool plan(const Waypoint &start, const Waypoint &goal, bool replan = false);
 
   protected:
@@ -82,6 +91,8 @@ class MPBaseUtil
     decimal_t epsilon_ = 1.0;
     ///Maxmum number of expansion allowd, -1 means no limitation
     int max_num_ = -1;
+    ///Best action id
+    int best_action_id_ = -1;
 
     ///Enabled to display debug message
     bool planner_verbose_;
