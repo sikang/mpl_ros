@@ -8,7 +8,7 @@ template <class state>
 void ARAStateSpace<state>::getSubStateSpace(int ref_idx) {
   // Prune hashmap and priority queue
   hashMap<ARAState<state>> new_hm;
-  priorityQueue<ARAState<state>> new_pq;
+  pq.clear();
 
   for(auto& it: this->hm) {
     // Check if the node exist and it is not the goal
@@ -18,21 +18,22 @@ void ARAStateSpace<state>::getSubStateSpace(int ref_idx) {
       if(search != new_hm.end()) 
         continue;
       // Check if the action idx matches the ref 
-      if(!it.second->actions.empty() && it.second->actions.front() == ref_idx) {
+      if(!it.second->actions.empty() && it.second->actions.front() == ref_idx &&
+          it.second->parent_action_id >= 0) {
         it.second->actions.pop_front();
         it.second->coord.t -= it.second->dt;
         if(it.second->actions.empty()) 
           it.second->parent = NULL;
         // Add current node
-        new_hm[it.second->hashkey] = it.second;
+        new_hm[it.first] = it.second;
         // If it is in open set, add to pq
-        if(it.second->iterationopened > it.second->iterationclosed) 
-          it.second->heapkey = new_pq.push(std::make_pair(it.second->g + eps*it.second->h, it.second));
+        if(it.second->iterationopened > it.second->iterationclosed) {
+          it.second->heapkey = pq.push(std::make_pair(it.second->g + eps*it.second->h, it.second));
+        }
       }
     }
   }
   this->hm = new_hm;
-  this->pq = new_pq;
 }
 
 
@@ -56,6 +57,7 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
     expands++;
     // get element with smallest cost
     if(sss_ptr->pq.empty()) {
+      printf(ANSI_COLOR_GREEN "Start new node!\n" ANSI_COLOR_RESET);
       currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
       currNode_pt->g = 0;
       currNode_pt->h = ENV.get_heur(start_coord);
@@ -145,6 +147,7 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
       child_pt->actions.push_back(succ_act_idx[s]);
       child_pt->parent_action_id = succ_act_idx[s];
       child_pt->dt = succ_act_dt[s];
+      double org_g = child_pt->g;
       child_pt->g = tentative_gval;    // Update gval
 
       double fval = child_pt->g + (sss_ptr->eps) * child_pt->h;
@@ -157,9 +160,11 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
       // if currently in OPEN, update
       if( child_pt->iterationopened > child_pt->iterationclosed)
       {
-        //std::cout << "UPDATE fval(old) = " << (*child_pt->heapkey).first << std::endl;
-        //std::cout << "UPDATE fval = " << fval << std::endl;
-        //std::cout << "eps*h = " << (sss_ptr->eps) * child_pt->h << std::endl;
+        if((*child_pt->heapkey).first < fval) {
+          std::cout << "UPDATE fval(old) = " << (*child_pt->heapkey).first << std::endl;
+          std::cout << "UPDATE fval = " << fval << std::endl;
+          std::cout << "origin g = " << org_g << std::endl;
+        }
 
         (*child_pt->heapkey).first = fval;     // update heap element
         //sss_ptr->pq.update(child_pt->heapkey);
