@@ -119,10 +119,12 @@ namespace MPL
           Trajectory& traj, std::vector<int>& action_idx, double eps = 1,
           double allocated_time_secs = std::numeric_limits<double>::infinity() );
           */
+      int bestAction() const { return best_action_; };
     private:
       bool spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
           std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
           const env_base& ENV );
+      int best_action_ = -1;
   };
 }
 #endif

@@ -36,7 +36,6 @@ void MPBaseUtil::setAlpha(int alpha) {
     printf("[MPBaseUtil] set alpha: %d\n", alpha);
 }
 
-
 void MPBaseUtil::setU(int n, bool use_3d) {
   ENV_->set_discretization(n, use_3d);
 }
@@ -156,7 +155,7 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
   return ps;
 }
 
-bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
+bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) {
   if(planner_verbose_) {
     printf("start pos: [%f, %f, %f], vel: [%f, %f, %f], acc: [%f, %f, %f]\n",
         start.pos(0), start.pos(1), start.pos(2),
@@ -173,20 +172,29 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal) {
     return false;
   }
  
-  planner_ptr_.reset(new MPL::ARAStar<Waypoint>());
-  sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
+  std::unique_ptr<MPL::ARAStar<Waypoint>> planner_ptr(new MPL::ARAStar<Waypoint>());
 
+  static int previous_best_action = -1;
+  if(!replan) {
+    printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
+    sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
+  }
+  else
+    sss_ptr_->getSubStateSpace(previous_best_action);
+
+  //ENV_->set_initial_t(start.t);
   ENV_->set_goal(goal);
 
-  planner_ptr_->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
-
-  sss_ptr_->getSubStateSpace(5);
+  planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
 
   if (traj_.segs.empty()) {
     if(planner_verbose_)
       printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a traj!" ANSI_COLOR_RESET "\n");
     return false;
   }
+
+  previous_best_action = planner_ptr->bestAction();
+  //sss_ptr_->getSubStateSpace(previous_best_action);
 
   ws_.clear();
   ws_.push_back(start);

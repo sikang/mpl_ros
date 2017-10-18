@@ -1,5 +1,6 @@
 <launch>
   <arg name="debug" default="false"/>
+  <arg name="replan" default="true"/>
   <!--<arg name="debug_valgrind" default="false"/>-->
 
   <arg name="prefix" value="" unless="$(arg debug)"/>
@@ -11,6 +12,7 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <remap from="~pose" to="/move_base_simple/goal"/>
+    <remap from="~replan" to="/replan"/>
     <param name="file" value="$(find test_node)/maps/simple/simple.bag"/>
     <!--<param name="file" value="$(find test_node)/maps/levine/levine.bag"/>-->
     <!--<param name="file" value="$(find test_node)/maps/skir/skir.bag"/>-->
@@ -30,6 +32,7 @@
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1.0"/>
     <param name="ndt" value="4"/>
+    <param name="replan" value="$(arg replan)"/>
   </node>
 
 </launch>

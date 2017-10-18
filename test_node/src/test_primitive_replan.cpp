@@ -1,4 +1,5 @@
 #include "bag_reader.hpp"
+#include <std_msgs/Bool.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
 #include <ros_utils/mapping_ros_utils.h>
@@ -8,18 +9,83 @@ using namespace MPL;
 
 std::unique_ptr<MPMapUtil> planner_;
 
+ros::Publisher sg_pub;
+ros::Publisher prs_pub;
+ros::Publisher traj_pub;
+ros::Publisher close_cloud_pub;
+ros::Publisher open_cloud_pub;
+std_msgs::Header header;
+
+Waypoint start, goal;
+bool terminated = false;
+
+void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
+  if(terminated)
+    return;
+  //Publish location of start and goal
+  sensor_msgs::PointCloud sg_cloud;
+  sg_cloud.header = header;
+  geometry_msgs::Point32 pt1, pt2;
+  pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = start.pos(2);
+  pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = goal.pos(2);
+  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2); 
+  sg_pub.publish(sg_cloud);
+
+  ros::Time t0 = ros::Time::now();
+  bool valid = planner_->plan(start, goal, msg->data);
+
+  //Publish expanded nodes
+  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
+  close_ps.header = header;
+  close_cloud_pub.publish(close_ps);
+
+  //Publish nodes in open set
+  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
+  open_ps.header = header;
+  open_cloud_pub.publish(open_ps);
+
+
+  if(!valid) {
+    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+    terminated = true;
+  }
+  else{
+    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+
+    //Publish trajectory
+    Trajectory traj = planner_->getTraj();
+    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
+    traj_msg.header = header;
+    traj_pub.publish(traj_msg);
+
+    printf("================== Traj -- total J: %f, total time: %f\n", traj.J(1), traj.getTotalTime());
+
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
+    prs_msg.header =  header;
+    prs_pub.publish(prs_msg);
+
+    std::vector<Waypoint> ws = planner_->getWs();
+    if(ws.size() < 3)
+      terminated = true;
+    else {
+      start = ws[1];
+      start.t = 0;
+    }
+  }
+}
+
 int main(int argc, char ** argv){
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
+  ros::Subscriber replan_sub = nh.subscribe("replan", 1, replanCallback);
   ros::Publisher map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
-  ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
-  ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
-  ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
-  ros::Publisher close_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("close_cloud", 1, true);
-  ros::Publisher open_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("open_set", 1, true);
+  sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
+  prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
+  traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
+  close_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("close_cloud", 1, true);
+  open_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("open_set", 1, true);
 
-  std_msgs::Header header;
   header.frame_id = std::string("map");
   //Read map from bag file
   std::string file_name, topic_name;
@@ -42,6 +108,8 @@ int main(int argc, char ** argv){
   map.header = header;
   map_pub.publish(map);
 
+  bool replan;
+  nh.param("replan", replan, false);
 
   //Set start and goal
   double start_x, start_y, start_z;
@@ -57,7 +125,6 @@ int main(int argc, char ** argv){
   nh.param("goal_y", goal_y, 16.6);
   nh.param("goal_z", goal_z, 0.0);
  
-  Waypoint start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
@@ -66,7 +133,6 @@ int main(int argc, char ** argv){
   start.use_vel = true;
   start.use_acc = false;
 
-  Waypoint goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -99,50 +165,11 @@ int main(int argc, char ** argv){
   planner_->setMode(start); // use acc as control
   planner_->setTol(1, 1, 1); // Tolerance for goal region
 
-  //Publish location of start and goal
-  sensor_msgs::PointCloud sg_cloud;
-  sg_cloud.header = header;
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = start_x, pt1.y = start_y, pt1.z = start_z;
-  pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2); 
-  sg_pub.publish(sg_cloud);
-
   //Planning thread!
   
-  ros::Time t0 = ros::Time::now();
-  bool valid = planner_->plan(start, goal);
-
-  //Publish expanded nodes
-  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
-  close_ps.header = header;
-  close_cloud_pub.publish(close_ps);
-
-  //Publish nodes in open set
-  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
-  open_ps.header = header;
-  open_cloud_pub.publish(open_ps);
-
-
-  if(!valid) 
-    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
-  else{
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
-
-    //Publish trajectory
-    Trajectory traj = planner_->getTraj();
-    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-    traj_msg.header = header;
-    traj_pub.publish(traj_msg);
-
-    printf("================== Traj -- total J: %f, total time: %f\n", traj.J(1), traj.getTotalTime());
-
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
-    prs_msg.header =  header;
-    prs_pub.publish(prs_msg);
-  }
-
-
+  std_msgs::Bool init;
+  init.data = false;
+  replanCallback(boost::make_shared<std_msgs::Bool>(init));
 
   ros::spin();
 

@@ -55,7 +55,7 @@ class env_cloud : public env_base
      * When goal is outside, extra step is needed for finding optimal trajectory
      * Here we use Heuristic function and multiply with 2
      */
-    bool get_succ( const Waypoint& curr, 
+     void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
@@ -69,9 +69,6 @@ class env_cloud : public env_base
       action_dts.clear();
 
       //ws_.push_back(curr);
-      if(t_max_ > 0 && curr.t >= t_max_)
-        return false;
-
       for(int i = 0; i < (int) U_.size(); i++) {
         if((U_[i] - curr.jrk).lpNorm<Eigen::Infinity>() > max_jrk_diff_ || (U_[i] - curr.jrk).norm() > max_jrk_diff_ * 1.414)
           continue;
@@ -96,7 +93,9 @@ class env_cloud : public env_base
           }
         }
       }
-      return true;
+
+      if(t_max_ > 0 && curr.t >= t_max_)
+        return;
     }
 
     Polyhedra polyhedra() {

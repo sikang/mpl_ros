@@ -77,7 +77,7 @@ class env_map : public env_base
      * When goal is outside, extra step is needed for finding optimal trajectory
      * Here we use Heuristic function and multiply with 2
      */
-    bool get_succ( const Waypoint& curr, 
+    void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
@@ -91,19 +91,8 @@ class env_map : public env_base
       action_dts.clear();
 
       const Vec3i pn = map_util_->floatToInt(curr.pos);
-      if ((goal_outside_ && map_util_->isOutSide(pn)) ||
-         (t_max_ > 0 && curr.t >= t_max_)) {
-        succ.push_back(goal_node_);
-        succ_idx.push_back(state_to_idx(goal_node_));
-        succ_cost.push_back(get_heur(curr));
-        action_idx.push_back(-1); // -1 indicates directly connection to the goal 
-        action_dts.push_back(0);
-        printf("connect to the goal!\n");
-        return false;
-      }
-
       if(map_util_->isOutSide(pn))
-        return true;
+        return;
 
       for(int i = 0; i < (int)U_.size(); i++) {
         Primitive pr(curr, U_[i], dt_);
@@ -125,7 +114,17 @@ class env_map : public env_base
        }
       }
 
-      return true;
+      if ((goal_outside_ && map_util_->isOutSide(pn)) ||
+         (t_max_ > 0 && curr.t >= t_max_ && !succ.empty())) {
+        succ.push_back(goal_node_);
+        succ_idx.push_back(state_to_idx(goal_node_));
+        succ_cost.push_back(get_heur(curr));
+        action_idx.push_back(-1); // -1 indicates directly connection to the goal 
+        action_dts.push_back(0);
+        printf("connect to the goal!\n");
+      }
+
+
     }
 
 };

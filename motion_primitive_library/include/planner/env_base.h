@@ -398,7 +398,7 @@ class env_base
      * @param succ_cost The array stores cost along valid edges
      * @param action_idx The array stores corresponding idx of control for each successor
      */
-    virtual bool get_succ( const Waypoint& curr, 
+    virtual void get_succ( const Waypoint& curr, 
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
@@ -410,7 +410,6 @@ class env_base
       succ_idx.push_back( state_to_idx(curr) );
       succ_cost.push_back(0);
       action_idx.push_back(0);
-      return false;
     }
 
     ///Flag shows that if the goal is outside map
