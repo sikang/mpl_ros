@@ -179,10 +179,10 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
     printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
     sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
   }
-  else
+  else {
     sss_ptr_->getSubStateSpace(previous_best_action);
+  }
 
-  //ENV_->set_initial_t(start.t);
   ENV_->set_goal(goal);
 
   planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);

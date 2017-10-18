@@ -24,10 +24,10 @@ void ARAStateSpace<state>::getSubStateSpace(int ref_idx) {
         if(it.second->actions.empty()) 
           it.second->parent = NULL;
         // Add current node
+        new_hm[it.second->hashkey] = it.second;
         // If it is in open set, add to pq
         if(it.second->iterationopened > it.second->iterationclosed) 
-          it.second->heapkey = new_pq.push(std::make_pair((*it.second->heapkey).first, it.second));
-        new_hm[it.second->hashkey] = it.second;
+          it.second->heapkey = new_pq.push(std::make_pair(it.second->g + eps*it.second->h, it.second));
       }
     }
   }
@@ -48,25 +48,28 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
   
   // Initialize start node
   std::shared_ptr<ARAState<state>> currNode_pt = sss_ptr->hm[start_idx];
-  if( !currNode_pt ) {
-    currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
-    currNode_pt->g = 0;
-    currNode_pt->h = ENV.get_heur(start_coord);
-    currNode_pt->iterationopened = sss_ptr->searchiteration;
-    currNode_pt->iterationclosed = sss_ptr->searchiteration;
-  }
-  else {
-    currNode_pt = sss_ptr->pq.top().second; 
-    sss_ptr->pq.pop(); 
-    currNode_pt->iterationclosed = sss_ptr->searchiteration; // Add to closed list
-  }
-   
+  
   int expands = 0;
   bool reachedGoal = false;
   while(!reachedGoal)
   {
     expands++;
-    if( ENV.is_goal(currNode_pt->coord) ) break;
+    // get element with smallest cost
+    if(sss_ptr->pq.empty()) {
+      currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
+      currNode_pt->g = 0;
+      currNode_pt->h = ENV.get_heur(start_coord);
+      currNode_pt->iterationopened = sss_ptr->searchiteration;
+      currNode_pt->iterationclosed = sss_ptr->searchiteration;
+    }
+    else {
+      // not close a node when it is close to the goal
+      currNode_pt = sss_ptr->pq.top().second;     
+      if( ENV.is_goal(currNode_pt->coord) ) break;
+      sss_ptr->pq.pop(); 
+      currNode_pt->iterationclosed = sss_ptr->searchiteration; // Add to closed list
+    }
+
     
     reachedGoal = spin( currNode_pt, sss_ptr, ENV ); // update heap
    
@@ -76,11 +79,9 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
     if( sss_ptr->pq.empty() || reachMaxStep)
       return std::numeric_limits<double>::infinity();
 
-    // get element with smallest cost
-    
-    currNode_pt = sss_ptr->pq.top().second; sss_ptr->pq.pop(); 
-    currNode_pt->iterationclosed = sss_ptr->searchiteration; // Add to closed list
-  }
+ }
+
+  //printf(ANSI_COLOR_GREEN "Expand [%d] nodes!\n" ANSI_COLOR_RESET, expands);
   
   // Recover trajectory
   double pcost = currNode_pt->g;
@@ -93,7 +94,7 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
       Primitive pr;
       ENV.forward_action( currNode_pt->coord, action_idx, currNode_pt->dt, pr );
       prs.push_back(pr);
-      printf("action id: %d\n", action_idx);
+      //printf("action id: %d\n", action_idx);
       best_action_ = action_idx;
     }
   }
@@ -159,9 +160,10 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
         //std::cout << "UPDATE fval(old) = " << (*child_pt->heapkey).first << std::endl;
         //std::cout << "UPDATE fval = " << fval << std::endl;
         //std::cout << "eps*h = " << (sss_ptr->eps) * child_pt->h << std::endl;
+
         (*child_pt->heapkey).first = fval;     // update heap element
-        sss_ptr->pq.update(child_pt->heapkey);
-        //sss_ptr->pq.increase( child_pt->heapkey );       // update heap
+        //sss_ptr->pq.update(child_pt->heapkey);
+        sss_ptr->pq.increase( child_pt->heapkey );       // update heap
       }
       // if currently in CLOSED
       else if( child_pt->iterationclosed == sss_ptr->searchiteration)
