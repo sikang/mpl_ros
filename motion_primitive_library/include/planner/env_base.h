@@ -386,7 +386,7 @@ class env_base
     }
 
     ///Retrieve dt
-    decimal_t get_dt() {
+    decimal_t get_dt() const {
       return dt_;
     }
 
@@ -426,24 +426,28 @@ class env_base
       return vec_Ellipsoid();
     }
 
+    //if true, goal is outside
     bool goal_outside_;
+    //weight of time cost
     double w_ = 10; 
     ///order of derivatives for effort
     int wi_ = -1; 
+    //heuristic time offset
     int alpha_ = 0;
 
+    //tolerance of goal region
     double tol_dis = 1.0;
     double tol_vel = 1.0;
     double tol_acc = 1.0;
+    //max control input
     double u_max_;
     double v_max_ = -1;
     double a_max_ = -1;
     double j_max_ = -1;
     double t_max_ = -1;
     double dt_ = 1.0;
-    double ds_ = 0.0001, dv_ = 0.001, da_ = 0.01;
+    double ds_ = 0.001, dv_ = 0.001, da_ = 0.01;
 
-    double max_jrk_diff_ = 17;
     ///Array of constant control input
     vec_Vec3f U_;
     Waypoint goal_node_;

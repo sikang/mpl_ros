@@ -60,6 +60,7 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
       printf(ANSI_COLOR_GREEN "Start new node!\n" ANSI_COLOR_RESET);
       currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
       currNode_pt->g = 0;
+      currNode_pt->dt = ENV.get_dt();
       currNode_pt->h = ENV.get_heur(start_coord);
       currNode_pt->iterationopened = sss_ptr->searchiteration;
       currNode_pt->iterationclosed = sss_ptr->searchiteration;
@@ -83,7 +84,7 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
 
  }
 
-  //printf(ANSI_COLOR_GREEN "Expand [%d] nodes!\n" ANSI_COLOR_RESET, expands);
+  printf(ANSI_COLOR_GREEN "Expand [%d] nodes!\n" ANSI_COLOR_RESET, expands);
   
   // Recover trajectory
   double pcost = currNode_pt->g;
@@ -94,6 +95,7 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
     currNode_pt = currNode_pt->parent;
     if(action_idx >= 0) {
       Primitive pr;
+      //std::cout << currNode_pt->coord.t << std::endl;
       ENV.forward_action( currNode_pt->coord, action_idx, currNode_pt->dt, pr );
       prs.push_back(pr);
       //printf("action id: %d\n", action_idx);

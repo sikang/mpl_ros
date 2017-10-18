@@ -147,13 +147,13 @@ bool Lambda::exist() const{
 
 
 //*********** Trajectory *********************
-Trajectory::Trajectory(const std::vector<Primitive>& trajs) {
+Trajectory::Trajectory(const std::vector<Primitive>& prs) {
   // Constructor from multiple primitives
-  segs = trajs;
+  segs = prs;
 
   taus.push_back(0);
-  for(const auto& traj: trajs) 
-    taus.push_back(traj.t()+taus.back());
+  for(const auto& pr: prs) 
+    taus.push_back(pr.t()+taus.back());
   Ts = taus;
   total_t_ = taus.back();
 }

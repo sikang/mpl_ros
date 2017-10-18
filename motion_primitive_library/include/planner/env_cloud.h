@@ -70,8 +70,6 @@ class env_cloud : public env_base
 
       //ws_.push_back(curr);
       for(int i = 0; i < (int) U_.size(); i++) {
-        if((U_[i] - curr.jrk).lpNorm<Eigen::Infinity>() > max_jrk_diff_ || (U_[i] - curr.jrk).norm() > max_jrk_diff_ * 1.414)
-          continue;
         Primitive pr(curr, U_[i], dt_);
         Waypoint tn = pr.evaluate(dt_);
         if(pr.valid_vel(v_max_) && pr.valid_acc(a_max_)) {

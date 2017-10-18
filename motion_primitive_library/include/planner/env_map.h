@@ -121,7 +121,7 @@ class env_map : public env_base
         succ_cost.push_back(get_heur(curr));
         action_idx.push_back(-1); // -1 indicates directly connection to the goal 
         action_dts.push_back(0);
-        printf("connect to the goal!\n");
+        printf("connect to the goal, curr t: %f!\n", curr.t);
       }
 
 
