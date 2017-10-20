@@ -2,10 +2,6 @@
 
 VoxelGrid::VoxelGrid(Vec3f origin, Vec3f dim, float res)
 {
-  val_unknown = -1;
-  val_occ = 100;
-  val_free = 0;
-
   origin_ = Vec3i::Zero();
   origin_d_ = Vec3f::Zero();
   dim_ = Vec3i::Zero();

@@ -53,7 +53,7 @@ void DecompUtil::setObstacles(const vec_Vec3f& obs) {
 }
 
 
-bool DecompUtil::isFree(const Primitive& pr, decimal_t& dt) {
+bool DecompUtil::isFree(const Primitive& pr) {
   if(Vs_) {
     std::vector<Waypoint> ps = pr.sample(2);
     for(const auto& it: ps) {
@@ -61,8 +61,9 @@ bool DecompUtil::isFree(const Primitive& pr, decimal_t& dt) {
         return false;
     }
   }
-
-  vec_Ellipsoid Es = sample_ellipsoids(pr, axe_, 5);
+  double max_v = std::max(std::max(pr.max_vel(0), pr.max_vel(1)), pr.max_vel(2));
+  int n = std::ceil(max_v * pr.t() / axe_(0));
+  vec_Ellipsoid Es = sample_ellipsoids(pr, axe_, n);
 
   for(const auto& E: Es) {
     float radius = r_;

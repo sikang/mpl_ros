@@ -12,7 +12,8 @@
 #include <vector>                         // std::vector
 #include <unordered_map>                  // std::unordered_map
 #include <array>                          // std::array
-#include <list>                           // std::list
+#include <list>                           // std::queue
+#include <queue>                           // std::deque
 #include <chrono>                         // std::chrono::high_resolution_clock
 #include <primitive/trajectory.h>
 
@@ -31,11 +32,15 @@ namespace MPL
     bool operator()(const std::pair<double,std::shared_ptr<arastate>>& p1, 
                     const std::pair<double,std::shared_ptr<arastate>>& p2) const
     {
+      /*
       if( (p1.first >= p2.first - 0.000001) && (p1.first <= p2.first + 0.000001) )
       {
         // if equal compare gvals
         return (p1.second->g) < (p2.second->g);
       }
+      */
+      if( (p1.first == p2.first) )
+        return (p1.second->g) > (p2.second->g);
       return p1.first > p2.first;
     }
   };  
@@ -57,7 +62,10 @@ namespace MPL
     state coord;                            // discrete coordinates of this node
     std::shared_ptr<ARAState<state>> parent; // pointer to parent node
     int parent_action_id = -1;
-    std::list<int> actions;
+    // actions from start
+    std::queue<int> actions;
+    // hashkey of neighbors
+    std::vector<std::pair<Key, double>> neighbors;
     double dt = 1.0;
     // pointer to heap location
     typename priorityQueue<ARAState<state>>::handle_type heapkey;
@@ -67,6 +75,7 @@ namespace MPL
     double h;
     unsigned int iterationopened = 0;
     unsigned int iterationclosed = 0;
+    bool dead = false;
     
     ARAState( Key hashkey, const state& coord )
       : hashkey(hashkey), coord(coord)//, parent(nullptr)
@@ -89,7 +98,10 @@ namespace MPL
     //bool reopen_nodes = false;
 
     ARAStateSpace(double eps = 1): eps(eps){}
-    void getSubStateSpace(int ref_idx);
+    void getSubStateSpace(int id =1);
+    void pruneStateSpace(std::vector<std::shared_ptr<ARAState<state>> > states);
+
+    std::vector<std::shared_ptr<ARAState<state>>> best_child_;
   };
 
   
@@ -119,12 +131,10 @@ namespace MPL
           Trajectory& traj, std::vector<int>& action_idx, double eps = 1,
           double allocated_time_secs = std::numeric_limits<double>::infinity() );
           */
-      int bestAction() const { return best_action_; };
     private:
       bool spin(const std::shared_ptr<ARAState<state>>& currNode_pt,
           std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
           const env_base& ENV );
-      int best_action_ = -1;
   };
 }
 #endif

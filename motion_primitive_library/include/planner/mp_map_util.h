@@ -20,6 +20,13 @@ class MPMapUtil : public MPBaseUtil
     void setMapUtil(std::shared_ptr<MPL::VoxelMapUtil> map_util);
     ///Set sub map util
     void setMapUtil(std::shared_ptr<MPL::SubVoxelMapUtil> map_util);
+    ///Get linked voxels
+    vec_Vec3f getLinkedNodes();
+    ///Remove affected nodes
+    void removeAffectedNodes(const vec_Vec3i& pns);
+
+  protected:
+    std::shared_ptr<MPL::VoxelMapUtil> map_util_;
 };
 
 

@@ -115,7 +115,6 @@ void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc)
 }
 
 std::vector<Primitive> MPBaseUtil::getPrimitives() const { 
-  //return ENV_->primitives(); 
   std::vector<Primitive> prs;
   for(const auto& it: sss_ptr_->hm) {
     if(it.second && it.second->parent && it.second->parent_action_id >= 0) {
@@ -135,10 +134,6 @@ Trajectory MPBaseUtil::getTraj() const {
   return traj_;
 }
 
-std::vector<decimal_t> MPBaseUtil::getDts() const {
-  return dts_;
-}
-
 vec_Vec3f MPBaseUtil::getOpenSet() const {
   vec_Vec3f ps;
   for(const auto& it: sss_ptr_->pq)
@@ -155,12 +150,12 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
   return ps;
 }
 
-int MPBaseUtil::getBestActionID() const {
-  return best_action_id_;
+vec_Vec3f MPBaseUtil::getExpandedNodes() const {
+  return ENV_->expanded_nodes_;
 }
 
-void MPBaseUtil::pruneStateSpace(int action_id) {
-  sss_ptr_->getSubStateSpace(action_id);
+void MPBaseUtil::getSubStateSpace(int id) {
+  sss_ptr_->getSubStateSpace(id);
 }
 
 bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) {
@@ -188,6 +183,8 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
   }
   ENV_->set_goal(goal);
 
+  ENV_->expanded_nodes_.clear();
+
   planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
 
   if (traj_.segs.empty()) {
@@ -195,8 +192,6 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
       printf(ANSI_COLOR_RED "[MPPlanner] Cannot find a traj!" ANSI_COLOR_RESET "\n");
     return false;
   }
-
-  best_action_id_ = planner_ptr->bestAction();
 
   ws_.clear();
   ws_.push_back(start);

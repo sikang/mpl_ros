@@ -17,10 +17,9 @@ namespace MPL {
  */
 class env_map : public env_base
 {
-  protected:
-    std::shared_ptr<VoxelMapUtil> map_util_;
 
   public:
+    std::shared_ptr<VoxelMapUtil> map_util_;
 
     ///Constructor with map util as input
     env_map(std::shared_ptr<VoxelMapUtil> map_util)
@@ -47,13 +46,14 @@ class env_map : public env_base
       return map_util_->isFree(map_util_->floatToInt(pt));
     }
 
-
     /**
      * @brief Check if a primitive is in free space
      *
      * We sample n (default as 5) points along a primitive, and check each point for collision
      */
-    bool is_free(const Primitive& pr, int n = 5) const {
+    bool is_free(const Primitive& pr) const {
+      double max_v = std::max(std::max(pr.max_vel(0), pr.max_vel(1)), pr.max_vel(2));
+      int n = std::ceil(max_v * pr.t() / map_util_->getRes());
       std::vector<Waypoint> pts = pr.sample(n);
       for(const auto& pt: pts){
         Vec3i pn = map_util_->floatToInt(pt.pos);
@@ -90,6 +90,8 @@ class env_map : public env_base
       action_idx.clear();
       action_dts.clear();
 
+      expanded_nodes_.push_back(curr.pos);
+
       const Vec3i pn = map_util_->floatToInt(curr.pos);
       if(map_util_->isOutSide(pn))
         return;
@@ -122,6 +124,7 @@ class env_map : public env_base
         action_idx.push_back(-1); // -1 indicates directly connection to the goal 
         action_dts.push_back(0);
         printf("connect to the goal, curr t: %f!\n", curr.t);
+        //curr.print();
       }
 
 

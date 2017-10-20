@@ -450,7 +450,11 @@ class env_base
 
     ///Array of constant control input
     vec_Vec3f U_;
+    ///Expanded nodes
+    mutable vec_Vec3f expanded_nodes_;
+    ///Goal node
     Waypoint goal_node_;
+    ///Prior trajectory
     Trajectory prior_traj_;
 };
 }

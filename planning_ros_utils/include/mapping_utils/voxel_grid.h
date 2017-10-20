@@ -38,9 +38,9 @@ class VoxelGrid {
   boost::multi_array<char, 3> map_;
   boost::multi_array<char, 3> inflated_map_;
 
-  char val_free;
-  char val_occ;
-  char val_unknown;
+  const char val_free = 0;
+  const char val_occ = 100;
+  const char val_unknown = -1;
 };
 
 #endif

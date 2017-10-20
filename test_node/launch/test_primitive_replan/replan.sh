@@ -1,1 +1,1 @@
-rostopic pub -1 /replan std_msgs/Bool "{data: false}"
+rostopic pub -1 /replan std_msgs/Bool "{data: true}"

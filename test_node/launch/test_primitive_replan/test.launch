@@ -13,10 +13,12 @@
     output="screen">
     <remap from="~pose" to="/move_base_simple/goal"/>
     <remap from="~replan" to="/replan"/>
+    <remap from="~add_cloud" to="/add_cloud"/>
     <param name="file" value="$(find test_node)/maps/simple/simple.bag"/>
     <!--<param name="file" value="$(find test_node)/maps/levine/levine.bag"/>-->
     <!--<param name="file" value="$(find test_node)/maps/skir/skir.bag"/>-->
-    <param name="topic" value="/voxel_map"/>
+    <param name="map_name" value="/voxel_map"/>
+    <param name="cloud_name" value="/cloud"/>
     <!-- Set start and goal -->
     <param name="start_x" value="12.5"/>
     <param name="start_y" value="1.4"/>
@@ -30,8 +32,8 @@
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
-    <param name="dt" value="0.5"/>
-    <param name="ndt" value="8"/>
+    <param name="dt" value="1.0"/>
+    <param name="ndt" value="5"/>
     <param name="replan" value="$(arg replan)"/>
   </node>
 

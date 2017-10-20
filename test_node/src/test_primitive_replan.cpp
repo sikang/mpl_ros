@@ -3,21 +3,85 @@
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
 #include <ros_utils/mapping_ros_utils.h>
+#include <mapping_utils/voxel_grid.h>
 #include <planner/mp_map_util.h>
 
 using namespace MPL;
 
 std::unique_ptr<MPMapUtil> planner_;
+std::unique_ptr<VoxelGrid> voxel_mapper_;
 
+std::shared_ptr<MPL::VoxelMapUtil> map_util;
+
+ros::Publisher map_pub;
 ros::Publisher sg_pub;
 ros::Publisher prs_pub;
 ros::Publisher traj_pub;
+ros::Publisher linked_cloud_pub;
 ros::Publisher close_cloud_pub;
 ros::Publisher open_cloud_pub;
+ros::Publisher expanded_cloud_pub;
 std_msgs::Header header;
 
 Waypoint start, goal;
 bool terminated = false;
+
+void visualizeGraph() {
+  //Publish expanded nodes
+  sensor_msgs::PointCloud expanded_ps = vec_to_cloud(planner_->getExpandedNodes());
+  expanded_ps.header = header;
+  expanded_cloud_pub.publish(expanded_ps);
+
+  //Publish nodes in closed set
+  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
+  close_ps.header = header;
+  close_cloud_pub.publish(close_ps);
+
+  //Publish nodes in open set
+  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
+  open_ps.header = header;
+  open_cloud_pub.publish(open_ps);
+
+  //Publish nodes in open set
+  sensor_msgs::PointCloud linked_ps = vec_to_cloud(planner_->getLinkedNodes());
+  linked_ps.header = header;
+  linked_cloud_pub.publish(linked_ps);
+
+  //Publish primitives
+  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
+  prs_msg.header =  header;
+  prs_pub.publish(prs_msg);
+}
+
+void changeMapCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
+  vec_Vec3f pts = cloud_to_vec(*msg);
+
+  voxel_mapper_->addCloud(pts);
+  planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
+
+  //Initialize map util 
+  //map_util.reset(new MPL::VoxelMapUtil);
+  setMap(map_util.get(), map);
+
+  //Free unknown space and dilate obstacles
+  map_util->freeUnKnown();
+  //map_util->dilate(0.2, 0.1);
+  //map_util->dilating();
+
+
+  //Publish the dilated map for visualization
+  getMap(map_util.get(), map);
+  map.header = header;
+  map_pub.publish(map);
+
+  vec_Vec3i pns;
+  for(const auto& pt: pts) 
+    pns.push_back(map_util->floatToInt(pt));
+
+  planner_->removeAffectedNodes(pns);
+
+  visualizeGraph();
+}
 
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   if(terminated)
@@ -32,7 +96,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   sg_pub.publish(sg_cloud);
 
   if(msg->data)
-    planner_->pruneStateSpace(planner_->getBestActionID());
+    planner_->getSubStateSpace(1);
   ros::Time t0 = ros::Time::now();
   bool valid = planner_->plan(start, goal, msg->data);
   if(!valid) {
@@ -50,10 +114,6 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
 
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_->getPrimitives());
-    prs_msg.header =  header;
-    prs_pub.publish(prs_msg);
-
     std::vector<Waypoint> ws = planner_->getWs();
     if(ws.size() < 3)
       terminated = true;
@@ -62,17 +122,8 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
       start.t = 0;
     }
   }
-  //Publish expanded nodes
-  sensor_msgs::PointCloud close_ps = vec_to_cloud(planner_->getCloseSet());
-  close_ps.header = header;
-  close_cloud_pub.publish(close_ps);
 
-  //Publish nodes in open set
-  sensor_msgs::PointCloud open_ps = vec_to_cloud(planner_->getOpenSet());
-  open_ps.header = header;
-  open_cloud_pub.publish(open_ps);
-
-
+  visualizeGraph();
 }
 
 int main(int argc, char ** argv){
@@ -80,28 +131,42 @@ int main(int argc, char ** argv){
   ros::NodeHandle nh("~");
 
   ros::Subscriber replan_sub = nh.subscribe("replan", 1, replanCallback);
-  ros::Publisher map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
+  ros::Subscriber cloud_sub = nh.subscribe("add_cloud", 1, changeMapCallback);
+  map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
   traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   close_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("close_cloud", 1, true);
   open_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("open_set", 1, true);
+  linked_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("linked_pts", 1, true);
+  expanded_cloud_pub = nh.advertise<sensor_msgs::PointCloud>("expanded_cloud", 1, true);
 
   header.frame_id = std::string("map");
   //Read map from bag file
-  std::string file_name, topic_name;
+  std::string file_name, map_name, cloud_name;
   nh.param("file", file_name, std::string("voxel_map"));
-  nh.param("topic", topic_name, std::string("voxel_map"));
-  planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, topic_name);
+  nh.param("map_name", map_name, std::string("voxel_map"));
+  nh.param("cloud_name", cloud_name, std::string("cloud"));
+
+  sensor_msgs::PointCloud cloud = read_bag<sensor_msgs::PointCloud>(file_name, cloud_name);
+  planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, map_name);
+
+  double res = map.info.resolution;
+  Vec3f origin(map.origin.x, map.origin.y, map.origin.z);
+  Vec3f dim(map.dim.x * res, map.dim.y * res, map.dim.z * res);
+
+  voxel_mapper_.reset(new VoxelGrid(origin, dim, res));
+  voxel_mapper_->addCloud(cloud_to_vec(cloud));
+  map = voxel_mapper_->getMap();
 
   //Initialize map util 
-  std::shared_ptr<MPL::VoxelMapUtil> map_util(new MPL::VoxelMapUtil);
+  map_util.reset(new MPL::VoxelMapUtil);
   setMap(map_util.get(), map);
 
   //Free unknown space and dilate obstacles
   map_util->freeUnKnown();
-  map_util->dilate(0.2, 0.1);
-  map_util->dilating();
+  //map_util->dilate(0.2, 0.1);
+  //map_util->dilating();
 
 
   //Publish the dilated map for visualization

@@ -12,6 +12,8 @@
 #include <planner/env_base.h>
 #include <primitive/trajectory.h>
 
+using linkedHashMap = std::unordered_map<int, std::vector<std::shared_ptr<MPL::ARAState<Waypoint>>> >;
+
 /**
  * @brief Motion primitive base util class
  */
@@ -26,15 +28,18 @@ class MPBaseUtil
     Trajectory getTraj() const;
     ///Get expanded primitives
     std::vector<Primitive> getPrimitives() const;
-    ///Get time allocation
-    std::vector<decimal_t> getDts() const;
     ///Get ps in open set
     vec_Vec3f getOpenSet() const;
     ///Get ps in close set
     vec_Vec3f getCloseSet() const;
-    ///Get best action id
-    int getBestActionID() const;
- 
+    ///Get expanded node
+    vec_Vec3f getExpandedNodes() const;
+    /**
+     * @brief Prune state space
+     * @param id the id of start state as the branch of corresponding tree
+     */
+    void getSubStateSpace(int id);
+
     ///Set max vel in each axis
     void setVmax(decimal_t v);
     ///Set max acc in each axis
@@ -65,12 +70,7 @@ class MPBaseUtil
     void setMode(const Waypoint& p);
     ///Set tolerance in geometric and dynamic spaces
     void setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc = 0.0);
-    /**
-     * @brief Prune state space
-     * @param action_id the pruned state space is the branch of corresponding action
-     */
-    void pruneStateSpace(int action_id);
-    /**
+   /**
      * @brief Planning thread
      * @param replan default as false, such that plan from scratch; set to be true, the planner reuses the state space for planning
      */
@@ -85,14 +85,12 @@ class MPBaseUtil
     std::vector<Waypoint> ws_;
     ///Optimal trajectory
     Trajectory traj_;
-    ///Time allocation for each segment
-    std::vector<decimal_t> dts_;
     ///Greedy searching parameter
     decimal_t epsilon_ = 1.0;
     ///Maxmum number of expansion allowd, -1 means no limitation
     int max_num_ = -1;
-    ///Best action id
-    int best_action_id_ = -1;
+
+    linkedHashMap lhm_;
 
     ///Enabled to display debug message
     bool planner_verbose_;

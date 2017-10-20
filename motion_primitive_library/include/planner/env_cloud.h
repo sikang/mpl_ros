@@ -73,8 +73,7 @@ class env_cloud : public env_base
         Primitive pr(curr, U_[i], dt_);
         Waypoint tn = pr.evaluate(dt_);
         if(pr.valid_vel(v_max_) && pr.valid_acc(a_max_)) {
-          decimal_t dt = dt_;
-          bool valid = map_util_->isFree(pr, dt);
+          bool valid = map_util_->isFree(pr);
           if(valid) {
             //primitives_.push_back(pr);
             tn.use_pos = curr.use_pos;
