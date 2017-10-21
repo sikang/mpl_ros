@@ -12,7 +12,6 @@
 #include <planner/env_base.h>
 #include <primitive/trajectory.h>
 
-using linkedHashMap = std::unordered_map<int, std::vector<std::shared_ptr<MPL::ARAState<Waypoint>>> >;
 
 /**
  * @brief Motion primitive base util class
@@ -22,6 +21,8 @@ class MPBaseUtil
   public:
     ///Simple constructor
     MPBaseUtil();
+    ///Check if it has been planned
+    bool initialized();
     ///Get nodes on the optimal trajectory
     std::vector<Waypoint> getWs() const;
     ///Get optimal trajectory
@@ -90,7 +91,6 @@ class MPBaseUtil
     ///Maxmum number of expansion allowd, -1 means no limitation
     int max_num_ = -1;
 
-    linkedHashMap lhm_;
 
     ///Enabled to display debug message
     bool planner_verbose_;

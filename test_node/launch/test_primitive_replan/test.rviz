@@ -6,7 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Trajectory1
+        - /planner1/Trajectory1
+        - /replanner1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -118,164 +119,330 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      Class: planning_rviz_plugins/Trajectory
+    - Class: rviz/Group
+      Displays:
+        - AccColor: 10; 200; 55
+          AccScale: 0.0199999996
+          Class: planning_rviz_plugins/Trajectory
+          Enabled: true
+          History Length: 1
+          JrkColor: 200; 20; 55
+          JrkScale: 0.0199999996
+          Name: Trajectory
+          Num of samples: 200
+          PosColor: 204; 51; 204
+          PosScale: 0.200000003
+          Topic: /test_primitive/trajectory0
+          Unreliable: false
+          Value: true
+          VelColor: 85; 85; 255
+          VelScale: 0.0199999996
+          Visualize Acc: false
+          Visualize Jrk: false
+          Visualize Vel: false
+        - AccColor: 10; 200; 55
+          AccScale: 0.0199999996
+          Class: planning_rviz_plugins/Primitives
+          Enabled: false
+          History Length: 1
+          JrkColor: 200; 20; 55
+          JrkScale: 0.0199999996
+          Name: Primitives
+          Num of samples: 10
+          PosColor: 0; 0; 255
+          PosScale: 0.0199999996
+          Topic: /test_primitive/primitives
+          Unreliable: false
+          Value: false
+          VelColor: 85; 85; 255
+          VelScale: 0.0199999996
+          Visualize Acc: false
+          Visualize Jrk: false
+          Visualize Vel: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 255; 0; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: openset
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.150000006
+          Style: Flat Squares
+          Topic: /test_primitive/open_set0
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 0; 0; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: closeset
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.150000006
+          Style: Flat Squares
+          Topic: /test_primitive/close_cloud0
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 116; 116; 116
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: linked
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.100000001
+          Style: Flat Squares
+          Topic: /test_primitive/linked_pts0
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 0; 170; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: PointCloud
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.200000003
+          Style: Squares
+          Topic: /test_primitive/expanded_cloud0
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
       Enabled: true
-      History Length: 1
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      Name: Trajectory
-      Num of samples: 200
-      PosColor: 204; 51; 204
-      PosScale: 0.200000003
-      Topic: /test_primitive/trajectory
-      Unreliable: false
-      Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      Visualize Acc: false
-      Visualize Jrk: false
-      Visualize Vel: false
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      Class: planning_rviz_plugins/Primitives
+      Name: planner
+    - Class: rviz/Group
+      Displays:
+        - AccColor: 10; 200; 55
+          AccScale: 0.0199999996
+          Class: planning_rviz_plugins/Trajectory
+          Enabled: true
+          History Length: 1
+          JrkColor: 200; 20; 55
+          JrkScale: 0.0199999996
+          Name: Trajectory
+          Num of samples: 200
+          PosColor: 204; 51; 204
+          PosScale: 0.200000003
+          Topic: /test_primitive/trajectory1
+          Unreliable: false
+          Value: true
+          VelColor: 85; 85; 255
+          VelScale: 0.0199999996
+          Visualize Acc: false
+          Visualize Jrk: false
+          Visualize Vel: false
+        - AccColor: 10; 200; 55
+          AccScale: 0.0199999996
+          Class: planning_rviz_plugins/Primitives
+          Enabled: false
+          History Length: 1
+          JrkColor: 200; 20; 55
+          JrkScale: 0.0199999996
+          Name: Primitives
+          Num of samples: 10
+          PosColor: 0; 0; 255
+          PosScale: 0.0199999996
+          Topic: /test_primitive/primitives
+          Unreliable: false
+          Value: false
+          VelColor: 85; 85; 255
+          VelScale: 0.0199999996
+          Visualize Acc: false
+          Visualize Jrk: false
+          Visualize Vel: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 255; 0; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: openset
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.150000006
+          Style: Flat Squares
+          Topic: /test_primitive/open_set1
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 0; 0; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: closeset
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.150000006
+          Style: Flat Squares
+          Topic: /test_primitive/close_cloud1
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 116; 116; 116
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: linked
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.100000001
+          Style: Flat Squares
+          Topic: /test_primitive/linked_pts1
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud
+          Color: 0; 170; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 4096
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: PointCloud
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.200000003
+          Style: Squares
+          Topic: /test_primitive/expanded_cloud1
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
       Enabled: true
-      History Length: 1
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      Name: Primitives
-      Num of samples: 10
-      PosColor: 0; 0; 255
-      PosScale: 0.0199999996
-      Topic: /test_primitive/primitives
-      Unreliable: false
-      Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      Visualize Acc: false
-      Visualize Jrk: false
-      Visualize Vel: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 255; 0; 255
-      Color Transformer: FlatColor
-      Decay Time: 0
-      Enabled: false
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: openset
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.150000006
-      Style: Flat Squares
-      Topic: /test_primitive/open_set
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 0; 0; 0
-      Color Transformer: FlatColor
-      Decay Time: 0
-      Enabled: false
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: closeset
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.150000006
-      Style: Flat Squares
-      Topic: /test_primitive/close_cloud
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 116; 116; 116
-      Color Transformer: FlatColor
-      Decay Time: 0
-      Enabled: false
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: linked
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.100000001
-      Style: Flat Squares
-      Topic: /test_primitive/linked_pts
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 0; 170; 0
-      Color Transformer: FlatColor
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.200000003
-      Style: Squares
-      Topic: /test_primitive/expanded_cloud
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
+      Name: replanner
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255

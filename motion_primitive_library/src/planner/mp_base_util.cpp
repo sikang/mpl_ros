@@ -6,6 +6,10 @@ MPBaseUtil::MPBaseUtil() {
   planner_verbose_ = false;
 }
 
+bool MPBaseUtil::initialized() {
+  return !(sss_ptr_ == nullptr);
+}
+
 void MPBaseUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;
   if(planner_verbose_)

@@ -251,7 +251,7 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
       // if currently in CLOSED
       else if( child_pt->iterationclosed == sss_ptr->searchiteration)
       {
-        printf(ANSI_COLOR_RED "ASTAR ERROR!\n" ANSI_COLOR_RESET);
+       // printf(ANSI_COLOR_RED "ASTAR ERROR!\n" ANSI_COLOR_RESET);
        // child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval,child_pt) );
        // child_pt->iterationopened = sss_ptr->searchiteration;
        // child_pt->iterationclosed = 0;
