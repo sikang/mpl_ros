@@ -47,7 +47,8 @@ struct Waypoint {
     return this->pos == n.pos &&
       this->vel == n.vel &&
       this->acc == n.acc &&
-      this->jrk == n.jrk;
+      this->jrk == n.jrk &&
+      this->t == n.t;
   }
 };
 

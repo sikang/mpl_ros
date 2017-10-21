@@ -13,7 +13,6 @@
 #include <unordered_map>                  // std::unordered_map
 #include <array>                          // std::array
 #include <list>                           // std::queue
-#include <queue>                           // std::deque
 #include <chrono>                         // std::chrono::high_resolution_clock
 #include <primitive/trajectory.h>
 
@@ -32,15 +31,13 @@ namespace MPL
     bool operator()(const std::pair<double,std::shared_ptr<arastate>>& p1, 
                     const std::pair<double,std::shared_ptr<arastate>>& p2) const
     {
-      /*
       if( (p1.first >= p2.first - 0.000001) && (p1.first <= p2.first + 0.000001) )
       {
         // if equal compare gvals
         return (p1.second->g) < (p2.second->g);
       }
-      */
-      if( (p1.first == p2.first) )
-        return (p1.second->g) > (p2.second->g);
+      //if( (p1.first == p2.first) )
+      //  return (p1.second->g) > (p2.second->g);
       return p1.first > p2.first;
     }
   };  
@@ -62,8 +59,6 @@ namespace MPL
     state coord;                            // discrete coordinates of this node
     std::shared_ptr<ARAState<state>> parent; // pointer to parent node
     int parent_action_id = -1;
-    // actions from start
-    std::queue<int> actions;
     // hashkey of neighbors
     std::vector<std::pair<Key, double>> neighbors;
     double dt = 1.0;
@@ -75,7 +70,6 @@ namespace MPL
     double h;
     unsigned int iterationopened = 0;
     unsigned int iterationclosed = 0;
-    bool dead = false;
     
     ARAState( Key hashkey, const state& coord )
       : hashkey(hashkey), coord(coord)//, parent(nullptr)

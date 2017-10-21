@@ -45,7 +45,8 @@ vec_Vec3f MPMapUtil::getLinkedNodes() {
 }
 
 
-void MPMapUtil::removeAffectedNodes(const vec_Vec3i& pns) { 
+vec_Vec3f MPMapUtil::removeAffectedNodes(const vec_Vec3i& pns) { 
+  vec_Vec3f pts;
   std::vector<std::shared_ptr<ARAState<Waypoint>>> affected_states;
   for(const auto& it: pns) {
     int id = map_util_->getIndex(it);
@@ -53,9 +54,11 @@ void MPMapUtil::removeAffectedNodes(const vec_Vec3i& pns) {
     if(search != lhm_.end()) {
       for(const auto& node: lhm_[id]) {
         affected_states.push_back(node);
+        pts.push_back(node->coord.pos);
       }
     }
   }
 
   sss_ptr_->pruneStateSpace(affected_states);
+  return pts;
 }

@@ -23,7 +23,7 @@ class MPMapUtil : public MPBaseUtil
     ///Get linked voxels
     vec_Vec3f getLinkedNodes();
     ///Remove affected nodes
-    void removeAffectedNodes(const vec_Vec3i& pns);
+    vec_Vec3f removeAffectedNodes(const vec_Vec3i& pns);
 
   protected:
     std::shared_ptr<MPL::VoxelMapUtil> map_util_;
