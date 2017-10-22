@@ -222,11 +222,6 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
       child_pt->dt = succ_act_dt[s];
       child_pt->coord.t = currNode_pt->coord.t + succ_act_dt[s];
       child_pt->g = tentative_gval;    // Update gval
-      /*
-      if(child_pt->coord.t - currNode_pt->coord.t != 0.5)
-          printf(ANSI_COLOR_RED "ERROR dt: %f!\n" ANSI_COLOR_RESET, child_pt->coord.t - currNode_pt->coord.t);
-          */
-
 
       double fval = child_pt->g + (sss_ptr->eps) * child_pt->h;
       //if it's set to goal directly, dont add to pq
@@ -248,14 +243,13 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
         //sss_ptr->pq.update(child_pt->heapkey);
         sss_ptr->pq.increase( child_pt->heapkey );       // update heap
       }
-      // if currently in CLOSED
+      // if currently in CLOSED, reopen the node
       else if( child_pt->iterationclosed == sss_ptr->searchiteration)
       {
-       // printf(ANSI_COLOR_RED "ASTAR ERROR!\n" ANSI_COLOR_RESET);
-       // child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval,child_pt) );
-       // child_pt->iterationopened = sss_ptr->searchiteration;
-       // child_pt->iterationclosed = 0;
-
+        //printf(ANSI_COLOR_RED "ASTAR ERROR!\n" ANSI_COLOR_RESET);
+        child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval,child_pt) );
+        child_pt->iterationopened = sss_ptr->searchiteration;
+        child_pt->iterationclosed = 0;
       }
       else // new node, add to heap
       {
