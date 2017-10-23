@@ -83,17 +83,37 @@ void ARAStateSpace::getSubStateSpace(int id) {
 }
 */
 
-void ARAStateSpace::pruneStateSpace(std::vector<std::pair<Key, int> > states) {
+void ARAStateSpace::increaseCost(std::vector<std::pair<Key, int> > states) {
   if(states.empty())
     return;
   for(const auto& affected_node: states) {
     int id = affected_node.second;
     hm[affected_node.first]->pred_action_cost[id] = std::numeric_limits<double>::infinity();
+    //hm[affected_node.first]->pred_action_cost[id] = 1000;
     updateNode(hm[affected_node.first]);
   }
 
   //getSubStateSpace(0);
 }
+
+void ARAStateSpace::decreaseCost(std::vector<std::pair<Key, int> > states, const env_base& ENV) {
+  if(states.empty())
+    return;
+  for(const auto& affected_node: states) {
+    int id = affected_node.second;
+    Key parent_key = hm[affected_node.first]->pred_hashkey[id];
+    Primitive pr;
+    ENV.forward_action( hm[parent_key]->coord, hm[affected_node.first]->pred_action_id[id], pr );
+    if(ENV.is_free(pr)) {
+      hm[affected_node.first]->pred_action_cost[id] = pr.J(ENV.wi_) + ENV.w_*ENV.dt_;
+      updateNode(hm[affected_node.first]);
+    }
+  }
+
+  //getSubStateSpace(0);
+}
+
+
 
 double ARAStar::Astar(const Waypoint& start_coord, Key start_idx, 
     const env_base& ENV, std::shared_ptr<ARAStateSpace> sss_ptr, 
@@ -129,7 +149,7 @@ double ARAStar::Astar(const Waypoint& start_coord, Key start_idx,
     expand_iteration++;
     // not close a node when it is close to the goal
     currNode_ptr = sss_ptr->pq.top().second;     
-    if( ENV.is_goal(currNode_ptr->coord) ) break;
+    //if( ENV.is_goal(currNode_ptr->coord) ) break;
     sss_ptr->pq.pop(); 
     currNode_ptr->iterationclosed = true; // Add to closed list
 
@@ -254,16 +274,15 @@ void ARAStateSpace::updateNode(ARAStatePtr currNode_ptr) {
     }
   }
 
-  //printf("curr g: %f, rhs: %f\n", currNode_ptr->g, currNode_ptr->rhs);
-  if(std::isinf(currNode_ptr->rhs)) 
-    return;
 
   // if currNode is in openset, remove it
-  if(currNode_ptr->iterationopened && !currNode_ptr->iterationclosed )
+  if(currNode_ptr->iterationopened && !currNode_ptr->iterationclosed ) {
     pq.erase(currNode_ptr->heapkey);
+    currNode_ptr->iterationclosed = true;
+  }
 
   // if currNode's g value is not equal to its rhs, put it into openset
-  if(currNode_ptr->g != currNode_ptr->rhs) {
+  if(currNode_ptr->g != currNode_ptr->rhs || !currNode_ptr->iterationopened) {
     double fval = std::min(currNode_ptr->g, currNode_ptr->rhs) + currNode_ptr->h;
     
     //printf("curr g: %f, rhs: %f, h: %f, f: %f\n", 

@@ -6,8 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /planner1/Trajectory1
-        - /replanner1
+        - /planner1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -149,9 +148,9 @@ Visualization Manager:
           JrkScale: 0.0199999996
           Name: Primitives
           Num of samples: 10
-          PosColor: 0; 0; 255
+          PosColor: 255; 0; 255
           PosScale: 0.0199999996
-          Topic: /test_primitive/primitives
+          Topic: /test_primitive/primitives0
           Unreliable: false
           Value: false
           VelColor: 85; 85; 255
@@ -292,7 +291,7 @@ Visualization Manager:
           JrkScale: 0.0199999996
           Name: Trajectory
           Num of samples: 200
-          PosColor: 204; 51; 204
+          PosColor: 0; 0; 255
           PosScale: 0.200000003
           Topic: /test_primitive/trajectory1
           Unreliable: false
@@ -305,7 +304,7 @@ Visualization Manager:
         - AccColor: 10; 200; 55
           AccScale: 0.0199999996
           Class: planning_rviz_plugins/Primitives
-          Enabled: false
+          Enabled: true
           History Length: 1
           JrkColor: 200; 20; 55
           JrkScale: 0.0199999996
@@ -313,9 +312,9 @@ Visualization Manager:
           Num of samples: 10
           PosColor: 0; 0; 255
           PosScale: 0.0199999996
-          Topic: /test_primitive/primitives
+          Topic: /test_primitive/primitives1
           Unreliable: false
-          Value: false
+          Value: true
           VelColor: 85; 85; 255
           VelScale: 0.0199999996
           Visualize Acc: false
@@ -441,7 +440,7 @@ Visualization Manager:
           Use Fixed Frame: true
           Use rainbow: true
           Value: true
-      Enabled: true
+      Enabled: false
       Name: replanner
   Enabled: true
   Global Options:
@@ -466,7 +465,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0
+      Angle: 0.00499999989
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -476,11 +475,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 46.7901535
+      Scale: 38.0214386
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 11.5868988
-      Y: 8.93720341
+      X: 12.182128
+      Y: 10.5323915
     Saved: ~
 Window Geometry:
   Displays:

@@ -47,21 +47,41 @@ vec_Vec3f MPMapUtil::getLinkedNodes() const {
 }
 
 
-vec_Vec3f MPMapUtil::updateAffectedNodes(const vec_Vec3i& pns) { 
+vec_Vec3f MPMapUtil::updateBlockedNodes(const vec_Vec3i& blocked_pns) {
   vec_Vec3f pts;
-  std::vector<std::pair<Key, int>> affected_states;
-  for(const auto& it: pns) {
+  std::vector<std::pair<Key, int>> blocked_nodes;
+  for(const auto& it: blocked_pns) {
     int id = map_util_->getIndex(it);
     auto search = lhm_.find(id);
     if(search != lhm_.end()) {
       for(const auto& node: lhm_[id]) {
-        affected_states.push_back(node);
+        blocked_nodes.push_back(node);
         pts.push_back(sss_ptr_->hm[node.first]->coord.pos);
       }
     }
   }
-  printf("number of affected pts: %zu\n", pts.size());
+  printf("number of blocked nodes: %zu\n", pts.size());
 
-  sss_ptr_->pruneStateSpace(affected_states);
+  sss_ptr_->increaseCost(blocked_nodes);
+  return pts;
+}
+
+
+vec_Vec3f MPMapUtil::updateClearedNodes(const vec_Vec3i& cleared_pns) {
+  vec_Vec3f pts;
+  std::vector<std::pair<Key, int>> cleared_nodes;
+  for(const auto& it: cleared_pns) {
+    int id = map_util_->getIndex(it);
+    auto search = lhm_.find(id);
+    if(search != lhm_.end()) {
+      for(const auto& node: lhm_[id]) {
+        cleared_nodes.push_back(node);
+        pts.push_back(sss_ptr_->hm[node.first]->coord.pos);
+      }
+    }
+  }
+  printf("number of cleared nodes: %zu\n", pts.size());
+
+  sss_ptr_->decreaseCost(cleared_nodes, *ENV_);
   return pts;
 }

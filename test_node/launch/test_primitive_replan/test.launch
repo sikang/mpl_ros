@@ -14,6 +14,7 @@
     <remap from="~pose" to="/move_base_simple/goal"/>
     <remap from="~replan" to="/replan"/>
     <remap from="~add_cloud" to="/add_cloud"/>
+    <remap from="~clear_cloud" to="/clear_cloud"/>
     <param name="file" value="$(find test_node)/maps/simple/simple.bag"/>
     <!--<param name="file" value="$(find test_node)/maps/levine/levine.bag"/>-->
     <!--<param name="file" value="$(find test_node)/maps/skir/skir.bag"/>-->

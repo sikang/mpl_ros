@@ -33,11 +33,9 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
     return;
 
   //Publish expanded nodes
-  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(planner.getExpandedNodes());
   expanded_ps.header = header;
   expanded_cloud_pub[id].publish(expanded_ps);
-  */
 
   //Publish nodes in closed set
   sensor_msgs::PointCloud close_ps = vec_to_cloud(planner.getCloseSet());
@@ -93,9 +91,11 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
   vec_Vec3f affected_pts = planner_.updateClearedNodes(pns);
+  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[0].publish(expanded_ps);
+  */
 
   //visualizeGraph(1, replan_planner_);
   //visualizeGraph(0, planner_);

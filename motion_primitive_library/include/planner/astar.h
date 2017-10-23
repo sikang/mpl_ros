@@ -94,7 +94,8 @@ namespace MPL
 
     ARAStateSpace(double eps = 1): eps(eps){}
     void getSubStateSpace(int id =1);
-    void pruneStateSpace(std::vector<std::pair<Key, int> > states);
+    void increaseCost(std::vector<std::pair<Key, int> > states);
+    void decreaseCost(std::vector<std::pair<Key, int> > states, const env_base& ENV);
     void updateNode(ARAStatePtr currNode_ptr);
 
     std::vector<std::shared_ptr<ARAState>> best_child_;

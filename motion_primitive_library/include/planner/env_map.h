@@ -106,6 +106,7 @@ class env_map : public env_base
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));
           double cost = is_free(pr) ? pr.J(wi_) + w_*dt_: std::numeric_limits<double>::infinity();
+          //double cost = is_free(pr) ? pr.J(wi_) + w_*dt_: 1000;
           succ_cost.push_back(cost);
           action_idx.push_back(i);
        }
