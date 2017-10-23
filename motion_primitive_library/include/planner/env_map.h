@@ -72,7 +72,6 @@ class env_map : public env_base
      * @param succ_idx The array stores successors' Key
      * @param succ_cost The array stores cost along valid edges
      * @param action_idx The array stores corresponding idx of control for each successor
-     * @param action_dts The array stores corresponding dt of control for each successor
      *
      * When goal is outside, extra step is needed for finding optimal trajectory
      * Here we use Heuristic function and multiply with 2
@@ -81,14 +80,12 @@ class env_map : public env_base
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
-        std::vector<int>& action_idx,
-        std::vector<double>& action_dts ) const
+        std::vector<int>& action_idx) const
     {
       succ.clear();
       succ_idx.clear();
       succ_cost.clear();
       action_idx.clear();
-      action_dts.clear();
 
       expanded_nodes_.push_back(curr.pos);
 
@@ -100,9 +97,7 @@ class env_map : public env_base
         Primitive pr(curr, U_[i], dt_);
         Waypoint tn = pr.evaluate(dt_);
         if(pr.valid_vel(v_max_) && pr.valid_acc(a_max_) && pr.valid_jrk(j_max_)) {
-         if(!is_free(pr)) 
-            continue;
-          tn.use_pos = curr.use_pos;
+         tn.use_pos = curr.use_pos;
           tn.use_vel = curr.use_vel;
           tn.use_acc = curr.use_acc;
           tn.use_jrk = curr.use_jrk;
@@ -110,22 +105,23 @@ class env_map : public env_base
 
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));
-          succ_cost.push_back(pr.J(wi_) + w_*dt_);
+          double cost = is_free(pr) ? pr.J(wi_) + w_*dt_: std::numeric_limits<double>::infinity();
+          succ_cost.push_back(cost);
           action_idx.push_back(i);
-          action_dts.push_back(dt_);
        }
       }
 
+      /*
       if ((goal_outside_ && map_util_->isOutSide(pn)) ||
          (t_max_ > 0 && curr.t >= t_max_ && !succ.empty())) {
         succ.push_back(goal_node_);
         succ_idx.push_back(state_to_idx(goal_node_));
         succ_cost.push_back(get_heur(curr));
         action_idx.push_back(-1); // -1 indicates directly connection to the goal 
-        action_dts.push_back(0);
         printf("connect to the goal, curr t: %f!\n", curr.t);
         //curr.print();
       }
+      */
 
 
     }

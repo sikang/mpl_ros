@@ -251,9 +251,9 @@ class env_base
     }
 
     ///Recover trajectory
-    void forward_action( const Waypoint& curr, int action_id, double dt, Primitive& pr) const
+    void forward_action( const Waypoint& curr, int action_id, Primitive& pr) const
     {
-      pr = Primitive(curr, U_[action_id], dt);
+      pr = Primitive(curr, U_[action_id], dt_);
     }
 
     /**
@@ -402,8 +402,7 @@ class env_base
         std::vector<Waypoint>& succ,
         std::vector<Key>& succ_idx,
         std::vector<double>& succ_cost,
-        std::vector<int>& action_idx,
-       std::vector<double>& dts ) const
+        std::vector<int>& action_idx) const
     {
       printf("Used Null get_succ()\n");
       succ.push_back(curr);

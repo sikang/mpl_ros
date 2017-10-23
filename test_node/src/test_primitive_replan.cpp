@@ -53,9 +53,20 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   linked_cloud_pub[id].publish(linked_ps);
 
   //Publish primitives
-  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getPrimitives());
-  prs_msg.header =  header;
-  prs_pub[id].publish(prs_msg);
+  /*
+  if(id == 1) {
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getValidPrimitives());
+    prs_msg.header =  header;
+    prs_pub[id].publish(prs_msg);
+  }
+  */
+
+  if(id == 0) {
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
+    prs_msg.header =  header;
+    prs_pub[id].publish(prs_msg);
+  }
+
 }
 
 void changeMapCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
@@ -83,14 +94,15 @@ void changeMapCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   for(const auto& pt: pts) 
     pns.push_back(map_util->floatToInt(pt));
 
-  vec_Vec3f affected_pts = replan_planner_.removeAffectedNodes(pns);
+  vec_Vec3f affected_pts = planner_.updateAffectedNodes(pns);
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
-  expanded_cloud_pub.publish(expanded_ps);
+  expanded_cloud_pub[0].publish(expanded_ps);
   */
 
-  visualizeGraph(1, replan_planner_);
+  //visualizeGraph(1, replan_planner_);
+  //visualizeGraph(0, planner_);
 }
 
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
@@ -108,11 +120,10 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
 
   ros::Time t0 = ros::Time::now();
-  bool valid = planner_.plan(start, goal, false);
+  bool valid = planner_.plan(start, goal, msg->data);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_.getCloseSet().size());
     terminated = true;
-    return;
   }
   else{
     ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset: [%zu], total: [%zu]", 
@@ -126,11 +137,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     traj_pub[0].publish(traj_msg);
 
     printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
-
- }
+  }
 
   visualizeGraph(0, planner_);
+  return;
 
+  /*
   if(replan_planner_.initialized())
     replan_planner_.getSubStateSpace(1);
 
@@ -165,6 +177,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     start = ws[1];
     start.t = 0;
   }
+  */
 
 }
 

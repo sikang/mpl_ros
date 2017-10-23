@@ -96,7 +96,8 @@ void MPBaseUtil::setUmax(decimal_t u_max) {
 }
 
 void MPBaseUtil::setTmax(decimal_t t) {
-  ENV_->set_t_max(t);
+  //ENV_->set_t_max(t);
+  max_t_ = t;
   if(planner_verbose_)
     printf("[MPBaseUtil] set max time: %f\n", t);
 }
@@ -118,17 +119,42 @@ void MPBaseUtil::setTol(decimal_t tol_dis, decimal_t tol_vel, decimal_t tol_acc)
   }
 }
 
-std::vector<Primitive> MPBaseUtil::getPrimitives() const { 
+/*
+std::vector<Primitive> MPBaseUtil::getValidPrimitives() const { 
   std::vector<Primitive> prs;
   for(const auto& it: sss_ptr_->hm) {
     if(it.second && it.second->parent && it.second->parent_action_id >= 0) {
       Primitive pr;
-      ENV_->forward_action( it.second->parent->coord, it.second->parent_action_id, it.second->dt, pr );
+      ENV_->forward_action( it.second->parent->coord, it.second->parent_action_id, pr );
       prs.push_back(pr);
     }
   }
   return prs;
 }
+*/
+
+std::vector<Primitive> MPBaseUtil::getAllPrimitives() const { 
+  std::vector<Primitive> prs;
+  for(const auto& it: sss_ptr_->hm) {
+    if(it.second && !it.second->pred_hashkey.empty()) {
+      for(unsigned int i = 0; i < it.second->pred_hashkey.size(); i++) {
+        Key key = it.second->pred_hashkey[i];
+        if(!sss_ptr_->hm[key])
+          continue;
+        Primitive pr;
+        ENV_->forward_action( sss_ptr_->hm[key]->coord, it.second->pred_action_id[i], pr );
+        prs.push_back(pr);
+      }
+    }
+  }
+
+
+  printf("number of states in hm: %zu, number of prs: %zu\n", 
+      sss_ptr_->hm.size(), prs.size());
+  return prs;
+}
+
+
 
 std::vector<Waypoint> MPBaseUtil::getWs() const {
   return ws_; 
@@ -148,7 +174,7 @@ vec_Vec3f MPBaseUtil::getOpenSet() const {
 vec_Vec3f MPBaseUtil::getCloseSet() const {
   vec_Vec3f ps;
   for(const auto& it: sss_ptr_->hm) {
-    if(it.second && it.second->iterationclosed == sss_ptr_->searchiteration)
+    if(it.second && it.second->iterationclosed)
       ps.push_back(it.second->coord.pos);
   }
   return ps;
@@ -157,10 +183,11 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
 vec_Vec3f MPBaseUtil::getExpandedNodes() const {
   return ENV_->expanded_nodes_;
 }
-
+/*
 void MPBaseUtil::getSubStateSpace(int id) {
   sss_ptr_->getSubStateSpace(id);
 }
+*/
 
 bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) {
   if(planner_verbose_) {
@@ -179,17 +206,18 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
     return false;
   }
  
-  std::unique_ptr<MPL::ARAStar<Waypoint>> planner_ptr(new MPL::ARAStar<Waypoint>());
+  std::unique_ptr<MPL::ARAStar> planner_ptr(new MPL::ARAStar());
 
   if(!replan) {
     printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
-    sss_ptr_.reset(new MPL::ARAStateSpace<Waypoint>(epsilon_));
+    sss_ptr_.reset(new MPL::ARAStateSpace(epsilon_));
   }
   ENV_->set_goal(goal);
 
   ENV_->expanded_nodes_.clear();
 
-  planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_);
+  sss_ptr_->dt = ENV_->get_dt();
+  planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_, max_t_);
 
   if (traj_.segs.empty()) {
     if(planner_verbose_)

@@ -27,8 +27,10 @@ class MPBaseUtil
     std::vector<Waypoint> getWs() const;
     ///Get optimal trajectory
     Trajectory getTraj() const;
+    ///Get expanded collision free primitives
+    std::vector<Primitive> getValidPrimitives() const;
     ///Get expanded primitives
-    std::vector<Primitive> getPrimitives() const;
+    std::vector<Primitive> getAllPrimitives() const;
     ///Get ps in open set
     vec_Vec3f getOpenSet() const;
     ///Get ps in close set
@@ -39,7 +41,7 @@ class MPBaseUtil
      * @brief Prune state space
      * @param id the id of start state as the branch of corresponding tree
      */
-    void getSubStateSpace(int id);
+    //void getSubStateSpace(int id);
 
     ///Set max vel in each axis
     void setVmax(decimal_t v);
@@ -81,15 +83,17 @@ class MPBaseUtil
     ///Env class
     std::unique_ptr<MPL::env_base> ENV_;
     ///Planner workspace
-    std::shared_ptr<MPL::ARAStateSpace<Waypoint>> sss_ptr_;
+    std::shared_ptr<MPL::ARAStateSpace> sss_ptr_;
     ///Intermediate nodes in optimal trajectory
     std::vector<Waypoint> ws_;
     ///Optimal trajectory
     Trajectory traj_;
     ///Greedy searching parameter
     decimal_t epsilon_ = 1.0;
-    ///Maxmum number of expansion allowd, -1 means no limitation
+    ///Maxmum number of expansion, -1 means no limitation
     int max_num_ = -1;
+    ///Maxmum time horizon of expansion, 0 means no limitation
+    double max_t_ = 0;
 
 
     ///Enabled to display debug message

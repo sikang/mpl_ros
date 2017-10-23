@@ -5,7 +5,7 @@
 #include <planner/env_map.h>
 #include <planner/mp_base_util.h>
 
-using linkedHashMap = std::unordered_map<int, std::vector<std::shared_ptr<MPL::ARAState<Waypoint>>> >;
+using linkedHashMap = std::unordered_map<int, std::vector<std::pair<MPL::Key, int>>>;
 /**
  * @brief Motion primitive planner in voxel map
  */
@@ -24,7 +24,7 @@ class MPMapUtil : public MPBaseUtil
     ///Get linked voxels
     vec_Vec3f getLinkedNodes() const;
     ///Remove affected nodes
-    vec_Vec3f removeAffectedNodes(const vec_Vec3i& pns);
+    vec_Vec3f updateAffectedNodes(const vec_Vec3i& pns);
 
   protected:
     std::shared_ptr<MPL::VoxelMapUtil> map_util_;

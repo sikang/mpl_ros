@@ -4,40 +4,40 @@
 
 using namespace MPL;
 
-template <class state>
-void ARAStateSpace<state>::getSubStateSpace(int id) {
+/*
+void ARAStateSpace::getSubStateSpace(int id) {
   if(best_child_.empty())
     return;
 
-  std::shared_ptr<ARAState<state>> currNode_ptr = best_child_[id];
+  ARAStatePtr currNode_ptr = best_child_[id];
   currNode_ptr->parent = nullptr;
 
-  hashMap<ARAState<state>> new_hm;
-  priorityQueue<ARAState<state>> epq;
+  hashMap<ARAState> new_hm;
+  priorityQueue<ARAState> epq;
   currNode_ptr->heapkey = epq.push(std::make_pair(currNode_ptr->g, currNode_ptr));
 
   double init_g = currNode_ptr->g;
   for(auto& it: hm) {
     if(it.second) {
       it.second->g = std::numeric_limits<double>::infinity();
-      it.second->iterationopened = 0;
+      it.second->iterationopened = false;
       //it.second->iterationclosed = 0;
     }
   }
 
   currNode_ptr->g = init_g;
   while(!epq.empty()) {
-    for(unsigned int i = 0; i < currNode_ptr->neighbors.size(); i++) {
-      Key key = currNode_ptr->neighbors[i].first;
+    for(unsigned int i = 0; i < currNode_ptr->succ.size(); i++) {
+      Key key = currNode_ptr->succ[i].first;
       if(key.empty())
         continue;
       auto search = hm.find(key);
       if(search == hm.end())
         continue;
-      std::shared_ptr<ARAState<state>>& child_ptr = hm[key];
+      ARAStatePtr& child_ptr = hm[key];
       if(!child_ptr)
         continue;
-      double tentative_gval = currNode_ptr->g + currNode_ptr->neighbors[i].second;
+      double tentative_gval = currNode_ptr->g + currNode_ptr->succ[i].second;
 
       if(tentative_gval < child_ptr->g) {
 
@@ -47,21 +47,19 @@ void ARAStateSpace<state>::getSubStateSpace(int id) {
         child_ptr->g = tentative_gval;
 
         // if currently in OPEN, update
-        if( child_ptr->iterationopened > 0)
+        if( child_ptr->iterationopened)
         {
           (*child_ptr->heapkey).first = tentative_gval;     // update heap element
           epq.increase( child_ptr->heapkey );       // update heap
         }
         // if currently in CLOSED
-        /*
         else if( child_ptr->iterationclosed == searchiteration)
         {
           printf(ANSI_COLOR_RED "ASTAR getSubStateSpace ERROR!\n" ANSI_COLOR_RESET);
         }
-        */
         else {
           child_ptr->heapkey = epq.push( std::make_pair(tentative_gval, child_ptr) );
-          child_ptr->iterationopened = searchiteration;
+          child_ptr->iterationopened = true;
         }
       }
     }
@@ -77,29 +75,29 @@ void ARAStateSpace<state>::getSubStateSpace(int id) {
   for(auto& it: hm) {
     if(id > 0)
       it.second->coord.t -= best_child_[id]->dt;
-    if(it.second->iterationclosed == 0) {
+    if(!it.second->iterationclosed) {
       it.second->heapkey = pq.push( std::make_pair(it.second->g + eps * it.second->h, it.second) );
-      it.second->iterationopened = searchiteration;
+      it.second->iterationopened = true;
     }
   }
 }
+*/
 
-template <class state>
-void ARAStateSpace<state>::pruneStateSpace(std::vector<std::shared_ptr<ARAState<state>> > states) {
+void ARAStateSpace::pruneStateSpace(std::vector<std::pair<Key, int> > states) {
   if(states.empty())
     return;
   for(const auto& affected_node: states) {
-    hm[affected_node->hashkey] = nullptr;
+    int id = affected_node.second;
+    hm[affected_node.first]->pred_action_cost[id] = std::numeric_limits<double>::infinity();
+    updateNode(hm[affected_node.first]);
   }
 
-  getSubStateSpace(0);
+  //getSubStateSpace(0);
 }
 
-
-template <class state>
-double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
-    const env_base& ENV, std::shared_ptr<ARAStateSpace<state>> sss_ptr, 
-    Trajectory& traj, int max_expand )
+double ARAStar::Astar(const Waypoint& start_coord, Key start_idx, 
+    const env_base& ENV, std::shared_ptr<ARAStateSpace> sss_ptr, 
+    Trajectory& traj, int max_expand, double max_t)
 {
   traj.segs.clear();
   sss_ptr->best_child_.clear();
@@ -108,62 +106,129 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
     return 0;
   
   // Initialize start node
-  std::shared_ptr<ARAState<state>> currNode_pt = sss_ptr->hm[start_idx];
-  
-  int expands = 0;
-  bool reachedGoal = false;
-  while(!reachedGoal)
+  ARAStatePtr currNode_ptr = sss_ptr->hm[start_idx];
+  if(sss_ptr->pq.empty()) {
+    printf(ANSI_COLOR_GREEN "Start new node!\n" ANSI_COLOR_RESET);
+    currNode_ptr = std::make_shared<ARAState>(ARAState(start_idx, start_coord));
+    currNode_ptr->t = 0;
+    currNode_ptr->g = std::numeric_limits<double>::infinity();
+    currNode_ptr->rhs = 0;
+    currNode_ptr->h = ENV.get_heur(start_coord);
+    double fval = std::min(currNode_ptr->g, currNode_ptr->rhs) + currNode_ptr->h;
+    currNode_ptr->heapkey = sss_ptr->pq.push( std::make_pair(fval, currNode_ptr));
+    currNode_ptr->iterationopened = true;
+    currNode_ptr->iterationclosed = false;
+    sss_ptr->hm[start_idx] = currNode_ptr;
+  }
+  // Initialize null goal node
+  ARAStatePtr goalNode_ptr= std::make_shared<ARAState>(ARAState(Key(), Waypoint()));
+
+  int expand_iteration = 0;
+  while(sss_ptr->pq.top().first < std::min(goalNode_ptr->g, goalNode_ptr->rhs) || goalNode_ptr->rhs != goalNode_ptr->g)
   {
-    expands++;
-    // get element with smallest cost
-    if(sss_ptr->pq.empty()) {
-      printf(ANSI_COLOR_GREEN "Start new node!\n" ANSI_COLOR_RESET);
-      currNode_pt.reset( new ARAState<state>(start_idx, start_coord) );  
-      currNode_pt->g = 0;
-      currNode_pt->dt = ENV.get_dt();
-      currNode_pt->h = ENV.get_heur(start_coord);
-      currNode_pt->iterationopened = sss_ptr->searchiteration;
-      currNode_pt->iterationclosed = sss_ptr->searchiteration;
-    }
-    else {
-      // not close a node when it is close to the goal
-      currNode_pt = sss_ptr->pq.top().second;     
-      if( ENV.is_goal(currNode_pt->coord) ) { 
-        //currNode_pt->coord.print();
-        break;
+    expand_iteration++;
+    // not close a node when it is close to the goal
+    currNode_ptr = sss_ptr->pq.top().second;     
+    if( ENV.is_goal(currNode_ptr->coord) ) break;
+    sss_ptr->pq.pop(); 
+    currNode_ptr->iterationclosed = true; // Add to closed list
+
+    // Get successors
+    std::vector<Waypoint> succ_coord;
+    std::vector<MPL::Key> succ_idx;
+    std::vector<double> succ_cost;
+    std::vector<int> succ_act_idx;
+
+    ENV.get_succ( currNode_ptr->coord, succ_coord, succ_idx, succ_cost, succ_act_idx);
+    currNode_ptr->succ.resize(ENV.U_.size(), std::make_pair(Key(""), 0));
+
+    //printf("[%d] expand, g: %f, h: %f\n", expands, currNode_ptr->g, currNode_ptr->h);
+
+    std::vector<ARAStatePtr> nodes_ptr;
+    // Process successors
+    for( unsigned s = 0; s < succ_coord.size(); ++s )
+    {
+      // Get child
+      ARAStatePtr& child_ptr = sss_ptr->hm[ succ_idx[s] ];
+      if( !(child_ptr) ) {
+        child_ptr = std::make_shared<ARAState>(ARAState(succ_idx[s], succ_coord[s]) );
+        child_ptr->h = ENV.get_heur( child_ptr->coord );   // compute heuristic        
       }
-      sss_ptr->pq.pop(); 
-      currNode_pt->iterationclosed = sss_ptr->searchiteration; // Add to closed list
+
+      if(ENV.is_goal(child_ptr->coord)) {
+        child_ptr->h = 0;
+        printf("Find goal!\n");
+        goalNode_ptr = child_ptr;
+      }
+
+      // store the hashkey
+      currNode_ptr->succ[succ_act_idx[s]] = std::make_pair(succ_idx[s], succ_cost[s]);
+      child_ptr->pred_hashkey.push_back(currNode_ptr->hashkey);
+      child_ptr->pred_action_cost.push_back(succ_cost[s]);
+      child_ptr->pred_action_id.push_back(succ_act_idx[s]);
+
+      nodes_ptr.push_back(child_ptr);
     }
 
-    
-    reachedGoal = spin( currNode_pt, sss_ptr, ENV ); // update heap
-   
-    bool reachMaxStep = (max_expand > 0 && expands >= max_expand);
-    if(reachMaxStep)
+    if(currNode_ptr->g > currNode_ptr->rhs) 
+      currNode_ptr->g = currNode_ptr->rhs;
+    else {
+      currNode_ptr->g = std::numeric_limits<double>::infinity();
+      nodes_ptr.push_back(currNode_ptr);
+    }
+
+    for(auto& it: nodes_ptr)
+      sss_ptr->updateNode(it);
+
+    if(max_t > 0 && currNode_ptr->t >= max_t) {
+      printf(ANSI_COLOR_GREEN "MaxExpandTime [%f] Reached!!!!!!\n\n" ANSI_COLOR_RESET, max_t);
+      break;
+    }
+
+    if(max_expand > 0 && expand_iteration >= max_expand) {
       printf(ANSI_COLOR_RED "MaxExpandStep [%d] Reached!!!!!!\n\n" ANSI_COLOR_RESET, max_expand);
-    if( sss_ptr->pq.empty() || reachMaxStep)
       return std::numeric_limits<double>::infinity();
+    }
 
- }
+    if( sss_ptr->pq.empty()) {
+      printf(ANSI_COLOR_RED "Priority queue is empty!!!!!!\n\n" ANSI_COLOR_RESET);
+      return std::numeric_limits<double>::infinity();
+    }
+  }
 
-  printf(ANSI_COLOR_GREEN "Expand [%d] nodes!\n" ANSI_COLOR_RESET, expands);
+  printf(ANSI_COLOR_GREEN "topKey: %f, goal g: %f, rhs: %f!\n" ANSI_COLOR_RESET, sss_ptr->pq.top().first, goalNode_ptr->g, goalNode_ptr->rhs);
+  printf(ANSI_COLOR_GREEN "Expand [%d] nodes!\n" ANSI_COLOR_RESET, expand_iteration);
   
   // Recover trajectory
-  double pcost = currNode_pt->g;
+  double pcost = currNode_ptr->g;
   std::vector<Primitive> prs;
-  while( currNode_pt->parent)
+  while( !currNode_ptr->pred_hashkey.empty())
   {
-    int action_idx = currNode_pt->parent_action_id;
-    currNode_pt = currNode_pt->parent;
-    if(action_idx >= 0) {
+    int min_id = -1;
+    double min_gval = std::numeric_limits<double>::infinity();
+    for(unsigned int i = 0; i < currNode_ptr->pred_hashkey.size(); i++) {
+      Key key = currNode_ptr->pred_hashkey[i];
+      if(min_gval > sss_ptr->hm[key]->g + currNode_ptr->pred_action_cost[i]) {
+        min_gval = sss_ptr->hm[key]->g + currNode_ptr->pred_action_cost[i];
+        min_id = i;
+      }
+    }
+
+    if(min_id >= 0) {
+      Key key = currNode_ptr->pred_hashkey[min_id];
+      int action_idx = currNode_ptr->pred_action_id[min_id];
+      currNode_ptr = sss_ptr->hm[key];
       Primitive pr;
-      ENV.forward_action( currNode_pt->coord, action_idx, currNode_pt->dt, pr );
+      ENV.forward_action( currNode_ptr->coord, action_idx, pr );
       prs.push_back(pr);
-      sss_ptr->best_child_.push_back(currNode_pt);
-      std::cout << currNode_pt->coord.t << std::endl;
+      sss_ptr->best_child_.push_back(currNode_ptr);
+      std::cout << currNode_ptr->t << std::endl;
       printf("action id: %d, action dt: %f\n", action_idx, pr.t());
     }
+    else 
+      break;
+    if(currNode_ptr->hashkey == start_idx)
+      break;
   }
 
   std::reverse(prs.begin(), prs.end());
@@ -172,7 +237,45 @@ double ARAStar<state>::Astar(const state& start_coord, Key start_idx,
   return pcost;  
 }
 
+ 
+void ARAStateSpace::updateNode(ARAStatePtr currNode_ptr) {
+  double parent_t = 0;
+  // if currNode is not start, update its rhs
+  if(currNode_ptr->rhs != 0) {
+    currNode_ptr->rhs = std::numeric_limits<double>::infinity();
+    for(unsigned int i = 0; i < currNode_ptr->pred_hashkey.size(); i++) {
+      Key key = currNode_ptr->pred_hashkey[i];
+      if(!hm[key])
+        continue;
+      if(currNode_ptr->rhs > hm[key]->g + currNode_ptr->pred_action_cost[i]) {
+        currNode_ptr->rhs = hm[key]->g + currNode_ptr->pred_action_cost[i];
+        parent_t = hm[key]->t;
+      }
+    }
+  }
 
+  //printf("curr g: %f, rhs: %f\n", currNode_ptr->g, currNode_ptr->rhs);
+  if(std::isinf(currNode_ptr->rhs)) 
+    return;
+
+  // if currNode is in openset, remove it
+  if(currNode_ptr->iterationopened && !currNode_ptr->iterationclosed )
+    pq.erase(currNode_ptr->heapkey);
+
+  // if currNode's g value is not equal to its rhs, put it into openset
+  if(currNode_ptr->g != currNode_ptr->rhs) {
+    double fval = std::min(currNode_ptr->g, currNode_ptr->rhs) + currNode_ptr->h;
+    
+    //printf("curr g: %f, rhs: %f, h: %f, f: %f\n", 
+    //    currNode_ptr->g, currNode_ptr->rhs, currNode_ptr->h, fval);
+    currNode_ptr->heapkey = pq.push( std::make_pair(fval, currNode_ptr));
+    currNode_ptr->iterationopened = true;
+    currNode_ptr->iterationclosed = false;
+    currNode_ptr->t = parent_t + dt;
+  }
+
+}
+/*
 template <class state>
 bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
     std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
@@ -188,7 +291,7 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
 
   ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx, succ_act_dt);
 
-  currNode_pt->neighbors.resize(ENV.U_.size(), std::make_pair(Key(""), 0));
+  currNode_pt->succ.resize(ENV.U_.size(), std::make_pair(Key(""), 0));
   //std::cout << "num succ=" << succ_coord.size() << std::endl;
   
   // Process successors
@@ -198,7 +301,6 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
     std::shared_ptr<ARAState<state>>& child_pt = sss_ptr->hm[ succ_idx[s] ];
     if( !(child_pt) )
     {
-      //std::cout << "init child" << std::endl;
       child_pt.reset( new ARAState<state>(succ_idx[s], succ_coord[s]) );
       if(ENV.is_goal(child_pt->coord))
         child_pt->h = 0;
@@ -208,7 +310,10 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
 
     // store the hashkey
     if(succ_act_idx[s] >= 0) {
-      currNode_pt->neighbors[succ_act_idx[s]] = std::make_pair(succ_idx[s], succ_cost[s]);
+      currNode_pt->succ[succ_act_idx[s]] = std::make_pair(succ_idx[s], succ_cost[s]);
+      child_pt->pred_hashkey.push_back(currNode_pt->hashkey);
+      child_pt->pred_action_cost.push_back(succ_cost[s]);
+      child_pt->pred_action_id.push_back(succ_act_idx[s]);
     }
    
     //see if we can improve the value of succstate
@@ -218,8 +323,6 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
     if( tentative_gval < child_pt->g )
     {
       child_pt->parent = currNode_pt;  // Assign new parent
-      child_pt->parent_action_id = succ_act_idx[s];
-      child_pt->dt = succ_act_dt[s];
       child_pt->coord.t = currNode_pt->coord.t + succ_act_dt[s];
       child_pt->g = tentative_gval;    // Update gval
 
@@ -232,7 +335,7 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
       }
       
       // if currently in OPEN, update
-      if( child_pt->iterationopened > child_pt->iterationclosed)
+      if( child_pt->iterationopened && !child_pt->iterationclosed)
       {
         if((*child_pt->heapkey).first < fval) {
           std::cout << "UPDATE fval(old) = " << (*child_pt->heapkey).first << std::endl;
@@ -244,27 +347,22 @@ bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
         sss_ptr->pq.increase( child_pt->heapkey );       // update heap
       }
       // if currently in CLOSED, reopen the node
-      else if( child_pt->iterationclosed == sss_ptr->searchiteration)
-      {
-        //printf(ANSI_COLOR_RED "ASTAR ERROR!\n" ANSI_COLOR_RESET);
-        child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval,child_pt) );
-        child_pt->iterationopened = sss_ptr->searchiteration;
-        child_pt->iterationclosed = 0;
-      }
       else // new node, add to heap
       {
         //std::cout << "ADD fval = " << fval << std::endl;
         child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval, child_pt));
-        child_pt->iterationopened = sss_ptr->searchiteration;
+        child_pt->iterationopened = true;
+        child_pt->iterationclosed = false;
       }
     } //
   } // Process successors    
 
   return reached;
 }
+*/
 
 
 // explicit instantiations
-template class MPL::ARAStateSpace<Waypoint>;
-template class MPL::ARAStar<Waypoint>;
+//template class MPL::ARAStateSpace<Waypoint>;
+//template class MPL::ARAStar<Waypoint>;
 
