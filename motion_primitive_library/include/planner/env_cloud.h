@@ -80,7 +80,6 @@ class env_cloud : public env_base
             tn.use_vel = curr.use_vel;
             tn.use_acc = curr.use_acc;
             tn.use_jrk = curr.use_jrk;
-            tn.t = curr.t + dt_;
 
             succ.push_back(tn);
             succ_idx.push_back(state_to_idx(tn));
@@ -91,8 +90,8 @@ class env_cloud : public env_base
         }
       }
 
-      if(t_max_ > 0 && curr.t >= t_max_)
-        return;
+      //if(t_max_ > 0 && curr.t >= t_max_)
+        //return;
     }
 
     Polyhedra polyhedra() {

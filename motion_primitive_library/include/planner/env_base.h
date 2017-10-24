@@ -43,10 +43,10 @@ class env_base
     }
 
     ///Heuristic function 
-    double get_heur(const Waypoint& state) const
+    double get_heur(const Waypoint& state, double t) const
     {
       Waypoint goal_node = goal_node_;
-      decimal_t t = state.t + alpha_ * dt_;
+      t += alpha_ * dt_;
       if(!prior_traj_.segs.empty() && t < prior_traj_.getTotalTime()) {
         prior_traj_.evaluate(t, goal_node);
         goal_node.use_pos = goal_node_.use_pos;

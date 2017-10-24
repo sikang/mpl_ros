@@ -299,7 +299,6 @@ Waypoint Primitive::evaluate(decimal_t t) const {
     p.acc(j) = d(2);
     p.jrk(j) = d(3);
   }
-  p.t = t;
   return p;
 }
 

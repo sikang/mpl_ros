@@ -71,10 +71,8 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   std::vector<Waypoint> ws = replan_planner_.getWs();
   if(ws.size() < 3)
     terminated = true;
-  else {
+  else 
     start = ws[1];
-    start.t = 0;
-  }
 
   //replan_planner_.getLinkedNodes();
   visualizeGraph(1, replan_planner_);

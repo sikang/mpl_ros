@@ -133,7 +133,7 @@ double ARAStar::Astar(const Waypoint& start_coord, Key start_idx,
     currNode_ptr->t = 0;
     currNode_ptr->g = std::numeric_limits<double>::infinity();
     currNode_ptr->rhs = 0;
-    currNode_ptr->h = ENV.get_heur(start_coord);
+    currNode_ptr->h = ENV.get_heur(start_coord, currNode_ptr->t);
     double fval = std::min(currNode_ptr->g, currNode_ptr->rhs) + currNode_ptr->h;
     currNode_ptr->heapkey = sss_ptr->pq.push( std::make_pair(fval, currNode_ptr));
     currNode_ptr->iterationopened = true;
@@ -181,7 +181,7 @@ double ARAStar::Astar(const Waypoint& start_coord, Key start_idx,
       ARAStatePtr& child_ptr = sss_ptr->hm[ succ_idx[s] ];
       if( !(child_ptr) ) {
         child_ptr = std::make_shared<ARAState>(ARAState(succ_idx[s], succ_coord[s]) );
-        child_ptr->h = ENV.get_heur( child_ptr->coord );   // compute heuristic        
+        child_ptr->h = ENV.get_heur( child_ptr->coord, currNode_ptr->t + ENV.dt_);   // compute heuristic        
       }
 
       // store the hashkey
@@ -316,92 +316,6 @@ void ARAStateSpace::updateNode(ARAStatePtr currNode_ptr) {
   }
 
 }
-/*
-template <class state>
-bool ARAStar<state>::spin( const std::shared_ptr<ARAState<state>>& currNode_pt,
-    std::shared_ptr<ARAStateSpace<state>>& sss_ptr,
-    const env_base& ENV )
-{
-  // Get successors
-  std::vector<state> succ_coord;
-  std::vector<MPL::Key> succ_idx;
-  std::vector<double> succ_cost;
-  std::vector<int> succ_act_idx;
-  std::vector<double> succ_act_dt;
-  bool reached = false;
-
-  ENV.get_succ( currNode_pt->coord, succ_coord, succ_idx, succ_cost, succ_act_idx, succ_act_dt);
-
-  currNode_pt->succ.resize(ENV.U_.size(), std::make_pair(Key(""), 0));
-  //std::cout << "num succ=" << succ_coord.size() << std::endl;
-  
-  // Process successors
-  for( unsigned s = 0; s < succ_coord.size(); ++s )
-  {
-    // Get child
-    std::shared_ptr<ARAState<state>>& child_pt = sss_ptr->hm[ succ_idx[s] ];
-    if( !(child_pt) )
-    {
-      child_pt.reset( new ARAState<state>(succ_idx[s], succ_coord[s]) );
-      if(ENV.is_goal(child_pt->coord))
-        child_pt->h = 0;
-      else
-        child_pt->h = ENV.get_heur( child_pt->coord );   // compute heuristic        
-    }
-
-    // store the hashkey
-    if(succ_act_idx[s] >= 0) {
-      currNode_pt->succ[succ_act_idx[s]] = std::make_pair(succ_idx[s], succ_cost[s]);
-      child_pt->pred_hashkey.push_back(currNode_pt->hashkey);
-      child_pt->pred_action_cost.push_back(succ_cost[s]);
-      child_pt->pred_action_id.push_back(succ_act_idx[s]);
-    }
-   
-    //see if we can improve the value of succstate
-    //taking into account the cost of action
-    double tentative_gval = currNode_pt->g + succ_cost[s];
-   
-    if( tentative_gval < child_pt->g )
-    {
-      child_pt->parent = currNode_pt;  // Assign new parent
-      child_pt->coord.t = currNode_pt->coord.t + succ_act_dt[s];
-      child_pt->g = tentative_gval;    // Update gval
-
-      double fval = child_pt->g + (sss_ptr->eps) * child_pt->h;
-      //if it's set to goal directly, dont add to pq
-      if(succ_act_idx[s] < 0) {
-        reached = true;
-        continue;
-        //fval = 0;
-      }
-      
-      // if currently in OPEN, update
-      if( child_pt->iterationopened && !child_pt->iterationclosed)
-      {
-        if((*child_pt->heapkey).first < fval) {
-          std::cout << "UPDATE fval(old) = " << (*child_pt->heapkey).first << std::endl;
-          std::cout << "UPDATE fval = " << fval << std::endl;
-        }
-
-        (*child_pt->heapkey).first = fval;     // update heap element
-        //sss_ptr->pq.update(child_pt->heapkey);
-        sss_ptr->pq.increase( child_pt->heapkey );       // update heap
-      }
-      // if currently in CLOSED, reopen the node
-      else // new node, add to heap
-      {
-        //std::cout << "ADD fval = " << fval << std::endl;
-        child_pt->heapkey = sss_ptr->pq.push( std::make_pair(fval, child_pt));
-        child_pt->iterationopened = true;
-        child_pt->iterationclosed = false;
-      }
-    } //
-  } // Process successors    
-
-  return reached;
-}
-*/
-
 
 // explicit instantiations
 //template class MPL::ARAStateSpace<Waypoint>;

@@ -281,7 +281,6 @@ bool Trajectory::evaluate(decimal_t time, Waypoint &p) const{
         p.acc(j) = d(2)/lambda/lambda-d(1)*lambda_dot/lambda/lambda/lambda;
         p.jrk(j) = d(3); //TODO
       }
-      p.t = time;
       return true;
 
     }

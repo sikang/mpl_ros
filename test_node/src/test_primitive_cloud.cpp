@@ -95,7 +95,6 @@ int main(int argc, char ** argv){
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
   start.jrk = Vec3f(0, 0, 0);
-  start.t = 0;
   start.use_pos = true;
   start.use_vel = true;
   start.use_acc = use_acc;

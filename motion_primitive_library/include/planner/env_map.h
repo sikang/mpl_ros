@@ -101,7 +101,6 @@ class env_map : public env_base
           tn.use_vel = curr.use_vel;
           tn.use_acc = curr.use_acc;
           tn.use_jrk = curr.use_jrk;
-          tn.t = curr.t + dt_;
 
           succ.push_back(tn);
           succ_idx.push_back(state_to_idx(tn));

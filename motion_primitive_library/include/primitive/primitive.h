@@ -25,11 +25,9 @@ struct Waypoint {
   bool use_acc = false;///<If true, attribute acc will be used in primitive generation 
   bool use_jrk = false;///<If true, attribute jrk will be used in primitive generation 
 
-  decimal_t t = 0;
   std::shared_ptr<Waypoint> parent;
   ///Print all the useful attributes
   void print() const {
-    std::cout << "t: " << t << std::endl;
    if(use_pos)
       std::cout << "pos: " << pos.transpose() << std::endl;
     if(use_vel)
@@ -47,8 +45,7 @@ struct Waypoint {
     return this->pos == n.pos &&
       this->vel == n.vel &&
       this->acc == n.acc &&
-      this->jrk == n.jrk &&
-      this->t == n.t;
+      this->jrk == n.jrk;
   }
 };
 
