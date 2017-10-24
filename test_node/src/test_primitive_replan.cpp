@@ -1,5 +1,6 @@
 #include "bag_reader.hpp"
 #include <std_msgs/Bool.h>
+#include <std_msgs/Int8.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
 #include <ros_utils/mapping_ros_utils.h>
@@ -33,11 +34,9 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
     return;
 
   //Publish expanded nodes
-  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(planner.getExpandedNodes());
   expanded_ps.header = header;
   expanded_cloud_pub[id].publish(expanded_ps);
-  */
 
   //Publish nodes in closed set
   sensor_msgs::PointCloud close_ps = vec_to_cloud(planner.getCloseSet());
@@ -63,11 +62,9 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   }
   */
 
-  if(id == 0) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
-    prs_msg.header =  header;
-    prs_pub[id].publish(prs_msg);
-  }
+  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
+  prs_msg.header =  header;
+  prs_pub[id].publish(prs_msg);
 
 }
 
@@ -92,10 +89,12 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = planner_.updateClearedNodes(pns);
+  vec_Vec3f affected_pts = replan_planner_.updateClearedNodes(pns);
+  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[0].publish(expanded_ps);
+  */
 
   //visualizeGraph(1, replan_planner_);
   //visualizeGraph(0, planner_);
@@ -123,7 +122,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = planner_.updateBlockedNodes(pns);
+  vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(pns);
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
@@ -132,6 +131,23 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   //visualizeGraph(1, replan_planner_);
   //visualizeGraph(0, planner_);
+}
+
+void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
+  if(replan_planner_.initialized())
+    replan_planner_.getSubStateSpace(msg->data);
+  else
+    return;
+  visualizeGraph(1, replan_planner_);
+  std::vector<Waypoint> ws = replan_planner_.getWs();
+  if(ws.size() < 3)
+    terminated = true;
+  else {
+    start = ws[1];
+    start.t = 0;
+  }
+
+  replan_planner_.getLinkedNodes();
 }
 
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
@@ -149,7 +165,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
 
   ros::Time t0 = ros::Time::now();
-  bool valid = planner_.plan(start, goal, msg->data);
+  bool valid = planner_.plan(start, goal, false);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_.getCloseSet().size());
     terminated = true;
@@ -169,18 +185,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   }
 
   visualizeGraph(0, planner_);
-  return;
-
-  /*
-  if(replan_planner_.initialized())
-    replan_planner_.getSubStateSpace(1);
 
   ros::Time t1 = ros::Time::now();
   valid = replan_planner_.plan(start, goal, replan_planner_.initialized());
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t1).toSec(), replan_planner_.getCloseSet().size());
     terminated = true;
-    return;
   }
   else{
     ROS_WARN("Succeed! Takes %f sec for replan planning, openset: [%zu], closeset: [%zu], total: [%zu]", 
@@ -199,21 +209,13 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
   visualizeGraph(1, replan_planner_);
 
-  std::vector<Waypoint> ws = planner_.getWs();
-  if(ws.size() < 3)
-    terminated = true;
-  else {
-    start = ws[1];
-    start.t = 0;
-  }
-  */
-
 }
 
 int main(int argc, char ** argv){
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
+  ros::Subscriber subtree_sub = nh.subscribe("subtree", 1, subtreeCallback);
   ros::Subscriber replan_sub = nh.subscribe("replan", 1, replanCallback);
   ros::Subscriber add_cloud_sub = nh.subscribe("add_cloud", 1, addCloudCallback);
   ros::Subscriber clear_cloud_sub = nh.subscribe("clear_cloud", 1, clearCloudCallback);
@@ -289,6 +291,10 @@ int main(int argc, char ** argv){
   nh.param("start_vx", start_vx, 0.0);
   nh.param("start_vy", start_vy, 0.0);
   nh.param("start_vz", start_vz, 0.0);
+  double start_ax, start_ay, start_az;
+  nh.param("start_ax", start_ax, 0.0);
+  nh.param("start_ay", start_ay, 0.0);
+  nh.param("start_az", start_az, 0.0);
   double goal_x, goal_y, goal_z;
   nh.param("goal_x", goal_x, 6.4);
   nh.param("goal_y", goal_y, 16.6);
@@ -296,8 +302,7 @@ int main(int argc, char ** argv){
  
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
-  start.acc = Vec3f(0, 0, 0);
-  start.t = 0;
+  start.acc = Vec3f(start_ax, start_ay, start_az);
   start.use_pos = true;
   start.use_vel = true;
   start.use_acc = true;
@@ -341,17 +346,15 @@ int main(int argc, char ** argv){
   replan_planner_.setUmax(u_max);// 2D discretization with 1
   replan_planner_.setDt(dt); // Set dt for each primitive
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
-  replan_planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
+  replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(1, false);// 2D discretization with 1
   replan_planner_.setMode(start); // use acc as control
   replan_planner_.setTol(1, 1, 1); // Tolerance for goal region
 
   //Planning thread!
-  /*
   std_msgs::Bool init;
   init.data = false;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
-  */
 
   ros::spin();
 

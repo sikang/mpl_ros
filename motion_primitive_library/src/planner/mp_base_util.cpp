@@ -183,11 +183,10 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
 vec_Vec3f MPBaseUtil::getExpandedNodes() const {
   return ENV_->expanded_nodes_;
 }
-/*
+
 void MPBaseUtil::getSubStateSpace(int id) {
   sss_ptr_->getSubStateSpace(id);
 }
-*/
 
 bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) {
   if(planner_verbose_) {
@@ -212,6 +211,7 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
     printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
     sss_ptr_.reset(new MPL::ARAStateSpace(epsilon_));
   }
+
   ENV_->set_goal(goal);
 
   ENV_->expanded_nodes_.clear();

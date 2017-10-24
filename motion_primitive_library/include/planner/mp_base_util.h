@@ -41,7 +41,7 @@ class MPBaseUtil
      * @brief Prune state space
      * @param id the id of start state as the branch of corresponding tree
      */
-    //void getSubStateSpace(int id);
+    void getSubStateSpace(int id);
 
     ///Set max vel in each axis
     void setVmax(decimal_t v);

@@ -55,7 +55,9 @@ namespace MPL
     Waypoint coord;                            // discrete coordinates of this node
     double t;
     // hashkey of successors
-    std::vector<std::pair<Key, double>> succ;
+    std::vector<Key> succ_hashkey;
+    std::vector<int> succ_action_id;
+    std::vector<double> succ_action_cost;
     // hashkey of predicessors
     std::vector<Key> pred_hashkey;
     std::vector<int> pred_action_id;
@@ -99,6 +101,7 @@ namespace MPL
     void updateNode(ARAStatePtr currNode_ptr);
 
     std::vector<std::shared_ptr<ARAState>> best_child_;
+    ARAStatePtr goalNode_ptr = nullptr;
   };
 
   
