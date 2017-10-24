@@ -21,22 +21,23 @@ vec_Vec3f MPMapUtil::getLinkedNodes() const {
   lhm_.clear();
   vec_Vec3f linked_pts;
   for(const auto& it: sss_ptr_->hm) {
-    if(it.second && !it.second->pred_hashkey.empty()) {
-      for(unsigned int i = 0; i < it.second->pred_hashkey.size(); i++) {
-        Key key = it.second->pred_hashkey[i];
-        Primitive pr;
-        ENV_->forward_action( sss_ptr_->hm[key]->coord, it.second->pred_action_id[i], pr );
-        double max_v = std::max(std::max(pr.max_vel(0), pr.max_vel(1)), pr.max_vel(2));
-        int n = std::ceil(max_v * pr.t() / map_util_->getRes());
-        int prev_id = -1;
-        std::vector<Waypoint> ws = pr.sample(n);
-        for(const auto& w: ws) {
-          int id = map_util_->getIndex(map_util_->floatToInt(w.pos));
-          if(id != prev_id) {
-            linked_pts.push_back(map_util_->intToFloat(map_util_->floatToInt(w.pos)));
-            lhm_[id].push_back(std::make_pair(it.second->hashkey, i));
-            prev_id = id;
-          }
+    if(!it.second)
+      continue;
+    //check pred array
+    for(unsigned int i = 0; i < it.second->pred_hashkey.size(); i++) {
+      Key key = it.second->pred_hashkey[i];
+      Primitive pr;
+      ENV_->forward_action( sss_ptr_->hm[key]->coord, it.second->pred_action_id[i], pr );
+      double max_v = std::max(std::max(pr.max_vel(0), pr.max_vel(1)), pr.max_vel(2));
+      int n = std::ceil(max_v * pr.t() / map_util_->getRes());
+      int prev_id = -1;
+      std::vector<Waypoint> ws = pr.sample(n);
+      for(const auto& w: ws) {
+        int id = map_util_->getIndex(map_util_->floatToInt(w.pos));
+        if(id != prev_id) {
+          linked_pts.push_back(map_util_->intToFloat(map_util_->floatToInt(w.pos)));
+          lhm_[id].push_back(std::make_pair(it.second->hashkey, i));
+          prev_id = id;
         }
       }
     }

@@ -56,7 +56,6 @@ namespace MPL
     double t;
     // hashkey of successors
     std::vector<Key> succ_hashkey;
-    std::vector<int> succ_action_id;
     std::vector<double> succ_action_cost;
     // hashkey of predicessors
     std::vector<Key> pred_hashkey;
