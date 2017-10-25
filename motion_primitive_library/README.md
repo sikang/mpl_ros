@@ -1,8 +1,8 @@
-# MRSL Motion Primitive Library for quadrotor v0.2
+# MRSL Motion Primitive Library for quadrotor v0.3
 ==================================
 ## New Feature
-  - Add control in snap space
-  - Add MPCloudUtil based on the submission to ICRA2018 
+  - Add Lifelong Planning Astar to handle replanning in dynamical environments
+  - Enable maximum allowed time for searching
 
 ## Compilation
 
@@ -29,11 +29,13 @@ Waypoint start, goal;
 start.pos = Vec3f(2.5, -3.5, 0.0);
 start.use_pos = true;
 start.use_vel = true;
-start.use_acc = false; // Current lib only works for planning in accleration space
+start.use_acc = false; 
+start.use_jrk = false; 
 goal.pos = Vec3f(35, 2.5, 0.0);
 goal.use_pos = start.use_pos;
 goal.use_vel = start.use_vel;
 goal.use_acc = start.use_acc;
+goal.use_jrk = start.use_jrk;
 ```
 
 The flags `use_xxx` will adapt the planning in different control space. For example, the one above is control in acc space. Four options are provided by setting those flags as below:

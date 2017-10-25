@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MRSL Motion Primitive Library: # MRSL Motion Primitive Library for quadrotor v0.2</title>
+<title>MRSL Motion Primitive Library: # MRSL Motion Primitive Library for quadrotor v0.3</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MRSL Motion Primitive Library
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">0.3</span>
    </div>
    <div id="projectbrief">A motion primitive library for generating trajectory for mobile robots</div>
   </td>
@@ -61,18 +61,18 @@ $(function() {
 
 <div class="header">
   <div class="headertitle">
-<div class="title"># MRSL Motion <a class="el" href="classPrimitive.html" title="Primitive class. ">Primitive</a> Library for quadrotor v0.2 </div>  </div>
+<div class="title"># MRSL Motion <a class="el" href="classPrimitive.html" title="Primitive class. ">Primitive</a> Library for quadrotor v0.3 </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>New Feature</h2>
 <ul>
-<li>Add control in snap space</li>
-<li>Add <a class="el" href="classMPCloudUtil.html" title="Motion primitive planner using point cloud. ">MPCloudUtil</a> based on the submission to ICRA2018</li>
+<li>Add Lifelong Planning Astar to handle replanning in dynamical environments</li>
+<li>Enable maximum allowed time for searching</li>
 </ul>
 <h2>Compilation</h2>
 <p>A) Simple cmake (set USE_ROS to OFF) </p><div class="fragment"><div class="line">mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make</div></div><!-- fragment --><p>B) Using CATKIN with ROS (set USE_ROS to ON) </p><div class="fragment"><div class="line">$ mv motion_primitive_library ~/catkin_ws/src</div><div class="line">$ cd ~/catkin_ws &amp; catkin_make -DCMAKE_BUILD_TYPE=Release</div></div><!-- fragment --><h2>Example Usage</h2>
 <p>The simple API are provided in the base planner class, please look up in Doxygen.</p>
-<p>Before planning, the start and goal states must be set up accordingly as: </p><div class="fragment"><div class="line">{c++}</div><div class="line">// Initialize planning mission </div><div class="line">Waypoint start, goal;</div><div class="line">start.pos = Vec3f(2.5, -3.5, 0.0);</div><div class="line">start.use_pos = true;</div><div class="line">start.use_vel = true;</div><div class="line">start.use_acc = false; // Current lib only works for planning in accleration space</div><div class="line">goal.pos = Vec3f(35, 2.5, 0.0);</div><div class="line">goal.use_pos = start.use_pos;</div><div class="line">goal.use_vel = start.use_vel;</div><div class="line">goal.use_acc = start.use_acc;</div></div><!-- fragment --><p>The flags <code>use_xxx</code> will adapt the planning in different control space. For example, the one above is control in acc space. Four options are provided by setting those flags as below:</p>
+<p>Before planning, the start and goal states must be set up accordingly as: </p><div class="fragment"><div class="line">{c++}</div><div class="line">// Initialize planning mission </div><div class="line">Waypoint start, goal;</div><div class="line">start.pos = Vec3f(2.5, -3.5, 0.0);</div><div class="line">start.use_pos = true;</div><div class="line">start.use_vel = true;</div><div class="line">start.use_acc = false; </div><div class="line">start.use_jrk = false; </div><div class="line">goal.pos = Vec3f(35, 2.5, 0.0);</div><div class="line">goal.use_pos = start.use_pos;</div><div class="line">goal.use_vel = start.use_vel;</div><div class="line">goal.use_acc = start.use_acc;</div><div class="line">goal.use_jrk = start.use_jrk;</div></div><!-- fragment --><p>The flags <code>use_xxx</code> will adapt the planning in different control space. For example, the one above is control in acc space. Four options are provided by setting those flags as below:</p>
 <table class="doxtable">
 <tr>
 <th align="left">Vel </th><th align="left">Acc </th><th align="left">Jrk </th><th align="left">Snp  </th></tr>
