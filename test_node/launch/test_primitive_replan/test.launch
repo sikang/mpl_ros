@@ -22,13 +22,13 @@
     <param name="map_name" value="/voxel_map"/>
     <param name="cloud_name" value="/cloud"/>
     <!-- Set start and goal -->
-    <param name="start_x" value="15.833"/>
-    <param name="start_y" value="4.4"/>
+    <param name="start_x" value="12.5"/>
+    <param name="start_y" value="1.4"/>
     <param name="start_z" value="0.0"/>
-    <param name="start_vx" value="0.0"/>
-    <param name="start_vy" value="2.0"/>
+    <param name="start_vx" value="1.0"/>
+    <param name="start_vy" value="0.0"/>
     <param name="start_vz" value="0.0"/>
-    <param name="start_ax" value="-1.0"/>
+    <param name="start_ax" value="0.0"/>
     <param name="start_ay" value="0.0"/>
     <param name="start_az" value="0.0"/>
     <param name="goal_x" value="6.4"/>

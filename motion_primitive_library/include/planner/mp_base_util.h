@@ -8,9 +8,8 @@
 #ifndef MP_BASE_UTIL_H
 #define MP_BASE_UTIL_H
 
-#include <planner/astar.h>
+#include <planner/graph_search.h>
 #include <planner/env_base.h>
-#include <primitive/trajectory.h>
 
 
 /**
@@ -43,6 +42,8 @@ class MPBaseUtil
      */
     void getSubStateSpace(int id);
 
+    ///Set max vel in each axis
+    void setLPAstar(bool use_lpastar);
     ///Set max vel in each axis
     void setVmax(decimal_t v);
     ///Set max acc in each axis
@@ -83,7 +84,7 @@ class MPBaseUtil
     ///Env class
     std::unique_ptr<MPL::env_base> ENV_;
     ///Planner workspace
-    std::shared_ptr<MPL::ARAStateSpace> sss_ptr_;
+    std::shared_ptr<MPL::StateSpace> sss_ptr_;
     ///Intermediate nodes in optimal trajectory
     std::vector<Waypoint> ws_;
     ///Optimal trajectory
@@ -94,6 +95,8 @@ class MPBaseUtil
     int max_num_ = -1;
     ///Maxmum time horizon of expansion, 0 means no limitation
     double max_t_ = 0;
+    ///Enable LPAstar for planning
+    bool use_lpastar_ = false;
 
 
     ///Enabled to display debug message

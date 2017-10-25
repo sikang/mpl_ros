@@ -24,6 +24,7 @@ var searchData=
   ['setdt',['setDt',['../classMPBaseUtil.html#ac72b99df0dd45eee681b6c36c34c3537',1,'MPBaseUtil']]],
   ['setepsilon',['setEpsilon',['../classMPBaseUtil.html#a6aad99835300f90624326add6e527bcd',1,'MPBaseUtil']]],
   ['setjmax',['setJmax',['../classMPBaseUtil.html#a1ebba8832eac577becf49cae059be6e1',1,'MPBaseUtil']]],
+  ['setlpastar',['setLPAstar',['../classMPBaseUtil.html#a9540a924b165c9f47d1c2c2e6666e728',1,'MPBaseUtil']]],
   ['setmap',['setMap',['../classMPL_1_1MapUtilBase.html#a818f2235f18fbdb3720ed06658a04149',1,'MPL::MapUtilBase::setMap()'],['../classMPL_1_1SubVoxelMapUtil.html#ab619774a342d220f01f164f90dd88c28',1,'MPL::SubVoxelMapUtil::setMap()'],['../classMPCloudUtil.html#a303f17a791f422204c33191f90a3828c',1,'MPCloudUtil::setMap()']]],
   ['setmaputil',['setMapUtil',['../classMPMapUtil.html#a0384f13ee684e0be0e5f59df1a8002ae',1,'MPMapUtil::setMapUtil(std::shared_ptr&lt; MPL::VoxelMapUtil &gt; map_util)'],['../classMPMapUtil.html#a4973d596240a75783445ee5cda491f4e',1,'MPMapUtil::setMapUtil(std::shared_ptr&lt; MPL::SubVoxelMapUtil &gt; map_util)']]],
   ['setmaxnum',['setMaxNum',['../classMPBaseUtil.html#a38122fae7d17f4529a7000e10d29d3cf',1,'MPBaseUtil']]],

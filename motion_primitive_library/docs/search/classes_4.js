@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['face',['Face',['../classFace.html',1,'']]]
+  ['graphsearch',['GraphSearch',['../classMPL_1_1GraphSearch.html',1,'MPL']]]
 ];

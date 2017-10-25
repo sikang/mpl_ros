@@ -338,6 +338,7 @@ int main(int argc, char ** argv){
   planner_.setU(1, false);// 2D discretization with 1
   planner_.setMode(start); // use acc as control
   planner_.setTol(1, 1, 1); // Tolerance for goal region
+  replan_planner_.setLPAstar(false); // Use Astar
 
   replan_planner_.setMapUtil(map_util); // Set collision checking function
   replan_planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
@@ -348,8 +349,9 @@ int main(int argc, char ** argv){
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(1, false);// 2D discretization with 1
-  replan_planner_.setMode(start); // use acc as control
+  replan_planner_.setMode(start); // Use acc as control
   replan_planner_.setTol(1, 1, 1); // Tolerance for goal region
+  replan_planner_.setLPAstar(true); // Use LPAstar
 
   //Planning thread!
   std_msgs::Bool init;

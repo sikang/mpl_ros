@@ -62,16 +62,15 @@ target_link_libraries(poly_solver primitive)
 
 add_library(mp_map_util src/planner/mp_map_util.cpp
   src/planner/mp_base_util.cpp
-  src/planner/astar.cpp)
+  src/planner/graph_search.cpp)
 target_link_libraries(mp_map_util primitive)
 
 
 add_library(mp_cloud_util src/planner/mp_cloud_util.cpp
   src/planner/mp_base_util.cpp
   src/collision_checking/decomp_util.cpp
-  src/planner/astar.cpp)
+  src/planner/graph_search.cpp)
 target_link_libraries(mp_cloud_util primitive ${PCL_LIBRARIES})
-
 
 
 #add_library(mp_sfc_util src/planner/mp_sfc_util.cpp

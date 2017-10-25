@@ -1,7 +1,7 @@
 var searchData=
 [
   ['pair_5fvec3f',['pair_Vec3f',['../data__type_8h.html#a8f4b636ce76b430796cf6ccfa3772149',1,'data_type.h']]],
-  ['plan',['plan',['../classMPBaseUtil.html#ae0ee4dac26b0999dd4241de79421c72a',1,'MPBaseUtil']]],
+  ['plan',['plan',['../classMPBaseUtil.html#a688d13bdfd3117f0c9647c951860511a',1,'MPBaseUtil']]],
   ['planner_5fverbose_5f',['planner_verbose_',['../classMPBaseUtil.html#ad52514a4b1f772cec7bbf571d05d8b86',1,'MPBaseUtil']]],
   ['poly_5fsolver_2eh',['poly_solver.h',['../poly__solver_8h.html',1,'']]],
   ['poly_5ftraj_2eh',['poly_traj.h',['../poly__traj_8h.html',1,'']]],
@@ -12,10 +12,9 @@ var searchData=
   ['primitive_2eh',['primitive.h',['../primitive_8h.html',1,'']]],
   ['primitive1d',['Primitive1D',['../classPrimitive1D.html',1,'Primitive1D'],['../classPrimitive1D.html#a9e2b1d851b9b09b7361e7f9bd1454736',1,'Primitive1D::Primitive1D()'],['../classPrimitive1D.html#ab9d25d6f3ffcfad2bb81f9e35e033531',1,'Primitive1D::Primitive1D(const Vec6f &amp;coeff)'],['../classPrimitive1D.html#a71e204be35cb684175fbc1ac603ee084',1,'Primitive1D::Primitive1D(decimal_t p, decimal_t u)'],['../classPrimitive1D.html#a2c5695d027bfe3d3f4d9dd1206e44bfd',1,'Primitive1D::Primitive1D(Vec2f state, decimal_t u)'],['../classPrimitive1D.html#a58cb82ad598cdb1be1e808a0bbd8dea1',1,'Primitive1D::Primitive1D(Vec3f state, decimal_t u)'],['../classPrimitive1D.html#a1d65d067f406e2fdbc675fce17e8ee84',1,'Primitive1D::Primitive1D(Vec4f state, decimal_t u)'],['../classPrimitive1D.html#ad8abb6aa1d833a6179488e928d7c5013',1,'Primitive1D::Primitive1D(decimal_t p1, decimal_t p2, decimal_t t)'],['../classPrimitive1D.html#a37a1b40f53fc0663cd7c0726d5b4703d',1,'Primitive1D::Primitive1D(decimal_t p1, decimal_t v1, decimal_t p2, decimal_t v2, decimal_t t)'],['../classPrimitive1D.html#a2b2f041e1dc06803e3817c0ccd068afa',1,'Primitive1D::Primitive1D(decimal_t p1, decimal_t v1, decimal_t a1, decimal_t p2, decimal_t v2, decimal_t a2, decimal_t t)']]],
   ['primitive_5futil_2eh',['primitive_util.h',['../primitive__util_8h.html',1,'']]],
-  ['primitives',['primitives',['../classMPL_1_1env__base.html#abcc244e8f2178e7da2c8d6fe1dbc87b7',1,'MPL::env_base']]],
   ['print',['print',['../structWaypoint.html#a9cd2c20c1d32ed8c4cb5eb5b125817af',1,'Waypoint']]],
   ['print_5fcoeffs',['print_coeffs',['../primitive__util_8h.html#a6a19aeb51fc7f9a191f0fff0398fe351',1,'primitive_util.cpp']]],
   ['print_5fmax',['print_max',['../primitive__util_8h.html#a97ad0b9667c934402eb9fc1aa2cf9d70',1,'primitive_util.cpp']]],
-  ['priorityqueue',['priorityQueue',['../namespaceMPL.html#a10b0dac04495f8fa3300db27366896bb',1,'MPL']]],
-  ['ps',['ps',['../classMPL_1_1env__base.html#a9ae5f217cacfe1fa2d578b15114d52db',1,'MPL::env_base']]]
+  ['prior_5ftraj_5f',['prior_traj_',['../classMPL_1_1env__base.html#a6ac77c8b3520b26b344b061c04affd70',1,'MPL::env_base']]],
+  ['priorityqueue',['priorityQueue',['../namespaceMPL.html#af10a63545f5d7e532249379196d7f84c',1,'MPL']]]
 ];

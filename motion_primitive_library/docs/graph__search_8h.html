@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MRSL Motion Primitive Library: include/planner/astar.h File Reference</title>
+<title>MRSL Motion Primitive Library: include/planner/graph_search.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,11 +69,11 @@ $(function() {
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
-<div class="title">astar.h File Reference</div>  </div>
+<div class="title">graph_search.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>backend of graph search, implemetation of A* and ARA*  
+<p>backend of graph search, implemetation of A* and Lifelong Planning A*  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;boost/heap/d_ary_heap.hpp&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
@@ -81,25 +81,23 @@ $(function() {
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
-<code>#include &lt;list&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;<a class="el" href="trajectory_8h_source.html">primitive/trajectory.h</a>&gt;</code><br />
 </div>
-<p><a href="astar_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="graph__search_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1compare__pair.html">MPL::compare_pair&lt; arastate &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1compare__pair.html">MPL::compare_pair&lt; state &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heap element comparison.  <a href="structMPL_1_1compare__pair.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1ARAState.html">MPL::ARAState&lt; state &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ARA state definition.  <a href="structMPL_1_1ARAState.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1State.html">MPL::State</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lattice of the graph in graph search.  <a href="structMPL_1_1State.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1ARAStateSpace.html">MPL::ARAStateSpace&lt; state &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">State space.  <a href="structMPL_1_1ARAStateSpace.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMPL_1_1StateSpace.html">MPL::StateSpace</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structMPL_1_1State.html" title="Lattice of the graph in graph search. ">State</a> space.  <a href="structMPL_1_1StateSpace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1ARAStar.html">MPL::ARAStar&lt; state &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classMPL_1_1ARAStar.html" title="ARAStar class. ">ARAStar</a> class.  <a href="classMPL_1_1ARAStar.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1GraphSearch.html">MPL::GraphSearch</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classMPL_1_1GraphSearch.html" title="GraphSearch class. ">GraphSearch</a> class.  <a href="classMPL_1_1GraphSearch.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -109,22 +107,22 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac469f005b0bd9eccdf4b379519e3143e"><td class="memItemLeft" align="right" valign="top">typedef std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">MPL::Key</a></td></tr>
-<tr class="memdesc:ac469f005b0bd9eccdf4b379519e3143e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key for hashmap.  <a href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">More...</a><br /></td></tr>
-<tr class="separator:ac469f005b0bd9eccdf4b379519e3143e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea131d0be35614ed539f1e7fdf6847eb"><td class="memTemplParams" colspan="2"><a id="aea131d0be35614ed539f1e7fdf6847eb"></a>
-template&lt;class arastate &gt; </td></tr>
-<tr class="memitem:aea131d0be35614ed539f1e7fdf6847eb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#aea131d0be35614ed539f1e7fdf6847eb">MPL::hashMap</a> = std::unordered_map&lt; Key, std::shared_ptr&lt; arastate &gt; &gt;</td></tr>
-<tr class="memdesc:aea131d0be35614ed539f1e7fdf6847eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define hashmap type. <br /></td></tr>
-<tr class="separator:aea131d0be35614ed539f1e7fdf6847eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10b0dac04495f8fa3300db27366896bb"><td class="memTemplParams" colspan="2"><a id="a10b0dac04495f8fa3300db27366896bb"></a>
-template&lt;class arastate &gt; </td></tr>
-<tr class="memitem:a10b0dac04495f8fa3300db27366896bb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#a10b0dac04495f8fa3300db27366896bb">MPL::priorityQueue</a> = boost::heap::d_ary_heap&lt; std::pair&lt; double, std::shared_ptr&lt; arastate &gt; &gt;, boost::heap::mutable_&lt; true &gt;, boost::heap::arity&lt; 2 &gt;, boost::heap::compare&lt; compare_pair&lt; arastate &gt; &gt; &gt;</td></tr>
-<tr class="memdesc:a10b0dac04495f8fa3300db27366896bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define priority queue. <br /></td></tr>
-<tr class="separator:a10b0dac04495f8fa3300db27366896bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae25392099da7ae52dcdb3ae0d08d03f3"><td class="memTemplParams" colspan="2"><a id="ae25392099da7ae52dcdb3ae0d08d03f3"></a>
+template&lt;class state &gt; </td></tr>
+<tr class="memitem:ae25392099da7ae52dcdb3ae0d08d03f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#ae25392099da7ae52dcdb3ae0d08d03f3">MPL::hashMap</a> = std::unordered_map&lt; Key, std::shared_ptr&lt; state &gt; &gt;</td></tr>
+<tr class="memdesc:ae25392099da7ae52dcdb3ae0d08d03f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define hashmap type. <br /></td></tr>
+<tr class="separator:ae25392099da7ae52dcdb3ae0d08d03f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10a63545f5d7e532249379196d7f84c"><td class="memTemplParams" colspan="2"><a id="af10a63545f5d7e532249379196d7f84c"></a>
+template&lt;class state &gt; </td></tr>
+<tr class="memitem:af10a63545f5d7e532249379196d7f84c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMPL.html#af10a63545f5d7e532249379196d7f84c">MPL::priorityQueue</a> = boost::heap::d_ary_heap&lt; std::pair&lt; double, std::shared_ptr&lt; state &gt; &gt;, boost::heap::mutable_&lt; true &gt;, boost::heap::arity&lt; 2 &gt;, boost::heap::compare&lt; compare_pair&lt; state &gt; &gt; &gt;</td></tr>
+<tr class="memdesc:af10a63545f5d7e532249379196d7f84c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define priority queue. <br /></td></tr>
+<tr class="separator:af10a63545f5d7e532249379196d7f84c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3801daa412c74da0b8ccb3ecfb4ec19f"><td class="memItemLeft" align="right" valign="top"><a id="a3801daa412c74da0b8ccb3ecfb4ec19f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>MPL::StatePtr</b> = std::shared_ptr&lt; State &gt;</td></tr>
+<tr class="separator:a3801daa412c74da0b8ccb3ecfb4ec19f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>backend of graph search, implemetation of A* and ARA* </p>
+<div class="textblock"><p>backend of graph search, implemetation of A* and Lifelong Planning A* </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

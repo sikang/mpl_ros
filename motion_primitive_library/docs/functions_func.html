@@ -70,7 +70,7 @@ $(function() {
 : <a class="el" href="classPolyTraj.html#a7ffc377b1fc429841a37ca8b21afd1e1">PolyTraj</a>
 </li>
 <li>Astar()
-: <a class="el" href="classMPL_1_1ARAStar.html#ad42c05d962b6b7d4eecc2e5d34964dcb">MPL::ARAStar&lt; state &gt;</a>
+: <a class="el" href="classMPL_1_1GraphSearch.html#a8c500e1c0310a18165c530db4e59eba1">MPL::GraphSearch</a>
 </li>
 </ul>
 
@@ -137,22 +137,28 @@ $(function() {
 , <a class="el" href="classMPL_1_1VoxelMapUtil.html#a81da9b804502fc265f8bce9cedf5c751">MPL::VoxelMapUtil</a>
 </li>
 <li>forward_action()
-: <a class="el" href="classMPL_1_1env__base.html#a9f8994bd6d04e3ae251bb9ca4096963d">MPL::env_base</a>
+: <a class="el" href="classMPL_1_1env__base.html#a170c52f4d73bfdd660720e0792c9a0cc">MPL::env_base</a>
 </li>
 </ul>
 
 
 <h3><a id="index_g"></a>- g -</h3><ul>
 <li>get_dt()
-: <a class="el" href="classMPL_1_1env__base.html#a2249af817b9f8fdaae133f42473a1b1e">MPL::env_base</a>
+: <a class="el" href="classMPL_1_1env__base.html#ad20696e1a80eea534985a1be87735e1b">MPL::env_base</a>
 </li>
 <li>get_heur()
-: <a class="el" href="classMPL_1_1env__base.html#ac9e994df3ed3c123cb01c6ce3411823d">MPL::env_base</a>
+: <a class="el" href="classMPL_1_1env__base.html#aa85f1858e00de899de7a6156e834adcd">MPL::env_base</a>
 </li>
 <li>get_succ()
-: <a class="el" href="classMPL_1_1env__base.html#aa31d33e44f5a65b548037fd0e1faad8a">MPL::env_base</a>
+: <a class="el" href="classMPL_1_1env__base.html#add85a24c2e7bcdbcfde00c80fee083d3">MPL::env_base</a>
 , <a class="el" href="classMPL_1_1env__cloud.html#aa70d9986ca84bb12ada06ead5d03b63a">MPL::env_cloud</a>
-, <a class="el" href="classMPL_1_1env__map.html#a5f2594c7e838309ef9383c8630cbb519">MPL::env_map</a>
+, <a class="el" href="classMPL_1_1env__map.html#aa01f25b506bb2e5af18046673ef87d43">MPL::env_map</a>
+</li>
+<li>getAllPrimitives()
+: <a class="el" href="classMPBaseUtil.html#a8488265370b0ffa81bddfd75415a38fb">MPBaseUtil</a>
+</li>
+<li>getCloseSet()
+: <a class="el" href="classMPBaseUtil.html#a4c8e877898b1c4f8dce0a65126ea4622">MPBaseUtil</a>
 </li>
 <li>getCloud()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#a7484fbb0e2c3ed12ffa0cace39f8992a">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
@@ -161,15 +167,21 @@ $(function() {
 <li>getDim()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#ad151ae14062bbbac2f5270d6697d9286">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 </li>
-<li>getDts()
-: <a class="el" href="classMPBaseUtil.html#ad5e6118bdaec1f862286a5594376781f">MPBaseUtil</a>
+<li>getExpandedNodes()
+: <a class="el" href="classMPBaseUtil.html#a8e2078161a19e768d615a9318d7e6355">MPBaseUtil</a>
 </li>
 <li>getIndex()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#af75ee4a39fde320876c37f52050ef3f3">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 , <a class="el" href="classMPL_1_1VoxelMapUtil.html#a5061722661d22fd8f615fd98c5708914">MPL::VoxelMapUtil</a>
 </li>
+<li>getLinkedNodes()
+: <a class="el" href="classMPMapUtil.html#a4776ce09a542593304569ac76aca59e9">MPMapUtil</a>
+</li>
 <li>getMap()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#ad121768e086ec3d31e49cba615709ffc">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
+</li>
+<li>getOpenSet()
+: <a class="el" href="classMPBaseUtil.html#abd774b351f528f9257db3f5876c77471">MPBaseUtil</a>
 </li>
 <li>getOrigin()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#ab61c6dcb2b2a1a7345c79c67c3b4c338">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
@@ -177,33 +189,36 @@ $(function() {
 <li>getPolyhedra()
 : <a class="el" href="classMPCloudUtil.html#a6e0992436c35fa6013d0d5f908db8796">MPCloudUtil</a>
 </li>
-<li>getPrimitives()
-: <a class="el" href="classMPBaseUtil.html#a81f67cb3ab47a252790794644fe2cb72">MPBaseUtil</a>
-</li>
-<li>getPs()
-: <a class="el" href="classMPBaseUtil.html#adf24eba4e80dbd21a6e543e678de166c">MPBaseUtil</a>
-</li>
 <li>getRes()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#a58aae164dcfc96d689743efe5e2038ff">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 </li>
 <li>getSegsT()
 : <a class="el" href="classTrajectory.html#a13c112898c1f72e8a27fc67b3cdef211">Trajectory</a>
 </li>
+<li>getSubStateSpace()
+: <a class="el" href="classMPBaseUtil.html#a7b9ae838af2bcfeb27d963275ed7887f">MPBaseUtil</a>
+</li>
 <li>getTotalTime()
 : <a class="el" href="classPolyTraj.html#a6855a989ddf5ad5d922e69f7cf7440dd">PolyTraj</a>
 , <a class="el" href="classTrajectory.html#ad1e100ce61c43876dbe3fa66b4bf3f3f">Trajectory</a>
 </li>
 <li>getTraj()
-: <a class="el" href="classMPBaseUtil.html#a4690352b033fe627db0565802d4a966c">MPBaseUtil</a>
+: <a class="el" href="classMPBaseUtil.html#aad2dff2616a3d212fc3a22c5cabcf3a8">MPBaseUtil</a>
 </li>
 <li>getTrajectory()
 : <a class="el" href="classPolySolver.html#a0ba6ebeaf03052445baa1702ef531988">PolySolver</a>
 </li>
+<li>getValidPrimitives()
+: <a class="el" href="classMPBaseUtil.html#a02018a52f81c20d4b8c017c2ca7c1350">MPBaseUtil</a>
+</li>
 <li>getWs()
-: <a class="el" href="classMPBaseUtil.html#a4dc8603059c2852eb077df03b80ad564">MPBaseUtil</a>
+: <a class="el" href="classMPBaseUtil.html#ae9f6683380b22548a1d1136319ff463e">MPBaseUtil</a>
 </li>
 <li>goal_outside()
 : <a class="el" href="classMPL_1_1env__base.html#a18d8dfe720dafe2fde2d4e2acef00d33">MPL::env_base</a>
+</li>
+<li>GraphSearch()
+: <a class="el" href="classMPL_1_1GraphSearch.html#a32b762065c805a769d55c64c662d4fc5">MPL::GraphSearch</a>
 </li>
 </ul>
 
@@ -214,6 +229,9 @@ $(function() {
 , <a class="el" href="classMPL_1_1MapUtilBase.html#a5722e0c3f2f41590d0749ab8b4becc1c">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 , <a class="el" href="classMPL_1_1SubVoxelMapUtil.html#a45e8ad321659adaa4558838191222759">MPL::SubVoxelMapUtil</a>
 , <a class="el" href="classMPL_1_1VoxelMapUtil.html#a0c3b85dd284604da4311887f923ecf2b">MPL::VoxelMapUtil</a>
+</li>
+<li>initialized()
+: <a class="el" href="classMPBaseUtil.html#ac85cb14fc0221deb0179867369621d33">MPBaseUtil</a>
 </li>
 <li>insidePolyhedron()
 : <a class="el" href="classDecompUtil.html#a6047f9036992d27f5769697b02f2ad49">DecompUtil</a>
@@ -234,7 +252,7 @@ $(function() {
 : <a class="el" href="classMPL_1_1MapUtilBase.html#a6e8ddc978a212b8570523091b51df2c2">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 </li>
 <li>isFree()
-: <a class="el" href="classDecompUtil.html#a6cc47e76846c86c150aab67116b385d0">DecompUtil</a>
+: <a class="el" href="classDecompUtil.html#a0d54bc0180088d4339cf754b5288a5bd">DecompUtil</a>
 , <a class="el" href="classMPL_1_1MapUtilBase.html#accbe27fdc54c656af07e4bcaa9457599">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 </li>
 <li>isOccupied()
@@ -266,6 +284,9 @@ $(function() {
 <h3><a id="index_l"></a>- l -</h3><ul>
 <li>lambda()
 : <a class="el" href="classTrajectory.html#a95bd1ec2a088a09e578699743ab59af0">Trajectory</a>
+</li>
+<li>LPAstar()
+: <a class="el" href="classMPL_1_1GraphSearch.html#a57cc2393ed2bad010125715780a9c624">MPL::GraphSearch</a>
 </li>
 </ul>
 
@@ -304,7 +325,7 @@ $(function() {
 
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>plan()
-: <a class="el" href="classMPBaseUtil.html#ae0ee4dac26b0999dd4241de79421c72a">MPBaseUtil</a>
+: <a class="el" href="classMPBaseUtil.html#a688d13bdfd3117f0c9647c951860511a">MPBaseUtil</a>
 </li>
 <li>polyhedra()
 : <a class="el" href="classDecompUtil.html#a2d6f9eeb5dc43f6de3bec69a0d9f0c09">DecompUtil</a>
@@ -318,19 +339,13 @@ $(function() {
 : <a class="el" href="classPolyTraj.html#a770c3cbf6ab7c6112672516c84c5dca8">PolyTraj</a>
 </li>
 <li>Primitive()
-: <a class="el" href="classPrimitive.html#ae6b6e9440d482575d1dcbf77a936c201">Primitive</a>
+: <a class="el" href="classPrimitive.html#a81784280371418d819d60ae73259c11e">Primitive</a>
 </li>
 <li>Primitive1D()
-: <a class="el" href="classPrimitive1D.html#a2c5695d027bfe3d3f4d9dd1206e44bfd">Primitive1D</a>
-</li>
-<li>primitives()
-: <a class="el" href="classMPL_1_1env__base.html#abcc244e8f2178e7da2c8d6fe1dbc87b7">MPL::env_base</a>
+: <a class="el" href="classPrimitive1D.html#a9e2b1d851b9b09b7361e7f9bd1454736">Primitive1D</a>
 </li>
 <li>print()
 : <a class="el" href="structWaypoint.html#a9cd2c20c1d32ed8c4cb5eb5b125817af">Waypoint</a>
-</li>
-<li>ps()
-: <a class="el" href="classMPL_1_1env__base.html#a9ae5f217cacfe1fa2d578b15114d52db">MPL::env_base</a>
 </li>
 </ul>
 
@@ -339,6 +354,9 @@ $(function() {
 <li>rayTrace()
 : <a class="el" href="classMPL_1_1MapUtilBase.html#a5733a2395b0cb7f68a50c90ad6766a87">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
 , <a class="el" href="classMPL_1_1VoxelMapUtil.html#ac8314acb23114af729c138abdb481810">MPL::VoxelMapUtil</a>
+</li>
+<li>recoverTraj()
+: <a class="el" href="classMPL_1_1GraphSearch.html#aa27d959c5d6fc2124e44ef9665d518b0">MPL::GraphSearch</a>
 </li>
 </ul>
 
@@ -419,6 +437,9 @@ $(function() {
 <li>setJmax()
 : <a class="el" href="classMPBaseUtil.html#a1ebba8832eac577becf49cae059be6e1">MPBaseUtil</a>
 </li>
+<li>setLPAstar()
+: <a class="el" href="classMPBaseUtil.html#a9540a924b165c9f47d1c2c2e6666e728">MPBaseUtil</a>
+</li>
 <li>setMap()
 : <a class="el" href="classMPCloudUtil.html#a303f17a791f422204c33191f90a3828c">MPCloudUtil</a>
 , <a class="el" href="classMPL_1_1MapUtilBase.html#a818f2235f18fbdb3720ed06658a04149">MPL::MapUtilBase&lt; Ti, Tf, Tmap &gt;</a>
@@ -443,7 +464,7 @@ $(function() {
 : <a class="el" href="classMPBaseUtil.html#ae3fa1886d1d5d75ca5f4e73948761a04">MPBaseUtil</a>
 </li>
 <li>setU()
-: <a class="el" href="classMPBaseUtil.html#a5ca52f3dd5e3c60342cd73d02fae27e5">MPBaseUtil</a>
+: <a class="el" href="classMPBaseUtil.html#a44942d69c4178352b16987704aa7b1de">MPBaseUtil</a>
 </li>
 <li>setUmax()
 : <a class="el" href="classMPBaseUtil.html#a023d1a4a78bb49399626530bf985f814">MPBaseUtil</a>
@@ -478,6 +499,13 @@ $(function() {
 </li>
 <li>Trajectory()
 : <a class="el" href="classTrajectory.html#aa340ba80f1f4d1aa39f19f069d5d8089">Trajectory</a>
+</li>
+</ul>
+
+
+<h3><a id="index_u"></a>- u -</h3><ul>
+<li>updateBlockedNodes()
+: <a class="el" href="classMPMapUtil.html#a0de44ee59f99c9dd5c35d9653cb2dec9">MPMapUtil</a>
 </li>
 </ul>
 

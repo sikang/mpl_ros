@@ -42,7 +42,11 @@ class env_base
      return goaled;
     }
 
-    ///Heuristic function 
+    /**
+     * @brief Heuristic function 
+     * @param Waypoint current state coord
+     * @param t current state time
+     */
     double get_heur(const Waypoint& state, double t) const
     {
       Waypoint goal_node = goal_node_;

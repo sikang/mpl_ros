@@ -10,6 +10,14 @@ bool MPBaseUtil::initialized() {
   return !(sss_ptr_ == nullptr);
 }
 
+void MPBaseUtil::setLPAstar(bool use_lpastar) {
+  use_lpastar_ =  use_lpastar;
+  if(use_lpastar_)
+    printf("[MPBaseUtil] use Lifelong Planning A*\n");
+  else
+    printf("[MPBaseUtil] use normal A*\n");
+}
+
 void MPBaseUtil::setEpsilon(decimal_t eps) {
   epsilon_ = eps;
   if(planner_verbose_)
@@ -213,11 +221,11 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
     return false;
   }
  
-  std::unique_ptr<MPL::ARAStar> planner_ptr(new MPL::ARAStar());
+  std::unique_ptr<MPL::GraphSearch> planner_ptr(new MPL::GraphSearch(true));
 
   if(!replan) {
     printf(ANSI_COLOR_CYAN "[MPPlanner] reset planner state space!" ANSI_COLOR_RESET "\n");
-    sss_ptr_.reset(new MPL::ARAStateSpace(epsilon_));
+    sss_ptr_.reset(new MPL::StateSpace(epsilon_));
   }
 
   ENV_->set_goal(goal);
@@ -225,7 +233,10 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
   ENV_->expanded_nodes_.clear();
 
   sss_ptr_->dt = ENV_->get_dt();
-  planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_, max_t_);
+  if(use_lpastar_)
+    planner_ptr->LPAstar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_, max_t_);
+  else
+    planner_ptr->Astar(start, ENV_->state_to_idx(start), *ENV_, sss_ptr_, traj_, max_num_, max_t_);
 
   if (traj_.segs.empty()) {
     if(planner_verbose_)
