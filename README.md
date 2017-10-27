@@ -1,10 +1,11 @@
 MRSL Motion Primitive Library ROS
 =====================
 A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Stacks include:
+  - `decomp_ros`: convex decomposition tools for generating ellipsoid and polyhedron
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
   - `planning_ros_utils`: ROS utils for interfacing with MPL
-  - `test_node`: examples
+  - `test_node`: examples code for simple testing
 
 ## Compilation
 Prerequisite:
@@ -53,7 +54,7 @@ Another example using ellipsoid model can be found in `test_node/launch/test_pri
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
-<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> <img src="./test_node/samples/sample3.png" width="256"> 
+<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> <img src="./test_node/samples/sample3.png" width="300"> 
 
 The built-in maps are listed as below:
 
