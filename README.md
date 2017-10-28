@@ -11,7 +11,6 @@ A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.
 Prerequisite:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
-  - `QT`(4+)
 
 Using Catkin:
 ```sh

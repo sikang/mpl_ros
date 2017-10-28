@@ -7,6 +7,7 @@
 #define ENV_MP_H
 #include <planner/env_base.h>
 #include <primitive/primitive.h>
+#include <unordered_map>
 #include <collision_checking/voxel_map_util.h>
 #include <collision_checking/sub_voxel_map_util.h>
 
@@ -17,6 +18,9 @@ namespace MPL {
  */
 class env_map : public env_base
 {
+  ///Lookup table for voxels
+  using lookUpTable = std::unordered_map<Key, vec_Vec3i>;
+
 
   public:
     std::shared_ptr<VoxelMapUtil> map_util_;
@@ -125,6 +129,8 @@ class env_map : public env_base
 
 
     }
+
+    lookUpTable collision_checking_table_;
 
 };
 }

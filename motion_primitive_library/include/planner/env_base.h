@@ -242,16 +242,29 @@ class env_base
     Key state_to_idx(const Waypoint& state) const
     {
       Vec3i pi = (state.pos/ds_).cast<int>();
-      Vec3i vi = (state.vel/dv_).cast<int>();
-      if(!state.use_acc )
-        return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) + "-" +
-          std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2));
-      else {
+      if(state.use_pos && state.use_vel && !state.use_acc ) {
+        Vec3i vi = (state.vel/dv_).cast<int>();
+      return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) + "-" +
+        std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2));
+      }
+      else if(state.use_pos && state.use_vel && state.use_acc && !state.use_jrk) {
+        Vec3i vi = (state.vel/dv_).cast<int>();
         Vec3i ai = (state.acc/da_).cast<int>();
         return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) + "-" +
           std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2)) + "-" +
           std::to_string(ai(0)) + "-" + std::to_string(ai(1)) + "-" + std::to_string(ai(2));
-     }
+      }
+      else if(state.use_pos && state.use_vel && state.use_acc && state.use_jrk) {
+        Vec3i vi = (state.vel/dv_).cast<int>();
+        Vec3i ai = (state.acc/da_).cast<int>();
+        Vec3i ji = (state.jrk/dj_).cast<int>();
+        return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2)) + "-" +
+          std::to_string(vi(0)) + "-" + std::to_string(vi(1)) + "-" + std::to_string(vi(2)) + "-" +
+          std::to_string(ai(0)) + "-" + std::to_string(ai(1)) + "-" + std::to_string(ai(2)) + "-" +
+          std::to_string(ji(0)) + "-" + std::to_string(ji(1)) + "-" + std::to_string(ji(2));
+      }
+      else 
+        return std::to_string(pi(0)) + "-" + std::to_string(pi(1)) + "-" + std::to_string(pi(2));
     }
 
     ///Recover trajectory
@@ -434,7 +447,7 @@ class env_base
     //weight of time cost
     double w_ = 10; 
     ///order of derivatives for effort
-    int wi_ = -1; 
+    int wi_; 
     //heuristic time offset
     int alpha_ = 0;
 
@@ -449,7 +462,7 @@ class env_base
     double j_max_ = -1;
     double t_max_ = -1;
     double dt_ = 1.0;
-    double ds_ = 0.001, dv_ = 0.001, da_ = 0.01;
+    double ds_ = 0.01, dv_ = 0.001, da_ = 0.01, dj_ = 0.01;
 
     ///Array of constant control input
     vec_Vec3f U_;
@@ -459,6 +472,7 @@ class env_base
     Waypoint goal_node_;
     ///Prior trajectory
     Trajectory prior_traj_;
+
 };
 }
 
