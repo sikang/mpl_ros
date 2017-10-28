@@ -115,7 +115,6 @@ namespace planning_rviz_plugins {
           visual->setMessage(mav_to_path(paths_.paths[i]));
           visual->setFramePosition(position_);
           visual->setFrameOrientation(orientation_);
-          visual->setNumLines(paths_.paths.size() + 1);
         }
         visual->addMessage(mav_to_path(paths_.paths[i]));
       }

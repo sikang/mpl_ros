@@ -18,7 +18,6 @@ namespace planning_rviz_plugins {
 
       virtual ~PathVisual();
 
-      void setNumLines(int n);
       void setMessage(const vec_Vec3f &path);
       void addMessage(const vec_Vec3f &path);
 
@@ -31,12 +30,11 @@ namespace planning_rviz_plugins {
       void setNodeScale(float s);
 
     private:
-      std::unique_ptr<rviz::BillboardLine> line_;
+      std::vector<std::unique_ptr<rviz::BillboardLine>> lines_;
       std::vector<std::unique_ptr<rviz::Shape>> nodes_;
 
       Ogre::SceneNode *frame_node_;
       Ogre::SceneManager *scene_manager_;
-      int line_num_ = 1;
   };
 }
 
