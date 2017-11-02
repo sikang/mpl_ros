@@ -49,7 +49,7 @@ goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], 
 ================== Traj -- total J: 9.000000, total time: 10.000000
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
 ```
-Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`.
+Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacle course, and the robot is modeled as ellipsoid. More information will be updated later. 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 

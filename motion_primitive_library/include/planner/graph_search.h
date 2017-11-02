@@ -3,8 +3,8 @@
  * @brief backend of graph search, implemetation of A* and Lifelong Planning A*
  */
 
-#ifndef ASTAR_H
-#define ASTAR_H
+#ifndef GRAPH_SEARCH_H
+#define GRAPH_SEARCH_H
 
 #include <boost/heap/d_ary_heap.hpp>      // boost::heap::d_ary_heap
 #include <memory>                         // std::shared_ptr
