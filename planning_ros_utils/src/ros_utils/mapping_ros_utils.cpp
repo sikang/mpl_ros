@@ -1,6 +1,6 @@
 #include <ros_utils/mapping_ros_utils.h>
 
-void setMap(MPL::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg) {
+void setMap(std::shared_ptr<MPL::VoxelMapUtil> map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
   Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);
   decimal_t res = msg.info.resolution;
@@ -10,7 +10,7 @@ void setMap(MPL::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg)
 }
 
 
-void getMap(MPL::VoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map) {
+void getMap(std::shared_ptr<MPL::VoxelMapUtil> map_util, planning_ros_msgs::VoxelMap& map) {
   Vec3f ori = map_util->getOrigin();
   Vec3i dim = map_util->getDim();
   decimal_t res = map_util->getRes();
@@ -28,6 +28,7 @@ void getMap(MPL::VoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map) {
 }
 
 
+/*
 void setMap(MPL::SubVoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
   Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);
@@ -56,7 +57,6 @@ void getMap(MPL::SubVoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map) {
   map.data = map_util->getSubMap();
 }
 
-/*
 void setMap(JPS::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
   Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);

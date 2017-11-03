@@ -61,7 +61,7 @@ int main(int argc, char ** argv){
 
   //Initialize map util 
   std::shared_ptr<MPL::VoxelMapUtil> map_util(new MPL::VoxelMapUtil);
-  setMap(map_util.get(), map);
+  setMap(map_util, map);
 
   //Free unknown space and dilate obstacles
   map_util->freeUnKnown();
@@ -70,7 +70,7 @@ int main(int argc, char ** argv){
 
 
   //Publish the dilated map for visualization
-  getMap(map_util.get(), map);
+  getMap(map_util, map);
   map.header = header_;
   map_pub.publish(map);
 

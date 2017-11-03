@@ -151,12 +151,12 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
 
-  setMap(map_util.get(), map);
+  setMap(map_util, map);
 
   map_util->freeUnKnown();
 
   //Publish the dilated map for visualization
-  getMap(map_util.get(), map);
+  getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
 
@@ -186,12 +186,12 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
 
-  setMap(map_util.get(), map);
+  setMap(map_util, map);
 
   map_util->freeUnKnown();
 
   //Publish the dilated map for visualization
-  getMap(map_util.get(), map);
+  getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
 
@@ -266,7 +266,7 @@ int main(int argc, char ** argv){
 
   //Initialize map util 
   map_util.reset(new MPL::VoxelMapUtil);
-  setMap(map_util.get(), map);
+  setMap(map_util, map);
 
   //Free unknown space and dilate obstacles
   map_util->freeUnKnown();
@@ -275,7 +275,7 @@ int main(int argc, char ** argv){
 
 
   //Publish the dilated map for visualization
-  getMap(map_util.get(), map);
+  getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
 
@@ -338,7 +338,7 @@ int main(int argc, char ** argv){
   planner_.setU(1, false);// 2D discretization with 1
   planner_.setMode(start); // use acc as control
   planner_.setTol(1, 1, 1); // Tolerance for goal region
-  replan_planner_.setLPAstar(false); // Use Astar
+  planner_.setLPAstar(false); // Use Astar
 
   replan_planner_.setMapUtil(map_util); // Set collision checking function
   replan_planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)

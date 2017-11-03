@@ -155,7 +155,7 @@ BoundVec3f MapDisplay::getSpace() {
 void MapDisplay::processMessage(
     const planning_ros_msgs::VoxelMapConstPtr &msg) {
   header_ = msg->header;
-  setMap(map_util_.get(), *msg);
+  setMap(map_util_, *msg);
 
   Ogre::Quaternion orientation;
   Ogre::Vector3 position;

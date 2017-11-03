@@ -10,11 +10,11 @@
 #include <planning_ros_msgs/VoxelMap.h>
 #include <sensor_msgs/PointCloud.h>
 
-void setMap(MPL::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg);
-void getMap(MPL::VoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map);
+void setMap(std::shared_ptr<MPL::VoxelMapUtil> map_util, const planning_ros_msgs::VoxelMap& msg);
+void getMap(std::shared_ptr<MPL::VoxelMapUtil> map_util, planning_ros_msgs::VoxelMap& map);
 
-void setMap(MPL::SubVoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg);
-void getMap(MPL::SubVoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map);
+//void setMap(MPL::SubVoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg);
+//void getMap(MPL::SubVoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map);
 
 //void setMap(JPS::VoxelMapUtil* map_util, const planning_ros_msgs::VoxelMap& msg);
 //void getMap(JPS::VoxelMapUtil* map_util, planning_ros_msgs::VoxelMap& map);

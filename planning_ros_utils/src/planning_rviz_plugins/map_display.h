@@ -51,7 +51,7 @@ namespace planning_rviz_plugins {
         rviz::PointCloudCommon *point_cloud_common_;
         boost::circular_buffer<boost::shared_ptr<BoundVisual>> visuals_;
 
-        std::unique_ptr<MPL::VoxelMapUtil> map_util_;
+        std::shared_ptr<MPL::VoxelMapUtil> map_util_;
 
         std_msgs::Header header_;
     };
