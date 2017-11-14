@@ -3,11 +3,8 @@
 
 #include <motion_primitive_library/data_type.h>
 #include <sensor_msgs/PointCloud.h>
-#include <planning_ros_msgs/Polyhedra.h>
 #include <planning_ros_msgs/Path.h>
-#include <planning_ros_msgs/Mesh.h>
 #include <planning_ros_msgs/Arrows.h>
-#include <planning_ros_msgs/Ellipsoids.h>
 #include <tf_conversions/tf_eigen.h>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/Twist.h>
@@ -137,117 +134,6 @@ inline vec_Vec3f mav_to_path(const planning_ros_msgs::Path& msg) {
   for (const auto &it : msg.waypoints)
     path.push_back(Vec3f(it.x, it.y, it.z));
   return path;
-}
-
-inline Polyhedra mav_to_polyhedra(const planning_ros_msgs::Polyhedra& msg){
-  Polyhedra polys;
-  for(const auto& polyhedron: msg.polyhedra){
-    Polyhedron p;
-    for(unsigned int i = 0; i < polyhedron.points.size(); i++){
-      Vec3f pt(polyhedron.points[i].x,
-               polyhedron.points[i].y,
-               polyhedron.points[i].z);
-      Vec3f n(polyhedron.normals[i].x,
-              polyhedron.normals[i].y,
-              polyhedron.normals[i].z);
-      if(polyhedron.passes.empty())
-        p.push_back(Face(pt, n));
-      else
-        p.push_back(Face(pt, n, polyhedron.passes[i]));
-    }
-    polys.push_back(p);
-  }
-  return polys;
-}
-
-inline planning_ros_msgs::Polyhedra polyhedra_to_mav(const Polyhedra& vs){
-  planning_ros_msgs::Polyhedra poly;
-  for (const auto &v : vs) {
-    planning_ros_msgs::Polyhedron f;
-    for (const auto &p : v) {
-      geometry_msgs::Point pt, n;
-      pt.x = p.p(0);
-      pt.y = p.p(1);
-      pt.z = p.p(2);
-      n.x = p.n(0);
-      n.y = p.n(1);
-      n.z = p.n(2);
-      f.points.push_back(pt);
-      f.normals.push_back(n);
-      f.passes.push_back(p.pass);
-    }
-    poly.polyhedra.push_back(f);
-  }
-
-  return poly;
-}
-
-inline planning_ros_msgs::Ellipsoids ellipsoids_to_mav(const vec_Ellipsoid& Es) {
-  planning_ros_msgs::Ellipsoids ellipsoids;
-  for (unsigned int i = 0; i < Es.size(); i++) {
-    planning_ros_msgs::Ellipsoid ellipsoid;
-    ellipsoid.d[0] = Es[i].second(0);
-    ellipsoid.d[1] = Es[i].second(1);
-    ellipsoid.d[2] = Es[i].second(2);
-
-    for (int x = 0; x < 3; x++)
-      for (int y = 0; y < 3; y++)
-        ellipsoid.E[3 * x + y] = Es[i].first(x, y);
-    ellipsoids.ellipsoids.push_back(ellipsoid);
-  }
-
-  return ellipsoids;
-}
-
-
-inline Polyhedron vertices_to_poly(const BoundVec3f& vs) {
-  Polyhedron pl;
-  if(vs.size() < 4)
-  {
-    printf("cannot form a polyhedron as the num of faces %zu < 4\n", vs.size());
-    return pl;
-  }
-
-  vec_Vec3f cs;
-  for(const auto &v: vs) {
-    Vec3f center = Vec3f::Zero();
-    for(const auto &pt: v)
-      center += pt;
-    center /= v.size();
-    cs.push_back(center);
-  }
-
-  for(int i = 0; i < (int)vs.size(); i++) {
-    Vec3f p = cs[i];
-    Vec3f n = (p - vs[i][0]).cross(p-vs[i][1]);
-    n = n.normalized();
-    int j = i + 1;
-    if(j >= (int)vs.size())
-      j = 0;
-    if(n.dot(cs[j]-cs[i]) > 0)
-      n = -n;
-
-    pl.push_back(Face(p, n, true));
-  }
-
-  return pl;
-}
-
-inline planning_ros_msgs::Mesh bound_to_mesh(const BoundVec3f& bds) {
-  planning_ros_msgs::Mesh mesh;
-
-  for(const auto& face: bds) {
-    planning_ros_msgs::Face f;
-    for(const auto& v: face) {
-      geometry_msgs::Point pt;
-      pt.x = v(0);
-      pt.y = v(1);
-      pt.z = v(2);
-      f.vertices.push_back(pt);
-    }
-    mesh.faces.push_back(f);
-  }
-  return mesh;
 }
 
 inline planning_ros_msgs::Arrows pairs_to_arrows(const vec_E<std::pair<Vec3f, Vec3f>>& vs) {
