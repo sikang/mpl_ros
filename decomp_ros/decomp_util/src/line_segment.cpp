@@ -219,7 +219,7 @@ void LineSegment::shrink(const Vec3f& p1, const Vec3f& p2, decimal_t thr) {
     decimal_t d2 = it.n.dot(p2) - b;
     decimal_t d = -std::max(d1, d2) - 0.1;
     d = d < thr ? d : thr;
-    if (d > 0.0)
+    if (d > 0.01)
       it.p -= d * it.n;
   }
 }
