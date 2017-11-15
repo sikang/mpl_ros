@@ -50,6 +50,8 @@ target_link_libraries(image_to_cloud ${OpenCV_LIBS})
 
 cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
 
+cs_add_executable(laser_to_cloud src/mapping_utils/laser_to_cloud.cpp)
+
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
   src/planning_rviz_plugins/primitive_visual.cpp
