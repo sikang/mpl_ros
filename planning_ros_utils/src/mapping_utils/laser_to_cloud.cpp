@@ -92,7 +92,7 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr &msg)
     }
     else {
       sensor_msgs::PointCloud2 cloud2;
-      sensor_msgs::convertPointCloud2ToPointCloud(cloud2, cloud);
+      sensor_msgs::convertPointCloudToPointCloud2(cloud, cloud2);
       cloud2.header = cloud.header;
       laser_pub.publish(cloud2);
     }
