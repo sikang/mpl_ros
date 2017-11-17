@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include <motion_primitive_library/data_type.h>
-#include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/point_cloud_conversion.h>
 #include <sensor_msgs/LaserScan.h>
 #include <eigen_conversions/eigen_msg.h>
 #include <ros_utils/tf_listener.h>
@@ -10,7 +10,7 @@ std::string horizon_frame;
 std::string laser_frame;
 
 float resolution_, min_dist_, max_dist_;
-bool to_horizon_frame;
+bool to_horizon_frame, use_cloud2;
 
 sensor_msgs::PointCloud scan_to_cloud(const sensor_msgs::LaserScan &scan)
 {
@@ -85,9 +85,17 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr &msg)
 
   if(!to_horizon_frame)
   {
-    cloud.header.stamp = msg->header.stamp;
-    cloud.header.frame_id = laser_frame;
-    laser_pub.publish(cloud);
+    if(!use_cloud2) {
+      cloud.header.stamp = msg->header.stamp;
+      cloud.header.frame_id = laser_frame;
+      laser_pub.publish(cloud);
+    }
+    else {
+      sensor_msgs::PointCloud2 cloud2;
+      sensor_msgs::convertPointCloud2ToPointCloud(cloud2, cloud);
+      cloud2.header = cloud.header;
+      laser_pub.publish(cloud2);
+    }
   }
   else
   {
@@ -117,10 +125,14 @@ int main(int argc, char **argv)
   n.param("max_dist", max_dist_, 15.0f);
 
   n.param("to_horizon_frame", to_horizon_frame, false);
+  n.param("use_cloud2", use_cloud2, false);
   n.param("horizon_frame", horizon_frame, std::string("horizon_frame"));
   n.param("laser_frame", laser_frame, std::string("laser_frame"));
 
-  laser_pub = n.advertise<sensor_msgs::PointCloud>("laser_cloud", 5, true);
+  if(!use_cloud2)
+    laser_pub = n.advertise<sensor_msgs::PointCloud>("laser_cloud", 5, true);
+  else
+    laser_pub = n.advertise<sensor_msgs::PointCloud2>("laser_cloud", 5, true);
   ros::Subscriber laser_sub = n.subscribe("laser_in", 5, scanCallback);
   if(to_horizon_frame)
     ROS_WARN("laser_to_cloud: publish cloud in horizon frame");
