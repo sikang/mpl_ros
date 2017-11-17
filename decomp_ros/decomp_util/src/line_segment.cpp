@@ -19,7 +19,14 @@ void LineSegment::set_obstacles(const vec_Vec3f& obs) {
 Ellipsoid LineSegment::find_ellipsoid(const Vec3f& p1, const Vec3f& p2){
   const decimal_t f = (p1 - p2).norm() / 2;
   Mat3f C = f * Mat3f::Identity();
+  C(0, 0) += shrink_distance_;
   Vec3f axes(C(0, 0), C(1, 1), C(2, 2));
+  //if(axes(0) > 0) {
+  if(0) {
+    double ratio = axes(1) / axes(0);
+    axes *= ratio;
+    C *= ratio;
+  }
 
   const Quatf qi = vec_to_quaternion(p2 - p1);
   C = qi * C * qi.conjugate();
@@ -92,7 +99,7 @@ Polyhedron LineSegment::find_polyhedron(const Ellipsoid& E){
   vec_Vec3f O_remain = obs_;
   while (!O_remain.empty()) {
     Face v = closest_obstacle(E, O_remain);
-    adjust(v);
+    //adjust(v);
     Vs.push_back(v);
     Vec3f a = v.n;
     decimal_t b = v.p.dot(a);
@@ -109,59 +116,6 @@ Polyhedron LineSegment::find_polyhedron(const Ellipsoid& E){
   }
 
   return Vs;
-}
-
-void LineSegment::adjust(Face& v){
-  decimal_t d1 = fabs(v.n.dot(p1_ - v.p));
-  decimal_t d2 = fabs(v.n.dot(p2_ - v.p));
-  decimal_t d = std::min(d1, d2);
-  if(d >= robot_radius_ )
-    return;
-
-  Vec3f p, pp;
-  if(d == d1){
-    p = p1_;
-    pp = p2_;
-  }
-  else{
-    p = p2_;
-    pp = p1_;
-  }
-
-  const Vec3f pv = v.p;
-  const Vec3f n1 = (pv - p).normalized();
-  const Vec3f n3 = (v.n.cross(n1)).normalized();
-  const Vec3f n2 = (n3.cross(n1)).normalized();
-
-  Aff3f TFbw;
-  TFbw.matrix() << n1(0), n2(0), n3(0), p(0),
-    n1(1), n2(1), n3(1), p(1),
-    n1(2), n2(2), n3(2), p(2),
-    0, 0, 0, 1;
-
-  const decimal_t r = (pv - p).norm();
-  const decimal_t r1 = robot_radius_;
-  if(1 && r < r1){
-    printf(ANSI_COLOR_GREEN "r: %f, r1: %f\n" ANSI_COLOR_RESET, r, r1);
-    return;
-  }
-  const decimal_t r2 = sqrt(r*r - r1*r1);
-  const decimal_t theta = atan2(r2, r1);
-  const Vec3f new_p1_b(r1 * cos(theta), r1 * sin(theta), 0);
-  const Vec3f new_p2_b(r1 * cos(-theta), r1 * sin(-theta), 0);
-  const Vec3f new_p1 = TFbw * new_p1_b;
-  const Vec3f new_p2 = TFbw * new_p2_b;
-
-  const Vec3f new_n1 = (new_p1-p).normalized();
-  const Vec3f new_n2 = (new_p2-p).normalized();
-
-  d1 = -new_n1.dot(pp - v.p);
-  d2 = -new_n2.dot(pp - v.p);
-
-  if(d1 > robot_radius_)
-    v.n = new_n1;
-  else if(d2 > robot_radius_)
-    v.n = new_n2;
 }
 
 void LineSegment::add_virtual_wall(Polyhedron &Vs) {
@@ -189,15 +143,9 @@ void LineSegment::add_virtual_wall(Polyhedron &Vs) {
 }
 
 void LineSegment::dilate(decimal_t radius) {
-  robot_radius_ = radius;
+  shrink_distance_ = radius;
   ellipsoid_ = find_ellipsoid(p1_, p2_);
   polyhedron_ = find_polyhedron(ellipsoid_);
-  /*
-     decimal_t d1 = cal_closest_dist(p1_, polyhedron_);
-     decimal_t d2 = cal_closest_dist(p2_, polyhedron_);
-     printf("v1: d1: %f, d2: %f\n", d1, d2);
-     */
-
   add_virtual_wall(polyhedron_);
 }
 
@@ -212,13 +160,13 @@ decimal_t LineSegment::polyhedron_volume() {
 }
 
 
-void LineSegment::shrink(const Vec3f& p1, const Vec3f& p2, decimal_t thr) {
+void LineSegment::shrink(const Vec3f& p1, const Vec3f& p2) {
   for (auto &it : polyhedron_) {
     decimal_t b = it.p.dot(it.n);
     decimal_t d1 = it.n.dot(p1) - b;
     decimal_t d2 = it.n.dot(p2) - b;
     decimal_t d = -std::max(d1, d2) - 0.1;
-    d = d < thr ? d : thr;
+    d = d < shrink_distance_ ? d : shrink_distance_;
     if (d > 0.01)
       it.p -= d * it.n;
   }

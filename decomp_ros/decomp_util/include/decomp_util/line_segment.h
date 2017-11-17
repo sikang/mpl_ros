@@ -54,9 +54,8 @@ class LineSegment {
      * @brief Shrink the polyhedron 
      * @param p1 One end of the line seg
      * @param p2 The other end of the line seg
-     * @param thr Shrinking distance
      */
-    void shrink(const Vec3f& p1, const Vec3f& p2, decimal_t thr);
+    void shrink(const Vec3f& p1, const Vec3f& p2);
     /**
      * @brief Adjust the norm of half plane to prevent cutting off the line seg whhile shrinking
      *
@@ -81,7 +80,7 @@ class LineSegment {
     Ellipsoid ellipsoid_;
     Polyhedron polyhedron_;
 
-    decimal_t robot_radius_ = 0;
+    decimal_t shrink_distance_ = 0;
     decimal_t virtual_x_ = 5;
     decimal_t virtual_y_ = 5;
     decimal_t virtual_z_ = 2;

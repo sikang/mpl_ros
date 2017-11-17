@@ -34,18 +34,19 @@ int main(int argc, char ** argv){
     ROS_ERROR("Fail to read a path!");
 
   //Downsample the path as many line segments with lenght equal to 1.0
-  //path = path_downsample(path, 1.0);
+  path = path_downsample(path, 1.0);
 
   nav_msgs::Path path_msg = DecompROS::eigen_to_path(path);
   path_msg.header.frame_id = "map";
   path_pub.publish(path_msg);
 
   //Using iterative decomposition
-  EllipseDecomp decomp_util(true);
-  decomp_util.set_radius(1.0);
+  //EllipseDecomp decomp_util(true);
+  IterativeDecomp decomp_util(true);
+  decomp_util.set_shrink_distance(2.0);
   decomp_util.set_obstacles(obs);
-  decomp_util.decomp(path);
-  //decomp_util.decomp_iter(path, 1, true); //Set max iteration number of 10, do fix the path
+  //decomp_util.decomp(path);
+  decomp_util.decomp_iter(path, 2, true); //Set max iteration number of 10, do fix the path
 
   //Publish visualization msgs
   decomp_ros_msgs::Ellipsoids es_msg = DecompROS::ellipsoids_to_ros(decomp_util.get_ellipsoids());

@@ -77,7 +77,7 @@ bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
     if(virtual_.norm() > 0)
       lines_[i]->set_virtual_dim(virtual_(0), virtual_(1), virtual_(2));
     lines_[i]->set_obstacles(obs_);
-    lines_[i]->dilate(robot_radius_);
+    lines_[i]->dilate(shrink_distance_);
 
     ellipsoids_[i] = lines_[i]->ellipsoid();
     polyhedrons_[i] = lines_[i]->polyhedron();
@@ -96,8 +96,7 @@ bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
 
   for(unsigned int i = 0; i < lines_.size(); i++) {
     if(shrink_distance_ > 0)
-      lines_[i]->shrink(dilate_path_[i], dilate_path_[i+1], shrink_distance_);
-    //lines_[i]->shrink(center_path_[i], center_path_[i+1], ds * d);
+      lines_[i]->shrink(dilate_path_[i], dilate_path_[i+1]);
     polyhedrons_[i] = lines_[i]->polyhedron();
     if(has_bounding_box_)
       add_bounding(polyhedrons_[i]);

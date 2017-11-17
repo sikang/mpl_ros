@@ -30,8 +30,6 @@ public:
   EllipseDecomp(const Vec3f &origin, const Vec3f &dim, bool verbose = false);
   ///Set obstacle points
   void set_obstacles(const vec_Vec3f &obs) { obs_ = obs; }
-  ///Set robot radius
-  void set_radius(decimal_t r) { robot_radius_ = r; }
   ///Set shrink distance (usually greater than robot radius)
   void set_shrink_distance(decimal_t r) { shrink_distance_ = r; }
   ///Set dimension of virtual bounding box
@@ -85,7 +83,6 @@ protected:
   bool verbose_ = false;
 
   Vec3f virtual_ = Vec3f(0, 0, 0);
-  decimal_t robot_radius_ = 0;
   decimal_t shrink_distance_ = 0;
 };
 #endif
