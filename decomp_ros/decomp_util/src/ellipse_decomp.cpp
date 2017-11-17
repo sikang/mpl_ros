@@ -94,16 +94,25 @@ bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
   center_path_.push_back(poses.back());
   center_path_.insert(center_path_.begin(), poses.front());
 
-  for(unsigned int i = 0; i < lines_.size(); i++) {
-    if(shrink_distance_ > 0)
-      lines_[i]->shrink(dilate_path_[i], dilate_path_[i+1]);
-    polyhedrons_[i] = lines_[i]->polyhedron();
-    if(has_bounding_box_)
+  if(has_bounding_box_) {
+    for(unsigned int i = 0; i < lines_.size(); i++) {
+      polyhedrons_[i] = lines_[i]->polyhedron();
       add_bounding(polyhedrons_[i]);
+    }
   }
+ 
   return true;
 }
 
+void EllipseDecomp::shrink(const vec_Vec3f& path) {
+  for(unsigned int i = 0; i < lines_.size(); i++) {
+    if(shrink_distance_ > 0)
+      lines_[i]->shrink(path[i], path[i+1]);
+    polyhedrons_[i] = lines_[i]->polyhedron();
+    if(has_bounding_box_) 
+      add_bounding(polyhedrons_[i]);
+  }
+}
 
 vec_Vec3f EllipseDecomp::cal_centers(const Polyhedra &intersect_vs) {
   vec_Vec3f path;

@@ -61,6 +61,8 @@ public:
    */
   bool decomp(const vec_Vec3f &poses);
 
+  void shrink(const vec_Vec3f &path);
+
 protected:
   void clear();
   void add_bounding(Polyhedron &Vs);
