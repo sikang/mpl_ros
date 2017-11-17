@@ -3,6 +3,7 @@
 #include <decomp_ros_utils/data_ros_utils.h>
 #include <ros/ros.h>
 #include <decomp_util/seed_decomp.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 
 std_msgs::Header header_;
@@ -25,7 +26,7 @@ int main(int argc, char ** argv){
   nh.param("bag_topic", topic_name, std::string("voxel_map"));
   nh.param("bag_marker", marker_name, std::string("voxel_map"));
   //Read the point cloud from bag
-  sensor_msgs::PointCloud2 map = read_point_cloud2(file_name, topic_name);
+  sensor_msgs::PointCloud2 map = read_bag<sensor_msgs::PointCloud2>(file_name, topic_name);
   map.header = header_;
   map_pub.publish(map);
 
@@ -34,7 +35,7 @@ int main(int argc, char ** argv){
   sensor_msgs::convertPointCloud2ToPointCloud(map, cloud);
   vec_Vec3f obs = DecompROS::cloud_to_vec(cloud);
 
-  visualization_msgs::MarkerArray markers = read_marker_array(file_name, marker_name);
+  visualization_msgs::MarkerArray markers = read_bag<visualization_msgs::MarkerArray>(file_name, marker_name);
   for(auto & it: markers.markers)
     it.header = header_;
   marker_pub.publish(markers);
