@@ -94,9 +94,11 @@ bool PolySolver::solve(const std::vector<Waypoint>& waypoints,
   // First point
   Df.row(0) = waypoints[0].pos.transpose();
   Df.row(1) = waypoints[0].vel.transpose();
-  if (num_fixed_derivatives > 2)
+  if (N_/2 > 2)
     Df.row(2) = waypoints[0].acc.transpose();
-  for (unsigned int i = 3; i < N_ / 2; i++) {
+  if (N_/2 > 3) 
+    Df.row(3) = waypoints[0].jrk.transpose();
+  for (unsigned int i = 4; i < N_ / 2; i++) {
     Df.row(i) = Vec3f::Zero().transpose();
   }
   // Middle waypoints
@@ -104,12 +106,14 @@ bool PolySolver::solve(const std::vector<Waypoint>& waypoints,
     Df.row((N_ / 2) - 1 + i) = waypoints[i].pos.transpose();
   }
   // End point
-  int end = N_ / 2 + (num_waypoints - 2);
+  int end = num_waypoints + 1;
   Df.row(end) = waypoints[num_waypoints - 1].pos.transpose();
   Df.row(end+1) = waypoints[num_waypoints - 1].vel.transpose();
-  if (num_fixed_derivatives > 2)
+  if (N_ / 2 > 2) 
     Df.row(end+2) = waypoints[num_waypoints - 1].acc.transpose();
-  for (unsigned int i = 3; i < N_ / 2; i++) {
+  if (N_ / 2 > 3) 
+    Df.row(end+3) = waypoints[num_waypoints - 1].jrk.transpose();
+  for (unsigned int i = 4; i < N_ / 2; i++) {
     Df.row(end+i) = Vec3f::Zero().transpose();
     // Df.row((N_ / 2) + (num_waypoints - 2) + i) = end_vel_.transpose();
   }

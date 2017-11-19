@@ -27,7 +27,7 @@ bool IterativeDecomp::decomp_iter(const vec_Vec3f& poses, int iter_num, double o
       return false;
     cnt ++;
     vec_Vec3f new_path;
-    if(1)
+    if(0)
       new_path = simplify(center_path_);
     else
       new_path = center_path_;
