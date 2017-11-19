@@ -43,10 +43,9 @@ int main(int argc, char ** argv){
   //Using iterative decomposition
   //EllipseDecomp decomp_util(true);
   IterativeDecomp decomp_util(true);
-  decomp_util.set_shrink_distance(2.0);
   decomp_util.set_obstacles(obs);
   //decomp_util.decomp(path);
-  decomp_util.decomp_iter(path, 2, true); //Set max iteration number of 10, do fix the path
+  decomp_util.decomp_iter(path, 2, 2.0); //Set max iteration number of 10, do fix the path
 
   //Publish visualization msgs
   decomp_ros_msgs::Ellipsoids es_msg = DecompROS::ellipsoids_to_ros(decomp_util.get_ellipsoids());
