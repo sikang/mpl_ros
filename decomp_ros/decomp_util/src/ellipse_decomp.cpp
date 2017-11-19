@@ -57,7 +57,7 @@ void EllipseDecomp::add_bounding(Polyhedron &Vs) {
   Vs.push_back(Face(Vec3f(0, min_(1), 0), Vec3f(0, -1, 0)));
 }
 
-bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
+bool EllipseDecomp::decomp(const vec_Vec3f &poses, double offset_x) {
   clear();
   if (poses.size() < 2)
   {
@@ -77,7 +77,7 @@ bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
     if(virtual_.norm() > 0)
       lines_[i]->set_virtual_dim(virtual_(0), virtual_(1), virtual_(2));
     lines_[i]->set_obstacles(obs_);
-    lines_[i]->dilate(shrink_distance_);
+    lines_[i]->dilate(offset_x);
 
     ellipsoids_[i] = lines_[i]->ellipsoid();
     polyhedrons_[i] = lines_[i]->polyhedron();
@@ -100,16 +100,17 @@ bool EllipseDecomp::decomp(const vec_Vec3f &poses) {
       add_bounding(polyhedrons_[i]);
     }
   }
- 
+
   return true;
 }
 
-void EllipseDecomp::shrink(const vec_Vec3f& path) {
+void EllipseDecomp::shrink(const vec_Vec3f& path, double shrink_distance) {
+  if(shrink_distance <= 0)
+    return;
   for(unsigned int i = 0; i < lines_.size(); i++) {
-    if(shrink_distance_ > 0)
-      lines_[i]->shrink(path[i], path[i+1]);
+    lines_[i]->shrink(path[i], path[i+1], shrink_distance);
     polyhedrons_[i] = lines_[i]->polyhedron();
-    if(has_bounding_box_) 
+    if(has_bounding_box_)
       add_bounding(polyhedrons_[i]);
   }
 }
@@ -160,6 +161,12 @@ vec_Vec3f EllipseDecomp::cal_centers(const Polyhedra &intersect_vs) {
     } else
       path.push_back(C);
   }
+
+  /*
+  double z = path.front()(2);
+  for(auto &it: path)
+    it(2) = z;
+    */
 
   return path;
 }

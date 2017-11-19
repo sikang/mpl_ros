@@ -16,13 +16,12 @@ void LineSegment::set_obstacles(const vec_Vec3f& obs) {
   obs_ = ps_in_polytope(vs, obs);
 }
 
-Ellipsoid LineSegment::find_ellipsoid(const Vec3f& p1, const Vec3f& p2){
+Ellipsoid LineSegment::find_ellipsoid(const Vec3f& p1, const Vec3f& p2, double offset_x){
   const decimal_t f = (p1 - p2).norm() / 2;
   Mat3f C = f * Mat3f::Identity();
-  C(0, 0) += shrink_distance_;
+  C(0, 0) += offset_x;
   Vec3f axes(C(0, 0), C(1, 1), C(2, 2));
-  //if(axes(0) > 0) {
-  if(0) {
+  if(axes(0) > 0) {
     double ratio = axes(1) / axes(0);
     axes *= ratio;
     C *= ratio;
@@ -143,8 +142,7 @@ void LineSegment::add_virtual_wall(Polyhedron &Vs) {
 }
 
 void LineSegment::dilate(decimal_t radius) {
-  shrink_distance_ = radius;
-  ellipsoid_ = find_ellipsoid(p1_, p2_);
+  ellipsoid_ = find_ellipsoid(p1_, p2_, radius);
   polyhedron_ = find_polyhedron(ellipsoid_);
   add_virtual_wall(polyhedron_);
 }
@@ -160,13 +158,13 @@ decimal_t LineSegment::polyhedron_volume() {
 }
 
 
-void LineSegment::shrink(const Vec3f& p1, const Vec3f& p2) {
+void LineSegment::shrink(const Vec3f& p1, const Vec3f& p2, double shrink_distance) {
   for (auto &it : polyhedron_) {
     decimal_t b = it.p.dot(it.n);
     decimal_t d1 = it.n.dot(p1) - b;
     decimal_t d2 = it.n.dot(p2) - b;
     decimal_t d = -std::max(d1, d2) - 0.1;
-    d = d < shrink_distance_ ? d : shrink_distance_;
+    d = d < shrink_distance ? d : shrink_distance;
     if (d > 0.01)
       it.p -= d * it.n;
   }

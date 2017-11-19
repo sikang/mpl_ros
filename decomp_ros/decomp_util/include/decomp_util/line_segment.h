@@ -29,7 +29,7 @@ class LineSegment {
      * @param y Distance in y axis
      * @param v Distance in z axis
      *
-     * This virtual bounding box is parallel to the line segment, the x,y,z axes are not w.r.t the world coordinate system, but instead, x-axis is parallel to the line, y-axis is perpendicular to the line and world z-axis, z-axis is perpendiculat to the line and y-axis 
+     * This virtual bounding box is parallel to the line segment, the x,y,z axes are not w.r.t the world coordinate system, but instead, x-axis is parallel to the line, y-axis is perpendicular to the line and world z-axis, z-axis is perpendiculat to the line and y-axis
      */
     void set_virtual_dim(decimal_t x, decimal_t y, decimal_t z);
     ///Import obstacle points
@@ -47,15 +47,16 @@ class LineSegment {
 
     /**
      * @brief Infalte the line segment
-     * @param radius Robot radius
+     * @param radius the offset added to the long semi-axis
      */
     void dilate(decimal_t radius);
     /**
-     * @brief Shrink the polyhedron 
+     * @brief Shrink the polyhedron
      * @param p1 One end of the line seg
      * @param p2 The other end of the line seg
+     * @param shrink_distance Shrink distance
      */
-    void shrink(const Vec3f& p1, const Vec3f& p2);
+    void shrink(const Vec3f& p1, const Vec3f& p2, double shrink_distance);
     /**
      * @brief Adjust the norm of half plane to prevent cutting off the line seg whhile shrinking
      *
@@ -68,7 +69,7 @@ class LineSegment {
     void cal_spheroid(const Vec3f& pw, const Quatf& qi, const Vec3f& center,
         Vec3f& axes, Quatf& qf);
 
-    Ellipsoid find_ellipsoid(const Vec3f &p1, const Vec3f &p2);
+    Ellipsoid find_ellipsoid(const Vec3f &p1, const Vec3f &p2, double offset_x = 0);
     Polyhedron find_polyhedron(const Ellipsoid &E);
 
     // Input:
@@ -80,7 +81,6 @@ class LineSegment {
     Ellipsoid ellipsoid_;
     Polyhedron polyhedron_;
 
-    decimal_t shrink_distance_ = 0;
     decimal_t virtual_x_ = 5;
     decimal_t virtual_y_ = 5;
     decimal_t virtual_z_ = 2;

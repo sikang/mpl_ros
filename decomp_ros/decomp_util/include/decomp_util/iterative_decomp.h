@@ -27,9 +27,9 @@ class IterativeDecomp : public EllipseDecomp
      * @brief Decomposition thread
      * @param poses The path to dilate
      * @param iter_num Max iteration number
-     * @param forced If true, the original path wont change
+     * @param offset_x offset added to the long semi-axis, default is 0
      */
-    bool decomp_iter(const vec_Vec3f &poses, int iter_num = 5, bool forced = false);
+    bool decomp_iter(const vec_Vec3f &poses, int iter_num = 5, double offset_x = 0);
   private:
     ///Remove redundant waypoints
     vec_Vec3f simplify(const vec_Vec3f& path);
