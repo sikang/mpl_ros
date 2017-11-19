@@ -27,7 +27,7 @@ bool IterativeDecomp::decomp_iter(const vec_Vec3f& poses, int iter_num, double o
       return false;
     cnt ++;
     vec_Vec3f new_path;
-    if(0)
+    if(1)
       new_path = simplify(center_path_);
     else
       new_path = center_path_;
@@ -62,7 +62,8 @@ vec_Vec3f IterativeDecomp::simplify(const vec_Vec3f& path){
   new_path.push_back(ref_pt);
 
   for(int i = 2; i < (int) path.size(); i ++){
-    if(inside_polytope(ref_pt, polyhedrons_[i-1], 0)) {
+    if(inside_polytope(ref_pt, polyhedrons_[i-1], 0) &&
+        cal_closest_dist(ref_pt, polyhedrons_[i-1]) > 2e-1) {
       if(verbose_)
         printf(ANSI_COLOR_GREEN "remove intermediate waypoints\n" ANSI_COLOR_RESET);
     }

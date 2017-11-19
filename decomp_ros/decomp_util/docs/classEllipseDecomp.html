@@ -97,14 +97,6 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#a2d5ed0ef1a21aad091f19e916cd2f017">set_obstacles</a> (const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;obs)</td></tr>
 <tr class="memdesc:a2d5ed0ef1a21aad091f19e916cd2f017"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set obstacle points. <br /></td></tr>
 <tr class="separator:a2d5ed0ef1a21aad091f19e916cd2f017"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac055177607d11a5aab2a4a4c959de262"><td class="memItemLeft" align="right" valign="top"><a id="ac055177607d11a5aab2a4a4c959de262"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#ac055177607d11a5aab2a4a4c959de262">set_radius</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r)</td></tr>
-<tr class="memdesc:ac055177607d11a5aab2a4a4c959de262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set robot radius. <br /></td></tr>
-<tr class="separator:ac055177607d11a5aab2a4a4c959de262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880bed756200ac9ad964226cec47e859"><td class="memItemLeft" align="right" valign="top"><a id="a880bed756200ac9ad964226cec47e859"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#a880bed756200ac9ad964226cec47e859">set_shrink_distance</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> r)</td></tr>
-<tr class="memdesc:a880bed756200ac9ad964226cec47e859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set shrink distance (usually greater than robot radius) <br /></td></tr>
-<tr class="separator:a880bed756200ac9ad964226cec47e859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefe7e03c72846c5a4033d39833954462"><td class="memItemLeft" align="right" valign="top"><a id="aefe7e03c72846c5a4033d39833954462"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#aefe7e03c72846c5a4033d39833954462">set_virtual_box</a> (const <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a> &amp;v)</td></tr>
 <tr class="memdesc:aefe7e03c72846c5a4033d39833954462"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set dimension of virtual bounding box. <br /></td></tr>
@@ -145,9 +137,12 @@ Polyhedra&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#a2069804f425582913aaaca6836123651">clean</a> ()</td></tr>
 <tr class="memdesc:a2069804f425582913aaaca6836123651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean both dilation and obstacles, reset the whole class. <br /></td></tr>
 <tr class="separator:a2069804f425582913aaaca6836123651"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6f8006fa012957fefbff9fc6cc27f1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#af6f8006fa012957fefbff9fc6cc27f1d">decomp</a> (const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;poses)</td></tr>
-<tr class="memdesc:af6f8006fa012957fefbff9fc6cc27f1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decomposition thread.  <a href="#af6f8006fa012957fefbff9fc6cc27f1d">More...</a><br /></td></tr>
-<tr class="separator:af6f8006fa012957fefbff9fc6cc27f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a18f026cde492cc1a2ea257ffac7842"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#a0a18f026cde492cc1a2ea257ffac7842">decomp</a> (const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;poses, double offset_x=0)</td></tr>
+<tr class="memdesc:a0a18f026cde492cc1a2ea257ffac7842"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decomposition thread.  <a href="#a0a18f026cde492cc1a2ea257ffac7842">More...</a><br /></td></tr>
+<tr class="separator:a0a18f026cde492cc1a2ea257ffac7842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c1890488ee0f4ddfef9cf5861866f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEllipseDecomp.html#a01c1890488ee0f4ddfef9cf5861866f9">shrink</a> (const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;path, double shrink_distance)</td></tr>
+<tr class="memdesc:a01c1890488ee0f4ddfef9cf5861866f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shrink the safe flight corridor.  <a href="#a01c1890488ee0f4ddfef9cf5861866f9">More...</a><br /></td></tr>
+<tr class="separator:a01c1890488ee0f4ddfef9cf5861866f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -199,12 +194,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>verbose_</b> = false<
 <tr class="memitem:a12d668397c055c3e8cc44f64e8a6e60e"><td class="memItemLeft" align="right" valign="top"><a id="a12d668397c055c3e8cc44f64e8a6e60e"></a>
 <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><b>virtual_</b> = <a class="el" href="data__type_8h.html#a6a51054135436e5d0a4529dc0054ae0a">Vec3f</a>(0, 0, 0)</td></tr>
 <tr class="separator:a12d668397c055c3e8cc44f64e8a6e60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6c65ae33fd473efb6185f487e01cb17"><td class="memItemLeft" align="right" valign="top"><a id="ae6c65ae33fd473efb6185f487e01cb17"></a>
-<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>robot_radius_</b> = 0</td></tr>
-<tr class="separator:ae6c65ae33fd473efb6185f487e01cb17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabf94ee9d164829749d5ea79a5456e32"><td class="memItemLeft" align="right" valign="top"><a id="aabf94ee9d164829749d5ea79a5456e32"></a>
-<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_distance_</b> = 0</td></tr>
-<tr class="separator:aabf94ee9d164829749d5ea79a5456e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classEllipseDecomp.html" title="EllipseDecomp Class. ">EllipseDecomp</a> Class. </p>
@@ -254,8 +243,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>verbose_</b> = false<
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af6f8006fa012957fefbff9fc6cc27f1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6f8006fa012957fefbff9fc6cc27f1d">&#9670;&nbsp;</a></span>decomp()</h2>
+<a id="a0a18f026cde492cc1a2ea257ffac7842"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a18f026cde492cc1a2ea257ffac7842">&#9670;&nbsp;</a></span>decomp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,8 +253,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>verbose_</b> = false<
           <td class="memname">bool EllipseDecomp::decomp </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;&#160;</td>
-          <td class="paramname"><em>poses</em></td><td>)</td>
+          <td class="paramname"><em>poses</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>offset_x</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -274,6 +273,44 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>verbose_</b> = false<
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">poses</td><td>The path to dilate </td></tr>
+    <tr><td class="paramname">offset_x</td><td>offset added to the long semi-axis, default is 0 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a01c1890488ee0f4ddfef9cf5861866f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c1890488ee0f4ddfef9cf5861866f9">&#9670;&nbsp;</a></span>shrink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EllipseDecomp::shrink </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a> &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>shrink_distance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Shrink the safe flight corridor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path that used to shirnk </td></tr>
+    <tr><td class="paramname">shrink_distance</td><td>shrinking distance, should be positive </td></tr>
   </table>
   </dd>
 </dl>

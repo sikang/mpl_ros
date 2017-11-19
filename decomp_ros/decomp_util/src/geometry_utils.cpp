@@ -84,7 +84,7 @@ bool inside_polytope(const Vec3f &p,
   return inside;
 }
 
-//**** Determine if a point p is inside polytop
+//**** Determine if a point p is inside polytope
 bool inside_polytope(const Vec3f &p,
                      const LinearConstraint3f& C){
   VecDf d = C.first * p - C.second;
