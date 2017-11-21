@@ -370,7 +370,7 @@ vec_Vec3f path_crop(const vec_Vec3f& ps, decimal_t d){
   }
 
 
-  if((path.back() - end).norm() > 1e-1)
+  if((path.back() - end).norm() > 5e-1)
     path.push_back(end);
   return path;
 }

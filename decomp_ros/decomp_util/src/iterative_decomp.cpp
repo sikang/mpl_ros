@@ -63,7 +63,7 @@ vec_Vec3f IterativeDecomp::simplify(const vec_Vec3f& path){
 
   for(int i = 2; i < (int) path.size(); i ++){
     if(inside_polytope(ref_pt, polyhedrons_[i-1], 0) &&
-        cal_closest_dist(ref_pt, polyhedrons_[i-1]) > 2e-1) {
+        cal_closest_dist(ref_pt, polyhedrons_[i-1]) > 1e-1) {
       if(verbose_)
         printf(ANSI_COLOR_GREEN "remove intermediate waypoints\n" ANSI_COLOR_RESET);
     }
