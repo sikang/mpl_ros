@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['max_5fnum_5f',['max_num_',['../classMPBaseUtil.html#a2a98e75b4acfd38a6e3898b42d8fccf9',1,'MPBaseUtil']]],
-  ['max_5ft_5f',['max_t_',['../classMPBaseUtil.html#aa18778ffcf24bea5332507a255e511e1',1,'MPBaseUtil']]]
+  ['segs',['segs',['../classTrajectory.html#a86463591d1de80f857bc707b63341ec7',1,'Trajectory']]],
+  ['sss_5fptr_5f',['sss_ptr_',['../classMPBaseUtil.html#abd3accb8daa647cc51b51c6389f75b3a',1,'MPBaseUtil']]]
 ];

@@ -11,6 +11,7 @@ var searchData=
   ['set_5fgoal',['set_goal',['../classMPL_1_1env__base.html#a741952175a2a4641ba0c96e4b770bd50',1,'MPL::env_base::set_goal()'],['../classMPL_1_1env__cloud.html#a9e0692d52d6b27f1351964fa0f572056',1,'MPL::env_cloud::set_goal()'],['../classMPL_1_1env__map.html#a375e30567aaf1e940e99ef440ae0d10a',1,'MPL::env_map::set_goal()']]],
   ['set_5fj_5fmax',['set_j_max',['../classMPL_1_1env__base.html#a2e13a06e7d9fcc2bad324ec21cde78be',1,'MPL::env_base']]],
   ['set_5fprior_5ftrajectory',['set_prior_trajectory',['../classMPL_1_1env__base.html#a331bdc6b76375183e8263b2b5151fc21',1,'MPL::env_base']]],
+  ['set_5ft_5fmax',['set_t_max',['../classMPL_1_1env__base.html#a7dc1fc9ee0b976be82cac27d304cd7ba',1,'MPL::env_base']]],
   ['set_5ftol_5facc',['set_tol_acc',['../classMPL_1_1env__base.html#aa6cfa8599dd96e7a0afc55ff1f953741',1,'MPL::env_base']]],
   ['set_5ftol_5fdis',['set_tol_dis',['../classMPL_1_1env__base.html#ac721bdd95487f95c49c22c74394ec5a3',1,'MPL::env_base']]],
   ['set_5ftol_5fvel',['set_tol_vel',['../classMPL_1_1env__base.html#a2dc21e86a239456208d4c4ca77f497ed',1,'MPL::env_base']]],

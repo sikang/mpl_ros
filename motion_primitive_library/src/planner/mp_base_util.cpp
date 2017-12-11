@@ -196,6 +196,10 @@ vec_Vec3f MPBaseUtil::getCloseSet() const {
   return ps;
 }
 
+vec_Vec3f MPBaseUtil::getExpandedNodes() const {
+  return ENV_->expanded_nodes_;
+}
+
 void MPBaseUtil::getSubStateSpace(int id) {
   sss_ptr_->getSubStateSpace(id);
 }
@@ -225,6 +229,8 @@ bool MPBaseUtil::plan(const Waypoint &start, const Waypoint &goal, bool replan) 
   }
 
   ENV_->set_goal(goal);
+
+  ENV_->expanded_nodes_.clear();
 
   sss_ptr_->dt = ENV_->get_dt();
   if(use_lpastar_)

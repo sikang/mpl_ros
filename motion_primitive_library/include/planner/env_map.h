@@ -91,6 +91,8 @@ class env_map : public env_base
       succ_cost.clear();
       action_idx.clear();
 
+      expanded_nodes_.push_back(curr.pos);
+
       const Vec3i pn = map_util_->floatToInt(curr.pos);
       if(map_util_->isOutSide(pn))
         return;

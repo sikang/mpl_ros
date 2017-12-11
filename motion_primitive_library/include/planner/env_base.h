@@ -63,7 +63,6 @@ class env_base
       return cal_heur(state, goal_node);
     }
 
-    /// Actual function that calculates the heuristic between given two states
     double cal_heur(const Waypoint& state, const Waypoint& goal) const
     {
       //return 0;
@@ -322,6 +321,11 @@ class env_base
       u_max_ = u;
     }
 
+    ///Set max amount of time step to explore 
+    void set_t_max(decimal_t t) {
+      t_max_ = t;
+    }
+
     ///Set prior trajectory 
     void set_prior_trajectory(const Trajectory& traj) {
       prior_traj_ = traj;
@@ -367,7 +371,8 @@ class env_base
 
     ///Print out params
     void info() {
-      printf(ANSI_COLOR_YELLOW "++++++++++ PLANNER +++++++++++\n");
+      printf(ANSI_COLOR_YELLOW "\n");
+      printf("++++++++++ PLANNER +++++++++++\n");
       printf("+    alpha: %d                 +\n", alpha_);
       printf("+       dt: %.2f               +\n", dt_);
       printf("+        w: %.2f               +\n", w_);
@@ -376,11 +381,13 @@ class env_base
       printf("+    a_max: %.2f               +\n", a_max_);
       printf("+    j_max: %.2f               +\n", j_max_);
       printf("+    u_max: %.2f               +\n", u_max_);
+      printf("+    t_max: %.2f               +\n", t_max_);
       printf("+    U num: %zu                +\n", U_.size());
       printf("+  tol_dis: %.2f               +\n", tol_dis);
       printf("+  tol_vel: %.2f               +\n", tol_vel);
       printf("+  tol_acc: %.2f               +\n", tol_acc);
-      printf("++++++++++ PLANNER +++++++++++" ANSI_COLOR_RESET "\n");
+      printf("++++++++++ PLANNER +++++++++++\n");
+      printf(ANSI_COLOR_RESET "\n");
     }
 
     ///Check if a point is in free space
@@ -437,44 +444,35 @@ class env_base
 
     //if true, goal is outside
     bool goal_outside_;
-    ///weight of time cost
+    //weight of time cost
     double w_ = 10; 
     ///order of derivatives for effort
     int wi_; 
-    ///heuristic time offset
+    //heuristic time offset
     int alpha_ = 0;
 
-    ///tolerance of goal region in position
+    //tolerance of goal region
     double tol_dis = 1.0;
-    ///tolerance of goal region in velocity
     double tol_vel = 1.0;
-    ///tolerance of goal region in acceleration
     double tol_acc = 1.0;
-    ///max control input
+    //max control input
     double u_max_;
-    ///max velocity, -1 indicates no limitation
     double v_max_ = -1;
-    ///max acceleration, -1 indicates no limitation
     double a_max_ = -1;
-    ///max jerk, -1 indicates no limitation
     double j_max_ = -1;
-    ///execution time for each primitive
+    double t_max_ = -1;
     double dt_ = 1.0;
-    ///resolution of position
-    double ds_ = 0.01;
-    ///resolution of velocity
-    double dv_ = 0.01;
-    ///resolution of acceleration
-    double da_ = 0.1;
-    ///resolution of jerk
-    double dj_ = 0.1;
+    double ds_ = 0.01, dv_ = 0.001, da_ = 0.01, dj_ = 0.01;
 
     ///Array of constant control input
     vec_Vec3f U_;
+    ///Expanded nodes
+    mutable vec_Vec3f expanded_nodes_;
     ///Goal node
     Waypoint goal_node_;
     ///Prior trajectory
     Trajectory prior_traj_;
+
 };
 }
 

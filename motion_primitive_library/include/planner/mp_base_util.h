@@ -34,6 +34,8 @@ class MPBaseUtil
     vec_Vec3f getOpenSet() const;
     ///Get ps in close set
     vec_Vec3f getCloseSet() const;
+    ///Get expanded node
+    vec_Vec3f getExpandedNodes() const;
     /**
      * @brief Prune state space
      * @param id the id of start state as the branch of corresponding tree

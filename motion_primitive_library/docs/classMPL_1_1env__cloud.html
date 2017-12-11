@@ -125,8 +125,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:aa85f1858e00de899de7a6156e834adcd inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heuristic function.  <a href="classMPL_1_1env__base.html#aa85f1858e00de899de7a6156e834adcd">More...</a><br /></td></tr>
 <tr class="separator:aa85f1858e00de899de7a6156e834adcd inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40f8e0357978c51b88c55feb84e58ee7 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a40f8e0357978c51b88c55feb84e58ee7"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a40f8e0357978c51b88c55feb84e58ee7">cal_heur</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal) const</td></tr>
-<tr class="memdesc:a40f8e0357978c51b88c55feb84e58ee7 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actual function that calculates the heuristic between given two states. <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>cal_heur</b> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state, const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;goal) const</td></tr>
 <tr class="separator:a40f8e0357978c51b88c55feb84e58ee7 inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6734c7621ec2a67aae7a3fc3f5e3fc1 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="af6734c7621ec2a67aae7a3fc3f5e3fc1"></a>
 <a class="el" href="namespaceMPL.html#ac469f005b0bd9eccdf4b379519e3143e">Key</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#af6734c7621ec2a67aae7a3fc3f5e3fc1">state_to_idx</a> (const <a class="el" href="structWaypoint.html">Waypoint</a> &amp;state) const</td></tr>
@@ -159,6 +158,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#aee8617fc86b63bb54a13fc7276f6eead">set_u_max</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> u)</td></tr>
 <tr class="memdesc:aee8617fc86b63bb54a13fc7276f6eead inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max control in each axis. <br /></td></tr>
 <tr class="separator:aee8617fc86b63bb54a13fc7276f6eead inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dc1fc9ee0b976be82cac27d304cd7ba inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a7dc1fc9ee0b976be82cac27d304cd7ba"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a7dc1fc9ee0b976be82cac27d304cd7ba">set_t_max</a> (<a class="el" href="data__type_8h.html#a7c99d9360fc6cac2762b786e2fb52266">decimal_t</a> t)</td></tr>
+<tr class="memdesc:a7dc1fc9ee0b976be82cac27d304cd7ba inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set max amount of time step to explore. <br /></td></tr>
+<tr class="separator:a7dc1fc9ee0b976be82cac27d304cd7ba inherit pub_methods_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a331bdc6b76375183e8263b2b5151fc21 inherit pub_methods_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a331bdc6b76375183e8263b2b5151fc21"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a331bdc6b76375183e8263b2b5151fc21">set_prior_trajectory</a> (const <a class="el" href="classTrajectory.html">Trajectory</a> &amp;traj)</td></tr>
 <tr class="memdesc:a331bdc6b76375183e8263b2b5151fc21 inherit pub_methods_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set prior trajectory. <br /></td></tr>
@@ -227,69 +230,62 @@ Additional Inherited Members</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>goal_outside_</b></td></tr>
 <tr class="separator:a68a937d8be935d88d15dbc46d7b51b0c inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65250fd8d3932668a3f50edf5f50a66a inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a65250fd8d3932668a3f50edf5f50a66a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a65250fd8d3932668a3f50edf5f50a66a">w_</a> = 10</td></tr>
-<tr class="memdesc:a65250fd8d3932668a3f50edf5f50a66a inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">weight of time cost <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>w_</b> = 10</td></tr>
 <tr class="separator:a65250fd8d3932668a3f50edf5f50a66a inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf5ebb45e9ad9e0da387f8863d5d198f inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="adf5ebb45e9ad9e0da387f8863d5d198f"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#adf5ebb45e9ad9e0da387f8863d5d198f">wi_</a></td></tr>
 <tr class="memdesc:adf5ebb45e9ad9e0da387f8863d5d198f inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">order of derivatives for effort <br /></td></tr>
 <tr class="separator:adf5ebb45e9ad9e0da387f8863d5d198f inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4afbdb16614f0a966570244b1e0e7c84 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a4afbdb16614f0a966570244b1e0e7c84"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a4afbdb16614f0a966570244b1e0e7c84">alpha_</a> = 0</td></tr>
-<tr class="memdesc:a4afbdb16614f0a966570244b1e0e7c84 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">heuristic time offset <br /></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>alpha_</b> = 0</td></tr>
 <tr class="separator:a4afbdb16614f0a966570244b1e0e7c84 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7f1b7a62c4f4fbd1cde83da8ae1fad0 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="ae7f1b7a62c4f4fbd1cde83da8ae1fad0"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#ae7f1b7a62c4f4fbd1cde83da8ae1fad0">tol_dis</a> = 1.0</td></tr>
-<tr class="memdesc:ae7f1b7a62c4f4fbd1cde83da8ae1fad0 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">tolerance of goal region in position <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>tol_dis</b> = 1.0</td></tr>
 <tr class="separator:ae7f1b7a62c4f4fbd1cde83da8ae1fad0 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bf35181b79322265bc653ee968f898a inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a8bf35181b79322265bc653ee968f898a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a8bf35181b79322265bc653ee968f898a">tol_vel</a> = 1.0</td></tr>
-<tr class="memdesc:a8bf35181b79322265bc653ee968f898a inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">tolerance of goal region in velocity <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>tol_vel</b> = 1.0</td></tr>
 <tr class="separator:a8bf35181b79322265bc653ee968f898a inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea6a6a7ed66ac62280672613ad3d55c6 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="aea6a6a7ed66ac62280672613ad3d55c6"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#aea6a6a7ed66ac62280672613ad3d55c6">tol_acc</a> = 1.0</td></tr>
-<tr class="memdesc:aea6a6a7ed66ac62280672613ad3d55c6 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">tolerance of goal region in acceleration <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>tol_acc</b> = 1.0</td></tr>
 <tr class="separator:aea6a6a7ed66ac62280672613ad3d55c6 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada470c88ea94736094373051a6af4027 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="ada470c88ea94736094373051a6af4027"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#ada470c88ea94736094373051a6af4027">u_max_</a></td></tr>
-<tr class="memdesc:ada470c88ea94736094373051a6af4027 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">max control input <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>u_max_</b></td></tr>
 <tr class="separator:ada470c88ea94736094373051a6af4027 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8192abe5a7f4192050887794e31bcfdb inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a8192abe5a7f4192050887794e31bcfdb"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a8192abe5a7f4192050887794e31bcfdb">v_max_</a> = -1</td></tr>
-<tr class="memdesc:a8192abe5a7f4192050887794e31bcfdb inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">max velocity, -1 indicates no limitation <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>v_max_</b> = -1</td></tr>
 <tr class="separator:a8192abe5a7f4192050887794e31bcfdb inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab00a839d6cd8a075ac01bc951eb7e6cb inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="ab00a839d6cd8a075ac01bc951eb7e6cb"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#ab00a839d6cd8a075ac01bc951eb7e6cb">a_max_</a> = -1</td></tr>
-<tr class="memdesc:ab00a839d6cd8a075ac01bc951eb7e6cb inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">max acceleration, -1 indicates no limitation <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>a_max_</b> = -1</td></tr>
 <tr class="separator:ab00a839d6cd8a075ac01bc951eb7e6cb inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09d0f05928b636d7124023e6a15658c7 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a09d0f05928b636d7124023e6a15658c7"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a09d0f05928b636d7124023e6a15658c7">j_max_</a> = -1</td></tr>
-<tr class="memdesc:a09d0f05928b636d7124023e6a15658c7 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">max jerk, -1 indicates no limitation <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>j_max_</b> = -1</td></tr>
 <tr class="separator:a09d0f05928b636d7124023e6a15658c7 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a666a09e86315eebae910e78b5bd81b5f inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a666a09e86315eebae910e78b5bd81b5f"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>t_max_</b> = -1</td></tr>
+<tr class="separator:a666a09e86315eebae910e78b5bd81b5f inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf7c0ad06bbb55d346d822c52af51a26 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="abf7c0ad06bbb55d346d822c52af51a26"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#abf7c0ad06bbb55d346d822c52af51a26">dt_</a> = 1.0</td></tr>
-<tr class="memdesc:abf7c0ad06bbb55d346d822c52af51a26 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">execution time for each primitive <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>dt_</b> = 1.0</td></tr>
 <tr class="separator:abf7c0ad06bbb55d346d822c52af51a26 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93c9a2bd16fefabc99ee2aee1bc2d445 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a93c9a2bd16fefabc99ee2aee1bc2d445"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a93c9a2bd16fefabc99ee2aee1bc2d445">ds_</a> = 0.01</td></tr>
-<tr class="memdesc:a93c9a2bd16fefabc99ee2aee1bc2d445 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">resolution of position <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ds_</b> = 0.01</td></tr>
 <tr class="separator:a93c9a2bd16fefabc99ee2aee1bc2d445 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a4985a02d526c38b4e823b4e6815136 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a8a4985a02d526c38b4e823b4e6815136"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a8a4985a02d526c38b4e823b4e6815136">dv_</a> = 0.01</td></tr>
-<tr class="memdesc:a8a4985a02d526c38b4e823b4e6815136 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">resolution of velocity <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>dv_</b> = 0.001</td></tr>
 <tr class="separator:a8a4985a02d526c38b4e823b4e6815136 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a975a616c1e7ae43f1d92ba4f8baf7975 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a975a616c1e7ae43f1d92ba4f8baf7975"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a975a616c1e7ae43f1d92ba4f8baf7975">da_</a> = 0.1</td></tr>
-<tr class="memdesc:a975a616c1e7ae43f1d92ba4f8baf7975 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">resolution of acceleration <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>da_</b> = 0.01</td></tr>
 <tr class="separator:a975a616c1e7ae43f1d92ba4f8baf7975 inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae958108a1a2eec24bc56f0bf8f510d9e inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="ae958108a1a2eec24bc56f0bf8f510d9e"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#ae958108a1a2eec24bc56f0bf8f510d9e">dj_</a> = 0.1</td></tr>
-<tr class="memdesc:ae958108a1a2eec24bc56f0bf8f510d9e inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">resolution of jerk <br /></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>dj_</b> = 0.01</td></tr>
 <tr class="separator:ae958108a1a2eec24bc56f0bf8f510d9e inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fec9eb45a2cf926c4833f5a25a7f8cc inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a6fec9eb45a2cf926c4833f5a25a7f8cc"></a>
 <a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a6fec9eb45a2cf926c4833f5a25a7f8cc">U_</a></td></tr>
 <tr class="memdesc:a6fec9eb45a2cf926c4833f5a25a7f8cc inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of constant control input. <br /></td></tr>
 <tr class="separator:a6fec9eb45a2cf926c4833f5a25a7f8cc inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e920048a984a5f0deeec48cee24aeaa inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a2e920048a984a5f0deeec48cee24aeaa"></a>
+<a class="el" href="data__type_8h.html#a62c46ed3e3ab6773b30439f9be38290b">vec_Vec3f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a2e920048a984a5f0deeec48cee24aeaa">expanded_nodes_</a></td></tr>
+<tr class="memdesc:a2e920048a984a5f0deeec48cee24aeaa inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expanded nodes. <br /></td></tr>
+<tr class="separator:a2e920048a984a5f0deeec48cee24aeaa inherit pub_attribs_classMPL_1_1env__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42222f6c6f6c69d977e3cfe549d8aa76 inherit pub_attribs_classMPL_1_1env__base"><td class="memItemLeft" align="right" valign="top"><a id="a42222f6c6f6c69d977e3cfe549d8aa76"></a>
 <a class="el" href="structWaypoint.html">Waypoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMPL_1_1env__base.html#a42222f6c6f6c69d977e3cfe549d8aa76">goal_node_</a></td></tr>
 <tr class="memdesc:a42222f6c6f6c69d977e3cfe549d8aa76 inherit pub_attribs_classMPL_1_1env__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Goal node. <br /></td></tr>
