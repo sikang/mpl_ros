@@ -1,7 +1,7 @@
 MRSL Decomp Util ROS
 ===============
 A ROS wrapper for implementing [`DecompUtil`](https://github.com/sikang/DecompUtil.git), stacks include:
-  - `DecompUtil`: convex decomposition of free space in a cluttered environment
+  - `decomp_util`: convex decomposition of free space in a cluttered environment
   - `decomp_ros_msgs`: ROS msgs used in storing, visualizing and communicating
   - `decomp_ros_utils`: ROS utils for interfacing with `DecompUtil`
   - `test_node`: examples

@@ -1,11 +1,14 @@
 MRSL Motion Primitive Library ROS
 =====================
-A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Stacks include:
+A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
+
+Stacks include:
   - `decomp_ros`: convex decomposition tools for generating ellipsoid and polyhedron
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
-  - `planning_ros_utils`: ROS utils for interfacing with MPL
+  - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
   - `test_node`: examples code for simple testing
+Check each package for more details.
 
 ## Compilation
 Prerequisite:
