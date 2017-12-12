@@ -17,7 +17,8 @@
   <!--<depend>jps3d</depend>-->
   <depend>motion_primitive_library</depend>
   <depend>planning_ros_msgs</depend>
-  <!--<depend>image_geometry</depend>-->
+  <depend>image_geometry</depend>
+  <depend>depth_image_proc</depend>
   <depend>tf_conversions</depend>
 
   <export>
