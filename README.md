@@ -14,7 +14,6 @@ Check each package for more details.
 ## Compilation
 Prerequisite:
   - `ROS`(Indigo+)
-  - `QT4` (Current Rviz plugins cannot compile with QT5)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
 
 Using Catkin:
