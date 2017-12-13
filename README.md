@@ -57,7 +57,7 @@ goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], 
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
 ```
 
-Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/pdf/1710.02748.pdf). 
+Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 

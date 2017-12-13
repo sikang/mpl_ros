@@ -22,4 +22,5 @@ build:
         git clone https://github.com/catkin/catkin_simple.git
         catkin_init_workspace
         cd ..
+        export ROS_PARALLEL_JOBS='-j4 -l4' # Limit parallel jobs
         catkin_make -DCMAKE_BUILD_TYPE=Release
