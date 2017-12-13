@@ -8,11 +8,13 @@ Stacks include:
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
   - `test_node`: examples code for simple testing
+
 Check each package for more details.
 
 ## Compilation
 Prerequisite:
   - `ROS`(Indigo+)
+  - `QT4` (Current Rviz plugins cannot compile with QT5)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
 
 Using Catkin:
@@ -26,6 +28,7 @@ $ mv mpl_ros ~/catkin_ws/src
 $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ cd ~/catkin_ws & catkin build
 ```
+
 ## Usage
 Simple test using the built-in data can be applied through following commands:
 ```sh
@@ -52,7 +55,8 @@ goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], 
 ================== Traj -- total J: 9.000000, total time: 10.000000
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
 ```
-Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacle course, and the robot is modeled as ellipsoid. More information will be updated later. 
+
+Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/pdf/1710.02748.pdf). 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
