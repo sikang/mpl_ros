@@ -1,4 +1,4 @@
-box: ros:kinetic-ros-base
+box: ros:kinetic-desktop-full
 
 build:
   steps:
