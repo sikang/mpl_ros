@@ -3,6 +3,10 @@ box: ros:kinetic-desktop-full
 build:
   steps:
     - script:
+      name: initialize git submodules
+      code: |
+        git submodule update --init --recursive
+    - script:
       name: install dependencies
       code: |
         sudo apt-get update
