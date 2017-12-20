@@ -5,15 +5,13 @@
   <arg name="prefix" value="" unless="$(arg debug)"/>
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
-  <node pkg="test_node"
+  <node pkg="mpl_test_node"
     type="test_primitive_map"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">
     <remap from="~pose" to="/move_base_simple/goal"/>
-    <!--<param name="file" value="$(find test_node)/maps/simple/simple.bag"/>-->
-    <!--<param name="file" value="$(find test_node)/maps/levine/levine.bag"/>-->
-    <param name="file" value="$(find test_node)/maps/skir/skir.bag"/>
+    <param name="file" value="$(find mpl_test_node)/maps/skir/skir.bag"/>
     <param name="topic" value="/voxel_map"/>
     <!-- Set start and goal -->
     <param name="start_x" value="5.5"/>

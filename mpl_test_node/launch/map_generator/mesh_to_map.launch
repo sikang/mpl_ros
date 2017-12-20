@@ -4,7 +4,7 @@
     type="mesh_sampling"
     name="mesh_to_cloud"
     output="screen">
-    <param name="file" value="$(find test_node)/maps/levine/levine.stl"/>
+    <param name="file" value="$(find mpl_test_node)/maps/levine/levine.stl"/>
     <remap from="~cloud" to="cloud"/>
     <param name="n_samples" value="1000000"/>
     <param name="leaf_size" value="0.05"/>

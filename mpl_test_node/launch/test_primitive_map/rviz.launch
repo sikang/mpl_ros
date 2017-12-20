@@ -5,5 +5,5 @@
     type="rviz"
     name="rviz"
     output="screen"
-    args="-d $(find test_node)/launch/$(arg test)/test.rviz"/>
+    args="-d $(find mpl_test_node)/launch/$(arg test)/test.rviz"/>
 </launch>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>test_node</name>
+  <name>mpl_test_node</name>
   <version>0.0.1</version>
-  <description>The test_node package</description>
-  <maintainer email="sikang@todo.todo">sikang</maintainer>
+  <description>The mpl_test_node package</description>
+  <maintainer email="sikang@seas.upenn.edu">sikang</maintainer>
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>

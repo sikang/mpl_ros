@@ -10,7 +10,7 @@ Stacks include:
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
-  - `test_node`: examples code for simple testing
+  - `mpl_test_node`: examples code for simple testing
 
 Check each package for more details.
 
@@ -34,14 +34,14 @@ $ cd ~/catkin_ws & catkin build
 ## Usage
 Simple test using the built-in data can be applied through following commands:
 ```sh
-$ cd ./test_node/launch/test_primitive_map
+$ cd ./mpl_test_node/launch/test_primitive_map
 $ roslaunch rviz.launch
 $ roslaunch test.launch
 ```
 
 If it runs succesfully, you should be able to see following print out:
 ```sh
-[ WARN] [1499461391.525181641]: Get data!
+[ WARN] [1513803929.139830846]: Get data!
 [MPPlanner] PLANNER VERBOSE ON
 [MPBaseUtil] set epsilon: 1.000000
 [MPBaseUtil] set v_max: 2.000000
@@ -60,44 +60,23 @@ MaxExpandTime [0.000000] Reached!!!!!!
 
 currNode key: 121.282078, g: 109.000000, rhs: inf!
 Expand [756] nodes!
-9
-action id: 6, action dt: 1.000000
-8
-action id: 7, action dt: 1.000000
-7
-action id: 3, action dt: 1.000000
-6
-action id: 4, action dt: 1.000000
-5
-action id: 1, action dt: 1.000000
-4
-action id: 4, action dt: 1.000000
-3
-action id: 1, action dt: 1.000000
-2
-action id: 1, action dt: 1.000000
-1
-action id: 5, action dt: 1.000000
-0
-action id: 5, action dt: 1.000000
-[ INFO] [1513796128.064132008]: Succeed! Takes 0.025109 sec for planning, expand [756] nodes
+[ INFO] [1513803929.198487049]: Succeed! Takes 0.022980 sec for planning, expand [756] nodes
 ================== Traj -- total J: 9.000000, total time: 10.000000
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
-
 ```
 
-Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
+Another example using ellipsoid model can be found in `mpl_test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
-<img src="./test_node/samples/sample1.png" width="256"> <img src="./test_node/samples/sample2.png" width="256"> <img src="./test_node/samples/sample3.png" width="300"> 
+<img src="./mpl_test_node/samples/sample1.png" width="256"> <img src="./mpl_test_node/samples/sample2.png" width="256"> <img src="./mpl_test_node/samples/sample3.png" width="328"> 
 
 The built-in maps are listed as below:
 
 Simple | Levine | Skir | Office
 :----- | :----- | :--- | :-----
-<img src="./test_node/maps/simple/simple.png" width="128"> |<img src="./test_node/maps/levine/levine.png" width="128"> |<img src="./test_node/maps/skir/skir.png" width="128"> |<img src="./test_node/maps/office/office.png" width="128"> 
+<img src="./mpl_test_node/maps/simple/simple.png" width="156"> |<img src="./mpl_test_node/maps/levine/levine.png" width="156"> |<img src="./mpl_test_node/maps/skir/skir.png" width="156"> |<img src="./mpl_test_node/maps/office/office.png" width="156"> 
 
-User can form their own maps using the `mapping_utils`, a launch file example is provided in `./test_node/launch/map_generator` for converting a STL file into voxel map. 
+User can form their own maps using the `mapping_utils`, a launch file example is provided in `./mpl_test_node/launch/map_generator` for converting a STL file into voxel map. 
 For details about the full utilities, please refer to [wiki](https://github.com/sikang/mpl_ros/wiki).
 
