@@ -3,6 +3,7 @@ MRSL Motion Primitive Library ROS
 [![wercker status](https://app.wercker.com/status/d282a628f39dac13997c792b2298bde0/s/master "wercker status")](https://app.wercker.com/project/byKey/d282a628f39dac13997c792b2298bde0)
 
 A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
+The package is still under maintenance, the API may change occasionally, please use `git log` to track the latest update. 
 
 Stacks include:
   - `decomp_ros`: convex decomposition tools for generating ellipsoid and polyhedron
@@ -38,23 +39,51 @@ $ roslaunch rviz.launch
 $ roslaunch test.launch
 ```
 
-You should be able to see some messages as:
+If it runs succesfully, you should be able to see following print out:
 ```sh
 [ WARN] [1499461391.525181641]: Get data!
 [MPPlanner] PLANNER VERBOSE ON
 [MPBaseUtil] set epsilon: 1.000000
 [MPBaseUtil] set v_max: 2.000000
 [MPBaseUtil] set a_max: 1.000000
+[MPBaseUtil] set u_max: 1.000000
 [MPBaseUtil] set dt: 1.000000
 [MPBaseUtil] set max num: -1
-[MPBaseUtil] set n: 1, use_3d: 0
 [MPBaseUtil] set tol_dis: 1.000000
 [MPBaseUtil] set tol_vel: 1.000000
+[MPBaseUtil] set tol_acc: 1.000000
 start pos: [12.500000, 1.400000, 0.000000], vel: [1.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
 goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
-[ INFO] [1499461394.004879469]: Succeed! Takes 0.055615 sec for planning, expand [727] nodes
+[MPBaseUtil] set effort in acc
+Start new node!
+MaxExpandTime [0.000000] Reached!!!!!!
+
+currNode key: 121.282078, g: 109.000000, rhs: inf!
+Expand [756] nodes!
+9
+action id: 6, action dt: 1.000000
+8
+action id: 7, action dt: 1.000000
+7
+action id: 3, action dt: 1.000000
+6
+action id: 4, action dt: 1.000000
+5
+action id: 1, action dt: 1.000000
+4
+action id: 4, action dt: 1.000000
+3
+action id: 1, action dt: 1.000000
+2
+action id: 1, action dt: 1.000000
+1
+action id: 5, action dt: 1.000000
+0
+action id: 5, action dt: 1.000000
+[ INFO] [1513796128.064132008]: Succeed! Takes 0.025109 sec for planning, expand [756] nodes
 ================== Traj -- total J: 9.000000, total time: 10.000000
 ================ Refined traj -- total J: 7.537635, total time: 10.000000
+
 ```
 
 Another example using ellipsoid model can be found in `test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 

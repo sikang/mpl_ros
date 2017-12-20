@@ -152,7 +152,6 @@ int main(int argc, char ** argv){
   }
   else
     planner_->setU(num, use_3d); // Set discretization with 1 and efforts
-  planner_->setMode(start); // Set discretization with 1 and efforts
   //planner_->setMode(num, use_3d, start); // Set discretization with 1 and efforts
   //Planning thread!
 

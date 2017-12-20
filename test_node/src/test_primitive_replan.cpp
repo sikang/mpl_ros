@@ -93,7 +93,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
 
   ros::Time t0 = ros::Time::now();
-  bool valid = planner_.plan(start, goal, false);
+  bool valid = planner_.plan(start, goal);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_.getCloseSet().size());
     terminated = true;
@@ -115,7 +115,7 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   visualizeGraph(0, planner_);
 
   ros::Time t1 = ros::Time::now();
-  valid = replan_planner_.plan(start, goal, replan_planner_.initialized());
+  valid = replan_planner_.plan(start, goal);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t1).toSec(), replan_planner_.getCloseSet().size());
     terminated = true;
@@ -336,7 +336,6 @@ int main(int argc, char ** argv){
   planner_.setTmax(ndt * dt); // Set dt for each primitive
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_.setU(1, false);// 2D discretization with 1
-  planner_.setMode(start); // use acc as control
   planner_.setTol(1, 1, 1); // Tolerance for goal region
   planner_.setLPAstar(false); // Use Astar
 
@@ -349,7 +348,6 @@ int main(int argc, char ** argv){
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(1, false);// 2D discretization with 1
-  replan_planner_.setMode(start); // Use acc as control
   replan_planner_.setTol(1, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
 

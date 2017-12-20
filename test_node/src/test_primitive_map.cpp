@@ -125,7 +125,6 @@ int main(int argc, char ** argv){
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_->setU(1, false);// 2D discretization with 1
-  planner_->setMode(start); // use acc as control
   planner_->setTol(1, 1, 1); // Tolerance for goal region
 
 
