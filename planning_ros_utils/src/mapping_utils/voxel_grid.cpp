@@ -36,11 +36,17 @@ void VoxelGrid::clear(int nx, int ny) {
 }
 
 void VoxelGrid::fill(int nx, int ny) {
-  for(int nz = 0; nz < dim_(2); nz++) 
-    map_[nx][ny][nz] = val_occ;
+  if(nx >= 0 && nx < dim_(0) &&
+      ny >= 0 && ny < dim_(1)) {
+    for(int nz = 0; nz < dim_(2); nz++) 
+      map_[nx][ny][nz] = val_occ;
+  }
 }
 
 void VoxelGrid::fill(int nx, int ny, int nz) {
+  if(nx >= 0 && nx < dim_(0) &&
+      ny >= 0 && ny < dim_(1) &&
+      nz >= 0 && nz < dim_(2)) 
     map_[nx][ny][nz] = val_occ;
 }
 
