@@ -145,8 +145,10 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3i pns;
   for(const auto& it: pts) {
     Vec3i pn = map_util->floatToInt(it); 
-    voxel_mapper_->clear(pn(0), pn(1));
-    pns.push_back(pn);
+    if(map_util->isOccupied(pn)) {
+      voxel_mapper_->clear(pn(0), pn(1));
+      pns.push_back(pn);
+    }
   }
 
   planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
@@ -166,8 +168,6 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   expanded_cloud_pub[0].publish(expanded_ps);
 
   //visualizeGraph(1, replan_planner_);
-  //visualizeGraph(0, planner_);
-  //
   std_msgs::Bool init;
   init.data = true;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
@@ -180,8 +180,10 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3i pns;
   for(const auto& it: pts) {
     Vec3i pn = map_util->floatToInt(it); 
-    voxel_mapper_->fill(pn(0), pn(1));
-    pns.push_back(pn);
+    if(map_util->isFree(pn)) {
+      voxel_mapper_->fill(pn(0), pn(1));
+      pns.push_back(pn);
+    }
   }
 
   planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
@@ -203,7 +205,6 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   */
 
   //visualizeGraph(1, replan_planner_);
-  //visualizeGraph(0, planner_);
   std_msgs::Bool init;
   init.data = true;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
