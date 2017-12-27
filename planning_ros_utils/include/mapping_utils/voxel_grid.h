@@ -19,7 +19,7 @@ class VoxelGrid {
 
   void addCloud(const vec_Vec3f &pts);
 
-  void addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns);
+  vec_Vec3i addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns);
 
   void decay();
 

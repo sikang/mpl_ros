@@ -219,8 +219,9 @@ void VoxelGrid::addCloud(const vec_Vec3f &pts)
   }
 }
 
-void VoxelGrid::addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns)
+vec_Vec3i VoxelGrid::addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns)
 {
+  vec_Vec3i new_obs;
   for(const auto &it : pts)
   {
     Vec3i n = floatToInt(it);
@@ -229,12 +230,15 @@ void VoxelGrid::addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns)
     if(map_[n(0)][n(1)][n(2)] != val_occ) {
       for(const auto& it_n: ns) {
         Vec3i n2 = n + it_n;
-        if(!isOutSide(n2))
+        if(!isOutSide(n2) && inflated_map_[n2(0)][n2(1)][n2(2)] != val_occ) {
           inflated_map_[n2(0)][n2(1)][n2(2)] = val_occ;
+          new_obs.push_back(n2);
+        }
       }
     }
     map_[n(0)][n(1)][n(2)] = val_occ;
   }
+  return new_obs;
 }
 
 Vec3i VoxelGrid::floatToInt(const Vec3f &pt) {
