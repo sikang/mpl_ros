@@ -1,4 +1,5 @@
 #include "bag_reader.hpp"
+#include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Int8.h>
 #include <planning_ros_msgs/VoxelMap.h>
@@ -281,8 +282,8 @@ int main(int argc, char ** argv){
   nh.param("map_name", map_name, std::string("voxel_map"));
   nh.param("cloud_name", cloud_name, std::string("cloud"));
 
-  sensor_msgs::PointCloud cloud = read_bag<sensor_msgs::PointCloud>(file_name, cloud_name);
-  planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, map_name);
+  sensor_msgs::PointCloud cloud = read_bag<sensor_msgs::PointCloud>(file_name, cloud_name, 0).back();
+  planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, map_name, 0).back();
 
   double res = map.resolution;
   Vec3f origin(map.origin.x, map.origin.y, map.origin.z);

@@ -1,4 +1,5 @@
 #include "bag_reader.hpp"
+#include <ros/ros.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
@@ -87,6 +88,7 @@ int main(int argc, char ** argv){
   nh.param("file", file_name, std::string("voxel_map"));
   nh.param("topic", topic_name, std::string("voxel_map"));
   planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, topic_name);
+
 
   //Initialize map util 
   std::shared_ptr<MPL::VoxelMapUtil> map_util(new MPL::VoxelMapUtil);

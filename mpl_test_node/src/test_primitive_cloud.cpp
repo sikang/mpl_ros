@@ -1,4 +1,5 @@
 #include "bag_reader.hpp"
+#include <ros/ros.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
 #include <planner/mp_cloud_util.h>
@@ -26,7 +27,7 @@ int main(int argc, char ** argv){
   std::string file_name, topic_name;
   nh.param("file", file_name, std::string("voxel_map"));
   nh.param("topic", topic_name, std::string("voxel_map"));
-  sensor_msgs::PointCloud map = read_bag<sensor_msgs::PointCloud>(file_name, topic_name);
+  sensor_msgs::PointCloud map = read_bag<sensor_msgs::PointCloud>(file_name, topic_name, 0).back();
   cloud_pub.publish(map);
 
   double robot_radius;
@@ -126,7 +127,7 @@ int main(int argc, char ** argv){
   bool use_prior;
   nh.param("use_prior", use_prior, false);
   if(!traj_file_name.empty()) {
-    planning_ros_msgs::Trajectory prior_traj = read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name);
+    planning_ros_msgs::Trajectory prior_traj = read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name, 0).back();
     if(!prior_traj.primitives.empty()) {
       prior_traj_pub.publish(prior_traj);
       if(use_prior) {
