@@ -5,6 +5,5 @@
     type="rviz"
     name="rviz"
     output="screen"
-    launch-prefix="gdb -ex run --args"
     args="-d $(find mpl_test_node)/launch/$(arg test)/test.rviz"/>
 </launch>

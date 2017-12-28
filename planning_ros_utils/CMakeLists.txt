@@ -52,6 +52,9 @@ cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
 
 cs_add_executable(laser_to_cloud src/mapping_utils/laser_to_cloud.cpp)
 
+cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
+target_link_libraries(cloud_to_map voxel_grid)
+
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
   src/planning_rviz_plugins/primitive_visual.cpp

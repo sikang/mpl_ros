@@ -25,7 +25,7 @@ std::vector<T> read_bag(std::string file_name, std::string topic, int num) {
   }
   bag.close();
   if (msgs.empty())
-    ROS_WARN("Fail to find '%s' in '%s'", topic.c_str(), file_name.c_str());
+    ROS_WARN("Fail to find '%s' in '%s', make sure md5sum are equivalent.", topic.c_str(), file_name.c_str());
   else
     ROS_INFO("Get data!");
   return msgs;
