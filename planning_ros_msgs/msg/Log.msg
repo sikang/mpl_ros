@@ -1,4 +1,3 @@
-Header header
 # Epoch indicates the number of planning epoch
 int8 epoch
 # Field Name shows the name of following value
