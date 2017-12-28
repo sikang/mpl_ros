@@ -63,7 +63,7 @@ set(SOURCE_FILES
   src/planning_rviz_plugins/primitives_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
   src/ros_utils/primitive_ros_utils.cpp
-  src/ros_utils/mapping_ros_utils.cpp
+  #src/ros_utils/mapping_ros_utils.cpp
   ${MOC_FILES})
 
 cs_add_library(planning_rviz_plugins ${SOURCE_FILES})

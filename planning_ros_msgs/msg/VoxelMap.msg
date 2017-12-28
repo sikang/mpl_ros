@@ -1,9 +1,12 @@
 std_msgs/Header header
-VoxelMapInfo info
 
+# Resolution 
+float32 resolution
+
+# Origin is the origin of map stored as float
 geometry_msgs/Point origin
+# Dim is the dimension of the map stored as int
 geometry_msgs/Point dim
 
-# Subscript (xi, yi, zi) indexes probability[xi + num_x * yi + zi * num_x * num_y]
-# represents (origin.x + xi * resolution, origin.y + yi * resolution, origin.z + zi * resolution)
+# Subscript (xi, yi, zi) indices probability data[xi + dim.x * yi + zi * dim.y * dim.z]
 int8[] data

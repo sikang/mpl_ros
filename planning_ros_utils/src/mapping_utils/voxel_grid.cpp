@@ -87,10 +87,7 @@ planning_ros_msgs::VoxelMap VoxelGrid::getMap()
   voxel_map.dim.y = dim_(1);
   voxel_map.dim.z = dim_(2);
 
-  voxel_map.info.resolution = res_;
-  voxel_map.info.val_unknown = val_unknown;
-  voxel_map.info.val_free = val_free;
-  voxel_map.info.val_occupied = val_occ;
+  voxel_map.resolution = res_;
 
   voxel_map.data.resize(dim_(0) * dim_(1) * dim_(2), val_free);
   Vec3i n;
@@ -127,10 +124,7 @@ planning_ros_msgs::VoxelMap VoxelGrid::getInflatedMap()
   voxel_map.dim.y = dim_(1);
   voxel_map.dim.z = dim_(2);
 
-  voxel_map.info.resolution = res_;
-  voxel_map.info.val_unknown = val_unknown;
-  voxel_map.info.val_free = val_free;
-  voxel_map.info.val_occupied = val_occ;
+  voxel_map.resolution = res_;
 
   voxel_map.data.resize(dim_(0) * dim_(1) * dim_(2), val_free);
   Vec3i n;

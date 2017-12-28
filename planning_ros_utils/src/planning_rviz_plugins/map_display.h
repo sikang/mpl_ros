@@ -17,8 +17,10 @@
 #include <rviz/properties/enum_property.h>
 
 #include <boost/circular_buffer.hpp>
-#include <ros_utils/mapping_ros_utils.h>
 #include <ros_utils/data_ros_utils.h>
+
+#include <collision_checking/voxel_map_util.h>
+
 #include "bound_visual.h"
 
 namespace planning_rviz_plugins {
@@ -38,6 +40,10 @@ namespace planning_rviz_plugins {
         void updateScale();
 
       protected:
+        void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg);
+        void getMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, planning_ros_msgs::VoxelMap& map);
+
+
         virtual void onInitialize();
 
         virtual void processMessage(const planning_ros_msgs::VoxelMapConstPtr &map);

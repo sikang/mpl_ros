@@ -1,9 +1,9 @@
 #include "bag_reader.hpp"
 #include <std_msgs/Bool.h>
 #include <std_msgs/Int8.h>
+#include <planning_ros_msgs/VoxelMap.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
-#include <ros_utils/mapping_ros_utils.h>
 #include <mapping_utils/voxel_grid.h>
 #include <planner/mp_map_util.h>
 
@@ -28,6 +28,33 @@ std_msgs::Header header;
 
 Waypoint start, goal;
 bool terminated = false;
+
+void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
+  Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
+  Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);
+  decimal_t res = msg.resolution;
+  std::vector<signed char> map = msg.data;
+
+  map_util->setMap(ori, dim, map, res);
+}
+
+void getMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, planning_ros_msgs::VoxelMap& map) {
+  Vec3f ori = map_util->getOrigin();
+  Vec3i dim = map_util->getDim();
+  decimal_t res = map_util->getRes();
+
+  map.origin.x = ori(0);
+  map.origin.y = ori(1);
+  map.origin.z = ori(2);
+
+  map.dim.x = dim(0);
+  map.dim.y = dim(1);
+  map.dim.z = dim(2);
+  map.resolution = res;
+
+  map.data = map_util->getMap();
+}
+
 
 void visualizeGraph(int id, const MPMapUtil& planner) {
   if(id < 0 || id > 1)
@@ -257,7 +284,7 @@ int main(int argc, char ** argv){
   sensor_msgs::PointCloud cloud = read_bag<sensor_msgs::PointCloud>(file_name, cloud_name);
   planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, map_name);
 
-  double res = map.info.resolution;
+  double res = map.resolution;
   Vec3f origin(map.origin.x, map.origin.y, map.origin.z);
   Vec3f dim(map.dim.x * res, map.dim.y * res, map.dim.z * res);
 
