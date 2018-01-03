@@ -19,12 +19,18 @@ Prerequisite:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
 
-Using Catkin:
+If the submodule `motion_primitive_library` is not initialized yet, run following commands at first:
+```sh
+$ cd /PATH/TO/mpl_ros
+$ git submodule update --init 
+```
+
+Using Catkin to compile:
 ```sh
 $ mv mpl_ros ~/catkin_ws/src
 $ cd ~/catkin_ws & catkin_make -DCMAKE_BUILD_TYPE=Release
 ```
-Using Catkin Tools:
+Using Catkin Tools to compile:
 ```sh
 $ mv mpl_ros ~/catkin_ws/src
 $ catkin config -DCMAKE_BUILD_TYPE=Release

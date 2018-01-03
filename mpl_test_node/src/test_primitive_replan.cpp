@@ -61,12 +61,10 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   if(id < 0 || id > 1)
     return;
 
-  /*
   //Publish expanded nodes
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(planner.getExpandedNodes());
   expanded_ps.header = header;
   expanded_cloud_pub[id].publish(expanded_ps);
-  */
 
   //Publish nodes in closed set
   sensor_msgs::PointCloud close_ps = vec_to_cloud(planner.getCloseSet());
@@ -84,16 +82,17 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   linked_cloud_pub[id].publish(linked_ps);
 
   //Publish primitives
-  //planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
-  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getValidPrimitives());
+  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
+  //planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getValidPrimitives());
   prs_msg.header =  header;
   prs_pub[id].publish(prs_msg);
 
 }
 
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
-  if(replan_planner_.initialized())
+  if(replan_planner_.initialized()) {
     replan_planner_.getSubStateSpace(msg->data);
+  }
   else
     return;
   std::vector<Waypoint> ws = replan_planner_.getWs();
@@ -191,9 +190,11 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
   vec_Vec3f affected_pts = replan_planner_.updateClearedNodes(pns);
+  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[0].publish(expanded_ps);
+  */
 
   //visualizeGraph(1, replan_planner_);
   std_msgs::Bool init;
@@ -332,26 +333,31 @@ int main(int argc, char ** argv){
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(start_ax, start_ay, start_az);
+  start.jrk = Vec3f::Zero();
   start.use_pos = true;
   start.use_vel = true;
   start.use_acc = true;
+  start.use_jrk = false;
 
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
+  goal.jrk = Vec3f(0, 0, 0);
   goal.use_pos = start.use_pos;
   goal.use_vel = start.use_vel;
   goal.use_acc = start.use_acc;
+  goal.use_jrk = start.use_jrk;
 
 
   //Initialize planner
-  double dt, v_max, a_max, u_max;
+  double dt, v_max, a_max, j_max, u_max;
   int max_num, ndt;
   bool use_3d;
   nh.param("dt", dt, 1.0);
   nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
+  nh.param("j_max", j_max, 1.0);
   nh.param("u_max", u_max, 1.0);
   nh.param("max_num", max_num, -1);
   nh.param("use_3d", use_3d, false);
@@ -359,7 +365,8 @@ int main(int argc, char ** argv){
   planner_.setMapUtil(map_util); // Set collision checking function
   planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
   planner_.setVmax(v_max); // Set max velocity
-  planner_.setAmax(a_max); // Set max acceleration (as control input)
+  planner_.setAmax(a_max); // Set max acceleration
+  planner_.setJmax(j_max); // Set jrk (as control input)
   planner_.setUmax(u_max);// 2D discretization with 1
   planner_.setDt(dt); // Set dt for each primitive
   planner_.setTmax(ndt * dt); // Set dt for each primitive
@@ -372,6 +379,7 @@ int main(int argc, char ** argv){
   replan_planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
   replan_planner_.setVmax(v_max); // Set max velocity
   replan_planner_.setAmax(a_max); // Set max acceleration (as control input)
+  replan_planner_.setJmax(j_max); // Set jrk (as control input)
   replan_planner_.setUmax(u_max);// 2D discretization with 1
   replan_planner_.setDt(dt); // Set dt for each primitive
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
