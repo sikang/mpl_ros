@@ -92,6 +92,7 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   if(replan_planner_.initialized()) {
     replan_planner_.getSubStateSpace(msg->data);
+    visualizeGraph(1, replan_planner_);
   }
   else
     return;
@@ -100,9 +101,6 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
     terminated = true;
   else 
     start = ws[1];
-
-  //replan_planner_.getLinkedNodes();
-  visualizeGraph(1, replan_planner_);
 }
 
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
@@ -168,13 +166,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
 void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
-
-  vec_Vec3i pns;
-  for(const auto& it: pts) {
-    Vec3i pn = map_util->floatToInt(it); 
+  vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
+  vec_Vec3i new_clear;
+  for(const auto& pn: pns) {
     if(map_util->isOccupied(pn)) {
       voxel_mapper_->clear(pn(0), pn(1));
-      pns.push_back(pn);
+      new_clear.push_back(pn);
     }
   }
 
@@ -189,29 +186,30 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = replan_planner_.updateClearedNodes(pns);
+  vec_Vec3f affected_pts = replan_planner_.updateClearedNodes(new_clear);
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[0].publish(expanded_ps);
   */
 
-  //visualizeGraph(1, replan_planner_);
+  visualizeGraph(1, replan_planner_);
+  /*
   std_msgs::Bool init;
   init.data = true;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
+  */
 }
 
 
 void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
-
-  vec_Vec3i pns;
-  for(const auto& it: pts) {
-    Vec3i pn = map_util->floatToInt(it); 
+  vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
+  vec_Vec3i new_obs;
+  for(const auto& pn: pns) {
     if(map_util->isFree(pn)) {
       voxel_mapper_->fill(pn(0), pn(1));
-      pns.push_back(pn);
+      new_obs.push_back(pn);
     }
   }
 
@@ -226,17 +224,19 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(pns);
+  vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(new_obs);
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[0].publish(expanded_ps);
   */
 
-  //visualizeGraph(1, replan_planner_);
+  visualizeGraph(1, replan_planner_);
+  /*
   std_msgs::Bool init;
   init.data = true;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
+  */
 }
 
 
@@ -392,6 +392,7 @@ int main(int argc, char ** argv){
   std_msgs::Bool init;
   init.data = false;
   replanCallback(boost::make_shared<std_msgs::Bool>(init));
+
 
   ros::spin();
 
