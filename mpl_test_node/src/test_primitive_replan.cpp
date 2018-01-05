@@ -81,11 +81,13 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   linked_ps.header = header;
   linked_cloud_pub[id].publish(linked_ps);
 
+  /*
   //Publish primitives
   planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
   //planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getValidPrimitives());
   prs_msg.header =  header;
   prs_pub[id].publish(prs_msg);
+  */
 
 }
 
