@@ -92,6 +92,7 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   if(replan_planner_.initialized()) {
     replan_planner_.getSubStateSpace(msg->data);
+    replan_planner_.checkValidation();
     visualizeGraph(1, replan_planner_);
   }
   else
@@ -116,7 +117,6 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   sg_cloud.points.push_back(pt2); 
   sg_pub.publish(sg_cloud);
 
-
   ros::Time t0 = ros::Time::now();
   bool valid = planner_.plan(start, goal);
   if(!valid) {
@@ -124,8 +124,9 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     terminated = true;
   }
   else{
-    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset: [%zu], total: [%zu]", 
-        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(), planner_.getCloseSet().size(),
+    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(), planner_.getCloseSet().size(), 
+        planner_.getExpandedNodes().size(),
         planner_.getOpenSet().size() + planner_.getCloseSet().size());
 
     //Publish trajectory
@@ -136,7 +137,6 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
   }
-
   visualizeGraph(0, planner_);
 
   ros::Time t1 = ros::Time::now();
@@ -146,9 +146,11 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     terminated = true;
   }
   else{
-    ROS_WARN("Succeed! Takes %f sec for replan planning, openset: [%zu], closeset: [%zu], total: [%zu]", 
-        (ros::Time::now() - t1).toSec(), replan_planner_.getOpenSet().size(), replan_planner_.getCloseSet().size(),
+    ROS_WARN("Succeed! Takes %f sec for lpastar planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+        (ros::Time::now() - t1).toSec(), replan_planner_.getOpenSet().size(), replan_planner_.getCloseSet().size(), 
+        replan_planner_.getExpandedNodes().size(),
         replan_planner_.getOpenSet().size() + replan_planner_.getCloseSet().size());
+
 
     //Publish trajectory
     Trajectory traj = replan_planner_.getTraj();
@@ -158,9 +160,9 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
 
- }
-
+  }
   visualizeGraph(1, replan_planner_);
+  //replan_planner_.checkValidation();
 
 }
 
@@ -193,7 +195,7 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   expanded_cloud_pub[0].publish(expanded_ps);
   */
 
-  visualizeGraph(1, replan_planner_);
+  //visualizeGraph(1, replan_planner_);
   /*
   std_msgs::Bool init;
   init.data = true;
@@ -225,13 +227,11 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
   vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(new_obs);
-  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
-  expanded_cloud_pub[0].publish(expanded_ps);
-  */
+  expanded_cloud_pub[1].publish(expanded_ps);
 
-  visualizeGraph(1, replan_planner_);
+  //visualizeGraph(1, replan_planner_);
   /*
   std_msgs::Bool init;
   init.data = true;
