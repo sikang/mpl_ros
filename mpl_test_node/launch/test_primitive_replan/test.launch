@@ -20,11 +20,11 @@
     <param name="map_name" value="/voxel_map"/>
     <param name="cloud_name" value="/cloud"/>
     <!-- Set start and goal -->
-    <param name="start_x" value="12.5"/>
-    <param name="start_y" value="1.4"/>
+    <param name="start_x" value="14.5"/>
+    <param name="start_y" value="2.4"/>
     <param name="start_z" value="0.1"/>
-    <param name="start_vx" value="0.0"/>
-    <param name="start_vy" value="0.0"/>
+    <param name="start_vx" value="1.0"/>
+    <param name="start_vy" value="1.0"/>
     <param name="start_vz" value="0.0"/>
     <param name="start_ax" value="0.0"/>
     <param name="start_ay" value="0.0"/>
@@ -36,7 +36,7 @@
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1.0"/>
-    <param name="ndt" value="8"/>
+    <param name="ndt" value="-1"/>
     <param name="max_num" value="-1"/>
     <param name="replan" value="$(arg replan)"/>
   </node>

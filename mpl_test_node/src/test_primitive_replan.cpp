@@ -89,20 +89,7 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
 
 }
 
-void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
-  if(replan_planner_.initialized()) {
-    replan_planner_.getSubStateSpace(msg->data);
-    replan_planner_.checkValidation();
-    visualizeGraph(1, replan_planner_);
-  }
-  else
-    return;
-  std::vector<Waypoint> ws = replan_planner_.getWs();
-  if(ws.size() < 3)
-    terminated = true;
-  else 
-    start = ws[1];
-}
+
 
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   if(terminated)
@@ -219,17 +206,22 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   setMap(map_util, map);
 
-  map_util->freeUnKnown();
+  //map_util->freeUnKnown();
 
   //Publish the dilated map for visualization
   getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(new_obs);
+
+  if(replan_planner_.initialized())
+    vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(new_obs);
+
+  /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
   expanded_cloud_pub[1].publish(expanded_ps);
+  */
 
   //visualizeGraph(1, replan_planner_);
   /*
@@ -239,7 +231,26 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   */
 }
 
+void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
+  if(replan_planner_.initialized()) {
+    replan_planner_.getSubStateSpace(msg->data);
+    replan_planner_.checkValidation();
+    visualizeGraph(1, replan_planner_);
+  }
+  else
+    return;
+  std::vector<Waypoint> ws = replan_planner_.getWs();
+  if(ws.size() < 3)
+    terminated = true;
+  else 
+    start = ws[1];
 
+  /*
+  std_msgs::Bool init;
+  init.data = true;
+  replanCallback(boost::make_shared<std_msgs::Bool>(init));
+  */
+}
 
 int main(int argc, char ** argv){
   ros::init(argc, argv, "test");
@@ -387,6 +398,24 @@ int main(int argc, char ** argv){
   replan_planner_.setU(1, false);// 2D discretization with 1
   replan_planner_.setTol(1, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
+
+
+  /*
+  sensor_msgs::PointCloud cloud1, cloud2;
+
+  geometry_msgs::Point32 pt1, pt2;
+  pt1.x = 12.75, pt1.y = 9.55, pt1.z = 0.1;
+  pt2.x = 12.75, pt2.y = 11.95, pt2.z = 0.1;
+  cloud1.points.push_back(pt1), cloud1.points.push_back(pt2);
+
+  addCloudCallback(boost::make_shared<sensor_msgs::PointCloud>(cloud1));
+
+  pt1.x = 4, pt1.y = 5, pt1.z = 0.1;
+  pt2.x = 12, pt2.y = 5, pt2.z = 0.1;
+  cloud2.points.push_back(pt1), cloud2.points.push_back(pt2);
+
+  addCloudCallback(boost::make_shared<sensor_msgs::PointCloud>(cloud2));
+  */
 
   //Planning thread!
   std_msgs::Bool init;
