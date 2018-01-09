@@ -18,6 +18,7 @@ std::shared_ptr<MPL::VoxelMapUtil> map_util;
 
 ros::Publisher map_pub;
 ros::Publisher sg_pub;
+ros::Publisher changed_prs_pub;
 std::vector<ros::Publisher> prs_pub;
 std::vector<ros::Publisher> traj_pub;
 std::vector<ros::Publisher> linked_cloud_pub;
@@ -61,6 +62,17 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   if(id < 0 || id > 1)
     return;
 
+  //Publish location of start and goal
+  sensor_msgs::PointCloud sg_cloud;
+  sg_cloud.header = header;
+  geometry_msgs::Point32 pt1, pt2;
+  pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = start.pos(2);
+  pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = goal.pos(2);
+  sg_cloud.points.push_back(pt1);
+  sg_cloud.points.push_back(pt2); 
+  sg_pub.publish(sg_cloud);
+
+
   //Publish expanded nodes
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(planner.getExpandedNodes());
   expanded_ps.header = header;
@@ -94,16 +106,6 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
 void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   if(terminated)
     return;
-  //Publish location of start and goal
-  sensor_msgs::PointCloud sg_cloud;
-  sg_cloud.header = header;
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = start.pos(2);
-  pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = goal.pos(2);
-  sg_cloud.points.push_back(pt1);
-  sg_cloud.points.push_back(pt2); 
-  sg_pub.publish(sg_cloud);
-
   ros::Time t0 = ros::Time::now();
   bool valid = planner_.plan(start, goal);
   if(!valid) {
@@ -168,14 +170,22 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   setMap(map_util, map);
 
-  map_util->freeUnKnown();
+  /*
+  map_util->dilate(0.2, 0.1);
+  map_util->dilating();
+  */
 
   //Publish the dilated map for visualization
   getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
 
-  vec_Vec3f affected_pts = replan_planner_.updateClearedNodes(new_clear);
+  if(replan_planner_.initialized()) {
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateClearedNodes(new_clear));
+    prs_msg.header.frame_id = "map";
+    changed_prs_pub.publish(prs_msg);
+  }
+ 
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
@@ -206,6 +216,11 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   setMap(map_util, map);
 
+  /*
+  map_util->dilate(0.2, 0.1);
+  map_util->dilating();
+  */
+
   //map_util->freeUnKnown();
 
   //Publish the dilated map for visualization
@@ -214,8 +229,11 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
 
-  if(replan_planner_.initialized())
-    vec_Vec3f affected_pts = replan_planner_.updateBlockedNodes(new_obs);
+  if(replan_planner_.initialized()) {
+    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateBlockedNodes(new_obs));
+    prs_msg.header.frame_id = "map";
+    changed_prs_pub.publish(prs_msg);
+  }
 
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
@@ -234,8 +252,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   if(replan_planner_.initialized()) {
     replan_planner_.getSubStateSpace(msg->data);
-    replan_planner_.checkValidation();
-    visualizeGraph(1, replan_planner_);
+    //replan_planner_.checkValidation();
   }
   else
     return;
@@ -245,6 +262,7 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   else 
     start = ws[1];
 
+  visualizeGraph(1, replan_planner_);
   /*
   std_msgs::Bool init;
   init.data = true;
@@ -266,6 +284,8 @@ int main(int argc, char ** argv){
   ros::Publisher prs_pub0 = nh.advertise<planning_ros_msgs::Primitives>("primitives0", 1, true);
   ros::Publisher prs_pub1 = nh.advertise<planning_ros_msgs::Primitives>("primitives1", 1, true);
   prs_pub.push_back(prs_pub0), prs_pub.push_back(prs_pub1);
+
+  changed_prs_pub = nh.advertise<planning_ros_msgs::Primitives>("changed_primitives", 1, true);
 
   ros::Publisher traj_pub0 = nh.advertise<planning_ros_msgs::Trajectory>("trajectory0", 1, true);
   ros::Publisher traj_pub1 = nh.advertise<planning_ros_msgs::Trajectory>("trajectory1", 1, true);
@@ -311,8 +331,10 @@ int main(int argc, char ** argv){
 
   //Free unknown space and dilate obstacles
   map_util->freeUnKnown();
-  //map_util->dilate(0.2, 0.1);
-  //map_util->dilating();
+  /*
+  map_util->dilate(0.2, 0.1);
+  map_util->dilating();
+  */
 
 
   //Publish the dilated map for visualization
@@ -347,7 +369,7 @@ int main(int argc, char ** argv){
   start.jrk = Vec3f::Zero();
   start.use_pos = true;
   start.use_vel = true;
-  start.use_acc = true;
+  start.use_acc = false;
   start.use_jrk = false;
 
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
@@ -383,7 +405,7 @@ int main(int argc, char ** argv){
   planner_.setTmax(ndt * dt); // Set dt for each primitive
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_.setU(1, false);// 2D discretization with 1
-  planner_.setTol(1, 1, 1); // Tolerance for goal region
+  planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   planner_.setLPAstar(false); // Use Astar
 
   replan_planner_.setMapUtil(map_util); // Set collision checking function
@@ -396,7 +418,7 @@ int main(int argc, char ** argv){
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(1, false);// 2D discretization with 1
-  replan_planner_.setTol(1, 1, 1); // Tolerance for goal region
+  replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
 
 
@@ -404,8 +426,8 @@ int main(int argc, char ** argv){
   sensor_msgs::PointCloud cloud1, cloud2;
 
   geometry_msgs::Point32 pt1, pt2;
-  pt1.x = 12.75, pt1.y = 9.55, pt1.z = 0.1;
-  pt2.x = 12.75, pt2.y = 11.95, pt2.z = 0.1;
+  pt1.x = 14, pt1.y = 14, pt1.z = 0.1;
+  pt2.x = 18, pt2.y = 14, pt2.z = 0.1;
   cloud1.points.push_back(pt1), cloud1.points.push_back(pt2);
 
   addCloudCallback(boost::make_shared<sensor_msgs::PointCloud>(cloud1));

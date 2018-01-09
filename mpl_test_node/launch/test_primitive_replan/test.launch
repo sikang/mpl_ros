@@ -22,20 +22,20 @@
     <!-- Set start and goal -->
     <param name="start_x" value="14.5"/>
     <param name="start_y" value="2.4"/>
-    <param name="start_z" value="0.1"/>
+    <param name="start_z" value="0.06"/>
     <param name="start_vx" value="1.0"/>
     <param name="start_vy" value="1.0"/>
     <param name="start_vz" value="0.0"/>
     <param name="start_ax" value="0.0"/>
     <param name="start_ay" value="0.0"/>
     <param name="start_az" value="0.0"/>
-    <param name="goal_x" value="10.4"/>
+    <param name="goal_x" value="11.4"/>
     <param name="goal_y" value="11.6"/>
-    <param name="goal_z" value="0.1"/>
+    <param name="goal_z" value="0.06"/>
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
-    <param name="dt" value="1.0"/>
+    <param name="dt" value="1"/>
     <param name="ndt" value="-1"/>
     <param name="max_num" value="-1"/>
     <param name="replan" value="$(arg replan)"/>
