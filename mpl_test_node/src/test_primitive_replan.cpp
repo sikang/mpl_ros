@@ -204,6 +204,16 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
+
+  /*
+  Vec3f p1 = pts.front(); Vec3f p2 = pts.back();
+  for(int i = 1; i < 5; i++) {
+    p1(0) -= 0.1, p2(0) -= 0.1;
+    vec_Vec3i pns1 = map_util->rayTrace(p1, p2);
+    pns.insert(pns.end(), pns1.begin(), pns1.end());
+  }
+  */
+
   vec_Vec3i new_obs;
   for(const auto& pn: pns) {
     if(map_util->isFree(pn)) {
@@ -250,9 +260,13 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 }
 
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
+  //goal.pos(0) -= 2;
+  //goal.pos(1) -= 1;
+
+
   if(replan_planner_.initialized()) {
     replan_planner_.getSubStateSpace(msg->data, goal);
-    //replan_planner_.checkValidation();
+    //replan_planner_.getSubStateSpace(0, goal);
   }
   else
     return;
