@@ -251,7 +251,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
 void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   if(replan_planner_.initialized()) {
-    replan_planner_.getSubStateSpace(msg->data);
+    replan_planner_.getSubStateSpace(msg->data, goal);
     //replan_planner_.checkValidation();
   }
   else
