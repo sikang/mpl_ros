@@ -265,7 +265,8 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
 
 
   if(replan_planner_.initialized()) {
-    replan_planner_.getSubStateSpace(msg->data, goal);
+    replan_planner_.getSubStateSpace(msg->data);
+    //replan_planner_.updateGoal(goal);
     //replan_planner_.getSubStateSpace(0, goal);
   }
   else
