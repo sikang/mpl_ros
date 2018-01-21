@@ -13,6 +13,7 @@ catkin_simple()
 cs_add_executable(test_primitive_map src/test_primitive_map.cpp)
 cs_add_executable(test_primitive_replan src/test_primitive_replan.cpp)
 cs_add_executable(test_primitive_cloud src/test_primitive_cloud.cpp)
+cs_add_executable(test_rss src/test_rss.cpp)
 
 cs_install()
 
