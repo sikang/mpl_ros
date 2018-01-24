@@ -18,8 +18,8 @@ Vec3i dim_;
 Waypoint start_, goal_;
 std_msgs::Header header;
 
-MPMapUtil planner_ (false);
-MPMapUtil replan_planner_ (false);
+std::unique_ptr<MPMapUtil> planner_;
+std::unique_ptr<MPMapUtil> replan_planner_;
 
 ros::Publisher map_pub;
 ros::Publisher sg_pub;
@@ -31,8 +31,10 @@ std::vector<ros::Publisher> close_cloud_pub;
 std::vector<ros::Publisher> open_cloud_pub;
 std::vector<ros::Publisher> expanded_cloud_pub;
 
-//std::ofstream myfile;
-int addition_num = 50;
+std::ofstream myfile;
+int addition_num = 150;
+int obs_number_ = 0;
+double density_ = 0;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
@@ -117,51 +119,41 @@ void plan() {
   static bool terminate = false;
   if(terminate)
     return;
-
+  planner_->reset();
   ros::Time t0 = ros::Time::now();
-  bool valid = planner_.plan(start_, goal_);
+  double dt0 = 0;
+  bool valid = planner_->plan(start_, goal_);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning", (ros::Time::now() - t0).toSec());
     terminate = true;
   }
   else{
-
-    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%d), total: [%zu]", 
-        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(), planner_.getCloseSet().size(), 
-        planner_.getExpandedNum(),
-        planner_.getOpenSet().size() + planner_.getCloseSet().size());
-
-    //Publish trajectory
-    Trajectory traj = planner_.getTraj();
-    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-    traj_msg.header = header;
-    traj_pub[0].publish(traj_msg);
-    //printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
+    dt0 = (ros::Time::now() - t0).toSec();
+    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+        dt0, planner_->getOpenSet().size(), planner_->getCloseSet().size(), 
+        planner_->getExpandedNodes().size(),
+        planner_->getOpenSet().size() + planner_->getCloseSet().size());
   }
 
-  visualizeGraph(0, planner_);
-
   t0 = ros::Time::now();
-  valid = replan_planner_.plan(start_, goal_);
+  double dt1 = 0;
+  valid = replan_planner_->plan(start_, goal_);
   if(!valid) {
     ROS_ERROR("Failed! Takes %f sec for planning", (ros::Time::now() - t0).toSec());
   }
   else{
-    ROS_WARN("Succeed! Takes %f sec for LPA* planning, openset: [%zu], closeset (expanded): [%zu](%d), total: [%zu]", 
-        (ros::Time::now() - t0).toSec(), replan_planner_.getOpenSet().size(), replan_planner_.getCloseSet().size(), 
-        replan_planner_.getExpandedNum(),
-        replan_planner_.getOpenSet().size() + replan_planner_.getCloseSet().size());
+    dt1 = (ros::Time::now() - t0).toSec();
 
-    //Publish trajectory
-    Trajectory traj = replan_planner_.getTraj();
-    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-    traj_msg.header = header;
-    traj_pub[1].publish(traj_msg);
-    //printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
-  }
+    ROS_WARN("Succeed! Takes %f sec for LPA* planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+        dt1, replan_planner_->getOpenSet().size(), replan_planner_->getCloseSet().size(), 
+        replan_planner_->getExpandedNodes().size(),
+        replan_planner_->getOpenSet().size() + replan_planner_->getCloseSet().size());
 
-  visualizeGraph(1, replan_planner_);
-  //myfile << addition_num, density, 
+ }
+
+  replan_planner_->getLinkedNodes();
+  myfile << std::to_string(density_) + "," + std::to_string(dt0) + "," +
+         std::to_string(dt1) + "," + std::to_string(planner_->getExpandedNum()) + "," + std::to_string(replan_planner_->getExpandedNum()) + "\n";
   printf(ANSI_COLOR_CYAN "==========================================\n\n" ANSI_COLOR_RESET);
 }
 
@@ -191,16 +183,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   map.header = header;
   map_pub.publish(map);
 
-  if(replan_planner_.initialized()) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateBlockedNodes(new_obs));
-    prs_msg.header.frame_id = "map";
-    changed_prs_pub.publish(prs_msg);
-  }
- 
+  if(replan_planner_->initialized()) 
+    toPrimitivesROSMsg(replan_planner_->updateBlockedNodes(new_obs));
 
-  static int obs_number = 0;
-  obs_number += cnt;
-  printf("Density: %f\n", (float) obs_number / (dim_(0) * dim_(1)));
+  obs_number_ += cnt;
+  density_ = (float) obs_number_ / (dim_(0) * dim_(1));
+  printf("Density: %f\n", density_);
   plan();
 }
 
@@ -257,19 +245,6 @@ int main(int argc, char ** argv){
   dim_(1) = dim(1) / res;
   dim_(2) = dim(2) / res;
 
-  voxel_mapper_.reset(new VoxelGrid(ori, dim, res));
-  //Initialize map util 
-  map_util_.reset(new MPL::VoxelMapUtil);
-
-  planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
-  setMap(map_util_, map);
-  map_util_->freeUnKnown();
-  getMap(map_util_, map);
-  map.header = header;
-  map_pub.publish(map);
-
-
-
   //Set start and goal
   double start_x, start_y, start_z;
   nh.param("start_x", start_x, 12.5);
@@ -315,41 +290,62 @@ int main(int argc, char ** argv){
   nh.param("use_3d", use_3d, false);
 
 
-  planner_.setMapUtil(map_util_); // Set collision checking function
-  planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
-  planner_.setVmax(v_max); // Set max velocity
-  planner_.setAmax(a_max); // Set max acceleration
-  planner_.setJmax(j_max); // Set jrk (as control input)
-  planner_.setUmax(u_max);// 2D discretization with 1
-  planner_.setDt(dt); // Set dt for each primitive
-  planner_.setTmax(ndt * dt); // Set dt for each primitive
-  planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_.setU(1, false);// 2D discretization with 1
-  planner_.setTol(0.2, 1, 1); // Tolerance for goal region
-  planner_.setLPAstar(false); // Use Astar
+  myfile.open("record-chain-"+std::to_string(addition_num)+".csv");
+  myfile << "Obstacle Density,NormalAstar Time,LAstar Time,NormalAstar Expansion,LPAstar Expansion\n";
 
 
-  replan_planner_.setMapUtil(map_util_); // Set collision checking function
-  replan_planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
-  replan_planner_.setVmax(v_max); // Set max velocity
-  replan_planner_.setAmax(a_max); // Set max acceleration (as control input)
-  replan_planner_.setJmax(j_max); // Set jrk (as control input)
-  replan_planner_.setUmax(u_max);// 2D discretization with 1
-  replan_planner_.setDt(dt); // Set dt for each primitive
-  replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
-  replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
-  replan_planner_.setU(1, false);// 2D discretization with 1
-  replan_planner_.setTol(0.2, 1, 1); // Tolerance for goal region
-  replan_planner_.setLPAstar(true); // Use LPAstar
+  for(int i = 0; i < 20; i++) {
+    voxel_mapper_.reset(new VoxelGrid(ori, dim, res));
+    map_util_.reset(new MPL::VoxelMapUtil);
+
+    planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
+    setMap(map_util_, map);
+    map_util_->freeUnKnown();
+
+    planner_.reset(new MPMapUtil(false));
+
+    planner_->setMapUtil(map_util_); // Set collision checking function
+    planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
+    planner_->setVmax(v_max); // Set max velocity
+    planner_->setAmax(a_max); // Set max acceleration
+    planner_->setJmax(j_max); // Set jrk (as control input)
+    planner_->setUmax(u_max);// 2D discretization with 1
+    planner_->setDt(dt); // Set dt for each primitive
+    planner_->setTmax(ndt * dt); // Set dt for each primitive
+    planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
+    planner_->setU(1, false);// 2D discretization with 1
+    planner_->setTol(0.2, 1, 1); // Tolerance for goal region
+    planner_->setLPAstar(false); // Use Astar
+
+    replan_planner_.reset(new MPMapUtil(false));
+
+    replan_planner_->setMapUtil(map_util_); // Set collision checking function
+    replan_planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
+    replan_planner_->setVmax(v_max); // Set max velocity
+    replan_planner_->setAmax(a_max); // Set max acceleration (as control input)
+    replan_planner_->setJmax(j_max); // Set jrk (as control input)
+    replan_planner_->setUmax(u_max);// 2D discretization with 1
+    replan_planner_->setDt(dt); // Set dt for each primitive
+    replan_planner_->setTmax(ndt * dt); // Set dt for each primitive
+    replan_planner_->setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
+    replan_planner_->setU(1, false);// 2D discretization with 1
+    replan_planner_->setTol(0.2, 1, 1); // Tolerance for goal region
+    replan_planner_->setLPAstar(true); // Use LPAstar
+
+    //replan_planner_.reset();
+
+    density_ = 0;
+    obs_number_ = 0;
 
 
-  //myfile.open("record-"+std::to_string(addition_num)+".csv");
-  //myfile << "Addition Num, Obstacle Density, NormalAstar Time, LAstar Time, NormalAstar Expansion, LPAstar Expansion\n";
+    plan();
 
-  plan();
+    while(density_ <= 0.2) 
+      replanCallback(boost::make_shared<std_msgs::Bool>());
+    printf(ANSI_COLOR_GREEN "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Iteration %d\n" ANSI_COLOR_RESET, i);
+  }
 
-  
-  //myfile.close();
+  myfile.close();
   ros::spin();
 
   return 0;

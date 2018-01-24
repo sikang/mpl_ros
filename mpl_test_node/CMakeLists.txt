@@ -15,6 +15,8 @@ cs_add_executable(test_primitive_replan src/test_primitive_replan.cpp)
 cs_add_executable(test_primitive_cloud src/test_primitive_cloud.cpp)
 cs_add_executable(test_rss src/test_rss.cpp)
 cs_add_executable(rss_evaluate1 src/rss_evaluate1.cpp)
+cs_add_executable(rss_evaluate2 src/rss_evaluate2.cpp)
+cs_add_executable(rss_evaluate3 src/rss_evaluate3.cpp)
 
 cs_install()
 
