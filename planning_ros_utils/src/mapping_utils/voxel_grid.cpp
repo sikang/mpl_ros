@@ -31,8 +31,10 @@ vec_Vec3f VoxelGrid::getCloud() {
 }
 
 void VoxelGrid::clear(int nx, int ny) {
-  for(int nz = 0; nz < dim_(2); nz++) 
-    map_[nx][ny][nz] = val_free;
+  if(nx >= 0 && nx < dim_(0) &&
+      ny >= 0 && ny < dim_(1)) 
+    for(int nz = 0; nz < dim_(2); nz++) 
+      map_[nx][ny][nz] = val_free;
 }
 
 void VoxelGrid::fill(int nx, int ny) {
