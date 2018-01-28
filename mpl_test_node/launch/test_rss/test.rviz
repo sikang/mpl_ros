@@ -94,7 +94,7 @@ Visualization Manager:
         - AccColor: 10; 200; 55
           AccScale: 0.0199999996
           Class: planning_rviz_plugins/Primitives
-          Enabled: true
+          Enabled: false
           History Length: 1
           JrkColor: 200; 20; 55
           JrkScale: 0.0199999996
@@ -104,7 +104,7 @@ Visualization Manager:
           PosScale: 0.0199999996
           Topic: /test_primitive/prs
           Unreliable: false
-          Value: true
+          Value: false
           VelColor: 85; 85; 255
           VelScale: 0.0199999996
           Visualize Acc: false
@@ -122,7 +122,7 @@ Visualization Manager:
           Color: 255; 0; 255
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -139,7 +139,7 @@ Visualization Manager:
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -152,7 +152,7 @@ Visualization Manager:
           Color: 0; 170; 0
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -169,7 +169,7 @@ Visualization Manager:
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -283,7 +283,7 @@ Visualization Manager:
           Use Fixed Frame: true
           Use rainbow: true
           Value: false
-      Enabled: true
+      Enabled: false
       Name: BlockedGraph
     - Class: rviz/Group
       Displays:
@@ -296,7 +296,7 @@ Visualization Manager:
           JrkScale: 0.0199999996
           Name: SubPrimitives
           Num of samples: 20
-          PosColor: 204; 51; 204
+          PosColor: 0; 85; 255
           PosScale: 0.0199999996
           Topic: /test_primitive/sub_prs
           Unreliable: false
@@ -315,7 +315,7 @@ Visualization Manager:
           Axis: Z
           Channel Name: intensity
           Class: rviz/PointCloud
-          Color: 0; 0; 0
+          Color: 0; 170; 0
           Color Transformer: FlatColor
           Decay Time: 0
           Enabled: true
@@ -345,7 +345,7 @@ Visualization Manager:
           Axis: Z
           Channel Name: intensity
           Class: rviz/PointCloud
-          Color: 0; 170; 0
+          Color: 255; 0; 255
           Color Transformer: FlatColor
           Decay Time: 0
           Enabled: true
@@ -366,7 +366,7 @@ Visualization Manager:
           Use Fixed Frame: true
           Use rainbow: true
           Value: true
-      Enabled: false
+      Enabled: true
       Name: SubGraph
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -456,5 +456,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1397
-  X: 3083
-  Y: 70
+  X: 2685
+  Y: 58

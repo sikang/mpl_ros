@@ -78,7 +78,6 @@ void plan(bool record) {
   static bool terminate = false;
   if(terminate)
     return;
-  planner_->reset();
   ros::Time t0 = ros::Time::now();
   double dt0 = 0;
   bool valid = planner_->plan(start_, goal_);

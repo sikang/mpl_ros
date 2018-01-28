@@ -32,7 +32,7 @@ std::vector<ros::Publisher> open_cloud_pub;
 std::vector<ros::Publisher> expanded_cloud_pub;
 
 std::ofstream myfile;
-int addition_num = 150;
+int addition_num = 50;
 int obs_number_ = 0;
 double density_ = 0;
 
@@ -119,7 +119,6 @@ void plan() {
   static bool terminate = false;
   if(terminate)
     return;
-  planner_->reset();
   ros::Time t0 = ros::Time::now();
   double dt0 = 0;
   bool valid = planner_->plan(start_, goal_);

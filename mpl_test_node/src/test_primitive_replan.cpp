@@ -30,6 +30,7 @@ std_msgs::Header header;
 
 Waypoint start, goal;
 bool terminated = false;
+std::vector<Primitive> changed_prs_;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
@@ -99,6 +100,12 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   prs_msg.header =  header;
   prs_pub[id].publish(prs_msg);
 
+  if(id > 0) {
+    planning_ros_msgs::Primitives changed_prs_msg = toPrimitivesROSMsg(changed_prs_);
+    changed_prs_msg.header.frame_id = "map";
+    changed_prs_pub.publish(changed_prs_msg);
+  }
+
 }
 
 
@@ -143,6 +150,8 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     //Publish trajectory
     Trajectory traj = replan_planner_.getTraj();
+    for(auto &seg: traj.segs)
+      seg.prs_[2].c(5) += 0.1;
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub[1].publish(traj_msg);
@@ -153,11 +162,21 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   visualizeGraph(1, replan_planner_);
   //replan_planner_.checkValidation();
 
+  changed_prs_.clear();
 }
 
 void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
+
+  Vec3f p1 = pts.front(); Vec3f p2 = pts.back();
+  for(int i = 1; i < 5; i++) {
+    p1(0) -= 0.1, p2(0) -= 0.1;
+    vec_Vec3i pns1 = map_util->rayTrace(p1, p2);
+    pns.insert(pns.end(), pns1.begin(), pns1.end());
+  }
+
+
   vec_Vec3i new_clear;
   for(const auto& pn: pns) {
     if(map_util->isOccupied(pn)) {
@@ -181,10 +200,12 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
   if(replan_planner_.initialized()) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateClearedNodes(new_clear));
-    prs_msg.header.frame_id = "map";
-    changed_prs_pub.publish(prs_msg);
-  }
+    auto prs = replan_planner_.updateClearedNodes(new_clear);
+    for(auto &seg: prs)
+      seg.prs_[2].c(5) += 0.1;
+ 
+    changed_prs_.insert(changed_prs_.end(), prs.begin(), prs.end());
+ }
  
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
@@ -192,7 +213,7 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   expanded_cloud_pub[0].publish(expanded_ps);
   */
 
-  //visualizeGraph(1, replan_planner_);
+  visualizeGraph(1, replan_planner_);
   /*
   std_msgs::Bool init;
   init.data = true;
@@ -205,14 +226,12 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
 
-  /*
   Vec3f p1 = pts.front(); Vec3f p2 = pts.back();
   for(int i = 1; i < 5; i++) {
     p1(0) -= 0.1, p2(0) -= 0.1;
     vec_Vec3i pns1 = map_util->rayTrace(p1, p2);
     pns.insert(pns.end(), pns1.begin(), pns1.end());
   }
-  */
 
   vec_Vec3i new_obs;
   for(const auto& pn: pns) {
@@ -240,9 +259,10 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
 
   if(replan_planner_.initialized()) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateBlockedNodes(new_obs));
-    prs_msg.header.frame_id = "map";
-    changed_prs_pub.publish(prs_msg);
+    auto prs = replan_planner_.updateBlockedNodes(new_obs);
+    for(auto &seg: prs)
+      seg.prs_[2].c(5) += 0.1;
+    changed_prs_.insert(changed_prs_.end(), prs.begin(), prs.end());
   }
 
   /*
@@ -251,7 +271,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   expanded_cloud_pub[1].publish(expanded_ps);
   */
 
-  //visualizeGraph(1, replan_planner_);
+  visualizeGraph(1, replan_planner_);
   /*
   std_msgs::Bool init;
   init.data = true;
@@ -420,7 +440,7 @@ int main(int argc, char ** argv){
   planner_.setTmax(ndt * dt); // Set dt for each primitive
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_.setU(1, false);// 2D discretization with 1
-  planner_.setTol(0.5, 1, 1); // Tolerance for goal region
+  planner_.setTol(0.5, 0.5, 1); // Tolerance for goal region
   planner_.setLPAstar(false); // Use Astar
 
   replan_planner_.setMapUtil(map_util); // Set collision checking function
@@ -433,7 +453,7 @@ int main(int argc, char ** argv){
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(1, false);// 2D discretization with 1
-  replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
+  replan_planner_.setTol(0.5, 0.5, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
 
 
