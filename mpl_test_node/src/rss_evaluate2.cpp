@@ -8,6 +8,7 @@
 #include <mapping_utils/voxel_grid.h>
 #include <planner/mp_map_util.h>
 #include <fstream>
+#include <random>
 
 using namespace MPL;
 
