@@ -54,7 +54,7 @@ def plot(num):
     plt.ylabel(ylabel[num], fontsize=fs)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
-    #plt.ylim(0.0, 2.0)
+    plt.ylim(0.0, None)
     plt.savefig(title+"-"+str(num)+".eps", bbox_inches='tight')
 
 
