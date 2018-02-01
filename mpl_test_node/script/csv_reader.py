@@ -14,7 +14,7 @@ titlenumber = ''
 titlename = ['Speedup in Time', 'Reduction in Number of Expansion']
 ylabel = ['t(LPA*)/t(A*)', 'n(LPA*)/n(A*)']
 
-fs = 20 # fontsize 
+fs = 20 # fontsize
 
 def plot(num):
     plt.figure(num, figsize=(8, 5))
@@ -45,21 +45,21 @@ def plot(num):
                           markersize=12, markerfacecolor='none', linewidth=2.5, linestyle='-')
     medianprops = dict(linestyle='-', linewidth=1.5, color='green')
     plt.boxplot(plot_data, whis='range',
-            labels = labels, showmeans=False, meanline=False, 
+            labels = labels, showmeans=False, meanline=False,
             meanprops=meanlineprops, boxprops=boxprops, medianprops=medianprops)
     plt.plot(np.arange(length) + 1, means, c="g", lw=2, marker='o')
     plt.plot(np.arange(length+2), np.ones(length+2), lw=2, linestyle='--', color='black')
     plt.title(titlename[num]+" ("+titlenumber+")", fontsize=fs)
     plt.xlabel(names[0] + '' + r'$\rho$' +" (%)", fontsize=fs)
     plt.ylabel(ylabel[num], fontsize=fs)
-    plt.xticks(fontsize=15) 
-    plt.yticks(fontsize=15) 
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
     #plt.ylim(0.0, 2.0)
     plt.savefig(title+"-"+str(num)+".eps", bbox_inches='tight')
 
 
 def read_file(filename) :
-    with open(filename, 'rb') as  csvfile:
+    with open(filename, 'r') as  csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         i = 0
         for row in reader:
@@ -91,7 +91,7 @@ def read_file(filename) :
 
 if __name__=="__main__":
     if(len(sys.argv) < 2):
-        print "Must set input file!"
+        print("Must set input file!")
     else:
         for csvfile in sys.argv:
             path = csvfile
@@ -101,9 +101,9 @@ if __name__=="__main__":
         for name in title.split('-'):
             titlenumber = name
             if name == 'clear':
-                print 'Clear Order'
+                print('Clear Order')
                 flip = True
-            
- 
+
+
         read_file(path)
 
