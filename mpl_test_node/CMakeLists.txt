@@ -19,6 +19,8 @@ cs_add_executable(rss_evaluate2 src/rss_evaluate2.cpp)
 cs_add_executable(rss_evaluate3 src/rss_evaluate3.cpp)
 cs_add_executable(rss_evaluate4 src/rss_evaluate4.cpp)
 cs_add_executable(rss_evaluate5 src/rss_evaluate5.cpp)
+#cs_add_executable(rss_evaluate6 src/rss_evaluate6.cpp)
+cs_add_executable(rss_evaluate7 src/rss_evaluate7.cpp)
 
 cs_install()
 

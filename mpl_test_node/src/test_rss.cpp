@@ -92,6 +92,11 @@ int main(int argc, char ** argv){
   nh.param("start_vx", start_vx, 0.0);
   nh.param("start_vy", start_vy, 0.0);
   nh.param("start_vz", start_vz, 0.0);
+  double start_ax, start_ay, start_az;
+  nh.param("start_ax", start_ax, 0.0);
+  nh.param("start_ay", start_ay, 0.0);
+  nh.param("start_az", start_az, 0.0);
+ 
   double goal_x, goal_y, goal_z;
   nh.param("goal_x", goal_x, 6.4);
   nh.param("goal_y", goal_y, 16.6);
@@ -100,10 +105,10 @@ int main(int argc, char ** argv){
   Waypoint start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
-  start.acc = Vec3f(0, 0, 0);
+  start.acc = Vec3f(start_ax, start_ay, start_az);
   start.use_pos = true;
   start.use_vel = true;
-  start.use_acc = false;
+  start.use_acc = true;
 
   Waypoint goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
@@ -115,13 +120,15 @@ int main(int argc, char ** argv){
 
 
   //Initialize planner
-  double dt, v_max, a_max;
+  double dt, v_max, a_max, j_max, u_max;
   int max_num, ndt;
   bool use_3d;
   nh.param("dt", dt, 1.0);
   nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
+  nh.param("j_max", j_max, 1.0);
+  nh.param("u_max", u_max, 1.0);
   nh.param("max_num", max_num, -1);
   nh.param("use_3d", use_3d, false);
 
@@ -130,7 +137,8 @@ int main(int argc, char ** argv){
   planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
   planner_->setVmax(v_max); // Set max velocity
   planner_->setAmax(a_max); // Set max acceleration (as control input)
-  planner_->setUmax(a_max);// 2D discretization with 1
+  planner_->setJmax(j_max); // Set max acceleration (as control input)
+  planner_->setUmax(u_max);// 2D discretization with 1
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setTmax(dt*ndt); // Set dt for each primitive
   planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation

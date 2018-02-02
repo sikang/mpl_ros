@@ -150,8 +150,6 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     //Publish trajectory
     Trajectory traj = replan_planner_.getTraj();
-    for(auto &seg: traj.segs)
-      seg.prs_[2].c(5) += 0.1;
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub[1].publish(traj_msg);
@@ -189,12 +187,6 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
   setMap(map_util, map);
 
-  /*
-  map_util->dilate(0.2, 0.1);
-  map_util->dilating();
-  */
-
-  //Publish the dilated map for visualization
   getMap(map_util, map);
   map.header = header;
   map_pub.publish(map);
@@ -227,7 +219,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
 
   Vec3f p1 = pts.front(); Vec3f p2 = pts.back();
-  for(int i = 1; i < 5; i++) {
+  for(int i = 1; i < 3; i++) {
     p1(0) -= 0.1, p2(0) -= 0.1;
     vec_Vec3i pns1 = map_util->rayTrace(p1, p2);
     pns.insert(pns.end(), pns1.begin(), pns1.end());
@@ -237,7 +229,9 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   for(const auto& pn: pns) {
     if(map_util->isFree(pn)) {
       voxel_mapper_->fill(pn(0), pn(1));
-      new_obs.push_back(pn);
+      Vec3i dim = map_util->getDim();
+      for(int i = 0; i < dim(2); i++)
+        new_obs.push_back(Vec3i(pn(0), pn(1), i));
     }
   }
 
@@ -264,12 +258,6 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
       seg.prs_[2].c(5) += 0.1;
     changed_prs_.insert(changed_prs_.end(), prs.begin(), prs.end());
   }
-
-  /*
-  sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
-  expanded_ps.header = header;
-  expanded_cloud_pub[1].publish(expanded_ps);
-  */
 
   visualizeGraph(1, replan_planner_);
   /*
@@ -377,8 +365,6 @@ int main(int argc, char ** argv){
   map.header = header;
   map_pub.publish(map);
 
-  bool replan;
-  nh.param("replan", replan, false);
 
   //Set start and goal
   double start_x, start_y, start_z;
@@ -439,7 +425,7 @@ int main(int argc, char ** argv){
   planner_.setDt(dt); // Set dt for each primitive
   planner_.setTmax(ndt * dt); // Set dt for each primitive
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_.setU(1, false);// 2D discretization with 1
+  planner_.setU(1, use_3d);// 2D discretization with 1
   planner_.setTol(0.5, 0.5, 1); // Tolerance for goal region
   planner_.setLPAstar(false); // Use Astar
 
@@ -452,7 +438,7 @@ int main(int argc, char ** argv){
   replan_planner_.setDt(dt); // Set dt for each primitive
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
-  replan_planner_.setU(1, false);// 2D discretization with 1
+  replan_planner_.setU(1, use_3d);// 2D discretization with 1
   replan_planner_.setTol(0.5, 0.5, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
 

@@ -6,15 +6,16 @@
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
   <node pkg="mpl_test_node"
-    type="test_rss"
+    type="rss_evaluate7"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">
     <param name="file" value="$(find mpl_test_node)/maps/simple/simple.bag"/>
     <param name="topic" value="/voxel_map"/>
+    <param name="cloud_name" value="/cloud"/>
     <!-- Set start and goal -->
-    <param name="start_x" value="11.0"/>
-    <param name="start_y" value="3"/>
+    <param name="start_x" value="10.0"/>
+    <param name="start_y" value="2"/>
     <param name="start_z" value="0.0"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
@@ -23,17 +24,16 @@
     <param name="start_ay" value="0.0"/>
     <param name="start_az" value="0.0"/>
  
-    <param name="goal_x" value="6.4"/>
-    <param name="goal_y" value="16.6"/>
+    <param name="goal_x" value="3"/>
+    <param name="goal_y" value="17"/>
     <param name="goal_z" value="0.0"/>
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="4.0"/>
-    <param name="a_max" value="4.0"/>
-    <param name="j_max" value="2.0"/>
-    <param name="u_max" value="2.0"/>
+    <param name="v_max" value="2.0"/>
+    <param name="a_max" value="1.0"/>
+    <param name="j_max" value="1.0"/>
+    <param name="u_max" value="1.0"/>
     <param name="dt" value="1.0"/>
-    <param name="ndt" value="1"/>
-    <param name="max_num" value="1"/>
+    <param name="max_num" value="-1"/>
   </node>
 
 </launch>

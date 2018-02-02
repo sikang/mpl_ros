@@ -8,7 +8,6 @@
 #include <mapping_utils/voxel_grid.h>
 #include <planner/mp_map_util.h>
 #include <fstream>
-#include <random>
 
 using namespace MPL;
 
@@ -33,7 +32,7 @@ std::vector<ros::Publisher> open_cloud_pub;
 std::vector<ros::Publisher> expanded_cloud_pub;
 
 std::ofstream myfile;
-int addition_num = 100;
+int addition_num_ = 50;
 int obs_number_ = 0;
 double density_ = 0;
 
@@ -116,11 +115,13 @@ void visualizeGraph(int id, const MPMapUtil& planner) {
   prs_pub[id].publish(prs_msg);
 }
 
-void plan() {
+bool plan(double T ,bool record = true) {
   static bool terminate = false;
   if(terminate)
-    return;
+    return false;
   ros::Time t0 = ros::Time::now();
+  planner_->setTmax(T); // Set dt for each primitive
+
   double dt0 = 0;
   bool valid = planner_->plan(start_, goal_);
   if(!valid) {
@@ -129,12 +130,14 @@ void plan() {
   }
   else{
     dt0 = (ros::Time::now() - t0).toSec();
-    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
-        dt0, planner_->getOpenSet().size(), planner_->getCloseSet().size(), 
-        planner_->getExpandedNodes().size(),
-        planner_->getOpenSet().size() + planner_->getCloseSet().size());
+    if(record)
+      ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+          dt0, planner_->getOpenSet().size(), planner_->getCloseSet().size(), 
+          planner_->getExpandedNodes().size(),
+          planner_->getOpenSet().size() + planner_->getCloseSet().size());
   }
 
+  replan_planner_->setTmax(T); // Set dt for each primitive
   t0 = ros::Time::now();
   double dt1 = 0;
   valid = replan_planner_->plan(start_, goal_);
@@ -144,25 +147,27 @@ void plan() {
   else{
     dt1 = (ros::Time::now() - t0).toSec();
 
-    ROS_WARN("Succeed! Takes %f sec for LPA* planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
-        dt1, replan_planner_->getOpenSet().size(), replan_planner_->getCloseSet().size(), 
-        replan_planner_->getExpandedNodes().size(),
-        replan_planner_->getOpenSet().size() + replan_planner_->getCloseSet().size());
+    if(record)
+      ROS_WARN("Succeed! Takes %f sec for LPA* planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
+          dt1, replan_planner_->getOpenSet().size(), replan_planner_->getCloseSet().size(), 
+          replan_planner_->getExpandedNodes().size(),
+          replan_planner_->getOpenSet().size() + replan_planner_->getCloseSet().size());
 
- }
+  }
 
   replan_planner_->getLinkedNodes();
-  myfile << std::to_string(density_) + "," + std::to_string(dt0) + "," +
-         std::to_string(dt1) + "," + std::to_string(planner_->getExpandedNum()) + "," + std::to_string(replan_planner_->getExpandedNum()) + "\n";
-  printf(ANSI_COLOR_CYAN "==========================================\n\n" ANSI_COLOR_RESET);
+  if(record) {
+    myfile << std::to_string(density_) + "," + std::to_string(T) + "," + std::to_string(dt0) + "," +
+      std::to_string(dt1) + "," + std::to_string(planner_->getExpandedNum()) + "," + std::to_string(replan_planner_->getExpandedNum()) + "\n";
+    printf(ANSI_COLOR_CYAN "==========================================\n\n" ANSI_COLOR_RESET);
+  }
 }
 
 
-void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
-
+void add_points(int num) {
   int cnt = 0;
   vec_Vec3i new_obs;
-  while(cnt < addition_num-1) {
+  while(cnt < num) {
     Vec3i pn = generate_point();
     if(map_util_->isFree(pn)) {
       const Vec3f pt = map_util_->intToFloat(pn);
@@ -176,40 +181,8 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     }
   }
 
-  if(replan_planner_->initialized()) 
-  {
-    Trajectory traj = replan_planner_->getTraj();
-    static std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    static std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<double> dis_t(0.0, traj.getTotalTime());
-
-    while(1) {
-      double t = dis_t(gen);
-      Waypoint w;
-      traj.evaluate(t, w);
-      Vec3f pt = w.pos;
-      Vec3i pn = map_util_->floatToInt(pt);
-      if(map_util_->isFree(pn)) {
-        if((pt - start_.pos).topRows(2).norm() < 0.5 ||
-            (pt - goal_.pos).topRows(2).norm() < 0.5)
-          continue;
-        for(int i = 0; i < dim_(2); i++)
-          new_obs.push_back(Vec3i(pn(0), pn(1), i));
-        voxel_mapper_->fill(pn(0), pn(1));
-        cnt ++;
-        break;
-      }
-    }
-  }
- 
-
   planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
   setMap(map_util_, map);
-  //Publish the dilated map for visualization
-  map_util_->freeUnKnown();
-  getMap(map_util_, map);
-  map.header = header;
-  map_pub.publish(map);
 
   if(replan_planner_->initialized()) 
     toPrimitivesROSMsg(replan_planner_->updateBlockedNodes(new_obs));
@@ -217,7 +190,31 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
   obs_number_ += cnt;
   density_ = (float) obs_number_ / (dim_(0) * dim_(1));
   printf("Density: %f\n", density_);
-  plan();
+}
+
+void clear_points(int num) {
+  int cnt = 0;
+  vec_Vec3i new_obs;
+  while(cnt < num) {
+    Vec3i pn = generate_point();
+    if(map_util_->isOccupied(pn)) {
+      const Vec3f pt = map_util_->intToFloat(pn);
+      for(int i = 0; i < dim_(2); i++)
+        new_obs.push_back(Vec3i(pn(0), pn(1), i));
+      voxel_mapper_->clear(pn(0), pn(1));
+      cnt ++;
+    }
+  }
+
+  planning_ros_msgs::VoxelMap map = voxel_mapper_->getMap();
+  setMap(map_util_, map);
+
+  if(replan_planner_->initialized()) 
+    toPrimitivesROSMsg(replan_planner_->updateClearedNodes(new_obs));
+
+  obs_number_ -= cnt;
+  density_ = (float) obs_number_ / (dim_(0) * dim_(1));
+  printf("Density: %f\n", density_);
 }
 
 
@@ -252,7 +249,6 @@ int main(int argc, char ** argv){
   ros::Publisher expanded_cloud_pub1 = nh.advertise<sensor_msgs::PointCloud>("expanded_cloud1", 1, true);
   expanded_cloud_pub.push_back(expanded_cloud_pub0), expanded_cloud_pub.push_back(expanded_cloud_pub1);
 
-  ros::Subscriber replan_sub = nh.subscribe("replan", 1, replanCallback);
   changed_prs_pub = nh.advertise<planning_ros_msgs::Primitives>("changed_primitives", 1, true);
 
   header.frame_id = std::string("map");
@@ -306,10 +302,9 @@ int main(int argc, char ** argv){
 
   //Initialize planner
   double dt, v_max, a_max, j_max, u_max;
-  int max_num, ndt;
+  int max_num;
   bool use_3d;
   nh.param("dt", dt, 1.0);
-  nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
   nh.param("j_max", j_max, 1.0);
@@ -318,11 +313,10 @@ int main(int argc, char ** argv){
   nh.param("use_3d", use_3d, false);
 
 
-  myfile.open("record-chain-"+std::to_string(addition_num)+".csv");
-  myfile << "Obstacle Density,NormalAstar Time,LAstar Time,NormalAstar Expansion,LPAstar Expansion\n";
+  myfile.open("record-horizon-"+std::to_string(addition_num_)+".csv");
+  myfile << "Obstacle Density,Horizon,NormalAstar Time,LAstar Time,NormalAstar Expansion,LPAstar Expansion\n";
 
-
-  for(int i = 0; i < 50; i++) {
+  for(int i = 0; i < 9; i++) {
     voxel_mapper_.reset(new VoxelGrid(ori, dim, res));
     map_util_.reset(new MPL::VoxelMapUtil);
 
@@ -339,7 +333,6 @@ int main(int argc, char ** argv){
     planner_->setJmax(j_max); // Set jrk (as control input)
     planner_->setUmax(u_max);// 2D discretization with 1
     planner_->setDt(dt); // Set dt for each primitive
-    planner_->setTmax(ndt * dt); // Set dt for each primitive
     planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
     planner_->setU(1, false);// 2D discretization with 1
     planner_->setTol(0.2, 1, 1); // Tolerance for goal region
@@ -354,22 +347,23 @@ int main(int argc, char ** argv){
     replan_planner_->setJmax(j_max); // Set jrk (as control input)
     replan_planner_->setUmax(u_max);// 2D discretization with 1
     replan_planner_->setDt(dt); // Set dt for each primitive
-    replan_planner_->setTmax(ndt * dt); // Set dt for each primitive
     replan_planner_->setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
     replan_planner_->setU(1, false);// 2D discretization with 1
     replan_planner_->setTol(0.2, 1, 1); // Tolerance for goal region
     replan_planner_->setLPAstar(true); // Use LPAstar
 
-    //replan_planner_.reset();
 
     density_ = 0;
     obs_number_ = 0;
 
+    add_points(0.1 * dim_(0) * dim_(1));
 
-    plan();
-
-    while(density_ <= 0.2) 
-      replanCallback(boost::make_shared<std_msgs::Bool>());
+    int ndt = 2;
+    bool reached = false;
+    while(!reached) {
+      reached = plan(ndt * dt);
+      ndt ++;
+    }
     printf(ANSI_COLOR_GREEN "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Iteration %d\n" ANSI_COLOR_RESET, i);
   }
 
