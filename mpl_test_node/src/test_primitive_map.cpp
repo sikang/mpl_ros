@@ -156,7 +156,7 @@ int main(int argc, char ** argv){
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_->setU(1, false);// 2D discretization with 1
-  planner_->setTol(1, 1, 1); // Tolerance for goal region
+  planner_->setTol(0.5, 0.1, 1); // Tolerance for goal region
 
 
   //Publish location of start and goal

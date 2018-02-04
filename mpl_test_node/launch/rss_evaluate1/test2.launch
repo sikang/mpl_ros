@@ -27,6 +27,7 @@
     <param name="j_max" value="1.0"/>
     <param name="dt" value="0.5"/>
     <param name="ndt" value="100"/>
+    <param name="addition_num" value="150"/>
   </node>
 
 </launch>

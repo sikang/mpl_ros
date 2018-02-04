@@ -33,7 +33,7 @@ std::vector<ros::Publisher> open_cloud_pub;
 std::vector<ros::Publisher> expanded_cloud_pub;
 
 std::ofstream myfile;
-int addition_num = 100;
+int addition_num;
 int obs_number_ = 0;
 double density_ = 0;
 
@@ -317,12 +317,13 @@ int main(int argc, char ** argv){
   nh.param("max_num", max_num, -1);
   nh.param("use_3d", use_3d, false);
 
+  nh.param("addition_num", addition_num, 50);
 
   myfile.open("record-chain-"+std::to_string(addition_num)+".csv");
   myfile << "Obstacle Density,NormalAstar Time,LAstar Time,NormalAstar Expansion,LPAstar Expansion\n";
 
 
-  for(int i = 0; i < 50; i++) {
+  for(int i = 0; i < 20; i++) {
     voxel_mapper_.reset(new VoxelGrid(ori, dim, res));
     map_util_.reset(new MPL::VoxelMapUtil);
 
@@ -368,7 +369,7 @@ int main(int argc, char ** argv){
 
     plan();
 
-    while(density_ <= 0.2) 
+    while(density_ <= 0.1) 
       replanCallback(boost::make_shared<std_msgs::Bool>());
     printf(ANSI_COLOR_GREEN "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Iteration %d\n" ANSI_COLOR_RESET, i);
   }
