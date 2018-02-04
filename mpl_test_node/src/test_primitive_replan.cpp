@@ -150,6 +150,10 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
     //Publish trajectory
     Trajectory traj = replan_planner_.getTraj();
+    for(auto &seg: traj.segs)
+      seg.prs_[2].c(5) += 0.1;
+
+
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub[1].publish(traj_msg);
@@ -219,7 +223,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
 
   Vec3f p1 = pts.front(); Vec3f p2 = pts.back();
-  for(int i = 1; i < 3; i++) {
+  for(int i = 1; i < 5; i++) {
     p1(0) -= 0.1, p2(0) -= 0.1;
     vec_Vec3i pns1 = map_util->rayTrace(p1, p2);
     pns.insert(pns.end(), pns1.begin(), pns1.end());

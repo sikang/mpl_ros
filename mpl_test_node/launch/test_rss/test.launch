@@ -32,7 +32,7 @@
     <param name="j_max" value="2.0"/>
     <param name="u_max" value="2.0"/>
     <param name="dt" value="1.0"/>
-    <param name="ndt" value="1"/>
+    <param name="ndt" value="7"/>
     <param name="max_num" value="1"/>
   </node>
 
