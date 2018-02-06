@@ -47,7 +47,7 @@ $ roslaunch test.launch
 
 If it runs succesfully, you should be able to see following print out:
 ```sh
-[ WARN] [1513803929.139830846]: Get data!
+[ INFO] [1517950714.592547755]: Get data!
 [MPPlanner] PLANNER VERBOSE ON
 [MPBaseUtil] set epsilon: 1.000000
 [MPBaseUtil] set v_max: 2.000000
@@ -61,17 +61,35 @@ If it runs succesfully, you should be able to see following print out:
 start pos: [12.500000, 1.400000, 0.000000], vel: [1.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
 goal pos: [6.400000, 16.600000, 0.000000], vel: [0.000000, 0.000000, 0.000000], acc: [0.000000, 0.000000, 0.000000]
 [MPBaseUtil] set effort in acc
-Start new node!
-MaxExpandTime [0.000000] Reached!!!!!!
+Start from new node!
+goalNode fval: 111.258702, g: 97.000000!
+Expand [277] nodes!
+Reached Goal !!!!!!
 
-currNode key: 121.282078, g: 109.000000, rhs: inf!
-Expand [756] nodes!
-[ INFO] [1513803929.198487049]: Succeed! Takes 0.022980 sec for planning, expand [756] nodes
-================== Traj -- total J: 9.000000, total time: 10.000000
-================ Refined traj -- total J: 7.537635, total time: 10.000000
+t: 9 --> 8
+g: 97.000000, rhs: inf, h: 14.258702
+t: 8 --> 7
+g: 86.000000, rhs: inf, h: 21.483618
+t: 7 --> 6
+g: 75.000000, rhs: inf, h: 28.925053
+t: 6 --> 5
+g: 65.000000, rhs: inf, h: 37.819469
+t: 5 --> 4
+g: 54.000000, rhs: inf, h: 47.751727
+t: 4 --> 3
+g: 44.000000, rhs: inf, h: 53.842936
+t: 3 --> 2
+g: 33.000000, rhs: inf, h: 63.910897
+t: 2 --> 1
+g: 22.000000, rhs: inf, h: 74.000250
+t: 1 --> 0
+g: 11.000000, rhs: inf, h: 80.954339
+[ INFO] [1517950714.627870219]: Succeed! Takes 0.008684 sec for planning, expand [277] nodes
+================== Traj -- total J: 7.000000, total time: 9.000000
+================ Refined traj -- total J: 5.796949, total time: 9.000000
 ```
 
-Another example using ellipsoid model can be found in `mpl_test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
+Another example using ellipsoid model can be found in `mpl_test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning in SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
