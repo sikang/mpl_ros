@@ -23,6 +23,5 @@ build:
         catkin_init_workspace
         cd ..
         export ROS_PARALLEL_JOBS='-j4 -l4' # Limit parallel jobs
-        #catkin_make -DCMAKE_BUILD_TYPE=Release
-        catkin build
+        catkin_make_isolated -DCMAKE_BUILD_TYPE=Release
 
