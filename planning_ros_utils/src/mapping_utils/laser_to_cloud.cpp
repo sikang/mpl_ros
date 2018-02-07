@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <motion_primitive_library/data_type.h>
+#include <motion_primitive_library/common/data_type.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 #include <sensor_msgs/LaserScan.h>
 #include <eigen_conversions/eigen_msg.h>

@@ -1,7 +1,7 @@
 #ifndef PCL_UTILS_H
 #define PCL_UTILS_H
 
-#include <motion_primitive_library/data_type.h>
+#include <motion_primitive_library/common/data_type.h>
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 #include <pcl/point_cloud.h>
