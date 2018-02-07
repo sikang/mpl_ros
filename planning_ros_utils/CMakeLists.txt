@@ -6,7 +6,6 @@ find_package(catkin REQUIRED COMPONENTS rviz roscpp)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIRS})
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -28,6 +27,8 @@ endif()
 catkin_simple()
 
 FIND_PACKAGE(VTK REQUIRED)
+FIND_PACKAGE(motion_primitive_library REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIRS} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
 
 if(NOT VTK_FOUND)
   set(DEFAULT FALSE)
@@ -70,7 +71,7 @@ set(SOURCE_FILES
   ${MOC_FILES})
 
 cs_add_library(planning_rviz_plugins ${SOURCE_FILES})
-target_link_libraries(planning_rviz_plugins ${QT_LIBRARIES} ${catkin_LIBRARIES} ${rviz_DEFAULT_PLUGIN_LIBRARIES})
+target_link_libraries(planning_rviz_plugins ${QT_LIBRARIES} ${catkin_LIBRARIES} ${rviz_DEFAULT_PLUGIN_LIBRARIES} ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
 cs_install()
 

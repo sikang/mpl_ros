@@ -5,7 +5,7 @@
 #pragma once
 #include <planning_ros_msgs/Trajectory.h>
 #include <planning_ros_msgs/Primitives.h>
-#include <primitive/trajectory.h>
+#include <motion_primitive_library/primitive/trajectory.h>
 
 /**
  * @brief Primitive class to primitive ROS message

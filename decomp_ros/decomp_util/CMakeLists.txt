@@ -11,7 +11,7 @@ IF(USE_ROS)
   # roslib cmake_modules
   FIND_PACKAGE(catkin REQUIRED COMPONENTS roscpp)
   catkin_package(
-    DEPENDS Eigen3
+    DEPENDS EIGEN3
     CATKIN_DEPENDS
     INCLUDE_DIRS include
     LIBRARIES ellipse_decomp ellipsoid_utils iterative_decomp geometry_utils seed_decomp
@@ -21,7 +21,7 @@ IF(USE_ROS)
 ENDIF()
 
 find_package(Eigen3 REQUIRED)
-include_directories(./include ${EIGEN3_INCLUDE_DIRS})
+include_directories(include ${EIGEN3_INCLUDE_DIRS})
 
 add_library(geometry_utils src/geometry_utils.cpp)
 

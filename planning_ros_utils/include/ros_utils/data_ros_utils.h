@@ -1,7 +1,7 @@
 #ifndef DATA_ROS_UTILS_H
 #define DATA_ROS_UTILS_H
 
-#include <motion_primitive_library/data_type.h>
+#include <motion_primitive_library/common/data_type.h>
 #include <sensor_msgs/PointCloud.h>
 #include <planning_ros_msgs/Path.h>
 #include <planning_ros_msgs/Arrows.h>

@@ -2,7 +2,7 @@
 #include <ros/ros.h>
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
-#include <planner/mp_cloud_util.h>
+#include <motion_primitive_library/planner/mp_cloud_util.h>
 #include <decomp_ros_utils/data_ros_utils.h>
 
 

@@ -6,7 +6,7 @@
 #include <ros_utils/data_ros_utils.h>
 #include <ros_utils/primitive_ros_utils.h>
 #include <mapping_utils/voxel_grid.h>
-#include <planner/mp_map_util.h>
+#include <motion_primitive_library/planner/mp_map_util.h>
 
 using namespace MPL;
 
