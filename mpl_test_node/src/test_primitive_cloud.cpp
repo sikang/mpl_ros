@@ -14,7 +14,6 @@ int main(int argc, char ** argv){
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
-  ros::Publisher poly_pub = nh.advertise<decomp_ros_msgs::Polyhedra>("polyhedra", 1, true);
   ros::Publisher es_pub = nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
   ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
@@ -186,10 +185,6 @@ int main(int argc, char ** argv){
 
     max_attitude(traj, 1000);
   }
-
-  decomp_ros_msgs::Polyhedra poly_msg = DecompROS::polyhedra_to_ros(planner_->getPolyhedra());
-  poly_msg.header.frame_id = "map";
-  poly_pub.publish(poly_msg);
 
 
   ros::spin();
