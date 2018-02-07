@@ -5,7 +5,7 @@ MRSL Motion Primitive Library ROS
 A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
 The package is still under maintenance, the API may change occasionally, please use `git log` to track the latest update. 
 
-Stacks include:
+Packages:
   - `decomp_ros`: convex decomposition tools for generating ellipsoid and polyhedron
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
@@ -15,7 +15,7 @@ Stacks include:
 Check each package for more details.
 
 ## Compilation
-Prerequisite:
+#### Prerequisite:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
 
@@ -25,12 +25,13 @@ $ cd /PATH/TO/mpl_ros
 $ git submodule update --init 
 ```
 
-Using Catkin to compile:
+#### 1) Using Catkin:
 ```sh
 $ mv mpl_ros ~/catkin_ws/src
-$ cd ~/catkin_ws & catkin_make -DCMAKE_BUILD_TYPE=Release
+$ cd ~/catkin_ws & catkin_make_isolated -DCMAKE_BUILD_TYPE=Release
 ```
-Using Catkin Tools to compile:
+
+#### 2) Using Catkin Tools (recommended):
 ```sh
 $ mv mpl_ros ~/catkin_ws/src
 $ catkin config -DCMAKE_BUILD_TYPE=Release
@@ -38,7 +39,7 @@ $ cd ~/catkin_ws & catkin build
 ```
 
 ## Usage
-Simple test using the built-in data can be applied through following commands:
+Simple test using the built-in data can be run using the following commands:
 ```sh
 $ cd ./mpl_test_node/launch/test_primitive_map
 $ roslaunch rviz.launch
@@ -46,7 +47,7 @@ $ roslaunch test.launch
 ```
 
 If it runs succesfully, you should be able to see following print out:
-```sh
+```
 [ INFO] [1517950714.592547755]: Get data!
 [MPPlanner] PLANNER VERBOSE ON
 [MPBaseUtil] set epsilon: 1.000000
