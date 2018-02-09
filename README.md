@@ -1,8 +1,7 @@
-MRSL Motion Primitive Library ROS
-==================================
+#MRSL Motion Primitive Library ROS
 [![wercker status](https://app.wercker.com/status/d282a628f39dac13997c792b2298bde0/s/master "wercker status")](https://app.wercker.com/project/byKey/d282a628f39dac13997c792b2298bde0)
-
-A ROS wrapper for implementing [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/) in planning tasks. Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
+- - - 
+A ROS wrapper for [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/). Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
 The package is still under maintenance, the API may change occasionally, please use `git log` to track the latest update. 
 
 Packages:
@@ -12,9 +11,7 @@ Packages:
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
   - `mpl_test_node`: examples code for simple testing
 
-Check each package for more details.
-
-## Compilation
+## Installation
 #### Prerequisite:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
@@ -90,12 +87,13 @@ g: 11.000000, rhs: inf, h: 80.954339
 ================ Refined traj -- total J: 5.796949, total time: 9.000000
 ```
 
-Another example using ellipsoid model can be found in `mpl_test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information about planning in SE(3) space can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](https://arxiv.org/abs/1710.02748). 
+Another example using ellipsoid model can be found in `mpl_test_node/launch/test_primitive_cloud`, in which a point cloud is used as obstacles, and the robot is modeled as ellipsoid. More information can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](http://ieeexplore.ieee.org/document/8264768/). 
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
 <img src="./mpl_test_node/samples/sample1.png" width="256"> <img src="./mpl_test_node/samples/sample2.png" width="256"> <img src="./mpl_test_node/samples/sample3.png" width="328"> 
 
+## Use Maps
 The built-in maps are listed as below:
 
 Simple | Levine | Skir | Office
