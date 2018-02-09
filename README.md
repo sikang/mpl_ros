@@ -1,4 +1,4 @@
-#MRSL Motion Primitive Library ROS
+# MRSL Motion Primitive Library ROS
 [![wercker status](https://app.wercker.com/status/d282a628f39dac13997c792b2298bde0/s/master "wercker status")](https://app.wercker.com/project/byKey/d282a628f39dac13997c792b2298bde0)
 - - - 
 A ROS wrapper for [Motion Primitive Library](https://sikang.github.io/motion_primitive_library/). Video of the original paper of "Search-based Motion Planning for Quadrotors using Linear Quadratic Minimum Time Control" has been uploaded at the follwing link: [youtube](https://youtu.be/LMe72buMky8).
