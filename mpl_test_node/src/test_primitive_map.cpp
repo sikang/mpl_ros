@@ -12,8 +12,7 @@ std_msgs::Header header_;
 ros::Publisher cloud_pub_;
 std::vector<ros::Publisher> traj_pub_;
 
-
-std::unique_ptr<MPMapUtil> planner_;
+std::unique_ptr<MPMap3DUtil> planner_;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
@@ -42,7 +41,7 @@ void getMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, planning_ros_msgs::Vox
 }
 
 
-bool solve(const Waypoint& start, const Waypoint& goal) {
+bool solve(const Waypoint3& start, const Waypoint3& goal) {
   ros::Time t0 = ros::Time::now();
   bool valid = planner_->plan(start, goal);
 
@@ -59,12 +58,12 @@ bool solve(const Waypoint& start, const Waypoint& goal) {
     ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
   //Publish trajectory
-  Trajectory traj = planner_->getTraj();
+  auto traj = planner_->getTraj();
   planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
   traj_msg.header = header_;
   traj_pub_[0].publish(traj_msg);
 
-  printf("================== Traj -- total J: %f, total time: %f\n", traj.J(1), traj.getTotalTime());
+  printf("================== Traj -- total J: %f, total time: %f\n", traj.J(2), traj.getTotalTime());
   return true;
 }
 
@@ -95,9 +94,9 @@ int main(int argc, char ** argv){
   setMap(map_util, map);
 
   //Free unknown space and dilate obstacles
-  map_util->freeUnKnown();
-  map_util->dilate(0.2, 0.1);
-  map_util->dilating();
+  map_util->freeUnknown();
+  //map_util->dilate(0.2, 0.1);
+  //map_util->dilating();
 
 
   //Publish the dilated map for visualization
@@ -120,7 +119,7 @@ int main(int argc, char ** argv){
   nh.param("goal_y", goal_y, 16.6);
   nh.param("goal_z", goal_z, 0.0);
  
-  Waypoint start;
+  Waypoint3 start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
@@ -128,7 +127,7 @@ int main(int argc, char ** argv){
   start.use_vel = true;
   start.use_acc = false;
 
-  Waypoint goal;
+  Waypoint3 goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -137,25 +136,44 @@ int main(int argc, char ** argv){
   goal.use_acc = start.use_acc;
 
 
+
   //Initialize planner
-  double dt, v_max, a_max;
-  int max_num;
+  double dt, v_max, a_max, u_max;
+  int max_num, num;
   bool use_3d;
   nh.param("dt", dt, 1.0);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
+  nh.param("u_max", u_max, 1.0);
   nh.param("max_num", max_num, -1);
+  nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
 
-  planner_.reset(new MPMapUtil(true));
+  vec_Vec3f U;
+  const decimal_t du = u_max / num;
+  if(use_3d) {
+    decimal_t du_z = u_max / num;
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
+        for(decimal_t dz = -u_max; dz <= u_max; dz += du_z ) //here we reduce the z control
+          U.push_back(Vec3f(dx, dy, dz));
+  }
+  else {
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
+        U.push_back(Vec3f(dx, dy, 0));
+  }
+ 
+
+  planner_.reset(new MPMap3DUtil(true));
   planner_->setMapUtil(map_util); // Set collision checking function
   planner_->setEpsilon(1.0); // Set greedy param (default equal to 1)
   planner_->setVmax(v_max); // Set max velocity
   planner_->setAmax(a_max); // Set max acceleration (as control input)
-  planner_->setUmax(a_max);// 2D discretization with 1
+  planner_->setUmax(u_max);// 2D discretization with 1
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_->setU(1, false);// 2D discretization with 1
+  planner_->setU(U);// 2D discretization with 1
   planner_->setTol(1, 1, 1); // Tolerance for goal region
 
 
@@ -172,23 +190,23 @@ int main(int argc, char ** argv){
   if(solve(start, goal)) {
 
     //Get intermediate waypoints
-    std::vector<Waypoint> waypoints = planner_->getWs();
+    vec_E<Waypoint3> waypoints = planner_->getWs();
     //Get time allocation
     std::vector<decimal_t> dts;
     dts.resize(waypoints.size() - 1, dt);
 
     //Generate higher order polynomials
-    PolySolver poly_solver(2,3);
+    PolySolver3 poly_solver(2,3);
     poly_solver.solve(waypoints, dts);
 
-    Trajectory traj_refined = Trajectory(poly_solver.getTrajectory()->toPrimitives());
+    auto traj_refined = Trajectory3(poly_solver.getTrajectory()->toPrimitives());
 
     //Publish refined trajectory
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj_refined);
     traj_msg.header = header_;
     traj_pub_[1].publish(traj_msg);
 
-    printf("================ Refined traj -- total J: %f, total time: %f\n", traj_refined.J(1), traj_refined.getTotalTime());
+    printf("================ Refined traj -- total J: %f, total time: %f\n", traj_refined.J(2), traj_refined.getTotalTime());
   }
 
 

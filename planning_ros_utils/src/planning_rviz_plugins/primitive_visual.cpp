@@ -37,7 +37,7 @@ void PrimitiveVisual::setMessage(const planning_ros_msgs::Primitive &msg) {
       jrks_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
   }
 
-  Primitive p = toPrimitive(msg);
+  Primitive3 p = toPrimitive3(msg);
 
   decimal_t theta = M_PI / 2;
   Mat3f R;
@@ -45,12 +45,11 @@ void PrimitiveVisual::setMessage(const planning_ros_msgs::Primitive &msg) {
     sin(theta), cos(theta), 0,
     0, 0, 1;
 
-  std::vector<Waypoint> waypoints = p.sample(num_);
-  //while(waypoints.size() > num_)
-  //  waypoints.pop_back();
+  vec_E<Waypoint3> waypoints = p.sample(num_);
+
   for (int i = 1; i < (int) waypoints.size(); i++) {
-    Waypoint p1 = waypoints[i-1];
-    Waypoint p2 = waypoints[i];
+    Waypoint3 p1 = waypoints[i-1];
+    Waypoint3 p2 = waypoints[i];
 
     Ogre::Vector3 pos1(p1.pos(0), p1.pos(1), p1.pos(2));
     Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));
@@ -103,16 +102,16 @@ void PrimitiveVisual::addMessage(const planning_ros_msgs::Primitive &msg) {
   }
 
 
-  Primitive p = toPrimitive(msg);
+  Primitive3 p = toPrimitive3(msg);
   decimal_t theta = M_PI / 2;
   Mat3f R;
   R << cos(theta), -sin(theta), 0,
     sin(theta), cos(theta), 0,
     0, 0, 1;
-  std::vector<Waypoint> waypoints = p.sample(num_);
+  vec_E<Waypoint3> waypoints = p.sample(num_);
   for (int i = 1; i < (int) waypoints.size(); i++) {
-    Waypoint p1 = waypoints[i-1];
-    Waypoint p2 = waypoints[i];
+    Waypoint3 p1 = waypoints[i-1];
+    Waypoint3 p2 = waypoints[i];
 
     Ogre::Vector3 pos1(p1.pos(0), p1.pos(1), p1.pos(2));
     Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));

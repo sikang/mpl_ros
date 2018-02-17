@@ -19,7 +19,7 @@
 #include <boost/circular_buffer.hpp>
 #include <ros_utils/data_ros_utils.h>
 
-#include <motion_primitive_library/collision_checking/voxel_map_util.h>
+#include <motion_primitive_library/collision_checking/map_util.h>
 
 #include "bound_visual.h"
 

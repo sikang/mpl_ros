@@ -10,8 +10,9 @@
 
 using namespace MPL;
 
-MPMapUtil planner_(true);
-MPMapUtil replan_planner_(true);
+MPMap3DUtil planner_(true);
+MPMap3DUtil replan_planner_(true);
+
 std::unique_ptr<VoxelGrid> voxel_mapper_;
 
 std::shared_ptr<MPL::VoxelMapUtil> map_util;
@@ -28,7 +29,7 @@ std::vector<ros::Publisher> expanded_cloud_pub;
 
 std_msgs::Header header;
 
-Waypoint start, goal;
+Waypoint3 start, goal;
 bool terminated = false;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
@@ -58,7 +59,7 @@ void getMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, planning_ros_msgs::Vox
 }
 
 
-void visualizeGraph(int id, const MPMapUtil& planner) {
+void visualizeGraph(int id, const MPMap3DUtil& planner) {
   if(id < 0 || id > 1)
     return;
 
@@ -119,12 +120,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
         planner_.getOpenSet().size() + planner_.getCloseSet().size());
 
     //Publish trajectory
-    Trajectory traj = planner_.getTraj();
+    auto traj = planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub[0].publish(traj_msg);
 
-    printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
+    printf("================== Traj -- J(1): %f, J(2): %f, J(3): %f, total time: %f\n", traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
   }
   visualizeGraph(0, planner_);
 
@@ -142,12 +143,12 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
 
 
     //Publish trajectory
-    Trajectory traj = replan_planner_.getTraj();
+    auto traj = replan_planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub[1].publish(traj_msg);
 
-    printf("================== Traj -- J(0): %f, J(1): %f, J(2): %f, total time: %f\n", traj.J(0), traj.J(1), traj.J(2), traj.getTotalTime());
+    printf("================== Traj -- J(1): %f, J(2): %f, J(3): %f, total time: %f\n", traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
 
   }
   visualizeGraph(1, replan_planner_);
@@ -271,7 +272,7 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   }
   else
     return;
-  std::vector<Waypoint> ws = replan_planner_.getWs();
+  vec_E<Waypoint3> ws = replan_planner_.getWs();
   if(ws.size() < 3)
     terminated = true;
   else 
@@ -345,7 +346,7 @@ int main(int argc, char ** argv){
   setMap(map_util, map);
 
   //Free unknown space and dilate obstacles
-  map_util->freeUnKnown();
+  map_util->freeUnknown();
   /*
   map_util->dilate(0.2, 0.1);
   map_util->dilating();
@@ -399,7 +400,7 @@ int main(int argc, char ** argv){
 
   //Initialize planner
   double dt, v_max, a_max, j_max, u_max;
-  int max_num, ndt;
+  int max_num, ndt, num;
   bool use_3d;
   nh.param("dt", dt, 1.0);
   nh.param("ndt", ndt, -1);
@@ -408,7 +409,24 @@ int main(int argc, char ** argv){
   nh.param("j_max", j_max, 1.0);
   nh.param("u_max", u_max, 1.0);
   nh.param("max_num", max_num, -1);
+  nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
+
+  vec_Vec3f U;
+  const decimal_t du = u_max / num;
+  if(use_3d) {
+    decimal_t du_z = u_max / num;
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
+        for(decimal_t dz = -u_max; dz <= u_max; dz += du_z ) //here we reduce the z control
+          U.push_back(Vec3f(dx, dy, dz));
+  }
+  else {
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
+        U.push_back(Vec3f(dx, dy, 0));
+  }
+ 
 
   planner_.setMapUtil(map_util); // Set collision checking function
   planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)
@@ -419,7 +437,7 @@ int main(int argc, char ** argv){
   planner_.setDt(dt); // Set dt for each primitive
   planner_.setTmax(ndt * dt); // Set dt for each primitive
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_.setU(1, false);// 2D discretization with 1
+  planner_.setU(U);// 2D discretization with 1
   planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   planner_.setLPAstar(false); // Use Astar
 
@@ -432,7 +450,7 @@ int main(int argc, char ** argv){
   replan_planner_.setDt(dt); // Set dt for each primitive
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(-1); // Set maximum allowed expansion, -1 means no limitation
-  replan_planner_.setU(1, false);// 2D discretization with 1
+  replan_planner_.setU(U);// 2D discretization with 1
   replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true); // Use LPAstar
 

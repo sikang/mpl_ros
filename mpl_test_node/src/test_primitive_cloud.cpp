@@ -90,7 +90,7 @@ int main(int argc, char ** argv){
   nh.param("use_acc", use_acc, true);
   nh.param("use_jrk", use_jrk, true);
 
-  Waypoint start;
+  Waypoint3 start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
@@ -100,7 +100,7 @@ int main(int argc, char ** argv){
   start.use_acc = use_acc;
   start.use_jrk = use_jrk;
 
-  Waypoint goal;
+  Waypoint3 goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -130,7 +130,7 @@ int main(int argc, char ** argv){
     if(!prior_traj.primitives.empty()) {
       prior_traj_pub.publish(prior_traj);
       if(use_prior) {
-        planner_->setPriorTrajectory(toTrajectory(prior_traj));
+        planner_->setPriorTrajectory(toTrajectory3(prior_traj));
         goal.use_acc = false;
         goal.use_jrk = false;
       }
@@ -139,19 +139,21 @@ int main(int argc, char ** argv){
 
 
   //Set input control
+  vec_Vec3f U;
+  const decimal_t du = u_max / num;
   if(use_3d) {
-    vec_Vec3f U;
-    decimal_t du = u_max / num;
     decimal_t du_z = u_max_z / num;
     for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         for(decimal_t dz = -u_max_z; dz <= u_max_z; dz += du_z ) //here we reduce the z control
-          U.push_back(Vec3f(dx, dy, dz));                                                                                                
-
-    planner_->setU(U);// Set discretization with 1 and efforts
+          U.push_back(Vec3f(dx, dy, dz));
   }
-  else
-    planner_->setU(num, use_3d); // Set discretization with 1 and efforts
+  else {
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
+        U.push_back(Vec3f(dx, dy, 0));
+  }
+  planner_->setU(U);// Set discretization with 1 and efforts
   //planner_->setMode(num, use_3d, start); // Set discretization with 1 and efforts
   //Planning thread!
 
@@ -170,7 +172,7 @@ int main(int argc, char ** argv){
     ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
     //Publish trajectory
-    Trajectory traj = planner_->getTraj();
+    auto traj = planner_->getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
