@@ -1,7 +1,7 @@
 #ifndef VOXEL_GRID_H
 #define VOXEL_GRID_H
 
-#include <motion_primitive_library/common/data_utils.h>
+#include <motion_primitive_library/common/data_type.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <boost/multi_array.hpp>
 

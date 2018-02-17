@@ -41,10 +41,6 @@ else(NOT VTK_FOUND)
   target_link_libraries(mesh_sampling ${VTK_LIBRARIES})
 endif(NOT VTK_FOUND)
 
-
-#cs_add_executable(color_map_server src/mapping_utils/color_map_server.cpp
-# src/mapping_utils/voxel_grid_rgb.cpp)
-
 cs_add_executable(image_to_cloud src/mapping_utils/image_to_cloud.cpp
  src/mapping_utils/pcl_utils.cpp)
 target_link_libraries(image_to_cloud ${OpenCV_LIBS})

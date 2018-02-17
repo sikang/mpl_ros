@@ -11,7 +11,7 @@
 
 #include <image_geometry/pinhole_camera_model.h>
 
-#include <motion_primitive_library/common/data_utils.h>
+#include <motion_primitive_library/common/data_type.h>
 #include <mapping_utils/rgb_type.h>
 #include <ros_utils/data_ros_utils.h>
 #include <mapping_utils/pcl_utils.h>
