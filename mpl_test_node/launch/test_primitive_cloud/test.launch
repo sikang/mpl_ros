@@ -18,13 +18,13 @@
     <!-- Set start and goal -->
     <param name="start_x" value="8.0"/>
     <param name="start_y" value="13.0"/>
-    <param name="start_z" value="1.0"/>
+    <param name="start_z" value="1.3"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
     <param name="start_vz" value="0.0"/>
     <param name="goal_x" value="28.5"/>
     <param name="goal_y" value="14.0"/>
-    <param name="goal_z" value="1.0"/>
+    <param name="goal_z" value="1.3"/>
     <!-- Set range -->
     <param name="origin_x" value="6.0"/>
     <param name="origin_y" value="12.0"/>
@@ -36,14 +36,14 @@
     <param name="dt" value="$(arg dt)"/>
     <param name="v_max" value="10.0"/>
     <param name="a_max" value="10"/>
-    <param name="u_max" value="50.0"/>
+    <param name="u_max" value="60.0"/>
     <!--<param name="t_max" value="$(eval dt*10)"/>-->
     <param name="t_max" value="-1"/>
     <param name="use_3d" value="false"/>
     <param name="use_prior" value="false"/>
     <param name="use_acc" value="true"/>
     <param name="use_jrk" value="false"/>
-    <param name="num" value="3"/>
+    <param name="num" value="2"/>
     <param name="w" value="10000"/>
     <param name="epsilon" value="2"/>
     <param name="max_num" value="$(arg max_num)"/>
