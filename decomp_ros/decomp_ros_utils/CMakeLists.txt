@@ -30,12 +30,12 @@ catkin_simple()
 
 set(SOURCE_FILES
   src/ellipsoids_visual.cpp
-  src/ellipsoids_display.cpp
-  src/geometry_utils.cpp
   src/bound_visual.cpp
   src/mesh_visual.cpp
   src/vector_visual.cpp
+  src/ellipsoids_display.cpp
   src/polyhedra_display.cpp
+  src/geometry_utils.cpp
   ${MOC_FILES})
 
 cs_add_library(decomp_rviz_plugins ${SOURCE_FILES})

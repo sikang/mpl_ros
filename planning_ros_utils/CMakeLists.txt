@@ -6,6 +6,10 @@ find_package(catkin REQUIRED COMPONENTS rviz roscpp)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
+FIND_PACKAGE(VTK REQUIRED)
+FIND_PACKAGE(motion_primitive_library REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIRS} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
+
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -25,10 +29,6 @@ else()
 endif()
 
 catkin_simple()
-
-FIND_PACKAGE(VTK REQUIRED)
-FIND_PACKAGE(motion_primitive_library REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIRS} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
 
 if(NOT VTK_FOUND)
   set(DEFAULT FALSE)

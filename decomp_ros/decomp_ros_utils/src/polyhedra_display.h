@@ -1,5 +1,3 @@
-#include <boost/circular_buffer.hpp>
-
 #include <decomp_ros_msgs/Polyhedra.h>
 #include <rviz/message_filter_display.h>
 
@@ -47,9 +45,9 @@ private:
   void visualizeBound();
   void visualizeVs();
 
-  boost::circular_buffer<boost::shared_ptr<MeshVisual>> visuals_mesh_;
-  boost::circular_buffer<boost::shared_ptr<BoundVisual>> visuals_bound_;
-  boost::circular_buffer<boost::shared_ptr<VectorVisual>> visuals_vector_;
+  std::shared_ptr<MeshVisual> visual_mesh_;
+  std::shared_ptr<BoundVisual> visual_bound_;
+  std::shared_ptr<VectorVisual> visual_vector_;
 
   rviz::ColorProperty *mesh_color_property_;
   rviz::ColorProperty *bound_color_property_;

@@ -37,9 +37,6 @@ PolyhedraDisplay::PolyhedraDisplay() {
   state_property_->addOption("Both", 2);
   state_property_->addOption("Vs", 3);
 
-  visuals_mesh_.rset_capacity(1);
-  visuals_bound_.rset_capacity(1);
-  visuals_vector_.rset_capacity(1);
 }
 
 void PolyhedraDisplay::onInitialize() { MFDClass::onInitialize(); }
@@ -48,29 +45,12 @@ PolyhedraDisplay::~PolyhedraDisplay() {}
 
 void PolyhedraDisplay::reset() {
   MFDClass::reset();
-  visuals_mesh_.clear();
-  visuals_bound_.clear();
-  visuals_vector_.clear();
+  visual_mesh_ = nullptr;
+  visual_bound_ = nullptr;
+  visual_vector_ = nullptr;
 }
 
-void PolyhedraDisplay::updateMeshColorAndAlpha() {
-  float alpha = alpha_property_->getFloat();
-  Ogre::ColourValue color = mesh_color_property_->getOgreColor();
-
-  for (size_t i = 0; i < visuals_mesh_.size(); i++)
-    visuals_mesh_[i]->setColor(color.r, color.g, color.b, alpha);
-}
-
-void PolyhedraDisplay::updateBoundColorAndAlpha() {
-  float alpha = 1.0;
-  Ogre::ColourValue color = bound_color_property_->getOgreColor();
-
-  for (size_t i = 0; i < visuals_bound_.size(); i++)
-    visuals_bound_[i]->setColor(color.r, color.g, color.b, alpha);
-}
-
-void PolyhedraDisplay::processMessage(
-    const decomp_ros_msgs::Polyhedra::ConstPtr &msg) {
+void PolyhedraDisplay::processMessage(const decomp_ros_msgs::Polyhedra::ConstPtr &msg) {
   if (!context_->getFrameManager()->getTransform(
           msg->header.frame_id, msg->header.stamp, position_, orientation_)) {
     ROS_DEBUG("Error transforming from frame '%s' to frame '%s'",
@@ -107,12 +87,8 @@ void PolyhedraDisplay::processMessage(
 }
 
 void PolyhedraDisplay::visualizeMesh() {
-  boost::shared_ptr<MeshVisual> visual_mesh;
-  if (visuals_mesh_.full())
-    visual_mesh = visuals_mesh_.front();
-  else
-    visual_mesh.reset(new MeshVisual(context_->getSceneManager(), scene_node_));
-
+  std::shared_ptr<MeshVisual> visual_mesh;
+  visual_mesh.reset(new MeshVisual(context_->getSceneManager(), scene_node_));
  
   visual_mesh->setMessage(vertices_, passes_);
   visual_mesh->setFramePosition(position_);
@@ -121,16 +97,12 @@ void PolyhedraDisplay::visualizeMesh() {
   float alpha = alpha_property_->getFloat();
   Ogre::ColourValue color = mesh_color_property_->getOgreColor();
   visual_mesh->setColor(color.r, color.g, color.b, alpha);
-  visuals_mesh_.push_back(visual_mesh);
+  visual_mesh_ = visual_mesh;
 }
 
 void PolyhedraDisplay::visualizeBound() {
-  boost::shared_ptr<BoundVisual> visual_bound;
-  if (visuals_bound_.full())
-    visual_bound = visuals_bound_.front();
-  else
-    visual_bound.reset(
-        new BoundVisual(context_->getSceneManager(), scene_node_));
+  std::shared_ptr<BoundVisual> visual_bound;
+  visual_bound.reset(new BoundVisual(context_->getSceneManager(), scene_node_));
 
   visual_bound->setMessage(vertices_);
   visual_bound->setFramePosition(position_);
@@ -141,15 +113,12 @@ void PolyhedraDisplay::visualizeBound() {
   float scale = scale_property_->getFloat();
   visual_bound->setScale(scale);
 
-  visuals_bound_.push_back(visual_bound);
+  visual_bound_ = visual_bound;
 }
 
 void PolyhedraDisplay::visualizeVs() {
-  boost::shared_ptr<VectorVisual> visual_vector;
-  if (visuals_vector_.full())
-    visual_vector = visuals_vector_.front();
-  else
-    visual_vector.reset(new VectorVisual(context_->getSceneManager(), scene_node_));
+  std::shared_ptr<VectorVisual> visual_vector;
+  visual_vector.reset(new VectorVisual(context_->getSceneManager(), scene_node_));
 
   visual_vector->setMessage(vs_);
   visual_vector->setFramePosition(position_);
@@ -158,17 +127,17 @@ void PolyhedraDisplay::visualizeVs() {
   Ogre::ColourValue color = vs_color_property_->getOgreColor();
   visual_vector->setColor(color.r, color.g, color.b, 1.0);
 
-  visuals_vector_.push_back(visual_vector);
+  visual_vector_ = visual_vector;
 }
 
 void PolyhedraDisplay::visualizeMessage(int state) {
   switch (state) {
   case 0:
-    visuals_bound_.clear();
+    visual_bound_ = nullptr;
     visualizeMesh();
     break;
   case 1:
-    visuals_mesh_.clear();
+    visual_mesh_ = nullptr;
     visualizeBound();
     break;
   case 2:
@@ -176,7 +145,7 @@ void PolyhedraDisplay::visualizeMessage(int state) {
     visualizeBound();
     break;
   case 3:
-    visuals_vector_.clear();
+    visual_vector_ = nullptr;
     visualizeMesh();
     visualizeBound();
     visualizeVs();
@@ -186,6 +155,21 @@ void PolyhedraDisplay::visualizeMessage(int state) {
   }
 }
 
+void PolyhedraDisplay::updateMeshColorAndAlpha() {
+  float alpha = alpha_property_->getFloat();
+  Ogre::ColourValue color = mesh_color_property_->getOgreColor();
+
+  if(visual_mesh_)
+    visual_mesh_->setColor(color.r, color.g, color.b, alpha);
+}
+
+void PolyhedraDisplay::updateBoundColorAndAlpha() {
+  Ogre::ColourValue color = bound_color_property_->getOgreColor();
+  if(visual_bound_)
+    visual_bound_->setColor(color.r, color.g, color.b, 1.0);
+}
+
+
 void PolyhedraDisplay::updateState() {
   int state = state_property_->getOptionInt();
   visualizeMessage(state);
@@ -193,22 +177,20 @@ void PolyhedraDisplay::updateState() {
 
 void PolyhedraDisplay::updateScale() {
   float s = scale_property_->getFloat();
-  for (size_t i = 0; i < visuals_bound_.size(); i++)
-    visuals_bound_[i]->setScale(s);
+  if(visual_bound_)
+    visual_bound_->setScale(s);
 }
 
 void PolyhedraDisplay::updateVsScale() {
   float s = vs_scale_property_->getFloat();
-  for (size_t i = 0; i < visuals_vector_.size(); i++)
-    visuals_vector_[i]->setScale(s);
+  if(visual_vector_)
+    visual_vector_->setScale(s);
 }
 
 void PolyhedraDisplay::updateVsColorAndAlpha() {
-  float alpha = 1.0;
   Ogre::ColourValue color = vs_color_property_->getOgreColor();
-
-  for (size_t i = 0; i < visuals_vector_.size(); i++)
-    visuals_vector_[i]->setColor(color.r, color.g, color.b, alpha);
+  if(visual_vector_)
+    visual_vector_->setColor(color.r, color.g, color.b, 1);
 }
 }
 
