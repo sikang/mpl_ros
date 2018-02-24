@@ -38,7 +38,7 @@
 //***** ROS Wrapper, generate point cloud from stl
 //*** sikang@seas.upenn.edu
 
-#include <pcl/visualization/pcl_visualizer.h>
+//#include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/vtk_lib_io.h>
 #include <pcl/common/transforms.h>
@@ -216,25 +216,9 @@ int main(int argc, char **argv) {
   triangleMapper->Update();
   polydata1 = triangleMapper->GetInput();
 
-  bool INTER_VIS = false;
-  bool VIS = PCL_VIS;
-
-  if (INTER_VIS) {
-    visualization::PCLVisualizer vis;
-    vis.addModelFromPolyData(polydata1, "mesh1", 0);
-    vis.setRepresentationToSurfaceForAllActors();
-    vis.spin();
-  }
-
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_1(
       new pcl::PointCloud<pcl::PointXYZ>);
   uniform_sampling(polydata1, SAMPLE_POINTS_, *cloud_1);
-
-  if (INTER_VIS) {
-    visualization::PCLVisualizer vis_sampled;
-    vis_sampled.addPointCloud(cloud_1);
-    vis_sampled.spin();
-  }
 
   // Voxelgrid
   VoxelGrid<PointXYZ> grid_;
@@ -257,13 +241,8 @@ int main(int argc, char **argv) {
     pcl::io::savePCDFileASCII("tmp.pcd", *res);
     ROS_INFO("Cloud saved!");
   }
-  
-  if (VIS) {
-    visualization::PCLVisualizer vis3("VOXELIZED SAMPLES CLOUD");
-    vis3.addPointCloud(res);
-    vis3.spin();
-  } else
-    ros::spin();
+
+  ros::spin();
 
 
   return 0;

@@ -37,19 +37,18 @@ if(NOT VTK_FOUND)
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
   cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
-  target_link_libraries(mesh_sampling ${VTK_LIBRARIES})
 endif(NOT VTK_FOUND)
 
-cs_add_executable(image_to_cloud src/mapping_utils/image_to_cloud.cpp
- src/mapping_utils/pcl_utils.cpp)
-target_link_libraries(image_to_cloud ${OpenCV_LIBS})
+#cs_add_executable(image_to_cloud src/mapping_utils/image_to_cloud.cpp
+# src/mapping_utils/pcl_utils.cpp)
+#target_link_libraries(image_to_cloud ${OpenCV_LIBS})
 
 cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
 
-cs_add_executable(laser_to_cloud src/mapping_utils/laser_to_cloud.cpp)
+#cs_add_executable(laser_to_cloud src/mapping_utils/laser_to_cloud.cpp)
 
-cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
-target_link_libraries(cloud_to_map voxel_grid)
+#cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
+#target_link_libraries(cloud_to_map voxel_grid)
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
