@@ -36,7 +36,6 @@ if(NOT VTK_FOUND)
   message("VTK was not found")
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
-  message("VTK was found")
   cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
   target_link_libraries(mesh_sampling ${VTK_LIBRARIES})
 endif(NOT VTK_FOUND)
@@ -59,11 +58,9 @@ set(SOURCE_FILES
   src/planning_rviz_plugins/path_visual.cpp
   src/planning_rviz_plugins/map_display.cpp
   src/planning_rviz_plugins/path_display.cpp
-  src/planning_rviz_plugins/paths_display.cpp
   src/planning_rviz_plugins/primitives_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
   src/ros_utils/primitive_ros_utils.cpp
-  #src/ros_utils/mapping_ros_utils.cpp
   ${MOC_FILES})
 
 cs_add_library(planning_rviz_plugins ${SOURCE_FILES})

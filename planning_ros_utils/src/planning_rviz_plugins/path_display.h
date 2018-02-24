@@ -1,10 +1,8 @@
-#include <boost/circular_buffer.hpp>
 #include <OGRE/OgreSceneNode.h>
 #include <OGRE/OgreSceneManager.h>
 #include <rviz/visualization_manager.h>
 #include <rviz/properties/color_property.h>
 #include <rviz/properties/float_property.h>
-#include <rviz/properties/int_property.h>
 #include <rviz/properties/enum_property.h>
 #include <rviz/frame_manager.h>
 
@@ -33,19 +31,17 @@ namespace planning_rviz_plugins {
         void updateNodeColorAndAlpha();
         void updateLineScale();
         void updateNodeScale();
-        void updateHistoryLength();
 
       private:
         void processMessage(const planning_ros_msgs::Path::ConstPtr &msg);
         void visualizeMessage();
 
-        boost::circular_buffer<boost::shared_ptr<PathVisual>> visuals_;
+        std::shared_ptr<PathVisual> visual_;
 
         rviz::ColorProperty *line_color_property_;
         rviz::ColorProperty *node_color_property_;
         rviz::FloatProperty *line_scale_property_;
         rviz::FloatProperty *node_scale_property_;
-        rviz::IntProperty *history_length_property_;
 
         Ogre::Vector3 position_;
         Ogre::Quaternion orientation_;

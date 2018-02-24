@@ -1,4 +1,3 @@
-#include <boost/circular_buffer.hpp>
 #include <OGRE/OgreSceneNode.h>
 #include <OGRE/OgreSceneManager.h>
 #include <rviz/visualization_manager.h>
@@ -40,14 +39,13 @@ namespace planning_rviz_plugins {
         void updateVelVis();
         void updateAccVis();
         void updateJrkVis();
-        void updateHistoryLength();
         void updateNum();
 
       private:
         void processMessage(const planning_ros_msgs::Trajectory::ConstPtr &msg);
         void visualizeMessage();
 
-        boost::circular_buffer<boost::shared_ptr<TrajectoryVisual>> visuals_;
+        std::shared_ptr<TrajectoryVisual> visual_;
 
         rviz::ColorProperty *pos_color_property_;
         rviz::ColorProperty *vel_color_property_;
@@ -60,7 +58,6 @@ namespace planning_rviz_plugins {
         rviz::BoolProperty *vel_vis_property_;
         rviz::BoolProperty *acc_vis_property_;
         rviz::BoolProperty *jrk_vis_property_;
-        rviz::IntProperty *history_length_property_;
         rviz::IntProperty *num_property_;
 
         Ogre::Vector3 position_;

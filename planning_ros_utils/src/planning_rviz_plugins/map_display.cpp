@@ -1,29 +1,18 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-#include <ros/time.h>
 #include "map_display.h"
 
 namespace planning_rviz_plugins {
 
 MapDisplay::MapDisplay()
     : point_cloud_common_(new rviz::PointCloudCommon(this)) {
-  queue_size_property_ = new rviz::IntProperty(
-      "Queue Size", 10,
-      "Advanced: set the size of the incoming PointCloud message queue. "
-      " Increasing this is useful if your incoming TF data is delayed "
-      "significantly "
-      "from your PointCloud data, but it can greatly increase memory usage if "
-      "the messages are big.",
-      this, SLOT(updateQueueSize()));
-
   // PointCloudCommon sets up a callback queue with a thread for each
   // instance.  Use that for processing incoming messages.
 
   state_property_ = new rviz::EnumProperty(
-      "State", "Occupied", "VoxelMap has three states: Occupied, Free and "
-                           "Unknown, this option allows selecting visualizing "
-                           "voxels in corresponding state",
+      "State", "Occupied", "Visualize voxels at three different states: "
+      "Occupied, Free and Unknown, this option allows selecting visualizing ",
       this, SLOT(updateState()));
   state_property_->addOption("Occupied", 0);
   state_property_->addOption("Free", 1);
@@ -31,10 +20,9 @@ MapDisplay::MapDisplay()
   state_property_->addOption("Bound", 3);
 
   scale_property_ = new rviz::FloatProperty(
-      "Scale", 0.2, "0.2 is default value.", this, SLOT(updateScale()));
+      "BoundScale", 0.1, "Line width of the bounding box.", this, SLOT(updateBoundScale()));
 
   update_nh_.setCallbackQueue(point_cloud_common_->getCallbackQueue());
-  visuals_.rset_capacity(1);
   map_util_.reset(new MPL::VoxelMapUtil());
 }
 
@@ -73,9 +61,6 @@ void MapDisplay::onInitialize() {
   point_cloud_common_->initialize(context_, scene_node_);
 }
 
-void MapDisplay::updateQueueSize() {
-  tf_filter_->setQueueSize((uint32_t)queue_size_property_->getInt());
-}
 
 BoundVec3f MapDisplay::getSpace() {
   Vec3i dim = map_util_->getDim();
@@ -195,10 +180,7 @@ void MapDisplay::processMessage(
   }
 
   BoundVec3f bound  = getSpace();
-  boost::shared_ptr<BoundVisual> visual;
-  if (visuals_.full())
-    visual = visuals_.front();
-  else
+  std::shared_ptr<BoundVisual> visual;
     visual.reset(new BoundVisual(context_->getSceneManager(), scene_node_));
 
   // Now set or update the contents of the chosen visual.
@@ -210,7 +192,7 @@ void MapDisplay::processMessage(
   float scale = scale_property_->getFloat();
   visual->setScale(scale);
 
-  visuals_.push_back(visual);
+  visual_ = visual;
 
   int state = state_property_->getOptionInt();
   visualizeMessage(state);
@@ -257,16 +239,16 @@ void MapDisplay::update(float wall_dt, float ros_dt) {
   point_cloud_common_->update(wall_dt, ros_dt);
 }
 
-void MapDisplay::updateScale() {
+void MapDisplay::updateBoundScale() {
   float scale = scale_property_->getFloat();
-  for (size_t i = 0; i < visuals_.size(); i++)
-    visuals_[i]->setScale(scale);
+  if (visual_)
+    visual_->setScale(scale);
 }
 
 void MapDisplay::reset() {
   MFDClass::reset();
   point_cloud_common_->reset();
-  visuals_.clear();
+  visual_ = nullptr;
 }
 
 }

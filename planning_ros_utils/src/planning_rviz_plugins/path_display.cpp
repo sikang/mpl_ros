@@ -15,53 +15,41 @@ namespace planning_rviz_plugins {
     node_scale_property_ =
       new rviz::FloatProperty("NodeScale", 0.15, "0.15 is the default value.",
                               this, SLOT(updateNodeScale()));
-    history_length_property_ =
-      new rviz::IntProperty("History Length", 1, "Number of msg to display.",
-                            this, SLOT(updateHistoryLength()));
-    history_length_property_->setMin(1);
-    history_length_property_->setMax(10000);
   }
 
   void PathDisplay::onInitialize() {
     MFDClass::onInitialize();
-    updateHistoryLength();
   }
 
   PathDisplay::~PathDisplay() {}
 
   void PathDisplay::reset() {
     MFDClass::reset();
-    visuals_.clear();
+    visual_ = nullptr;
   }
 
   void PathDisplay::updateLineColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = line_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setLineColor(color.r, color.g, color.b, alpha);
+    if(visual_)
+      visual_->setLineColor(color.r, color.g, color.b, 1);
   }
 
   void PathDisplay::updateNodeColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = node_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setNodeColor(color.r, color.g, color.b, alpha);
+    if(visual_)
+      visual_->setNodeColor(color.r, color.g, color.b, 1);
   }
 
   void PathDisplay::updateLineScale() {
     float s = line_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setLineScale(s);
+    if(visual_)
+      visual_->setLineScale(s);
   }
 
   void PathDisplay::updateNodeScale() {
     float s = node_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setNodeScale(s);
-  }
-
-  void PathDisplay::updateHistoryLength() {
-    visuals_.rset_capacity(history_length_property_->getInt());
+    if(visual_)
+      visual_->setNodeScale(s);
   }
 
   void PathDisplay::processMessage(const planning_ros_msgs::Path::ConstPtr &msg) {
@@ -78,11 +66,8 @@ namespace planning_rviz_plugins {
   }
 
   void PathDisplay::visualizeMessage() {
-    boost::shared_ptr<PathVisual> visual;
-    if (visuals_.full())
-      visual = visuals_.front();
-    else
-      visual.reset(new PathVisual(context_->getSceneManager(), scene_node_));
+    std::shared_ptr<PathVisual> visual;
+    visual.reset(new PathVisual(context_->getSceneManager(), scene_node_));
 
     visual->setMessage(path_);
     visual->setFramePosition(position_);
@@ -98,7 +83,7 @@ namespace planning_rviz_plugins {
     Ogre::ColourValue node_color = node_color_property_->getOgreColor();
     visual->setNodeColor(node_color.r, node_color.g, node_color.b, 1);
 
-    visuals_.push_back(visual);
+    visual_ = visual;
   }
 
 }

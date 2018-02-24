@@ -38,106 +38,96 @@ namespace planning_rviz_plugins {
     jrk_vis_property_ =
       new rviz::BoolProperty("Visualize Jrk", 0, "Visualize Jrk?",
           this, SLOT(updateJrkVis()));
-    history_length_property_ =
-      new rviz::IntProperty("History Length", 1, "Number of msg to display.",
-          this, SLOT(updateHistoryLength()));
-    history_length_property_->setMin(1);
-    history_length_property_->setMax(10000);
   }
 
   void TrajectoryDisplay::onInitialize() {
     MFDClass::onInitialize();
-    updateHistoryLength();
   }
 
   TrajectoryDisplay::~TrajectoryDisplay() {}
 
   void TrajectoryDisplay::reset() {
     MFDClass::reset();
-    visuals_.clear();
+    visual_ = nullptr;
   }
 
   void TrajectoryDisplay::updateVelVis() {
     bool vis = vel_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelVis(vis);
+    if (visual_)
+      visual_->setVelVis(vis);
     visualizeMessage();
   }
 
   void TrajectoryDisplay::updateAccVis() {
     bool vis = acc_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccVis(vis);
+    if (visual_)
+      visual_->setAccVis(vis);
     visualizeMessage();
   }
 
   void TrajectoryDisplay::updateJrkVis() {
     bool vis = jrk_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkVis(vis);
+    if (visual_)
+      visual_->setJrkVis(vis);
     visualizeMessage();
   }
 
   void TrajectoryDisplay::updatePosColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = pos_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setPosColor(color.r, color.g, color.b, alpha);
+    if (visual_)
+      visual_->setPosColor(color.r, color.g, color.b, alpha);
   }
 
   void TrajectoryDisplay::updateVelColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = vel_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelColor(color.r, color.g, color.b, alpha);
+    if (visual_)
+      visual_->setVelColor(color.r, color.g, color.b, alpha);
   }
 
   void TrajectoryDisplay::updateAccColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = acc_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccColor(color.r, color.g, color.b, alpha);
+    if (visual_)
+      visual_->setAccColor(color.r, color.g, color.b, alpha);
   }
 
   void TrajectoryDisplay::updateJrkColorAndAlpha() {
     float alpha = 1;
     Ogre::ColourValue color = jrk_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkColor(color.r, color.g, color.b, alpha);
+    if (visual_)
+      visual_->setJrkColor(color.r, color.g, color.b, alpha);
   }
 
   void TrajectoryDisplay::updatePosScale() {
     float s = pos_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setPosScale(s);
+    if (visual_)
+      visual_->setPosScale(s);
   }
 
   void TrajectoryDisplay::updateVelScale() {
     float s = vel_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelScale(s);
+    if (visual_)
+      visual_->setVelScale(s);
   }
 
   void TrajectoryDisplay::updateAccScale() {
     float s = acc_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccScale(s);
+    if (visual_)
+      visual_->setAccScale(s);
   }
 
   void TrajectoryDisplay::updateJrkScale() {
     float s = jrk_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkScale(s);
+    if (visual_)
+      visual_->setJrkScale(s);
   }
 
   void TrajectoryDisplay::updateNum() {
     float n = num_property_->getInt();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setNum(n);
-  }
-
-  void TrajectoryDisplay::updateHistoryLength() {
-    visuals_.rset_capacity(history_length_property_->getInt());
+    if (visual_)
+      visual_->setNum(n);
   }
 
   void TrajectoryDisplay::processMessage(const planning_ros_msgs::Trajectory::ConstPtr &msg) {
@@ -154,11 +144,8 @@ namespace planning_rviz_plugins {
   }
 
   void TrajectoryDisplay::visualizeMessage() {
-    boost::shared_ptr<TrajectoryVisual> visual;
-    if (visuals_.full())
-      visual = visuals_.front();
-    else
-      visual.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
+    std::shared_ptr<TrajectoryVisual> visual;
+    visual.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
 
     float n = num_property_->getInt();
     visual->setNum(n);
@@ -194,7 +181,7 @@ namespace planning_rviz_plugins {
     Ogre::ColourValue jrk_color = jrk_color_property_->getOgreColor();
     visual->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
 
-    visuals_.push_back(visual);
+    visual_ = visual;
   }
 
 }

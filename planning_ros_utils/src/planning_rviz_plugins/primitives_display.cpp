@@ -38,100 +38,75 @@ namespace planning_rviz_plugins {
     jrk_vis_property_ =
       new rviz::BoolProperty("Visualize Jrk", 0, "Visualize Jrk?",
           this, SLOT(updateJrkVis()));
-    history_length_property_ =
-      new rviz::IntProperty("History Length", 1, "Number of msg to display.",
-          this, SLOT(updateHistoryLength()));
-    history_length_property_->setMin(1);
-    history_length_property_->setMax(10000);
  }
 
   void PrimitivesDisplay::onInitialize() {
     MFDClass::onInitialize();
-    updateHistoryLength();
   }
 
   PrimitivesDisplay::~PrimitivesDisplay() {}
 
   void PrimitivesDisplay::reset() {
     MFDClass::reset();
-    visuals_.clear();
+    visual_ = nullptr;
   }
 
   void PrimitivesDisplay::updateVelVis() {
     bool vis = vel_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelVis(vis);
+    if (visual_) visual_->setVelVis(vis);
     visualizeMessage();
   }
 
   void PrimitivesDisplay::updateAccVis() {
     bool vis = acc_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccVis(vis);
+    if (visual_) visual_->setAccVis(vis);
     visualizeMessage();
   }
 
   void PrimitivesDisplay::updateJrkVis() {
     bool vis = jrk_vis_property_->getBool();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkVis(vis);
+    if (visual_) visual_->setJrkVis(vis);
     visualizeMessage();
   }
 
   void PrimitivesDisplay::updatePosColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = pos_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setPosColor(color.r, color.g, color.b, alpha);
+    if(visual_) visual_->setPosColor(color.r, color.g, color.b, 1);
   }
 
   void PrimitivesDisplay::updateVelColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = vel_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelColor(color.r, color.g, color.b, alpha);
+    if(visual_) visual_->setVelColor(color.r, color.g, color.b, 1);
   }
 
   void PrimitivesDisplay::updateAccColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = acc_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccColor(color.r, color.g, color.b, alpha);
+    if(visual_) visual_->setAccColor(color.r, color.g, color.b, 1);
   }
 
   void PrimitivesDisplay::updateJrkColorAndAlpha() {
-    float alpha = 1;
     Ogre::ColourValue color = jrk_color_property_->getOgreColor();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkColor(color.r, color.g, color.b, alpha);
+    if(visual_) visual_->setJrkColor(color.r, color.g, color.b, 1);
   }
 
   void PrimitivesDisplay::updatePosScale() {
     float s = pos_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setPosScale(s);
+    if(visual_) visual_->setPosScale(s);
   }
 
   void PrimitivesDisplay::updateVelScale() {
     float s = vel_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setVelScale(s);
+    if(visual_) visual_->setVelScale(s);
   }
 
   void PrimitivesDisplay::updateAccScale() {
     float s = acc_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setAccScale(s);
+    if(visual_) visual_->setAccScale(s);
   }
 
   void PrimitivesDisplay::updateJrkScale() {
     float s = jrk_scale_property_->getFloat();
-    for (size_t i = 0; i < visuals_.size(); i++)
-      visuals_[i]->setJrkScale(s);
-  }
-
-  void PrimitivesDisplay::updateHistoryLength() {
-    visuals_.rset_capacity(history_length_property_->getInt());
+      if(visual_) visual_->setJrkScale(s);
   }
 
   void PrimitivesDisplay::processMessage(const planning_ros_msgs::Primitives::ConstPtr &msg) {
@@ -155,11 +130,8 @@ namespace planning_rviz_plugins {
     if (prs_msg_.primitives.empty())
       return;
 
-    boost::shared_ptr<PrimitiveVisual> visual;
-    if (visuals_.full())
-      visual = visuals_.front();
-    else
-      visual.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
+    std::shared_ptr<PrimitiveVisual> visual;
+    visual.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
 
     float n = num_property_->getInt();
     visual->setNum(n);
@@ -198,7 +170,7 @@ namespace planning_rviz_plugins {
     Ogre::ColourValue jrk_color = jrk_color_property_->getOgreColor();
     visual->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
 
-    visuals_.push_back(visual);
+    visual_ = visual;
   }
 
 }
