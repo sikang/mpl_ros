@@ -11,6 +11,8 @@ namespace planning_rviz_plugins {
   MeshVisual::~MeshVisual() { scene_manager_->destroySceneNode(frame_node_); }
 
   void MeshVisual::setMessage(const vec_E<vec_Vec3f> &vss) {
+    if(vss.empty())
+      return;
     obj_->clear();
 
     int cnt = 0;

@@ -29,6 +29,7 @@ namespace planning_rviz_plugins {
         private Q_SLOTS:
         void updateState();
         void updateBoundScale();
+        void updateMeshColorAndAlpha();
         void updateMeshHeight();
 
       protected:
@@ -49,16 +50,13 @@ namespace planning_rviz_plugins {
         rviz::ColorProperty *mesh_color_property_;
         rviz::FloatProperty *mesh_alpha_property_;
 
-
-
         rviz::PointCloudCommon *point_cloud_common_;
         std::shared_ptr<BoundVisual> visual_;
         std::vector<std::shared_ptr<MeshVisual>> visuals_mesh_;
         float mesh_height_;
 
         std::shared_ptr<MPL::VoxelMapUtil> map_util_;
-
-        std_msgs::Header header_;
+        std::shared_ptr<std_msgs::Header> header_ptr_;
 
         Ogre::Quaternion orientation_;
         Ogre::Vector3 position_;
