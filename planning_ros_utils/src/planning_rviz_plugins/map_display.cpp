@@ -19,9 +19,19 @@ MapDisplay::MapDisplay()
   state_property_->addOption("Unknown", 2);
   state_property_->addOption("Bound", 3);
 
-  scale_property_ = new rviz::FloatProperty(
+  bound_scale_property_ = new rviz::FloatProperty(
       "BoundScale", 0.1, "Line width of the bounding box.", this, SLOT(updateBoundScale()));
 
+  mesh_height_property_ = new rviz::FloatProperty(
+      "MeshHeight", 0.5, "Select height to visualize mesh.", this, SLOT(updateMeshHeight()));
+  mesh_color_property_ =
+    new rviz::ColorProperty("MeshColor", QColor(0, 170, 255), "Mesh color.",
+        this, SLOT(updateMeshColorAndAlpha()));
+  mesh_alpha_property_ = new rviz::FloatProperty("MeshAlpha", 0.2,
+      "0 is fully transparent, 1.0 is fully opaque, only affect mesh", this,
+      SLOT(updateMeshColorAndAlpha()));
+
+  mesh_height_ = mesh_height_property_->getFloat();
   update_nh_.setCallbackQueue(point_cloud_common_->getCallbackQueue());
   map_util_.reset(new MPL::VoxelMapUtil());
 }
@@ -165,15 +175,12 @@ BoundVec3f MapDisplay::getSpace() {
 }
 
 
-void MapDisplay::processMessage(
-    const planning_ros_msgs::VoxelMapConstPtr &msg) {
+void MapDisplay::processMessage(const planning_ros_msgs::VoxelMapConstPtr &msg) {
   header_ = msg->header;
   setMap(map_util_, *msg);
 
-  Ogre::Quaternion orientation;
-  Ogre::Vector3 position;
-  if (!context_->getFrameManager()->getTransform(
-          header_.frame_id, header_.stamp, position, orientation)) {
+ if (!context_->getFrameManager()->getTransform(
+          header_.frame_id, header_.stamp, position_, orientation_)) {
     ROS_DEBUG("Error transforming from frame '%s' to frame '%s'",
               header_.frame_id.c_str(), qPrintable(fixed_frame_));
     return;
@@ -185,11 +192,11 @@ void MapDisplay::processMessage(
 
   // Now set or update the contents of the chosen visual.
   visual->setMessage(bound);
-  visual->setFramePosition(position);
-  visual->setFrameOrientation(orientation);
+  visual->setFramePosition(position_);
+  visual->setFrameOrientation(orientation_);
 
   visual->setColor(0.0, 0.0, 0, 1.0);
-  float scale = scale_property_->getFloat();
+  float scale = bound_scale_property_->getFloat();
   visual->setScale(scale);
 
   visual_ = visual;
@@ -198,35 +205,61 @@ void MapDisplay::processMessage(
   visualizeMessage(state);
 }
 
+void MapDisplay::visualizeMesh(const vec_Vec3f& pts, double res) {
+  visuals_mesh_.clear();
+  for(const auto& pt: pts) {
+    if(std::abs(pt(2) - mesh_height_) > res/2)
+      continue;
+    std::shared_ptr<MeshVisual> visual_mesh;
+    visual_mesh.reset(new MeshVisual(context_->getSceneManager(), scene_node_));
+
+    Vec3f pt1(pt(0)-res/2, pt(1)-res/2, pt(2));
+    Vec3f pt2(pt(0)+res/2, pt(1)-res/2, pt(2));
+    Vec3f pt3(pt(0)+res/2, pt(1)+res/2, pt(2));
+    Vec3f pt4(pt(0)-res/2, pt(1)+res/2, pt(2));
+    vec_Vec3f vertices;
+    vertices.push_back(pt1);
+    vertices.push_back(pt2);
+    vertices.push_back(pt3);
+    vertices.push_back(pt4);
+    visual_mesh->setMessage(vertices);
+    visual_mesh->setFramePosition(position_);
+    visual_mesh->setFrameOrientation(orientation_);
+
+    float alpha = mesh_alpha_property_->getFloat();
+    Ogre::ColourValue color = mesh_color_property_->getOgreColor();
+    visual_mesh->setColor(color.r, color.g, color.b, alpha);
+    visuals_mesh_.push_back(visual_mesh);
+  }
+}
+
 void MapDisplay::visualizeMessage(int state) {
   switch (state) {
-  case 0: {
-    sensor_msgs::PointCloud cloud = vec_to_cloud(map_util_->getCloud());
-    cloud.header = header_;
-    point_cloud_common_->addMessage(
-        boost::make_shared<sensor_msgs::PointCloud>(cloud));
-    break;
-  }
-  case 1: {
-    sensor_msgs::PointCloud cloud = vec_to_cloud(map_util_->getFreeCloud());
-    cloud.header = header_;
-    point_cloud_common_->addMessage(
-        boost::make_shared<sensor_msgs::PointCloud>(cloud));
-    break;
-  }
-  case 2: {
-    sensor_msgs::PointCloud cloud = vec_to_cloud(map_util_->getUnknownCloud());
-    cloud.header = header_;
-    point_cloud_common_->addMessage(
-        boost::make_shared<sensor_msgs::PointCloud>(cloud));
-    break;
-  }
-  case 3: {
-    point_cloud_common_->reset();
-    break;
-  }
-  default:
-    std::cout << "Invalid State: " << state << std::endl;
+    case 0: {
+              visuals_mesh_.clear();
+              sensor_msgs::PointCloud cloud = vec_to_cloud(map_util_->getCloud());
+              cloud.header = header_;
+              point_cloud_common_->addMessage(
+                  boost::make_shared<sensor_msgs::PointCloud>(cloud));
+              break;
+            }
+    case 1: {
+            //point_cloud_common_->reset();
+            vec_Vec3f free_cloud = map_util_->getFreeCloud();
+            visualizeMesh(free_cloud, map_util_->getRes());
+            break;
+            }
+    case 2: {
+            vec_Vec3f unknown_cloud = map_util_->getUnknownCloud();
+            visualizeMesh(unknown_cloud, map_util_->getRes());
+            break;
+            }
+    case 3: {
+            point_cloud_common_->reset();
+            break;
+            }
+    default:
+            std::cout << "Invalid State: " << state << std::endl;
   }
 }
 
@@ -240,9 +273,15 @@ void MapDisplay::update(float wall_dt, float ros_dt) {
 }
 
 void MapDisplay::updateBoundScale() {
-  float scale = scale_property_->getFloat();
+  float scale = bound_scale_property_->getFloat();
   if (visual_)
     visual_->setScale(scale);
+}
+
+void MapDisplay::updateMeshHeight() {
+  mesh_height_ = mesh_height_property_->getFloat();
+  int state = state_property_->getOptionInt();
+  visualizeMessage(state);
 }
 
 void MapDisplay::reset() {

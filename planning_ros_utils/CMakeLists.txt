@@ -52,6 +52,7 @@ cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
+  src/planning_rviz_plugins/mesh_visual.cpp
   src/planning_rviz_plugins/primitive_visual.cpp
   src/planning_rviz_plugins/trajectory_visual.cpp
   src/planning_rviz_plugins/path_visual.cpp
