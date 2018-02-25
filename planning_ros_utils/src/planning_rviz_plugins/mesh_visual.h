@@ -16,7 +16,7 @@ namespace planning_rviz_plugins {
 
       virtual ~MeshVisual();
 
-      void setMessage(const vec_Vec3f &vs);
+      void setMessage(const vec_E<vec_Vec3f> &vss);
       void setFramePosition(const Ogre::Vector3 &position);
       void setFrameOrientation(const Ogre::Quaternion &orientation);
 

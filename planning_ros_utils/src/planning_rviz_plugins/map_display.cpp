@@ -207,12 +207,10 @@ void MapDisplay::processMessage(const planning_ros_msgs::VoxelMapConstPtr &msg) 
 
 void MapDisplay::visualizeMesh(const vec_Vec3f& pts, double res) {
   visuals_mesh_.clear();
+  vec_E<vec_Vec3f> vss;
   for(const auto& pt: pts) {
     if(std::abs(pt(2) - mesh_height_) > res/2)
       continue;
-    std::shared_ptr<MeshVisual> visual_mesh;
-    visual_mesh.reset(new MeshVisual(context_->getSceneManager(), scene_node_));
-
     Vec3f pt1(pt(0)-res/2, pt(1)-res/2, pt(2));
     Vec3f pt2(pt(0)+res/2, pt(1)-res/2, pt(2));
     Vec3f pt3(pt(0)+res/2, pt(1)+res/2, pt(2));
@@ -222,15 +220,19 @@ void MapDisplay::visualizeMesh(const vec_Vec3f& pts, double res) {
     vertices.push_back(pt2);
     vertices.push_back(pt3);
     vertices.push_back(pt4);
-    visual_mesh->setMessage(vertices);
-    visual_mesh->setFramePosition(position_);
-    visual_mesh->setFrameOrientation(orientation_);
-
-    float alpha = mesh_alpha_property_->getFloat();
-    Ogre::ColourValue color = mesh_color_property_->getOgreColor();
-    visual_mesh->setColor(color.r, color.g, color.b, alpha);
-    visuals_mesh_.push_back(visual_mesh);
+    vss.push_back(vertices);
   }
+  std::shared_ptr<MeshVisual> visual_mesh;
+  visual_mesh.reset(new MeshVisual(context_->getSceneManager(), scene_node_));
+
+  visual_mesh->setMessage(vss);
+  visual_mesh->setFramePosition(position_);
+  visual_mesh->setFrameOrientation(orientation_);
+
+  float alpha = mesh_alpha_property_->getFloat();
+  Ogre::ColourValue color = mesh_color_property_->getOgreColor();
+  visual_mesh->setColor(color.r, color.g, color.b, alpha);
+  visuals_mesh_.push_back(visual_mesh);
 }
 
 void MapDisplay::visualizeMessage(int state) {
