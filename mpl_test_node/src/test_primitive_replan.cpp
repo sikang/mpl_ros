@@ -3,9 +3,9 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Int8.h>
 #include <planning_ros_msgs/VoxelMap.h>
-#include <ros_utils/data_ros_utils.h>
-#include <ros_utils/primitive_ros_utils.h>
-#include <mapping_utils/voxel_grid.h>
+#include <planning_ros_utils/data_ros_utils.h>
+#include <planning_ros_utils/primitive_ros_utils.h>
+#include <planning_ros_utils/voxel_grid.h>
 #include <motion_primitive_library/planner/mp_map_util.h>
 
 using namespace MPL;

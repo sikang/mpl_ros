@@ -6,7 +6,6 @@
 #include <planning_ros_msgs/Path.h>
 #include <planning_ros_msgs/Arrows.h>
 #include <tf_conversions/tf_eigen.h>
-#include <nav_msgs/Path.h>
 #include <geometry_msgs/Twist.h>
 
 inline Vec3f pose_to_eigen(const geometry_msgs::Pose &pose) {
@@ -39,38 +38,9 @@ inline geometry_msgs::Twist eigen_to_twist(const Vec3f& twist) {
   return t;
 }
 
-inline vec_Vec3f path_to_eigen(const nav_msgs::Path &path) {
-  vec_Vec3f vs;
-  for (auto it : path.poses) {
-    Vec3f v(it.pose.position.x, it.pose.position.y, it.pose.position.z);
 
-    vs.push_back(v);
-  }
-
-  return vs;
-}
-
-inline nav_msgs::Path eigen_to_path(const vec_Vec3f &vs) {
-  nav_msgs::Path path;
-  for (auto it : vs) {
-    geometry_msgs::PoseStamped pose;
-    pose.pose.position.x = it(0);
-    pose.pose.position.y = it(1);
-    pose.pose.position.z = it(2);
-    pose.pose.orientation.w = 1.0;
-    pose.pose.orientation.x = 0.0;
-    pose.pose.orientation.y = 0.0;
-    pose.pose.orientation.z = 0.0;
-
-    path.poses.push_back(pose);
-  }
-
-  return path;
-}
-
-inline sensor_msgs::PointCloud
-transform_cloud(const sensor_msgs::PointCloud &cloud,
-                const Aff3f &TF) {
+inline sensor_msgs::PointCloud transform_cloud(
+    const sensor_msgs::PointCloud &cloud, const Aff3f &TF) {
   sensor_msgs::PointCloud new_cloud = cloud;
   int i = 0;
   for (const auto& it : cloud.points) {

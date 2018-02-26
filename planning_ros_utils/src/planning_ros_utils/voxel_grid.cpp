@@ -1,4 +1,4 @@
-#include <mapping_utils/voxel_grid.h>
+#include <planning_ros_utils/voxel_grid.h>
 
 VoxelGrid::VoxelGrid(Vec3f origin, Vec3f dim, float res)
 {

@@ -1,4 +1,4 @@
-#include <ros_utils/primitive_ros_utils.h>
+#include <planning_ros_utils/primitive_ros_utils.h>
 
 planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2& pr, double z) {
   planning_ros_msgs::Primitive msg;

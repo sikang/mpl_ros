@@ -1,7 +1,7 @@
 #ifndef TRAJECTORY_VISUAL_H
 #define TRAJECTORY_VISUAL_H
 
-#include <ros_utils/primitive_ros_utils.h>
+#include <planning_ros_utils/primitive_ros_utils.h>
 #include <OGRE/OgreVector3.h>
 #include <OGRE/OgreSceneNode.h>
 #include <OGRE/OgreSceneManager.h>

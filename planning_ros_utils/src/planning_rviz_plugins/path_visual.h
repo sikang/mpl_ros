@@ -2,7 +2,7 @@
 #define PATH_VISUAL_H
 
 #include <planning_ros_msgs/Path.h>
-#include <ros_utils/data_ros_utils.h>
+#include <planning_ros_utils/data_ros_utils.h>
 
 #include <OGRE/OgreVector3.h>
 #include <OGRE/OgreSceneNode.h>

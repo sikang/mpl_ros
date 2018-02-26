@@ -36,19 +36,10 @@ if(NOT VTK_FOUND)
   message("VTK was not found")
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
-  cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
+  cs_add_executable(mesh_sampling src/planning_ros_utils/mesh_sampling.cpp)
 endif(NOT VTK_FOUND)
 
-#cs_add_executable(image_to_cloud src/mapping_utils/image_to_cloud.cpp
-# src/mapping_utils/pcl_utils.cpp)
-#target_link_libraries(image_to_cloud ${OpenCV_LIBS})
-
-cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
-
-#cs_add_executable(laser_to_cloud src/mapping_utils/laser_to_cloud.cpp)
-
-#cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
-#target_link_libraries(cloud_to_map voxel_grid)
+cs_add_library(voxel_grid src/planning_ros_utils/voxel_grid.cpp)
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
@@ -60,7 +51,7 @@ set(SOURCE_FILES
   src/planning_rviz_plugins/path_display.cpp
   src/planning_rviz_plugins/primitives_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
-  src/ros_utils/primitive_ros_utils.cpp
+  src/planning_ros_utils/primitive_ros_utils.cpp
   ${MOC_FILES})
 
 cs_add_library(planning_rviz_plugins ${SOURCE_FILES})
