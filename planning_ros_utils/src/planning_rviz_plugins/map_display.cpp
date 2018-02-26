@@ -314,6 +314,7 @@ void MapDisplay::reset() {
   MFDClass::reset();
   point_cloud_common_->reset();
   visual_ = nullptr;
+  visuals_mesh_.clear();
 }
 
 }
