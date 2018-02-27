@@ -7,6 +7,17 @@ build:
       code: |
         git submodule update --init --recursive
     - script:
+      name: init workspace
+      code: |
+        cd ..
+        mkdir -p catkin_ws/src
+        mv source catkin_ws/src/
+        cd catkin_ws/src
+        git clone https://github.com/catkin/catkin_simple.git
+        git clone https://github.com/sikang/DecompROS.git
+        cd DecompROS
+        git submodule update --init --recursive
+    - script:
       name: install dependencies
       code: |
         sudo apt-get update
@@ -15,11 +26,7 @@ build:
     - script:
       name: build
       code: |
-        cd ..
-        mkdir -p catkin_ws/src
-        mv source catkin_ws/src/
         cd catkin_ws/src
-        git clone https://github.com/catkin/catkin_simple.git
         catkin_init_workspace
         cd ..
         export ROS_PARALLEL_JOBS='-j4 -l4' # Limit parallel jobs
