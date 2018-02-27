@@ -3,7 +3,7 @@
 
 #include <motion_primitive_library/common/data_type.h>
 #include <sensor_msgs/PointCloud.h>
-#include <planning_ros_msgs/Path.h>
+#include <planning_ros_msgs/PathArray.h>
 #include <planning_ros_msgs/Arrows.h>
 #include <tf_conversions/tf_eigen.h>
 #include <geometry_msgs/Twist.h>
@@ -87,7 +87,7 @@ inline Aff3f toTF(const geometry_msgs::Pose &p)
   return Td.cast<decimal_t>();
 }
 
-inline planning_ros_msgs::Path path_to_mav(const vec_Vec3f& path) {
+inline planning_ros_msgs::Path path_to_ros(const vec_Vec3f& path) {
   planning_ros_msgs::Path msg;
   for (const auto &itt : path) {
     geometry_msgs::Point pt;
@@ -99,7 +99,23 @@ inline planning_ros_msgs::Path path_to_mav(const vec_Vec3f& path) {
   return msg;
 }
 
-inline vec_Vec3f mav_to_path(const planning_ros_msgs::Path& msg) {
+inline planning_ros_msgs::PathArray path_array_to_ros(const vec_E<vec_Vec3f>& paths) {
+  planning_ros_msgs::PathArray msg;
+  for(const auto& it: paths) {
+    planning_ros_msgs::Path path_msg;
+    for (const auto &itt : it) {
+      geometry_msgs::Point pt;
+      pt.x = itt(0);
+      pt.y = itt(1);
+      pt.z = itt(2);
+      path_msg.waypoints.push_back(pt);
+    }
+    msg.paths.push_back(path_msg);
+  }
+  return msg;
+}
+
+inline vec_Vec3f ros_to_path(const planning_ros_msgs::Path& msg) {
   vec_Vec3f path;
   for (const auto &it : msg.waypoints)
     path.push_back(Vec3f(it.x, it.y, it.z));

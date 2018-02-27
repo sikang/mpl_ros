@@ -51,8 +51,10 @@ void PathVisual::addMessage(const vec_Vec3f &path) {
 
   unsigned int lines_prev_size = lines_.size();
   lines_.resize(lines_prev_size + path.size() - 1);
-  for (unsigned int i = lines_prev_size; i < nodes_.size(); i++)
+
+  for (unsigned int i = lines_prev_size; i < lines_prev_size + path.size() - 1; i++) {
     lines_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
+  }
 
   for (int i = 0; i < (int) path.size(); i++) {
     Ogre::Vector3 pos(path[i](0), path[i](1), path[i](2));

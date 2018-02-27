@@ -49,6 +49,7 @@ set(SOURCE_FILES
   src/planning_rviz_plugins/path_visual.cpp
   src/planning_rviz_plugins/map_display.cpp
   src/planning_rviz_plugins/path_display.cpp
+  src/planning_rviz_plugins/path_array_display.cpp
   src/planning_rviz_plugins/primitives_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
   src/planning_ros_utils/primitive_ros_utils.cpp
