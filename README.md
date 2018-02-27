@@ -5,7 +5,6 @@ A ROS wrapper for [Motion Primitive Library](https://sikang.github.io/motion_pri
 The package is still under maintenance, the API may change occasionally, please use `git log` to track the latest update. 
 
 Packages:
-  - `decomp_ros`: convex decomposition tools for generating ellipsoid and polyhedron
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating 
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
@@ -15,6 +14,7 @@ Packages:
 #### Prerequisite:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
+  - [`DecompROS`](https://github.com/sikang/DecompROS)
 
 If the submodule `motion_primitive_library` is not initialized yet, run following commands at first:
 ```sh
