@@ -7,6 +7,12 @@ build:
       code: |
         git submodule update --init --recursive
     - script:
+      name: install dependencies
+      code: |
+        sudo apt-get update
+        rosdep update
+        rosdep install --from-paths . --ignore-src -y -r --as-root apt:false
+    - script:
       name: init workspace
       code: |
         cd ..
@@ -17,12 +23,6 @@ build:
         git clone https://github.com/sikang/DecompROS.git
         cd DecompROS
         git submodule update --init --recursive
-    - script:
-      name: install dependencies
-      code: |
-        sudo apt-get update
-        rosdep update
-        rosdep install --from-paths . --ignore-src -y -r --as-root apt:false
     - script:
       name: build
       code: |
