@@ -23,7 +23,7 @@ build:
         cd ../catkin_ws/src
         sudo apt-get update
         rosdep update
-        rosdep install --from-paths --ignore-src -y -r --as-root apt:false
+        rosdep install --from-paths . --ignore-src -y -r --as-root apt:false
     - script:
       name: build
       code: |
