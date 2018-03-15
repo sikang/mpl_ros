@@ -26,6 +26,7 @@
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1.0"/>
+    <param name="ndt" value="10"/>
   </node>
 
 </launch>

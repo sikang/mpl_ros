@@ -435,7 +435,7 @@ int main(int argc, char ** argv){
   planner_.setJmax(j_max); // Set jrk (as control input)
   planner_.setUmax(u_max);// 2D discretization with 1
   planner_.setDt(dt); // Set dt for each primitive
-  planner_.setTmax(ndt * dt); // Set dt for each primitive
+  planner_.setTmax(ndt * dt); // Set the planning horizon: n*dt
   planner_.setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_.setU(U);// 2D discretization with 1
   planner_.setTol(0.5, 1, 1); // Tolerance for goal region
