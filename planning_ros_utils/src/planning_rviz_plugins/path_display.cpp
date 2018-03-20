@@ -60,7 +60,7 @@ namespace planning_rviz_plugins {
       return;
     }
 
-    path_ = mav_to_path(*msg);
+    path_ = ros_to_path(*msg);
 
     visualizeMessage();
   }

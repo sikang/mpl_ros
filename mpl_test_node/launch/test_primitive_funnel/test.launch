@@ -6,12 +6,13 @@
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
   <node pkg="mpl_test_node"
-    type="test_primitive_map"
+    type="test_primitive_funnel"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
+    clear_params="true"
     output="screen">
     <param name="file" value="$(find mpl_test_node)/maps/simple/simple.bag"/>
-    <param name="topic" value="/voxel_map"/>
+    <param name="topic" value="/cloud"/>
     <!-- Set start and goal -->
     <param name="start_x" value="14.5"/>
     <param name="start_y" value="4.4"/>
@@ -26,7 +27,11 @@
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1"/>
-    <param name="ndt" value="-1"/>
+    <param name="max_num" value="1000"/>
+    <!-- Set funnel constraints -->
+    <param name="kp" value="5.0"/>
+    <param name="kv" value="3.0"/>
+    <param name="v" value="3.0"/>
   </node>
 
 </launch>

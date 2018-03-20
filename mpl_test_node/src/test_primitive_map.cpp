@@ -4,7 +4,9 @@
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <motion_primitive_library/primitive/poly_solver.h>
+#include <motion_primitive_library/primitive/primitive_funnel.h>
 #include <motion_primitive_library/planner/mp_map_util.h>
+#include <decomp_ros_utils/data_ros_utils.h>
 
 using namespace MPL;
 
@@ -35,6 +37,29 @@ void getMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, planning_ros_msgs::Vox
   map.data = map_util->getMap();
 }
 
+//**** Sort poits in an order
+vec_Vec3f sort_pts(const vec_Vec3f &pts) {
+  //**** sort in body frame
+  Vec3f avg = Vec3f::Zero();
+  for (auto p : pts)
+    avg += p;
+  avg /= pts.size();
+
+  vec_E<std::pair<decimal_t, Vec3f>> ps_valued;
+  ps_valued.resize(pts.size());
+  for (unsigned int i = 0; i < pts.size(); i++) {
+    decimal_t theta = atan2(pts[i](1) - avg(1), pts[i](0) - avg(0));
+    ps_valued[i] = std::make_pair(theta, pts[i]);
+  }
+
+  std::sort(ps_valued.begin(), ps_valued.end(), [](const std::pair<decimal_t, Vec3f>& p1, const std::pair<decimal_t, Vec3f>& p2) { return p1.first < p2.first; });
+  vec_Vec3f b;
+  for (const auto& it : ps_valued)
+    b.push_back(it.second);
+  return b;
+}
+
+
 
 int main(int argc, char ** argv){
   ros::init(argc, argv, "test");
@@ -45,6 +70,11 @@ int main(int argc, char ** argv){
   ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher refined_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory_refined", 1, true);
+  ros::Publisher funnel1_pub = nh.advertise<sensor_msgs::PointCloud>("funnel1", 1, true);
+  ros::Publisher funnel2_pub = nh.advertise<sensor_msgs::PointCloud>("funnel2", 1, true);
+  ros::Publisher ellipsoid_pub = nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
+  ros::Publisher bounds_pub = nh.advertise<planning_ros_msgs::PathArray>("bounds", 1, true);
+ 
 
   ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
 
@@ -209,6 +239,75 @@ int main(int argc, char ** argv){
   refined_traj_pub.publish(refined_traj_msg);
 
   printf("================ Refined traj -- total J: %f, total time: %f\n", traj_refined.J(2), traj_refined.getTotalTime());
+
+  vec_Vec3f pts_x, pts_y;
+  Waypoint3 s1 = start, s2 = start;
+  Waypoint3 s3 = start, s4 = start;
+  Waypoint3 s5 = start, s6 = start;
+
+  Vec2f wf(start.pos(0), start.vel(0));
+
+  vec_E<vec_Vec3f> bounds;
+  vec_Ellipsoid Es;
+
+  for(auto seg: traj.segs) {
+    PrimitiveFunnel<3> f(seg, 5, 3);
+    auto b1 = f.compute(s1, Vec2f(3, 0));
+    auto b2 = f.compute(s2, Vec2f(-3, 0));
+    s1  = b1.back();
+    s2  = b2.back();
+    for(auto it: b1)
+      pts_x.push_back(it.pos);
+    for(auto it: b2)
+      pts_x.push_back(it.pos);
+ 
+
+    auto b3 = f.compute(s3, Vec2f(3, 3), 5);
+    auto b4 = f.compute(s4, Vec2f(-3, -3), 5);
+    auto b5 = f.compute(s5, Vec2f(3, -3), 5);
+    auto b6 = f.compute(s6, Vec2f(-3, 3), 5);
+    s3  = b3.back();
+    s4  = b4.back();
+    s5  = b5.back();
+    s6  = b6.back();
+    for(int i = 0; i < b3.size(); i++) {
+      pts_y.push_back(b3[i].pos);
+      pts_y.push_back(b4[i].pos);
+      pts_y.push_back(b5[i].pos);
+      pts_y.push_back(b6[i].pos);
+      vec_Vec3f b;
+      b.push_back(b3[i].pos);
+      b.push_back(b4[i].pos);
+      b.push_back(b5[i].pos);
+      b.push_back(b6[i].pos);
+      b = sort_pts(b);
+      b.push_back(b.front());
+
+      bounds.push_back(b);
+    }
+
+    auto es = f.compute(wf, 3, 5);
+    Es.insert(Es.end(), es.begin(), es.end());
+    wf = f.get_wf();
+  }
+
+  sensor_msgs::PointCloud funnel_cloud1 = vec_to_cloud(pts_x);
+  funnel_cloud1.header = header;
+  funnel1_pub.publish(funnel_cloud1);
+
+  sensor_msgs::PointCloud funnel_cloud2 = vec_to_cloud(pts_y);
+  funnel_cloud2.header = header;
+  funnel2_pub.publish(funnel_cloud2);
+
+  planning_ros_msgs::PathArray bounds_msg = path_array_to_ros(bounds);
+  bounds_msg.header = header;
+  bounds_pub.publish(bounds_msg);
+
+  decomp_ros_msgs::Ellipsoids es_msg = DecompROS::ellipsoids_to_ros(Es);
+  es_msg.header = header;
+  ellipsoid_pub.publish(es_msg);
+
+
 
   ros::spin();
 

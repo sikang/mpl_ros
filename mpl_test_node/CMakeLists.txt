@@ -17,6 +17,9 @@ cs_add_executable(test_primitive_replan src/test_primitive_replan.cpp)
 target_link_libraries(test_primitive_replan ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 cs_add_executable(test_primitive_cloud src/test_primitive_cloud.cpp)
 target_link_libraries(test_primitive_cloud ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+cs_add_executable(test_primitive_funnel src/test_primitive_funnel.cpp)
+target_link_libraries(test_primitive_funnel ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+
 
 cs_install()
 
