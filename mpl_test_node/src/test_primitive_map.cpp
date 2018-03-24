@@ -250,8 +250,12 @@ int main(int argc, char ** argv){
   vec_E<vec_Vec3f> bounds;
   vec_Ellipsoid Es;
 
+  double kp, kv;
+  nh.param("kp", kp, 5.0);
+  nh.param("kv", kv, 3.0);
+
   for(auto seg: traj.segs) {
-    PrimitiveFunnel<3> f(seg, 5, 3);
+    PrimitiveFunnel<3> f(seg, kp, kv);
     auto b1 = f.compute(s1, Vec2f(3, 0));
     auto b2 = f.compute(s2, Vec2f(-3, 0));
     s1  = b1.back();

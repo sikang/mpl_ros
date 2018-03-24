@@ -27,6 +27,8 @@
     <param name="a_max" value="1.0"/>
     <param name="dt" value="1"/>
     <param name="ndt" value="-1"/>
+    <param name="kp" value="4"/>
+    <param name="kv" value="3"/>
   </node>
 
 </launch>

@@ -11,6 +11,7 @@
     launch-prefix="$(arg prefix)"
     clear_params="true"
     output="screen">
+    <remap from="~cloud" to="cloud"/>
     <param name="file" value="$(find mpl_test_node)/maps/simple/simple.bag"/>
     <param name="topic" value="/cloud"/>
     <!-- Set start and goal -->
