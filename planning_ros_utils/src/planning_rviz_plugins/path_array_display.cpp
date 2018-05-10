@@ -92,7 +92,7 @@ namespace planning_rviz_plugins {
     else{
       for (int i = 0; i < (int)paths_.paths.size(); i++)
       {
-        if(i == 0){
+        if(i == 0) {
           set = true;
           visual->setMessage(ros_to_path(paths_.paths[i]));
           visual->setFramePosition(position_);
