@@ -87,7 +87,7 @@ inline Aff3f toTF(const geometry_msgs::Pose &p)
   return Td.cast<decimal_t>();
 }
 
-inline planning_ros_msgs::Path path_to_mav(const vec_Vec3f& path) {
+inline planning_ros_msgs::Path path_to_ros(const vec_Vec3f& path) {
   planning_ros_msgs::Path msg;
   for (const auto &itt : path) {
     geometry_msgs::Point pt;
@@ -99,7 +99,7 @@ inline planning_ros_msgs::Path path_to_mav(const vec_Vec3f& path) {
   return msg;
 }
 
-inline vec_Vec3f mav_to_path(const planning_ros_msgs::Path& msg) {
+inline vec_Vec3f ros_to_path(const planning_ros_msgs::Path& msg) {
   vec_Vec3f path;
   for (const auto &it : msg.waypoints)
     path.push_back(Vec3f(it.x, it.y, it.z));
