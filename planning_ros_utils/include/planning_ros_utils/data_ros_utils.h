@@ -123,6 +123,24 @@ inline planning_ros_msgs::PathArray path_array_to_ros(const vec_E<vec_Vec3f>& pa
   return msg;
 }
 
+
+inline planning_ros_msgs::PathArray path_array_to_ros(const std::vector<std::pair<std::string, vec_Vec3f>>& paths) {
+  planning_ros_msgs::PathArray msg;
+  for(const auto& it: paths) {
+    planning_ros_msgs::Path path_msg;
+    path_msg.name = it.first;
+    for (const auto &itt : it.second) {
+      geometry_msgs::Point pt;
+      pt.x = itt(0);
+      pt.y = itt(1);
+      pt.z = itt(2);
+      path_msg.waypoints.push_back(pt);
+    }
+    msg.paths.push_back(path_msg);
+  }
+  return msg;
+}
+
 inline planning_ros_msgs::Arrows pairs_to_arrows(const vec_E<std::pair<Vec3f, Vec3f>>& vs) {
   planning_ros_msgs::Arrows msg;
 

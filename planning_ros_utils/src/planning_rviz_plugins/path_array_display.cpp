@@ -15,7 +15,7 @@ namespace planning_rviz_plugins {
       new rviz::FloatProperty("NodeScale", 0.15, "0.15 is the default value.",
                               this, SLOT(updateNodeScale()));
     id_property_ =
-      new rviz::EnumProperty("ID", "0", "Visualize individual path using its id, 0 is the default",
+      new rviz::EnumProperty("ID", "All", "Visualize individual path using its id, All is the default",
                              this, SLOT(updateID()));
   }
 
@@ -54,10 +54,8 @@ namespace planning_rviz_plugins {
       visual_->setNodeScale(s);
   }
 
-  void PathArrayDisplay::processMessage(
-                                    const planning_ros_msgs::PathArray::ConstPtr &msg) {
-    if (!context_->getFrameManager()->getTransform(
-                                                   msg->header.frame_id, msg->header.stamp, position_, orientation_)) {
+  void PathArrayDisplay::processMessage(const planning_ros_msgs::PathArray::ConstPtr &msg) {
+    if (!context_->getFrameManager()->getTransform(msg->header.frame_id, msg->header.stamp, position_, orientation_)) {
       ROS_DEBUG("Error transforming from frame '%s' to frame '%s'",
                 msg->header.frame_id.c_str(), qPrintable(fixed_frame_));
       return;
@@ -67,8 +65,12 @@ namespace planning_rviz_plugins {
 
     id_property_->clearOptions();
     id_property_->addOption("All", -1);
-    for (int i = 0; i < (int)paths_.paths.size(); i++)
-      id_property_->addOption(QString::number(i), i);
+    for (int i = 0; i < (int) paths_.paths.size(); i++) {
+      if(paths_.paths[i].name.empty())
+        id_property_->addOption(QString::number(i), i);
+      else
+        id_property_->addOption(QString(paths_.paths[i].name.c_str()), i);
+    }
 
     int id = id_property_->getOptionInt();
     visualizeMessage(id);
@@ -76,20 +78,20 @@ namespace planning_rviz_plugins {
 
 
   void PathArrayDisplay::visualizeMessage(int id) {
-    if (id >= (int)paths_.paths.size())
+    if (id >= (int) paths_.paths.size())
       return;
 
     std::shared_ptr<PathVisual> visual;
     visual.reset(new PathVisual(context_->getSceneManager(), scene_node_));
 
     bool set = false;
-    if(id >= 0){
+    if(id >= 0) {
       set = true;
       visual->setMessage(ros_to_path(paths_.paths[id]));
       visual->setFramePosition(position_);
       visual->setFrameOrientation(orientation_);
     }
-    else{
+    else {
       for (int i = 0; i < (int)paths_.paths.size(); i++)
       {
         if(i == 0) {
