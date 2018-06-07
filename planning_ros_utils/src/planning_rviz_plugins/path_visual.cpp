@@ -17,6 +17,13 @@ void PathVisual::setMessage(const vec_Vec3f &path) {
   if (path.empty())
     return;
 
+  for (const auto& it: path) {
+    if (std::isnan(it(0)) ||
+        std::isnan(it(1)) ||
+        std::isnan(it(2)))
+      return;
+  }
+
   nodes_.resize(path.size());
   lines_.resize(path.size() - 1);
 
