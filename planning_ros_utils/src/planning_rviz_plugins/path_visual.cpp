@@ -13,7 +13,6 @@ PathVisual::~PathVisual() { scene_manager_->destroySceneNode(frame_node_); }
 void PathVisual::setMessage(const vec_Vec3f &path) {
   nodes_.clear();
   lines_.clear();
-  //line_.reset(new rviz::BillboardLine(scene_manager_, frame_node_));
 
   if (path.empty())
     return;
@@ -85,7 +84,7 @@ void PathVisual::setNodeColor(float r, float g, float b, float a) {
     it->setColor(r, g, b, a);
 }
 
-void PathVisual::setLineScale(float s) { 
+void PathVisual::setLineScale(float s) {
   for (auto &it : lines_)
     it->setLineWidth(s);
 }

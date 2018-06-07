@@ -78,7 +78,7 @@ namespace planning_rviz_plugins {
 
 
   void PathArrayDisplay::visualizeMessage(int id) {
-    if (id >= (int) paths_.paths.size())
+    if (id >= (int) paths_.paths.size() || paths_.paths.empty())
       return;
 
     std::shared_ptr<PathVisual> visual;
