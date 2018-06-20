@@ -6,7 +6,7 @@
 
 // num indicates the max number of elements to read, -1 means read till the end
 template<class T>
-std::vector<T> read_bag(std::string file_name, std::string topic, int num) {
+std::vector<T> read_bag(std::string file_name, std::string topic, unsigned int num) {
   rosbag::Bag bag;
   bag.open(file_name, rosbag::bagmode::Read);
 
