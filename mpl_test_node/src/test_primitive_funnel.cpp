@@ -5,7 +5,6 @@
 #include <motion_primitive_library/planner/mp_funnel_util.h>
 #include <decomp_ros_utils/data_ros_utils.h>
 
-
 using namespace MPL;
 std::unique_ptr<MPFunnelUtil> planner_;
 
@@ -83,8 +82,8 @@ int main(int argc, char ** argv){
   planner_->setMap(cloud_to_vec(map), origin, dim, kp, kv, v); // Set collision checking function
   planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)
   planner_->setVmax(v_max); // Set max velocity
-  planner_->setAmax(a_max); // Set max acceleration 
-  planner_->setUmax(u_max); // Set max control 
+  planner_->setAmax(a_max); // Set max acceleration
+  planner_->setUmax(u_max); // Set max control
   planner_->setTmax(t_max); // Set max time
   planner_->setDt(dt); // Set dt for each primitive
   planner_->setW(w); // Set w for each primitive
@@ -105,8 +104,8 @@ int main(int argc, char ** argv){
   nh.param("goal_x", goal_x, 6.4);
   nh.param("goal_y", goal_y, 16.6);
   nh.param("goal_z", goal_z, 0.0);
- 
-  Waypoint3 start;
+
+  Waypoint3D start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
@@ -116,7 +115,7 @@ int main(int argc, char ** argv){
   start.use_acc = false;
   start.use_jrk = false;
 
-  Waypoint3 goal;
+  Waypoint3D goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -133,13 +132,13 @@ int main(int argc, char ** argv){
   geometry_msgs::Point32 pt1, pt2;
   pt1.x = start_x, pt1.y = start_y, pt1.z = start_z;
   pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2); 
+  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
   sg_pub.publish(sg_cloud);
 
   //Set input control
   vec_Vec3f U;
   const decimal_t du = u_max / num;
-   for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+   for(decimal_t dx = -u_max; dx <= u_max; dx += du )
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         U.push_back(Vec3f(dx, dy, 0));
   planner_->setU(U);// Set discretization with 1 and efforts
@@ -164,16 +163,15 @@ int main(int argc, char ** argv){
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
 
-    printf("================== Traj -- total J(1): %f, J(2): %F, J(3): %f, total time: %f\n", 
+    printf("================== Traj -- total J(1): %f, J(2): %F, J(3): %f, total time: %f\n",
         traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
 
     vec_Vec3f pts_x, pts_y;
-    Waypoint3 s1 = start, s2 = start;
-    Waypoint3 s3 = start, s4 = start;
-    Waypoint3 s5 = start, s6 = start;
+    auto s1 = start, s2 = start;
+    auto s3 = start, s4 = start;
+    auto s5 = start, s6 = start;
 
     Vec2f wf(start.pos(0), start.vel(0));
-
 
     vec_E<vec_Vec3f> bounds;
     vec_Ellipsoid Es;

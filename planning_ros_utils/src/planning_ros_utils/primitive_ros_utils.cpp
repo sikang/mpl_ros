@@ -1,6 +1,6 @@
 #include <planning_ros_utils/primitive_ros_utils.h>
 
-planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2& pr, double z) {
+planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2D& pr, double z) {
   planning_ros_msgs::Primitive msg;
   const Vec6f cx = pr.traj(0).coeff();
   const Vec6f cy = pr.traj(1).coeff();
@@ -20,7 +20,7 @@ planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2& pr, double z) {
   return msg;
 }
 
-planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive3& pr) {
+planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive3D& pr) {
   planning_ros_msgs::Primitive msg;
   const Vec6f cx = pr.traj(0).coeff();
   const Vec6f cy = pr.traj(1).coeff();
@@ -39,7 +39,7 @@ planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive3& pr) {
 }
 
 
-planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory2& traj, double z) {
+planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory2D& traj, double z) {
   planning_ros_msgs::Trajectory msg;
   for(const auto& seg: traj.segs)
     msg.primitives.push_back(toPrimitiveROSMsg(seg, z));
@@ -60,7 +60,7 @@ planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory2& traj, double
   return msg;
 }
 
-planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory3& traj) {
+planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory3D& traj) {
   planning_ros_msgs::Trajectory msg;
   for(const auto& seg: traj.segs)
     msg.primitives.push_back(toPrimitiveROSMsg(seg));
@@ -81,21 +81,21 @@ planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory3& traj) {
   return msg;
 }
 
-planning_ros_msgs::Primitives toPrimitivesROSMsg(const vec_E<Primitive2>& prs, double z) {
-  planning_ros_msgs::Primitives msg;
+planning_ros_msgs::PrimitiveArray toPrimitiveArrayROSMsg(const vec_E<Primitive2D>& prs, double z) {
+  planning_ros_msgs::PrimitiveArray msg;
   for(const auto& pr: prs)
     msg.primitives.push_back(toPrimitiveROSMsg(pr, z));
   return msg;
 }
 
-planning_ros_msgs::Primitives toPrimitivesROSMsg(const vec_E<Primitive3>& prs) {
-  planning_ros_msgs::Primitives msg;
+planning_ros_msgs::PrimitiveArray toPrimitiveArrayROSMsg(const vec_E<Primitive3D>& prs) {
+  planning_ros_msgs::PrimitiveArray msg;
   for(const auto& pr: prs)
     msg.primitives.push_back(toPrimitiveROSMsg(pr));
   return msg;
 }
 
-Primitive2 toPrimitive2(const planning_ros_msgs::Primitive& pr) {
+Primitive2D toPrimitive2D(const planning_ros_msgs::Primitive& pr) {
   Vec6f cx, cy;
   for(int i = 0; i < 6; i++) {
     cx(i) = pr.cx[i];
@@ -105,10 +105,10 @@ Primitive2 toPrimitive2(const planning_ros_msgs::Primitive& pr) {
   cs.push_back(cx);
   cs.push_back(cy);
 
-  return Primitive2(cs, pr.t);
+  return Primitive2D(cs, pr.t);
 }
 
-Primitive3 toPrimitive3(const planning_ros_msgs::Primitive& pr) {
+Primitive3D toPrimitive3D(const planning_ros_msgs::Primitive& pr) {
   Vec6f cx, cy, cz;
   for(int i = 0; i < 6; i++) {
     cx(i) = pr.cx[i];
@@ -120,16 +120,16 @@ Primitive3 toPrimitive3(const planning_ros_msgs::Primitive& pr) {
   cs.push_back(cy);
   cs.push_back(cz);
 
-  return Primitive3(cs, pr.t);
+  return Primitive3D(cs, pr.t);
 }
 
 
-Trajectory2 toTrajectory2(const planning_ros_msgs::Trajectory & traj_msg) {
+Trajectory2D toTrajectory2D(const planning_ros_msgs::Trajectory& traj_msg) {
   // Constructor from ros msg
-  Trajectory2 traj;
+  Trajectory2D traj;
   traj.taus.push_back(0);
   for(const auto& it: traj_msg.primitives) {
-    traj.segs.push_back(toPrimitive2(it));
+    traj.segs.push_back(toPrimitive2D(it));
     traj.taus.push_back(traj.taus.back() + it.t);
   }
 
@@ -160,12 +160,12 @@ Trajectory2 toTrajectory2(const planning_ros_msgs::Trajectory & traj_msg) {
 
 
 
-Trajectory3 toTrajectory3(const planning_ros_msgs::Trajectory & traj_msg) {
+Trajectory3D toTrajectory3D(const planning_ros_msgs::Trajectory& traj_msg) {
   // Constructor from ros msg
-  Trajectory3 traj;
+  Trajectory3D traj;
   traj.taus.push_back(0);
   for(const auto& it: traj_msg.primitives) {
-    traj.segs.push_back(toPrimitive3(it));
+    traj.segs.push_back(toPrimitive3D(it));
     traj.taus.push_back(traj.taus.back() + it.t);
   }
 

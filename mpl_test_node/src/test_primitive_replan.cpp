@@ -29,7 +29,7 @@ std::vector<ros::Publisher> expanded_cloud_pub;
 
 std_msgs::Header header;
 
-Waypoint3 start, goal;
+Waypoint3D start, goal;
 bool terminated = false;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
@@ -70,7 +70,7 @@ void visualizeGraph(int id, const MPMap3DUtil& planner) {
   pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = start.pos(2);
   pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = goal.pos(2);
   sg_cloud.points.push_back(pt1);
-  sg_cloud.points.push_back(pt2); 
+  sg_cloud.points.push_back(pt2);
   sg_pub.publish(sg_cloud);
 
 
@@ -95,7 +95,7 @@ void visualizeGraph(int id, const MPMap3DUtil& planner) {
   linked_cloud_pub[id].publish(linked_ps);
 
   //Publish primitives
-  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getAllPrimitives());
+  planning_ros_msgs::PrimitiveArray prs_msg = toPrimitiveArrayROSMsg(planner.getAllPrimitives());
   //planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner.getValidPrimitives());
   prs_msg.header =  header;
   prs_pub[id].publish(prs_msg);
@@ -114,8 +114,8 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     terminated = true;
   }
   else{
-    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
-        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(), planner_.getCloseSet().size(), 
+    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]",
+        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(), planner_.getCloseSet().size(),
         planner_.getExpandedNodes().size(),
         planner_.getOpenSet().size() + planner_.getCloseSet().size());
 
@@ -136,8 +136,8 @@ void replanCallback(const std_msgs::Bool::ConstPtr& msg) {
     terminated = true;
   }
   else{
-    ROS_WARN("Succeed! Takes %f sec for lpastar planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]", 
-        (ros::Time::now() - t1).toSec(), replan_planner_.getOpenSet().size(), replan_planner_.getCloseSet().size(), 
+    ROS_WARN("Succeed! Takes %f sec for lpastar planning, openset: [%zu], closeset (expanded): [%zu](%zu), total: [%zu]",
+        (ros::Time::now() - t1).toSec(), replan_planner_.getOpenSet().size(), replan_planner_.getCloseSet().size(),
         replan_planner_.getExpandedNodes().size(),
         replan_planner_.getOpenSet().size() + replan_planner_.getCloseSet().size());
 
@@ -182,11 +182,11 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
   map_pub.publish(map);
 
   if(replan_planner_.initialized()) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateClearedNodes(new_clear));
+    planning_ros_msgs::PrimitiveArray prs_msg = toPrimitiveArrayROSMsg(replan_planner_.updateClearedNodes(new_clear));
     prs_msg.header.frame_id = "map";
     changed_prs_pub.publish(prs_msg);
   }
- 
+
   /*
   sensor_msgs::PointCloud expanded_ps = vec_to_cloud(affected_pts);
   expanded_ps.header = header;
@@ -241,7 +241,7 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr& msg) {
 
 
   if(replan_planner_.initialized()) {
-    planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(replan_planner_.updateBlockedNodes(new_obs));
+    planning_ros_msgs::PrimitiveArray prs_msg = toPrimitiveArrayROSMsg(replan_planner_.updateBlockedNodes(new_obs));
     prs_msg.header.frame_id = "map";
     changed_prs_pub.publish(prs_msg);
   }
@@ -272,10 +272,10 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr& msg) {
   }
   else
     return;
-  vec_E<Waypoint3> ws = replan_planner_.getWs();
+  auto ws = replan_planner_.getWs();
   if(ws.size() < 3)
     terminated = true;
-  else 
+  else
     start = ws[1];
 
   visualizeGraph(1, replan_planner_);
@@ -297,11 +297,11 @@ int main(int argc, char ** argv){
   map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
 
-  ros::Publisher prs_pub0 = nh.advertise<planning_ros_msgs::Primitives>("primitives0", 1, true);
-  ros::Publisher prs_pub1 = nh.advertise<planning_ros_msgs::Primitives>("primitives1", 1, true);
+  ros::Publisher prs_pub0 = nh.advertise<planning_ros_msgs::PrimitiveArray>("primitives0", 1, true);
+  ros::Publisher prs_pub1 = nh.advertise<planning_ros_msgs::PrimitiveArray>("primitives1", 1, true);
   prs_pub.push_back(prs_pub0), prs_pub.push_back(prs_pub1);
 
-  changed_prs_pub = nh.advertise<planning_ros_msgs::Primitives>("changed_primitives", 1, true);
+  changed_prs_pub = nh.advertise<planning_ros_msgs::PrimitiveArray>("changed_primitives", 1, true);
 
   ros::Publisher traj_pub0 = nh.advertise<planning_ros_msgs::Trajectory>("trajectory0", 1, true);
   ros::Publisher traj_pub1 = nh.advertise<planning_ros_msgs::Trajectory>("trajectory1", 1, true);
@@ -341,7 +341,7 @@ int main(int argc, char ** argv){
   voxel_mapper_->addCloud(cloud_to_vec(cloud));
   map = voxel_mapper_->getMap();
 
-  //Initialize map util 
+  //Initialize map util
   map_util.reset(new MPL::VoxelMapUtil);
   setMap(map_util, map);
 
@@ -378,7 +378,7 @@ int main(int argc, char ** argv){
   nh.param("goal_x", goal_x, 6.4);
   nh.param("goal_y", goal_y, 16.6);
   nh.param("goal_z", goal_z, 0.0);
- 
+
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(start_ax, start_ay, start_az);
@@ -416,17 +416,17 @@ int main(int argc, char ** argv){
   const decimal_t du = u_max / num;
   if(use_3d) {
     decimal_t du_z = u_max / num;
-    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du )
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         for(decimal_t dz = -u_max; dz <= u_max; dz += du_z ) //here we reduce the z control
           U.push_back(Vec3f(dx, dy, dz));
   }
   else {
-    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du )
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         U.push_back(Vec3f(dx, dy, 0));
   }
- 
+
 
   planner_.setMapUtil(map_util); // Set collision checking function
   planner_.setEpsilon(1.0); // Set greedy param (default equal to 1)

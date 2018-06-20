@@ -26,7 +26,7 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
     accs_.resize(num_);
   if(jrk_vis_)
     jrks_.resize(num_);
- 
+
   for (int i = 0; i < num_; i++) {
     poss_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(vel_vis_)
@@ -37,16 +37,16 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
       jrks_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
   }
 
-  Trajectory3 p = toTrajectory3(msg);
+  auto p = toTrajectory3D(msg);
   decimal_t theta = M_PI / 2;
   Mat3f R;
   R << cos(theta), -sin(theta), 0,
     sin(theta), cos(theta), 0,
     0, 0, 1;
-  vec_E<Waypoint3> waypoints = p.sample(num_);
+  const auto waypoints = p.sample(num_);
   for (int i = 1; i < (int) waypoints.size(); i++) {
-    Waypoint3 p1 = waypoints[i-1];
-    Waypoint3 p2 = waypoints[i];
+    const auto p1 = waypoints[i-1];
+    const auto p2 = waypoints[i];
 
     Ogre::Vector3 pos1(p1.pos(0), p1.pos(1), p1.pos(2));
     Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));
@@ -87,7 +87,7 @@ void TrajectoryVisual::addMessage(const planning_ros_msgs::Trajectory &msg) {
     accs_.resize(num_ + prev_size);
  if(jrk_vis_)
     jrks_.resize(num_ + prev_size);
-  
+
   for (int i = prev_size; i < (int)poss_.size(); i++) {
     poss_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
     if(vel_vis_)
@@ -99,17 +99,17 @@ void TrajectoryVisual::addMessage(const planning_ros_msgs::Trajectory &msg) {
   }
 
 
-  Trajectory3 p = toTrajectory3(msg);
+  auto p = toTrajectory3D(msg);
   decimal_t theta = M_PI / 2;
   Mat3f R;
   R << cos(theta), -sin(theta), 0,
     sin(theta), cos(theta), 0,
     0, 0, 1;
 
-  vec_E<Waypoint3> waypoints = p.sample(num_);
+  const auto waypoints = p.sample(num_);
   for (int i = 1; i < (int) waypoints.size(); i++) {
-    Waypoint3 p1 = waypoints[i-1];
-    Waypoint3 p2 = waypoints[i];
+    const auto p1 = waypoints[i-1];
+    const auto p2 = waypoints[i];
 
     Ogre::Vector3 pos1(p1.pos(0), p1.pos(1), p1.pos(2));
     Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));

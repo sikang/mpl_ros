@@ -9,18 +9,18 @@
 
 #include <rviz/load_resource.h>
 
-#include <planning_ros_msgs/Primitives.h>
+#include <planning_ros_msgs/PrimitiveArray.h>
 #include <rviz/message_filter_display.h>
 
 #include "primitive_visual.h"
 
 namespace planning_rviz_plugins {
-  class PrimitivesDisplay
-    : public rviz::MessageFilterDisplay<planning_ros_msgs::Primitives> {
+  class PrimitiveArrayDisplay
+    : public rviz::MessageFilterDisplay<planning_ros_msgs::PrimitiveArray> {
       Q_OBJECT
       public:
-        PrimitivesDisplay();
-        virtual ~PrimitivesDisplay();
+        PrimitiveArrayDisplay();
+        virtual ~PrimitiveArrayDisplay();
 
       protected:
         virtual void onInitialize();
@@ -42,7 +42,7 @@ namespace planning_rviz_plugins {
         void updateNum();
 
       private:
-        void processMessage(const planning_ros_msgs::Primitives::ConstPtr &msg);
+        void processMessage(const planning_ros_msgs::PrimitiveArray::ConstPtr &msg);
         void visualizeMessage();
 
         std::shared_ptr<PrimitiveVisual> visual_;
@@ -63,7 +63,7 @@ namespace planning_rviz_plugins {
         Ogre::Vector3 position_;
         Ogre::Quaternion orientation_;
 
-        planning_ros_msgs::Primitives prs_msg_;
+        planning_ros_msgs::PrimitiveArray prs_msg_;
     };
 
 }

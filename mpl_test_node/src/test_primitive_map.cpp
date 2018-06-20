@@ -10,7 +10,6 @@
 
 using namespace MPL;
 
-
 void setMap(std::shared_ptr<MPL::VoxelMapUtil>& map_util, const planning_ros_msgs::VoxelMap& msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
   Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);
@@ -67,14 +66,14 @@ int main(int argc, char ** argv){
 
   ros::Publisher map_pub = nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
-  ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::Primitives>("primitives", 1, true);
+  ros::Publisher prs_pub = nh.advertise<planning_ros_msgs::PrimitiveArray>("primitives", 1, true);
   ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher refined_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory_refined", 1, true);
   ros::Publisher funnel1_pub = nh.advertise<sensor_msgs::PointCloud>("funnel1", 1, true);
   ros::Publisher funnel2_pub = nh.advertise<sensor_msgs::PointCloud>("funnel2", 1, true);
   ros::Publisher ellipsoid_pub = nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
   ros::Publisher bounds_pub = nh.advertise<planning_ros_msgs::PathArray>("bounds", 1, true);
- 
+
 
   ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
 
@@ -90,7 +89,7 @@ int main(int argc, char ** argv){
   planning_ros_msgs::VoxelMap map = read_bag<planning_ros_msgs::VoxelMap>(file_name, topic_name, 0).back();
 
 
-  //Initialize map util 
+  //Initialize map util
   std::shared_ptr<MPL::VoxelMapUtil> map_util(new MPL::VoxelMapUtil);
   setMap(map_util, map);
 
@@ -119,8 +118,8 @@ int main(int argc, char ** argv){
   nh.param("goal_x", goal_x, 6.4);
   nh.param("goal_y", goal_y, 16.6);
   nh.param("goal_z", goal_z, 0.0);
- 
-  Waypoint3 start;
+
+  Waypoint3D start;
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
@@ -128,7 +127,7 @@ int main(int argc, char ** argv){
   start.use_vel = true;
   start.use_acc = false;
 
-  Waypoint3 goal;
+  Waypoint3D goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -155,17 +154,17 @@ int main(int argc, char ** argv){
   const decimal_t du = u_max / num;
   if(use_3d) {
     decimal_t du_z = u_max / num;
-    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du )
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         for(decimal_t dz = -u_max; dz <= u_max; dz += du_z ) //here we reduce the z control
           U.push_back(Vec3f(dx, dy, dz));
   }
   else {
-    for(decimal_t dx = -u_max; dx <= u_max; dx += du ) 
+    for(decimal_t dx = -u_max; dx <= u_max; dx += du )
       for(decimal_t dy = -u_max; dy <= u_max; dy += du )
         U.push_back(Vec3f(dx, dy, 0));
   }
- 
+
 
   std::unique_ptr<MPMap3DUtil> planner_ptr;
 
@@ -188,7 +187,7 @@ int main(int argc, char ** argv){
   geometry_msgs::Point32 pt1, pt2;
   pt1.x = start_x, pt1.y = start_y, pt1.z = start_z;
   pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2); 
+  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
   sg_pub.publish(sg_cloud);
 
   //Planning thread!
@@ -202,7 +201,7 @@ int main(int argc, char ** argv){
 
 
   //Publish primitives
-  planning_ros_msgs::Primitives prs_msg = toPrimitivesROSMsg(planner_ptr->getPrimitivesToGoal());
+  planning_ros_msgs::PrimitiveArray prs_msg = toPrimitiveArrayROSMsg(planner_ptr->getPrimitivesToGoal());
   prs_msg.header = header;
   prs_pub.publish(prs_msg);
 
@@ -222,16 +221,16 @@ int main(int argc, char ** argv){
   printf("==================  Raw traj -- total J: %f, total time: %f\n", traj.J(2), traj.getTotalTime());
 
   //Get intermediate waypoints
-  vec_E<Waypoint3> waypoints = planner_ptr->getWs();
+  const auto waypoints = planner_ptr->getWs();
   //Get time allocation
   std::vector<decimal_t> dts;
   dts.resize(waypoints.size() - 1, dt);
 
   //Generate higher order polynomials
-  PolySolver3 poly_solver(2,3);
+  PolySolver3D poly_solver(2,3);
   poly_solver.solve(waypoints, dts);
 
-  auto traj_refined = Trajectory3(poly_solver.getTrajectory()->toPrimitives());
+  auto traj_refined = Trajectory3D(poly_solver.getTrajectory()->toPrimitives());
 
   //Publish refined trajectory
   planning_ros_msgs::Trajectory refined_traj_msg = toTrajectoryROSMsg(traj_refined);
@@ -241,9 +240,9 @@ int main(int argc, char ** argv){
   printf("================ Refined traj -- total J: %f, total time: %f\n", traj_refined.J(2), traj_refined.getTotalTime());
 
   vec_Vec3f pts_x, pts_y;
-  Waypoint3 s1 = start, s2 = start;
-  Waypoint3 s3 = start, s4 = start;
-  Waypoint3 s5 = start, s6 = start;
+  auto s1 = start, s2 = start;
+  auto s3 = start, s4 = start;
+  auto s5 = start, s6 = start;
 
   Vec2f wf(start.pos(0), start.vel(0));
 
@@ -264,7 +263,7 @@ int main(int argc, char ** argv){
       pts_x.push_back(it.pos);
     for(auto it: b2)
       pts_x.push_back(it.pos);
- 
+
 
     auto b3 = f.compute(s3, Vec2f(3, 3), 5);
     auto b4 = f.compute(s4, Vec2f(-3, -3), 5);

@@ -1,7 +1,7 @@
-#include "primitives_display.h"
+#include "primitive_array_display.h"
 
 namespace planning_rviz_plugins {
-  PrimitivesDisplay::PrimitivesDisplay() {
+  PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
     num_property_ =
       new rviz::IntProperty("Num of samples", 4, "Number of samples to display.",
           this, SLOT(updateNum()));
@@ -40,76 +40,76 @@ namespace planning_rviz_plugins {
           this, SLOT(updateJrkVis()));
  }
 
-  void PrimitivesDisplay::onInitialize() {
+  void PrimitiveArrayDisplay::onInitialize() {
     MFDClass::onInitialize();
   }
 
-  PrimitivesDisplay::~PrimitivesDisplay() {}
+  PrimitiveArrayDisplay::~PrimitiveArrayDisplay() {}
 
-  void PrimitivesDisplay::reset() {
+  void PrimitiveArrayDisplay::reset() {
     MFDClass::reset();
     visual_ = nullptr;
   }
 
-  void PrimitivesDisplay::updateVelVis() {
+  void PrimitiveArrayDisplay::updateVelVis() {
     bool vis = vel_vis_property_->getBool();
     if (visual_) visual_->setVelVis(vis);
     visualizeMessage();
   }
 
-  void PrimitivesDisplay::updateAccVis() {
+  void PrimitiveArrayDisplay::updateAccVis() {
     bool vis = acc_vis_property_->getBool();
     if (visual_) visual_->setAccVis(vis);
     visualizeMessage();
   }
 
-  void PrimitivesDisplay::updateJrkVis() {
+  void PrimitiveArrayDisplay::updateJrkVis() {
     bool vis = jrk_vis_property_->getBool();
     if (visual_) visual_->setJrkVis(vis);
     visualizeMessage();
   }
 
-  void PrimitivesDisplay::updatePosColorAndAlpha() {
+  void PrimitiveArrayDisplay::updatePosColorAndAlpha() {
     Ogre::ColourValue color = pos_color_property_->getOgreColor();
     if(visual_) visual_->setPosColor(color.r, color.g, color.b, 1);
   }
 
-  void PrimitivesDisplay::updateVelColorAndAlpha() {
+  void PrimitiveArrayDisplay::updateVelColorAndAlpha() {
     Ogre::ColourValue color = vel_color_property_->getOgreColor();
     if(visual_) visual_->setVelColor(color.r, color.g, color.b, 1);
   }
 
-  void PrimitivesDisplay::updateAccColorAndAlpha() {
+  void PrimitiveArrayDisplay::updateAccColorAndAlpha() {
     Ogre::ColourValue color = acc_color_property_->getOgreColor();
     if(visual_) visual_->setAccColor(color.r, color.g, color.b, 1);
   }
 
-  void PrimitivesDisplay::updateJrkColorAndAlpha() {
+  void PrimitiveArrayDisplay::updateJrkColorAndAlpha() {
     Ogre::ColourValue color = jrk_color_property_->getOgreColor();
     if(visual_) visual_->setJrkColor(color.r, color.g, color.b, 1);
   }
 
-  void PrimitivesDisplay::updatePosScale() {
+  void PrimitiveArrayDisplay::updatePosScale() {
     float s = pos_scale_property_->getFloat();
     if(visual_) visual_->setPosScale(s);
   }
 
-  void PrimitivesDisplay::updateVelScale() {
+  void PrimitiveArrayDisplay::updateVelScale() {
     float s = vel_scale_property_->getFloat();
     if(visual_) visual_->setVelScale(s);
   }
 
-  void PrimitivesDisplay::updateAccScale() {
+  void PrimitiveArrayDisplay::updateAccScale() {
     float s = acc_scale_property_->getFloat();
     if(visual_) visual_->setAccScale(s);
   }
 
-  void PrimitivesDisplay::updateJrkScale() {
+  void PrimitiveArrayDisplay::updateJrkScale() {
     float s = jrk_scale_property_->getFloat();
       if(visual_) visual_->setJrkScale(s);
   }
 
-  void PrimitivesDisplay::processMessage(const planning_ros_msgs::Primitives::ConstPtr &msg) {
+  void PrimitiveArrayDisplay::processMessage(const planning_ros_msgs::PrimitiveArray::ConstPtr &msg) {
     if (!context_->getFrameManager()->getTransform(
           msg->header.frame_id, msg->header.stamp, position_, orientation_)) {
       ROS_DEBUG("Error transforming from frame '%s' to frame '%s'",
@@ -122,11 +122,11 @@ namespace planning_rviz_plugins {
     visualizeMessage();
   }
 
-  void PrimitivesDisplay::updateNum() {
+  void PrimitiveArrayDisplay::updateNum() {
     visualizeMessage();
   }
 
-  void PrimitivesDisplay::visualizeMessage() {
+  void PrimitiveArrayDisplay::visualizeMessage() {
     if (prs_msg_.primitives.empty())
       return;
 
@@ -176,4 +176,4 @@ namespace planning_rviz_plugins {
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::PrimitivesDisplay, rviz::Display)
+PLUGINLIB_EXPORT_CLASS(planning_rviz_plugins::PrimitiveArrayDisplay, rviz::Display)
