@@ -39,22 +39,22 @@
 //*** sikang@seas.upenn.edu
 
 //#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/common/transforms.h>
+#include <pcl/console/parse.h>
+#include <pcl/console/print.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/vtk_lib_io.h>
-#include <pcl/common/transforms.h>
-#include <vtkVersion.h>
-#include <vtkPLYReader.h>
 #include <vtkOBJReader.h>
+#include <vtkPLYReader.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
-#include <vtkPolyDataMapper.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/console/print.h>
-#include <pcl/console/parse.h>
+#include <vtkVersion.h>
 
-#include <sensor_msgs/point_cloud_conversion.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <ros/ros.h>
+#include <sensor_msgs/point_cloud_conversion.h>
 
 #define PCL_VIS 0
 
@@ -184,7 +184,8 @@ int main(int argc, char **argv) {
   n.param("leaf_size", leaf_size, default_leaf_size);
   bool save_pcd = false;
   n.param("save_pcd", save_pcd, false);
-  printf("n_samples: %d, leaf_size: %.3f, save_pcd: %d\n", SAMPLE_POINTS_, leaf_size, save_pcd);
+  printf("n_samples: %d, leaf_size: %.3f, save_pcd: %d\n", SAMPLE_POINTS_,
+         leaf_size, save_pcd);
 
   // Parse the command line arguments for .ply and PCD files
   std::string stlFileName;
@@ -236,16 +237,13 @@ int main(int argc, char **argv) {
 
   ROS_INFO("Cloud published!");
 
-  if(save_pcd)
-  {
+  if (save_pcd) {
     pcl::io::savePCDFileASCII("tmp.pcd", *res);
     ROS_INFO("Cloud saved!");
   }
 
   ros::spin();
 
-
   return 0;
 }
-
 

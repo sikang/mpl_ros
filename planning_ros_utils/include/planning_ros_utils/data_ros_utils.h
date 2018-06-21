@@ -1,12 +1,12 @@
 #ifndef DATA_ROS_UTILS_H
 #define DATA_ROS_UTILS_H
 
-#include <motion_primitive_library/common/data_type.h>
-#include <sensor_msgs/PointCloud.h>
-#include <planning_ros_msgs/PathArray.h>
-#include <planning_ros_msgs/Arrows.h>
-#include <tf_conversions/tf_eigen.h>
 #include <geometry_msgs/Twist.h>
+#include <motion_primitive_library/common/data_type.h>
+#include <planning_ros_msgs/Arrows.h>
+#include <planning_ros_msgs/PathArray.h>
+#include <sensor_msgs/PointCloud.h>
+#include <tf_conversions/tf_eigen.h>
 
 inline Vec3f pose_to_eigen(const geometry_msgs::Pose &pose) {
   return Vec3f(pose.position.x, pose.position.y, pose.position.z);
@@ -20,7 +20,7 @@ inline Vec3f vec_to_eigen(const geometry_msgs::Vector3 &v) {
   return Vec3f(v.x, v.y, v.z);
 }
 
-inline geometry_msgs::Pose eigen_to_pose(const Vec3f& pose) {
+inline geometry_msgs::Pose eigen_to_pose(const Vec3f &pose) {
   geometry_msgs::Pose p;
   p.position.x = pose(0);
   p.position.y = pose(1);
@@ -29,8 +29,7 @@ inline geometry_msgs::Pose eigen_to_pose(const Vec3f& pose) {
   return p;
 }
 
-
-inline geometry_msgs::Twist eigen_to_twist(const Vec3f& twist) {
+inline geometry_msgs::Twist eigen_to_twist(const Vec3f &twist) {
   geometry_msgs::Twist t;
   t.linear.x = twist(0);
   t.linear.y = twist(1);
@@ -38,12 +37,11 @@ inline geometry_msgs::Twist eigen_to_twist(const Vec3f& twist) {
   return t;
 }
 
-
-inline sensor_msgs::PointCloud transform_cloud(
-    const sensor_msgs::PointCloud &cloud, const Aff3f &TF) {
+inline sensor_msgs::PointCloud
+transform_cloud(const sensor_msgs::PointCloud &cloud, const Aff3f &TF) {
   sensor_msgs::PointCloud new_cloud = cloud;
   int i = 0;
-  for (const auto& it : cloud.points) {
+  for (const auto &it : cloud.points) {
     Vec3f raw(it.x, it.y, it.z);
     raw = TF * raw;
     new_cloud.points[i].x = raw(0);
@@ -78,8 +76,7 @@ inline vec_Vec3f cloud_to_vec(const sensor_msgs::PointCloud &cloud) {
   return pts;
 }
 
-inline Aff3f toTF(const geometry_msgs::Pose &p)
-{
+inline Aff3f toTF(const geometry_msgs::Pose &p) {
   tf::Pose Ttf;
   tf::poseMsgToTF(p, Ttf);
   Eigen::Affine3d Td;
@@ -87,14 +84,14 @@ inline Aff3f toTF(const geometry_msgs::Pose &p)
   return Td.cast<decimal_t>();
 }
 
-inline vec_Vec3f ros_to_path(const planning_ros_msgs::Path& msg) {
+inline vec_Vec3f ros_to_path(const planning_ros_msgs::Path &msg) {
   vec_Vec3f path;
   for (const auto &it : msg.waypoints)
     path.push_back(Vec3f(it.x, it.y, it.z));
   return path;
 }
 
-inline planning_ros_msgs::Path path_to_ros(const vec_Vec3f& path) {
+inline planning_ros_msgs::Path path_to_ros(const vec_Vec3f &path) {
   planning_ros_msgs::Path msg;
   for (const auto &itt : path) {
     geometry_msgs::Point pt;
@@ -106,10 +103,10 @@ inline planning_ros_msgs::Path path_to_ros(const vec_Vec3f& path) {
   return msg;
 }
 
-
-inline planning_ros_msgs::PathArray path_array_to_ros(const vec_E<vec_Vec3f>& paths) {
+inline planning_ros_msgs::PathArray
+path_array_to_ros(const vec_E<vec_Vec3f> &paths) {
   planning_ros_msgs::PathArray msg;
-  for(const auto& it: paths) {
+  for (const auto &it : paths) {
     planning_ros_msgs::Path path_msg;
     for (const auto &itt : it) {
       geometry_msgs::Point pt;
@@ -123,10 +120,10 @@ inline planning_ros_msgs::PathArray path_array_to_ros(const vec_E<vec_Vec3f>& pa
   return msg;
 }
 
-
-inline planning_ros_msgs::PathArray path_array_to_ros(const std::vector<std::pair<std::string, vec_Vec3f>>& paths) {
+inline planning_ros_msgs::PathArray
+path_array_to_ros(const std::vector<std::pair<std::string, vec_Vec3f>> &paths) {
   planning_ros_msgs::PathArray msg;
-  for(const auto& it: paths) {
+  for (const auto &it : paths) {
     planning_ros_msgs::Path path_msg;
     path_msg.name = it.first;
     for (const auto &itt : it.second) {
@@ -141,10 +138,11 @@ inline planning_ros_msgs::PathArray path_array_to_ros(const std::vector<std::pai
   return msg;
 }
 
-inline planning_ros_msgs::Arrows pairs_to_arrows(const vec_E<std::pair<Vec3f, Vec3f>>& vs) {
+inline planning_ros_msgs::Arrows
+pairs_to_arrows(const vec_E<std::pair<Vec3f, Vec3f>> &vs) {
   planning_ros_msgs::Arrows msg;
 
-  for(const auto& v: vs) {
+  for (const auto &v : vs) {
     geometry_msgs::Point pt;
     pt.x = v.first(0);
     pt.y = v.first(1);

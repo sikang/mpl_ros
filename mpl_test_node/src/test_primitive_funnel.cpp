@@ -1,9 +1,9 @@
 #include "bag_reader.hpp"
-#include <ros/ros.h>
+#include <decomp_ros_utils/data_ros_utils.h>
+#include <motion_primitive_library/planner/mp_funnel_util.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
-#include <motion_primitive_library/planner/mp_funnel_util.h>
-#include <decomp_ros_utils/data_ros_utils.h>
+#include <ros/ros.h>
 
 using namespace MPL;
 std::unique_ptr<MPFunnelUtil> planner_;
@@ -23,29 +23,38 @@ vec_Vec3f sort_pts(const vec_Vec3f &pts) {
     ps_valued[i] = std::make_pair(theta, pts[i]);
   }
 
-  std::sort(ps_valued.begin(), ps_valued.end(), [](const std::pair<decimal_t, Vec3f>& p1, const std::pair<decimal_t, Vec3f>& p2) { return p1.first < p2.first; });
+  std::sort(ps_valued.begin(), ps_valued.end(),
+            [](const std::pair<decimal_t, Vec3f> &p1,
+               const std::pair<decimal_t, Vec3f> &p2) {
+              return p1.first < p2.first;
+            });
   vec_Vec3f b;
-  for (const auto& it : ps_valued)
+  for (const auto &it : ps_valued)
     b.push_back(it.second);
   return b;
 }
 
-int main(int argc, char ** argv){
+int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
-  ros::Publisher es_pub = nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
-  ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
-  ros::Publisher traj_pub = nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
-  ros::Publisher cloud_pub = nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
+  ros::Publisher es_pub =
+      nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
+  ros::Publisher sg_pub =
+      nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
+  ros::Publisher traj_pub =
+      nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
+  ros::Publisher cloud_pub =
+      nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
   ros::Publisher ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
 
   ros::Time t0 = ros::Time::now();
-  //Read map from bag file
+  // Read map from bag file
   std::string file_name, topic_name;
   nh.param("file", file_name, std::string("voxel_map"));
   nh.param("topic", topic_name, std::string("voxel_map"));
-  sensor_msgs::PointCloud map = read_bag<sensor_msgs::PointCloud>(file_name, topic_name, 0).back();
+  sensor_msgs::PointCloud map =
+      read_bag<sensor_msgs::PointCloud>(file_name, topic_name, 0).back();
   cloud_pub.publish(map);
 
   Vec3f origin, dim;
@@ -59,7 +68,7 @@ int main(int argc, char ** argv){
   ROS_INFO("Takse %f sec to set up map!", (ros::Time::now() - t0).toSec());
   t0 = ros::Time::now();
 
-  //Initialize planner
+  // Initialize planner
   double dt, v_max, a_max, w, epsilon, t_max;
   double u_max;
   int max_num, num;
@@ -79,19 +88,20 @@ int main(int argc, char ** argv){
   nh.param("v", v, 3.0);
 
   planner_.reset(new MPFunnelUtil(true));
-  planner_->setMap(cloud_to_vec(map), origin, dim, kp, kv, v); // Set collision checking function
+  planner_->setMap(cloud_to_vec(map), origin, dim, kp, kv,
+                   v);           // Set collision checking function
   planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)
-  planner_->setVmax(v_max); // Set max velocity
-  planner_->setAmax(a_max); // Set max acceleration
-  planner_->setUmax(u_max); // Set max control
-  planner_->setTmax(t_max); // Set max time
-  planner_->setDt(dt); // Set dt for each primitive
-  planner_->setW(w); // Set w for each primitive
-  planner_->setMaxNum(max_num); // Set maximum allowed expansion, -1 means no limitation
+  planner_->setVmax(v_max);      // Set max velocity
+  planner_->setAmax(a_max);      // Set max acceleration
+  planner_->setUmax(u_max);      // Set max control
+  planner_->setTmax(t_max);      // Set max time
+  planner_->setDt(dt);           // Set dt for each primitive
+  planner_->setW(w);             // Set w for each primitive
+  planner_->setMaxNum(
+      max_num); // Set maximum allowed expansion, -1 means no limitation
   planner_->setTol(1.0, 1.0); // Tolerance for goal region
 
-
-  //Set start and goal
+  // Set start and goal
   double start_x, start_y, start_z;
   nh.param("start_x", start_x, 12.5);
   nh.param("start_y", start_y, 1.4);
@@ -125,8 +135,7 @@ int main(int argc, char ** argv){
   goal.use_acc = start.use_acc;
   goal.use_jrk = start.use_jrk;
 
-
-  //Publish location of start and goal
+  // Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
   sg_cloud.header.frame_id = "map";
   geometry_msgs::Point32 pt1, pt2;
@@ -135,36 +144,38 @@ int main(int argc, char ** argv){
   sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
   sg_pub.publish(sg_cloud);
 
-  //Set input control
+  // Set input control
   vec_Vec3f U;
   const decimal_t du = u_max / num;
-   for(decimal_t dx = -u_max; dx <= u_max; dx += du )
-      for(decimal_t dy = -u_max; dy <= u_max; dy += du )
-        U.push_back(Vec3f(dx, dy, 0));
-  planner_->setU(U);// Set discretization with 1 and efforts
+  for (decimal_t dx = -u_max; dx <= u_max; dx += du)
+    for (decimal_t dy = -u_max; dy <= u_max; dy += du)
+      U.push_back(Vec3f(dx, dy, 0));
+  planner_->setU(U); // Set discretization with 1 and efforts
 
   t0 = ros::Time::now();
   bool valid = planner_->plan(start, goal);
 
-  //Publish expanded nodes
+  // Publish expanded nodes
   sensor_msgs::PointCloud ps = vec_to_cloud(planner_->getCloseSet());
   ps.header.frame_id = "map";
   ps_pub.publish(ps);
 
-  if(!valid) {
-    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
-  }
-  else {
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes", (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+  if (!valid) {
+    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
+             (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+  } else {
+    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
+             (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
 
-    //Publish trajectory
+    // Publish trajectory
     auto traj = planner_->getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
 
-    printf("================== Traj -- total J(1): %f, J(2): %F, J(3): %f, total time: %f\n",
-        traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
+    printf("================== Traj -- total J(1): %f, J(2): %F, J(3): %f, "
+           "total time: %f\n",
+           traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
 
     vec_Vec3f pts_x, pts_y;
     auto s1 = start, s2 = start;
@@ -176,27 +187,26 @@ int main(int argc, char ** argv){
     vec_E<vec_Vec3f> bounds;
     vec_Ellipsoid Es;
 
-    for(auto seg: traj.segs) {
+    for (auto seg : traj.segs) {
       PrimitiveFunnel<3> f(seg, 5, 3);
       auto b1 = f.compute(s1, Vec2f(3, 0));
       auto b2 = f.compute(s2, Vec2f(-3, 0));
-      s1  = b1.back();
-      s2  = b2.back();
-      for(auto it: b1)
+      s1 = b1.back();
+      s2 = b2.back();
+      for (auto it : b1)
         pts_x.push_back(it.pos);
-      for(auto it: b2)
+      for (auto it : b2)
         pts_x.push_back(it.pos);
-
 
       auto b3 = f.compute(s3, Vec2f(3, 3), 5);
       auto b4 = f.compute(s4, Vec2f(-3, -3), 5);
       auto b5 = f.compute(s5, Vec2f(3, -3), 5);
       auto b6 = f.compute(s6, Vec2f(-3, 3), 5);
-      s3  = b3.back();
-      s4  = b4.back();
-      s5  = b5.back();
-      s6  = b6.back();
-      for(int i = 0; i < b3.size(); i++) {
+      s3 = b3.back();
+      s4 = b4.back();
+      s5 = b5.back();
+      s6 = b6.back();
+      for (int i = 0; i < b3.size(); i++) {
         pts_y.push_back(b3[i].pos);
         pts_y.push_back(b4[i].pos);
         pts_y.push_back(b5[i].pos);
@@ -221,7 +231,6 @@ int main(int argc, char ** argv){
     es_msg.header.frame_id = "map";
     es_pub.publish(es_msg);
   }
-
 
   ros::spin();
 
