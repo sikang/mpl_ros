@@ -1,0 +1,15 @@
+<launch>
+  <node pkg="planning_ros_utils"
+    type="image_to_map"
+    name="image_to_map"
+    output="screen">
+    <param name="file" value="$(find mpl_test_node)/maps/images/testmap.png"/>
+    <param name="resolution" value="0.5"/>
+    <param name="frame_id" value="map"/>
+    <param name="origin_x" value="0"/>
+    <param name="origin_y" value="0"/>
+    <param name="origin_z" value="0"/>
+  </node>
+
+
+</launch>

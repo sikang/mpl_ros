@@ -6,10 +6,11 @@ find_package(catkin REQUIRED COMPONENTS rviz roscpp)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
-FIND_PACKAGE(VTK REQUIRED)
-FIND_PACKAGE(motion_primitive_library REQUIRED)
+find_package(VTK REQUIRED)
+find_package(motion_primitive_library REQUIRED)
+find_package(SDL REQUIRED)
+find_package(SDL_image REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIRS} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
-
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -40,6 +41,13 @@ else(NOT VTK_FOUND)
 endif(NOT VTK_FOUND)
 
 cs_add_library(voxel_grid src/planning_ros_utils/voxel_grid.cpp)
+
+cs_add_executable(image_to_map src/planning_ros_utils/image_to_map.cpp)
+target_link_libraries(image_to_map
+  ${SDL_LIBRARY}
+  ${SDL_IMAGE_LIBRARIES})
+
+
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
