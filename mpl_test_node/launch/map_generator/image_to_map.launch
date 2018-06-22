@@ -3,8 +3,10 @@
     type="image_to_map"
     name="image_to_map"
     output="screen">
-    <param name="file" value="$(find mpl_test_node)/maps/images/testmap.png"/>
-    <param name="resolution" value="0.5"/>
+    <remap from="~voxel_map" to="voxel_map"/>
+    <!--<param name="file" value="$(find mpl_test_node)/maps/images/testmap.png"/>-->
+    <param name="file" value="$(find mpl_test_node)/maps/multi_gap/multi_gap.png"/>
+    <param name="resolution" value="0.1"/>
     <param name="frame_id" value="map"/>
     <param name="origin_x" value="0"/>
     <param name="origin_y" value="0"/>
