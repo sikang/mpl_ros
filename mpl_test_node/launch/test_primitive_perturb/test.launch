@@ -25,7 +25,7 @@
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
-    <param name="dt" value="1.0"/>
+    <param name="dt" value="0.5"/>
     <param name="ndt" value="-1"/>
     <param name="kp" value="4"/>
     <param name="kv" value="3"/>

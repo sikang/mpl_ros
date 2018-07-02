@@ -38,32 +38,6 @@ void getMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
   map.data = map_util->getMap();
 }
 
-//**** Sort poits in an order
-vec_Vec3f sort_pts(const vec_Vec3f &pts) {
-  //**** sort in body frame
-  Vec3f avg = Vec3f::Zero();
-  for (auto p : pts)
-    avg += p;
-  avg /= pts.size();
-
-  vec_E<std::pair<decimal_t, Vec3f>> ps_valued;
-  ps_valued.resize(pts.size());
-  for (unsigned int i = 0; i < pts.size(); i++) {
-    decimal_t theta = atan2(pts[i](1) - avg(1), pts[i](0) - avg(0));
-    ps_valued[i] = std::make_pair(theta, pts[i]);
-  }
-
-  std::sort(ps_valued.begin(), ps_valued.end(),
-            [](const std::pair<decimal_t, Vec3f> &p1,
-               const std::pair<decimal_t, Vec3f> &p2) {
-              return p1.first < p2.first;
-            });
-  vec_Vec3f b;
-  for (const auto &it : ps_valued)
-    b.push_back(it.second);
-  return b;
-}
-
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
@@ -72,23 +46,14 @@ int main(int argc, char **argv) {
       nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   ros::Publisher sg_pub =
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
+  ros::Publisher cloud_pub =
+      nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
   ros::Publisher prs_pub =
       nh.advertise<planning_ros_msgs::PrimitiveArray>("primitives", 1, true);
   ros::Publisher traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher refined_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
       "trajectory_refined", 1, true);
-  ros::Publisher funnel1_pub =
-      nh.advertise<sensor_msgs::PointCloud>("funnel1", 1, true);
-  ros::Publisher funnel2_pub =
-      nh.advertise<sensor_msgs::PointCloud>("funnel2", 1, true);
-  ros::Publisher ellipsoid_pub =
-      nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
-  ros::Publisher bounds_pub =
-      nh.advertise<planning_ros_msgs::PathArray>("bounds", 1, true);
-
-  ros::Publisher cloud_pub =
-      nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
 
   // Standard header
   std_msgs::Header header;
@@ -133,17 +98,21 @@ int main(int argc, char **argv) {
   start.pos = Vec3f(start_x, start_y, start_z);
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
+  start.jrk = Vec3f(0, 0, 0);
   start.use_pos = true;
   start.use_vel = true;
   start.use_acc = false;
+  start.use_jrk = false;
 
   Waypoint3D goal;
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
+  goal.jrk = Vec3f(0, 0, 0);
   goal.use_pos = start.use_pos;
   goal.use_vel = start.use_vel;
   goal.use_acc = start.use_acc;
+  goal.use_jrk = start.use_jrk;
 
   // Initialize planner
   double dt, v_max, a_max, u_max;
@@ -186,7 +155,12 @@ int main(int argc, char **argv) {
   planner_ptr->setMaxNum(
       max_num);         // Set maximum allowed expansion, -1 means no limitation
   planner_ptr->setU(U); // 2D discretization with 1
-  planner_ptr->setTol(1, 1, 1); // Tolerance for goal region
+  planner_ptr->setTol(1, 0.5, 1); // Tolerance for goal region
+
+  vec_Vec3f sg;
+  sg.push_back(start.pos);
+  sg.push_back(goal.pos);
+  planner_ptr->setValidRegion(sg, Vec3f(2, 2, 0)); // Tolerance for goal region
 
   // Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
@@ -201,126 +175,60 @@ int main(int argc, char **argv) {
   ros::Time t0 = ros::Time::now();
   bool valid = planner_ptr->plan(start, goal);
 
-  // Publish expanded nodes
-  sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
-  ps.header = header;
-  cloud_pub.publish(ps);
-
-  // Publish primitives
-  planning_ros_msgs::PrimitiveArray prs_msg =
-      toPrimitiveArrayROSMsg(planner_ptr->getPrimitivesToGoal());
-  prs_msg.header = header;
-  prs_pub.publish(prs_msg);
-
   if (!valid) {
     ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
              (ros::Time::now() - t0).toSec(),
              planner_ptr->getCloseSet().size());
-    return -1;
-  } else
+  } else {
     ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
              (ros::Time::now() - t0).toSec(),
              planner_ptr->getCloseSet().size());
 
-  // Publish trajectory
-  auto traj = planner_ptr->getTraj();
-  planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-  traj_msg.header = header;
-  traj_pub.publish(traj_msg);
+    // Publish trajectory
+    auto traj = planner_ptr->getTraj();
+    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
+    traj_msg.header = header;
+    traj_pub.publish(traj_msg);
 
-  printf("==================  Raw traj -- total J: %f, total time: %f\n",
-         traj.J(2), traj.getTotalTime());
+    printf("==================  Raw traj -- total J: %f, total time: %f\n",
+           traj.J(2), traj.getTotalTime());
 
-  // Get intermediate waypoints
-  const auto waypoints = planner_ptr->getWs();
-  // Get time allocation
-  std::vector<decimal_t> dts;
-  dts.resize(waypoints.size() - 1, dt);
+    // Get intermediate waypoints
+    const auto waypoints = planner_ptr->getWs();
+    // Get time allocation
+    std::vector<decimal_t> dts;
+    dts.resize(waypoints.size() - 1, dt);
 
-  // Generate higher order polynomials
-  PolySolver3D poly_solver(2, 3);
-  poly_solver.solve(waypoints, dts);
+    // Generate higher order polynomials
+    PolySolver3D poly_solver(2, 3);
+    poly_solver.solve(waypoints, dts);
 
-  auto traj_refined = Trajectory3D(poly_solver.getTrajectory()->toPrimitives());
+    auto traj_refined = Trajectory3D(poly_solver.getTrajectory()->toPrimitives());
 
-  // Publish refined trajectory
-  planning_ros_msgs::Trajectory refined_traj_msg =
+    // Publish refined trajectory
+    planning_ros_msgs::Trajectory refined_traj_msg =
       toTrajectoryROSMsg(traj_refined);
-  refined_traj_msg.header = header;
-  refined_traj_pub.publish(refined_traj_msg);
+    refined_traj_msg.header = header;
+    refined_traj_pub.publish(refined_traj_msg);
 
-  printf("================ Refined traj -- total J: %f, total time: %f\n",
-         traj_refined.J(2), traj_refined.getTotalTime());
-
-  vec_Vec3f pts_x, pts_y;
-  auto s1 = start, s2 = start;
-  auto s3 = start, s4 = start;
-  auto s5 = start, s6 = start;
-
-  Vec2f wf(start.pos(0), start.vel(0));
-
-  vec_E<vec_Vec3f> bounds;
-  vec_Ellipsoid Es;
-
-  double kp, kv;
-  nh.param("kp", kp, 5.0);
-  nh.param("kv", kv, 3.0);
-
-  for (auto seg : traj.segs) {
-    PrimitiveFunnel<3> f(seg, kp, kv);
-    auto b1 = f.compute(s1, Vec2f(3, 0));
-    auto b2 = f.compute(s2, Vec2f(-3, 0));
-    s1 = b1.back();
-    s2 = b2.back();
-    for (auto it : b1)
-      pts_x.push_back(it.pos);
-    for (auto it : b2)
-      pts_x.push_back(it.pos);
-
-    auto b3 = f.compute(s3, Vec2f(3, 3), 5);
-    auto b4 = f.compute(s4, Vec2f(-3, -3), 5);
-    auto b5 = f.compute(s5, Vec2f(3, -3), 5);
-    auto b6 = f.compute(s6, Vec2f(-3, 3), 5);
-    s3 = b3.back();
-    s4 = b4.back();
-    s5 = b5.back();
-    s6 = b6.back();
-    for (int i = 0; i < b3.size(); i++) {
-      pts_y.push_back(b3[i].pos);
-      pts_y.push_back(b4[i].pos);
-      pts_y.push_back(b5[i].pos);
-      pts_y.push_back(b6[i].pos);
-      vec_Vec3f b;
-      b.push_back(b3[i].pos);
-      b.push_back(b4[i].pos);
-      b.push_back(b5[i].pos);
-      b.push_back(b6[i].pos);
-      b = sort_pts(b);
-      b.push_back(b.front());
-
-      bounds.push_back(b);
-    }
-
-    auto es = f.compute(wf, 3, 5);
-    Es.insert(Es.end(), es.begin(), es.end());
-    wf = f.get_wf();
+    printf("================ Refined traj -- total J: %f, total time: %f\n",
+           traj_refined.J(2), traj_refined.getTotalTime());
   }
 
-  sensor_msgs::PointCloud funnel_cloud1 = vec_to_cloud(pts_x);
-  funnel_cloud1.header = header;
-  funnel1_pub.publish(funnel_cloud1);
+  // Publish expanded nodes
+  sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
+  //sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getValidRegion());
+  ps.header = header;
+  cloud_pub.publish(ps);
 
-  sensor_msgs::PointCloud funnel_cloud2 = vec_to_cloud(pts_y);
-  funnel_cloud2.header = header;
-  funnel2_pub.publish(funnel_cloud2);
+  // Publish primitives
+  /*
+  planning_ros_msgs::PrimitiveArray prs_msg =
+      toPrimitiveArrayROSMsg(planner_ptr->getPrimitivesToGoal());
+  prs_msg.header = header;
+  prs_pub.publish(prs_msg);
+  */
 
-  planning_ros_msgs::PathArray bounds_msg = path_array_to_ros(bounds);
-  bounds_msg.header = header;
-  bounds_pub.publish(bounds_msg);
-
-  decomp_ros_msgs::Ellipsoids es_msg = DecompROS::ellipsoids_to_ros(Es);
-  es_msg.header = header;
-  ellipsoid_pub.publish(es_msg);
 
   ros::spin();
 
