@@ -40,6 +40,8 @@ else(NOT VTK_FOUND)
 endif(NOT VTK_FOUND)
 
 cs_add_library(voxel_grid src/planning_ros_utils/voxel_grid.cpp)
+cs_add_executable(cloud_to_map src/planning_ros_utils/cloud_to_map.cpp)
+target_link_libraries(cloud_to_map voxel_grid)
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
