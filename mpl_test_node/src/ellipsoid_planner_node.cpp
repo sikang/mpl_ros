@@ -1,13 +1,12 @@
 #include "bag_reader.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
-#include <motion_primitive_library/planner/mp_cloud_util.h>
+#include <mpl_planner/planner/ellipsoid_planner.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
 
 using namespace MPL;
 
-std::unique_ptr<MPCloudUtil> planner_;
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
@@ -64,7 +63,8 @@ int main(int argc, char **argv) {
   nh.param("max_num", max_num, -1);
   nh.param("use_3d", use_3d, false);
 
-  planner_.reset(new MPCloudUtil(true));
+  std::unique_ptr<MPL::EllipsoidPlanner> planner_;
+  planner_.reset(new MPL::EllipsoidPlanner(true));
   planner_->setMap(cloud_to_vec(map), robot_radius, origin,
                    dim);         // Set collision checking function
   planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)

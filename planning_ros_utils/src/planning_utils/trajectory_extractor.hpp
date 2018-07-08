@@ -1,4 +1,4 @@
-#include <motion_primitive_library/primitive/trajectory.h>
+#include <mpl_basis/trajectory.h>
 #include <planning_ros_msgs/TrajectoryCommand.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 

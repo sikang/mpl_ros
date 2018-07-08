@@ -2,7 +2,7 @@
 #define VOXEL_GRID_H
 
 #include <boost/multi_array.hpp>
-#include <motion_primitive_library/common/data_type.h>
+#include <mpl_basis/data_type.h>
 #include <planning_ros_msgs/VoxelMap.h>
 
 class VoxelGrid {

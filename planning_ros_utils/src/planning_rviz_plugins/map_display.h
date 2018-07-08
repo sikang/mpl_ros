@@ -7,7 +7,7 @@
 #include <rviz/properties/enum_property.h>
 #include <rviz/properties/float_property.h>
 
-#include <motion_primitive_library/collision_checking/map_util.h>
+#include <mpl_collision/map_util.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
 

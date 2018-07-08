@@ -1,14 +1,11 @@
 #include "bag_reader.hpp"
-#include <decomp_ros_utils/data_ros_utils.h>
-#include <motion_primitive_library/planner/mp_map_util.h>
-#include <motion_primitive_library/primitive/poly_solver.h>
-#include <motion_primitive_library/primitive/primitive_funnel.h>
+//#include <decomp_ros_utils/data_ros_utils.h>
+#include <mpl_planner/planner/map_planner.h>
+#include <mpl_traj_solver/poly_solver.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
-
-using namespace MPL;
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
             const planning_ros_msgs::VoxelMap &msg) {
@@ -142,34 +139,17 @@ int main(int argc, char **argv) {
         U.push_back(Vec3f(dx, dy, 0));
   }
 
-  std::unique_ptr<MPMap3DUtil> planner_ptr;
+  std::unique_ptr<MPL::VoxelMapPlanner> planner_ptr;
 
-  planner_ptr.reset(new MPMap3DUtil(true));
+  planner_ptr.reset(new MPL::VoxelMapPlanner(true));
   planner_ptr->setMapUtil(map_util); // Set collision checking function
-  planner_ptr->setEpsilon(1.0);      // Set greedy param (default equal to 1)
   planner_ptr->setVmax(v_max);       // Set max velocity
   planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
   planner_ptr->setUmax(u_max);       // 2D discretization with 1
   planner_ptr->setDt(dt);            // Set dt for each primitive
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
-  planner_ptr->setMaxNum(
-      max_num);         // Set maximum allowed expansion, -1 means no limitation
   planner_ptr->setU(U); // 2D discretization with 1
-  planner_ptr->setTol(1, 0.5, 1); // Tolerance for goal region
-
-  vec_Vec3f sg;
-  sg.push_back(start.pos);
-  sg.push_back(goal.pos);
-  planner_ptr->setValidRegion(sg, Vec3f(2, 2, 0)); // Tolerance for goal region
-
-  // Publish location of start and goal
-  sensor_msgs::PointCloud sg_cloud;
-  sg_cloud.header = header;
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = start_x, pt1.y = start_y, pt1.z = start_z;
-  pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
-  sg_pub.publish(sg_cloud);
+  planner_ptr->setTol(0.5, 0.5, 1); // Tolerance for goal region
 
   // Planning thread!
   ros::Time t0 = ros::Time::now();
@@ -194,10 +174,9 @@ int main(int argc, char **argv) {
            traj.J(2), traj.getTotalTime());
 
     // Get intermediate waypoints
-    const auto waypoints = planner_ptr->getWs();
+    const auto waypoints = traj.getWaypoints();
     // Get time allocation
-    std::vector<decimal_t> dts;
-    dts.resize(waypoints.size() - 1, dt);
+    const auto dts = traj.getSegmentTimes();
 
     // Generate higher order polynomials
     PolySolver3D poly_solver(2, 3);
@@ -220,6 +199,16 @@ int main(int argc, char **argv) {
   //sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getValidRegion());
   ps.header = header;
   cloud_pub.publish(ps);
+
+  // Publish location of start and goal
+  sensor_msgs::PointCloud sg_cloud;
+  sg_cloud.header = header;
+  geometry_msgs::Point32 pt1, pt2;
+  pt1.x = start_x, pt1.y = start_y, pt1.z = start_z;
+  pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
+  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
+  sg_pub.publish(sg_cloud);
+
 
   // Publish primitives
   /*

@@ -1,8 +1,8 @@
-#ifndef DATA_ROS_UTILS_H
-#define DATA_ROS_UTILS_H
+#ifndef MPL_DATA_ROS_UTILS_H
+#define MPL_DATA_ROS_UTILS_H
 
+#include <mpl_basis/data_type.h>
 #include <geometry_msgs/Twist.h>
-#include <motion_primitive_library/common/data_type.h>
 #include <planning_ros_msgs/Arrows.h>
 #include <planning_ros_msgs/PathArray.h>
 #include <sensor_msgs/PointCloud.h>

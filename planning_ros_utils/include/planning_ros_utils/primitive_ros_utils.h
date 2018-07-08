@@ -2,9 +2,9 @@
  * @file primitive_ros_utils.h
  * @brief Interface between primitive classes and ROS
  */
-#ifndef PRIMITIVE_ROS_UTILS_H
-#define PRIMITIVE_ROS_UTILS_H
-#include <motion_primitive_library/primitive/trajectory.h>
+#ifndef MPL_PRIMITIVE_ROS_UTILS_H
+#define MPL_PRIMITIVE_ROS_UTILS_H
+#include <mpl_basis/trajectory.h>
 #include <planning_ros_msgs/PrimitiveArray.h>
 #include <planning_ros_msgs/Trajectory.h>
 
