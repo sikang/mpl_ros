@@ -11,19 +11,21 @@
 /// Primitive2D to primitive ROS message
 inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2D &pr,
                                                       double z = 0) {
-  planning_ros_msgs::Primitive msg;
-  const Vec6f cx = pr.pr(0).coeff();
-  const Vec6f cy = pr.pr(1).coeff();
+  const auto cx = pr.pr(0).coeff();
+  const auto cy = pr.pr(1).coeff();
+  const auto cyaw = pr.pr_yaw().coeff();
   Vec6f cz = Vec6f::Zero();
   cz[5] = z;
-
+  planning_ros_msgs::Primitive msg;
   msg.cx.resize(6);
   msg.cy.resize(6);
   msg.cz.resize(6);
+  msg.cyaw.resize(6);
   for (int i = 0; i < 6; i++) {
     msg.cx[i] = cx(i);
     msg.cy[i] = cy(i);
     msg.cz[i] = cz(i);
+    msg.cyaw[i] = cyaw(i);
   }
   msg.t = pr.t();
 
@@ -32,17 +34,20 @@ inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2D &pr,
 
 /// Primitive3D to primitive ROS message
 inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive3D &pr) {
+  const auto cx = pr.pr(0).coeff();
+  const auto cy = pr.pr(1).coeff();
+  const auto cz = pr.pr(2).coeff();
+  const auto cyaw = pr.pr_yaw().coeff();
   planning_ros_msgs::Primitive msg;
-  const Vec6f cx = pr.pr(0).coeff();
-  const Vec6f cy = pr.pr(1).coeff();
-  const Vec6f cz = pr.pr(2).coeff();
   msg.cx.resize(6);
   msg.cy.resize(6);
   msg.cz.resize(6);
+  msg.cyaw.resize(6);
   for (int i = 0; i < 6; i++) {
     msg.cx[i] = cx(i);
     msg.cy[i] = cy(i);
     msg.cz[i] = cz(i);
+    msg.cyaw[i] = cyaw(i);
   }
   msg.t = pr.t();
 
@@ -84,7 +89,6 @@ inline planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory2D &traj
       for (int j = 0; j < 4; j++)
         msg.lambda[i].ca[j] = l.segs[i].a(j);
     }
-    // msg.t = l.getTotalTime();
   }
   return msg;
 }
@@ -106,39 +110,42 @@ inline planning_ros_msgs::Trajectory toTrajectoryROSMsg(const Trajectory3D &traj
       for (int j = 0; j < 4; j++)
         msg.lambda[i].ca[j] = l.segs[i].a(j);
     }
-    // msg.t = l.getTotalTime();
   }
   return msg;
 }
 
 /// ROS message to Primitive2D class
 inline Primitive2D toPrimitive2D(const planning_ros_msgs::Primitive &pr) {
-  Vec6f cx, cy;
+  Vec6f cx, cy, cyaw;
   for (int i = 0; i < 6; i++) {
     cx(i) = pr.cx[i];
     cy(i) = pr.cy[i];
+    cyaw(i) = pr.cyaw[i];
   }
   vec_E<Vec6f> cs;
   cs.push_back(cx);
   cs.push_back(cy);
+  cs.push_back(cyaw);
 
-  return Primitive2D(cs, pr.t);
+  return Primitive2D(cs, pr.t, Control::SNP);
 }
 
 /// ROS message to Primitive3D class
 inline Primitive3D toPrimitive3D(const planning_ros_msgs::Primitive &pr) {
-  Vec6f cx, cy, cz;
+  Vec6f cx, cy, cz, cyaw;
   for (int i = 0; i < 6; i++) {
     cx(i) = pr.cx[i];
     cy(i) = pr.cy[i];
     cz(i) = pr.cz[i];
+    cyaw(i) = pr.cyaw[i];
   }
   vec_E<Vec6f> cs;
   cs.push_back(cx);
   cs.push_back(cy);
   cs.push_back(cz);
+  cs.push_back(cyaw);
 
-  return Primitive3D(cs, pr.t);
+  return Primitive3D(cs, pr.t, Control::SNP);
 }
 
 /// ROS message to Trajectory2D class

@@ -26,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: VoxelMap
+    SyncSource: PointCloud
 Visualization Manager:
   Class: ""
   Displays:
@@ -58,8 +58,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 1.80000007
-        Min Value: 0
+        Max Value: 1.85000002
+        Min Value: 0.0500000007
         Value: true
       Axis: Z
       BoundScale: 0.100000001
@@ -122,7 +122,7 @@ Visualization Manager:
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
       Class: planning_rviz_plugins/Trajectory
-      Enabled: true
+      Enabled: false
       JrkColor: 200; 20; 55
       JrkScale: 0.0199999996
       Name: Trajectory
@@ -131,7 +131,7 @@ Visualization Manager:
       PosScale: 0.100000001
       Topic: /test_primitive/trajectory
       Unreliable: false
-      Value: true
+      Value: false
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
       Visualize Acc: true
@@ -140,7 +140,7 @@ Visualization Manager:
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
       Class: planning_rviz_plugins/Trajectory
-      Enabled: true
+      Enabled: false
       JrkColor: 200; 20; 55
       JrkScale: 0.0199999996
       Name: Trajectory_Refined
@@ -149,7 +149,7 @@ Visualization Manager:
       PosScale: 0.100000001
       Topic: /test_primitive/trajectory_refined
       Unreliable: false
-      Value: true
+      Value: false
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
       Visualize Acc: true
@@ -158,8 +158,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0
-        Min Value: 0
+        Max Value: 0.0500000007
+        Min Value: 0.0500000007
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -185,6 +185,29 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      Class: planning_rviz_plugins/PrimitiveArray
+      Enabled: true
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      Name: PrimitiveArray
+      Num: 20
+      NumYaw: 2
+      PosColor: 204; 51; 204
+      PosScale: 0.100000001
+      Topic: /test_primitive/primitives
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VisAcc: true
+      VisJrk: false
+      VisVel: true
+      VisYaw: true
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleScale: 0.5
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -241,5 +264,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 3840
-  Y: 24
+  X: 1920
+  Y: 48

@@ -161,8 +161,14 @@ int main(int argc, char **argv) {
              (ros::Time::now() - t0).toSec(),
              planner_ptr->getCloseSet().size());
 
+    const auto traj = planner_ptr->getTraj();
+    // Publish trajectory as primitives
+    planning_ros_msgs::PrimitiveArray prs_msg =
+      toPrimitiveArrayROSMsg(traj.getPrimitives());
+    prs_msg.header = header;
+    prs_pub.publish(prs_msg);
+
     // Publish trajectory
-    auto traj = planner_ptr->getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
     traj_pub.publish(traj_msg);

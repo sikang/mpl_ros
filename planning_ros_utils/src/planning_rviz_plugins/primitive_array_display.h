@@ -32,14 +32,19 @@ private Q_SLOTS:
   void updateVelColorAndAlpha();
   void updateAccColorAndAlpha();
   void updateJrkColorAndAlpha();
+  void updateYawColorAndAlpha();
   void updatePosScale();
   void updateVelScale();
   void updateAccScale();
   void updateJrkScale();
+  void updateYawScale();
+  void updateYawTriangleScale();
   void updateVelVis();
   void updateAccVis();
   void updateJrkVis();
+  void updateYawVis();
   void updateNum();
+  void updateYawNum();
 
 private:
   void processMessage(const planning_ros_msgs::PrimitiveArray::ConstPtr &msg);
@@ -51,14 +56,19 @@ private:
   rviz::ColorProperty *vel_color_property_;
   rviz::ColorProperty *acc_color_property_;
   rviz::ColorProperty *jrk_color_property_;
+  rviz::ColorProperty *yaw_color_property_;
   rviz::FloatProperty *pos_scale_property_;
   rviz::FloatProperty *vel_scale_property_;
   rviz::FloatProperty *acc_scale_property_;
   rviz::FloatProperty *jrk_scale_property_;
+  rviz::FloatProperty *yaw_scale_property_;
+  rviz::FloatProperty *yaw_triangle_scale_property_;
   rviz::BoolProperty *vel_vis_property_;
   rviz::BoolProperty *acc_vis_property_;
   rviz::BoolProperty *jrk_vis_property_;
+  rviz::BoolProperty *yaw_vis_property_;
   rviz::IntProperty *num_property_;
+  rviz::IntProperty *yaw_num_property_;
 
   Ogre::Vector3 position_;
   Ogre::Quaternion orientation_;

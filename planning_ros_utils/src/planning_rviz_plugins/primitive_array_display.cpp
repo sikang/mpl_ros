@@ -2,9 +2,16 @@
 
 namespace planning_rviz_plugins {
 PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
-  num_property_ = new rviz::IntProperty("Num of samples", 4,
-                                        "Number of samples to display.", this,
+  num_property_ = new rviz::IntProperty("Num", 10,
+                                        "Number of samples of each primitive to display.", this,
                                         SLOT(updateNum()));
+  yaw_triangle_scale_property_ =
+    new rviz::FloatProperty("YawTriangleScale", 0.5, "0.5 is the default value.",
+                            this, SLOT(updateYawTriangleScale()));
+
+  yaw_num_property_ = new rviz::IntProperty("NumYaw", 2,
+                                        "Number of yaw samples of each primitive to display.", this,
+                                        SLOT(updateYawNum()));
   pos_color_property_ = new rviz::ColorProperty(
       "PosColor", QColor(204, 51, 204), "Color to draw the Pos.", this,
       SLOT(updatePosColorAndAlpha()));
@@ -17,8 +24,11 @@ PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
   jrk_color_property_ = new rviz::ColorProperty("JrkColor", QColor(200, 20, 55),
                                                 "Color to draw the Acc.", this,
                                                 SLOT(updateJrkColorAndAlpha()));
+  yaw_color_property_ = new rviz::ColorProperty("YawColor", QColor(100, 20, 55),
+                                                "Color to draw the Yaw.", this,
+                                                SLOT(updateYawColorAndAlpha()));
   pos_scale_property_ =
-      new rviz::FloatProperty("PosScale", 0.02, "0.02 is the default value.",
+      new rviz::FloatProperty("PosScale", 0.1, "0.1 is the default value.",
                               this, SLOT(updatePosScale()));
   vel_scale_property_ =
       new rviz::FloatProperty("VelScale", 0.02, "0.02 is the default value.",
@@ -29,12 +39,17 @@ PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
   jrk_scale_property_ =
       new rviz::FloatProperty("JrkScale", 0.02, "0.02 is the default value.",
                               this, SLOT(updateJrkScale()));
+  yaw_scale_property_ =
+    new rviz::FloatProperty("YawScale", 0.05, "0.05 is the default value.",
+                            this, SLOT(updateYawScale()));
   vel_vis_property_ = new rviz::BoolProperty(
-      "Visualize Vel", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
+    "VisVel", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
   acc_vis_property_ = new rviz::BoolProperty(
-      "Visualize Acc", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
+    "VisAcc", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
   jrk_vis_property_ = new rviz::BoolProperty(
-      "Visualize Jrk", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
+    "VisJrk", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
+  yaw_vis_property_ = new rviz::BoolProperty(
+    "VisYaw", 0, "Visualize Yaw?", this, SLOT(updateYawVis()));
 }
 
 void PrimitiveArrayDisplay::onInitialize() { MFDClass::onInitialize(); }
@@ -47,23 +62,18 @@ void PrimitiveArrayDisplay::reset() {
 }
 
 void PrimitiveArrayDisplay::updateVelVis() {
-  bool vis = vel_vis_property_->getBool();
-  if (visual_)
-    visual_->setVelVis(vis);
   visualizeMessage();
 }
 
 void PrimitiveArrayDisplay::updateAccVis() {
-  bool vis = acc_vis_property_->getBool();
-  if (visual_)
-    visual_->setAccVis(vis);
   visualizeMessage();
 }
 
 void PrimitiveArrayDisplay::updateJrkVis() {
-  bool vis = jrk_vis_property_->getBool();
-  if (visual_)
-    visual_->setJrkVis(vis);
+  visualizeMessage();
+}
+
+void PrimitiveArrayDisplay::updateYawVis() {
   visualizeMessage();
 }
 
@@ -91,6 +101,12 @@ void PrimitiveArrayDisplay::updateJrkColorAndAlpha() {
     visual_->setJrkColor(color.r, color.g, color.b, 1);
 }
 
+void PrimitiveArrayDisplay::updateYawColorAndAlpha() {
+  Ogre::ColourValue color = yaw_color_property_->getOgreColor();
+  if (visual_)
+    visual_->setYawColor(color.r, color.g, color.b, 1);
+}
+
 void PrimitiveArrayDisplay::updatePosScale() {
   float s = pos_scale_property_->getFloat();
   if (visual_)
@@ -115,6 +131,16 @@ void PrimitiveArrayDisplay::updateJrkScale() {
     visual_->setJrkScale(s);
 }
 
+void PrimitiveArrayDisplay::updateYawScale() {
+ float s = yaw_scale_property_->getFloat();
+  if (visual_)
+    visual_->setYawScale(s);
+}
+
+void PrimitiveArrayDisplay::updateYawTriangleScale() {
+  visualizeMessage();
+}
+
 void PrimitiveArrayDisplay::processMessage(
     const planning_ros_msgs::PrimitiveArray::ConstPtr &msg) {
   if (!context_->getFrameManager()->getTransform(
@@ -129,53 +155,73 @@ void PrimitiveArrayDisplay::processMessage(
   visualizeMessage();
 }
 
-void PrimitiveArrayDisplay::updateNum() { visualizeMessage(); }
+void PrimitiveArrayDisplay::updateNum() {
+  visualizeMessage();
+}
+
+void PrimitiveArrayDisplay::updateYawNum() {
+  visualizeMessage();
+}
 
 void PrimitiveArrayDisplay::visualizeMessage() {
-  if (prs_msg_.primitives.empty())
+  if (prs_msg_.primitives.empty() || !pos_color_property_ ||
+      !vel_color_property_ || !acc_color_property_ || !yaw_color_property_ ||
+      !pos_scale_property_ || !vel_scale_property_ || !acc_scale_property_ ||
+      !yaw_scale_property_ || !yaw_triangle_scale_property_ ||
+      !vel_vis_property_ || !acc_vis_property_ || !jrk_vis_property_ ||
+      !yaw_vis_property_ || !num_property_ || !yaw_num_property_)
     return;
 
-  std::shared_ptr<PrimitiveVisual> visual;
-  visual.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
+  visual_.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
 
   float n = num_property_->getInt();
-  visual->setNum(n);
+  visual_->setNum(n);
+
+  float yaw_n = yaw_num_property_->getInt();
+  visual_->setYawNum(yaw_n);
 
   bool vel_vis = vel_vis_property_->getBool();
-  visual->setVelVis(vel_vis);
+  visual_->setVelVis(vel_vis);
 
   bool acc_vis = acc_vis_property_->getBool();
-  visual->setAccVis(acc_vis);
+  visual_->setAccVis(acc_vis);
 
   bool jrk_vis = jrk_vis_property_->getBool();
-  visual->setJrkVis(jrk_vis);
+  visual_->setJrkVis(jrk_vis);
 
-  visual->setMessage(prs_msg_.primitives.front());
-  for (int i = 1; i < (int)prs_msg_.primitives.size(); i++)
-    visual->addMessage(prs_msg_.primitives[i]);
+  bool yaw_vis = yaw_vis_property_->getBool();
+  visual_->setYawVis(yaw_vis);
 
-  visual->setFramePosition(position_);
-  visual->setFrameOrientation(orientation_);
+  float yaw_tria_scale = yaw_triangle_scale_property_->getFloat();
+  visual_->setYawTriangleScale(yaw_tria_scale);
+
+  visual_->setMessage(prs_msg_.primitives);
+
+  visual_->setFramePosition(position_);
+  visual_->setFrameOrientation(orientation_);
 
   float pos_scale = pos_scale_property_->getFloat();
-  visual->setPosScale(pos_scale);
+  visual_->setPosScale(pos_scale);
   float vel_scale = vel_scale_property_->getFloat();
-  visual->setVelScale(vel_scale);
+  visual_->setVelScale(vel_scale);
   float acc_scale = acc_scale_property_->getFloat();
-  visual->setAccScale(acc_scale);
+  visual_->setAccScale(acc_scale);
   float jrk_scale = jrk_scale_property_->getFloat();
-  visual->setJrkScale(jrk_scale);
+  visual_->setJrkScale(jrk_scale);
+  float yaw_scale = yaw_scale_property_->getFloat();
+  visual_->setYawScale(yaw_scale);
 
   Ogre::ColourValue pos_color = pos_color_property_->getOgreColor();
-  visual->setPosColor(pos_color.r, pos_color.g, pos_color.b, 1);
+  visual_->setPosColor(pos_color.r, pos_color.g, pos_color.b, 1);
   Ogre::ColourValue vel_color = vel_color_property_->getOgreColor();
-  visual->setVelColor(vel_color.r, vel_color.g, vel_color.b, 1);
+  visual_->setVelColor(vel_color.r, vel_color.g, vel_color.b, 1);
   Ogre::ColourValue acc_color = acc_color_property_->getOgreColor();
-  visual->setAccColor(acc_color.r, acc_color.g, acc_color.b, 1);
+  visual_->setAccColor(acc_color.r, acc_color.g, acc_color.b, 1);
   Ogre::ColourValue jrk_color = jrk_color_property_->getOgreColor();
-  visual->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
+  visual_->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
+  Ogre::ColourValue yaw_color = yaw_color_property_->getOgreColor();
+  visual_->setYawColor(yaw_color.r, yaw_color.g, yaw_color.b, 1);
 
-  visual_ = visual;
 }
 }
 
