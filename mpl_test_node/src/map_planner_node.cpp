@@ -96,20 +96,18 @@ int main(int argc, char **argv) {
   start.vel = Vec3f(start_vx, start_vy, start_vz);
   start.acc = Vec3f(0, 0, 0);
   start.jrk = Vec3f(0, 0, 0);
+  start.yaw = 0;
   start.use_pos = true;
   start.use_vel = true;
   start.use_acc = false;
   start.use_jrk = false;
+  start.use_yaw = false;
 
-  Waypoint3D goal;
+  Waypoint3D goal(start.control);
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
   goal.jrk = Vec3f(0, 0, 0);
-  goal.use_pos = start.use_pos;
-  goal.use_vel = start.use_vel;
-  goal.use_acc = start.use_acc;
-  goal.use_jrk = start.use_jrk;
 
   // Initialize planner
   double dt, v_max, a_max, u_max;
@@ -124,7 +122,7 @@ int main(int argc, char **argv) {
   nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
 
-  vec_Vec3f U;
+  vec_E<VecDf> U;
   const decimal_t du = u_max / num;
   if (use_3d) {
     decimal_t du_z = u_max / num;
@@ -145,7 +143,6 @@ int main(int argc, char **argv) {
   planner_ptr->setMapUtil(map_util); // Set collision checking function
   planner_ptr->setVmax(v_max);       // Set max velocity
   planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
-  planner_ptr->setUmax(u_max);       // 2D discretization with 1
   planner_ptr->setDt(dt);            // Set dt for each primitive
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_ptr->setU(U); // 2D discretization with 1
@@ -170,8 +167,8 @@ int main(int argc, char **argv) {
     traj_msg.header = header;
     traj_pub.publish(traj_msg);
 
-    printf("==================  Raw traj -- total J: %f, total time: %f\n",
-           traj.J(2), traj.getTotalTime());
+    printf("==================  Raw traj -- total J in ACC: %f, total time: %f\n",
+           traj.J(Control::ACC), traj.getTotalTime());
 
     // Get intermediate waypoints
     const auto waypoints = traj.getWaypoints();
@@ -190,8 +187,8 @@ int main(int argc, char **argv) {
     refined_traj_msg.header = header;
     refined_traj_pub.publish(refined_traj_msg);
 
-    printf("================ Refined traj -- total J: %f, total time: %f\n",
-           traj_refined.J(2), traj_refined.getTotalTime());
+    printf("================ Refined traj -- total J in ACC: %f, total time: %f\n",
+           traj_refined.J(Control::ACC), traj_refined.getTotalTime());
   }
 
   // Publish expanded nodes

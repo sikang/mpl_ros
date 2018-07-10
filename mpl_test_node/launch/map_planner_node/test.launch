@@ -15,13 +15,13 @@
     <!-- Set start and goal -->
     <param name="start_x" value="14.5"/>
     <param name="start_y" value="4.4"/>
-    <param name="start_z" value="0.1"/>
+    <param name="start_z" value="0.05"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
     <param name="start_vz" value="0.0"/>
     <param name="goal_x" value="2.4"/>
     <param name="goal_y" value="16.6"/>
-    <param name="goal_z" value="0.1"/>
+    <param name="goal_z" value="0.05"/>
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>

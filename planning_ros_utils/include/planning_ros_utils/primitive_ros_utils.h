@@ -12,8 +12,8 @@
 inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2D &pr,
                                                       double z = 0) {
   planning_ros_msgs::Primitive msg;
-  const Vec6f cx = pr.traj(0).coeff();
-  const Vec6f cy = pr.traj(1).coeff();
+  const Vec6f cx = pr.pr(0).coeff();
+  const Vec6f cy = pr.pr(1).coeff();
   Vec6f cz = Vec6f::Zero();
   cz[5] = z;
 
@@ -33,9 +33,9 @@ inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive2D &pr,
 /// Primitive3D to primitive ROS message
 inline planning_ros_msgs::Primitive toPrimitiveROSMsg(const Primitive3D &pr) {
   planning_ros_msgs::Primitive msg;
-  const Vec6f cx = pr.traj(0).coeff();
-  const Vec6f cy = pr.traj(1).coeff();
-  const Vec6f cz = pr.traj(2).coeff();
+  const Vec6f cx = pr.pr(0).coeff();
+  const Vec6f cy = pr.pr(1).coeff();
+  const Vec6f cz = pr.pr(2).coeff();
   msg.cx.resize(6);
   msg.cy.resize(6);
   msg.cz.resize(6);

@@ -1,5 +1,5 @@
 <launch>
-  <arg name="test" default="test_primitive_replan"/>
+  <arg name="test" default="map_replanner_node"/>
 
   <node pkg="rviz"
     type="rviz"

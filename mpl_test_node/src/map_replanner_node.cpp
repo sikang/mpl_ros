@@ -1,5 +1,5 @@
 #include "bag_reader.hpp"
-#include <motion_primitive_library/planner/mp_map_util.h>
+#include <mpl_planner/planner/map_planner.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
@@ -10,12 +10,12 @@
 
 using namespace MPL;
 
-MPMap3DUtil planner_(true);
-MPMap3DUtil replan_planner_(true);
+VoxelMapPlanner planner_(true);
+VoxelMapPlanner replan_planner_(true);
 
 std::unique_ptr<VoxelGrid> voxel_mapper_;
 
-std::shared_ptr<MPL::VoxelMapUtil> map_util;
+std::shared_ptr<VoxelMapUtil> map_util;
 
 ros::Publisher map_pub;
 ros::Publisher sg_pub;
@@ -32,7 +32,7 @@ std_msgs::Header header;
 Waypoint3D start, goal;
 bool terminated = false;
 
-void setMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
+void setMap(std::shared_ptr<VoxelMapUtil> &map_util,
             const planning_ros_msgs::VoxelMap &msg) {
   Vec3f ori(msg.origin.x, msg.origin.y, msg.origin.z);
   Vec3i dim(msg.dim.x, msg.dim.y, msg.dim.z);
@@ -42,7 +42,7 @@ void setMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
   map_util->setMap(ori, dim, map, res);
 }
 
-void getMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
+void getMap(std::shared_ptr<VoxelMapUtil> &map_util,
             planning_ros_msgs::VoxelMap &map) {
   Vec3f ori = map_util->getOrigin();
   Vec3i dim = map_util->getDim();
@@ -60,7 +60,7 @@ void getMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
   map.data = map_util->getMap();
 }
 
-void visualizeGraph(int id, const MPMap3DUtil &planner) {
+void visualizeGraph(int id, const VoxelMapPlanner& planner) {
   if (id < 0 || id > 1)
     return;
 
@@ -126,9 +126,10 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
     traj_msg.header = header;
     traj_pub[0].publish(traj_msg);
 
-    printf("================== Traj -- J(1): %f, J(2): %f, J(3): %f, total "
+    printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
            "time: %f\n",
-           traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
+           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK), traj.getTotalTime());
+
   }
   visualizeGraph(0, planner_);
 
@@ -155,9 +156,9 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
     traj_msg.header = header;
     traj_pub[1].publish(traj_msg);
 
-    printf("================== Traj -- J(1): %f, J(2): %f, J(3): %f, total "
+    printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
            "time: %f\n",
-           traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
+           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK), traj.getTotalTime());
   }
   visualizeGraph(1, replan_planner_);
   // replan_planner_.checkValidation();
@@ -277,7 +278,7 @@ void subtreeCallback(const std_msgs::Int8::ConstPtr &msg) {
     // replan_planner_.getSubStateSpace(0, goal);
   } else
     return;
-  auto ws = replan_planner_.getWs();
+  auto ws = replan_planner_.getTraj().getWaypoints();
   if (ws.size() < 3)
     terminated = true;
   else
@@ -368,7 +369,7 @@ int main(int argc, char **argv) {
   map = voxel_mapper_->getMap();
 
   // Initialize map util
-  map_util.reset(new MPL::VoxelMapUtil);
+  map_util.reset(new VoxelMapUtil);
   setMap(map_util, map);
 
   // Free unknown space and dilate obstacles
@@ -412,15 +413,13 @@ int main(int argc, char **argv) {
   start.use_vel = true;
   start.use_acc = false;
   start.use_jrk = false;
+  start.use_yaw = false;
 
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
   goal.jrk = Vec3f(0, 0, 0);
-  goal.use_pos = start.use_pos;
-  goal.use_vel = start.use_vel;
-  goal.use_acc = start.use_acc;
-  goal.use_jrk = start.use_jrk;
+  goal.control = start.control;
 
   // Initialize planner
   double dt, v_max, a_max, j_max, u_max;
@@ -436,7 +435,7 @@ int main(int argc, char **argv) {
   nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
 
-  vec_Vec3f U;
+  vec_E<VecDf> U;
   const decimal_t du = u_max / num;
   if (use_3d) {
     decimal_t du_z = u_max / num;
@@ -456,7 +455,6 @@ int main(int argc, char **argv) {
   planner_.setVmax(v_max);       // Set max velocity
   planner_.setAmax(a_max);       // Set max acceleration
   planner_.setJmax(j_max);       // Set jrk (as control input)
-  planner_.setUmax(u_max);       // 2D discretization with 1
   planner_.setDt(dt);            // Set dt for each primitive
   planner_.setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_.setMaxNum(
@@ -470,7 +468,6 @@ int main(int argc, char **argv) {
   replan_planner_.setVmax(v_max);       // Set max velocity
   replan_planner_.setAmax(a_max);    // Set max acceleration (as control input)
   replan_planner_.setJmax(j_max);    // Set jrk (as control input)
-  replan_planner_.setUmax(u_max);    // 2D discretization with 1
   replan_planner_.setDt(dt);         // Set dt for each primitive
   replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(

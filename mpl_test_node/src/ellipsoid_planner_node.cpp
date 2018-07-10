@@ -70,7 +70,6 @@ int main(int argc, char **argv) {
   planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)
   planner_->setVmax(v_max);      // Set max velocity
   planner_->setAmax(a_max);      // Set max acceleration
-  planner_->setUmax(u_max);      // Set max control
   planner_->setTmax(t_max);      // Set max time
   planner_->setDt(dt);           // Set dt for each primitive
   planner_->setW(w);             // Set w for each primitive
@@ -105,15 +104,13 @@ int main(int argc, char **argv) {
   start.use_vel = true;
   start.use_acc = use_acc;
   start.use_jrk = use_jrk;
+  start.use_yaw = false;
 
-  Waypoint3D goal;
+  Waypoint3D goal(start.control);
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
-  goal.use_pos = start.use_pos;
-  goal.use_vel = start.use_vel;
-  goal.use_acc = start.use_acc;
-  goal.use_jrk = start.use_jrk;
+  goal.jrk = Vec3f(0, 0, 0);
 
   // Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
@@ -146,7 +143,7 @@ int main(int argc, char **argv) {
   }
 
   // Set input control
-  vec_Vec3f U;
+  vec_E<VecDf> U;
   const decimal_t du = u_max / num;
   if (use_3d) {
     decimal_t du_z = u_max_z / num;
@@ -186,9 +183,9 @@ int main(int argc, char **argv) {
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
 
-    printf("================== Traj -- total J(1): %f, J(2): %F, J(3): %f, "
+    printf("================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
            "total time: %f\n",
-           traj.J(1), traj.J(2), traj.J(3), traj.getTotalTime());
+           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
 
     vec_Ellipsoid Es =
         sample_ellipsoids(traj, Vec3f(robot_radius, robot_radius, 0.1), 50);
