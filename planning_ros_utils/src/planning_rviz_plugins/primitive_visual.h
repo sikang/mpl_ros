@@ -34,6 +34,7 @@ public:
   void setJrkScale(float s);
   void setYawScale(float s);
   void setYawTriangleScale(float s);
+  void setYawTriangleAngle(float a);
   void setVelVis(bool vis);
   void setAccVis(bool vis);
   void setJrkVis(bool vis);

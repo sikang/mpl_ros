@@ -8,6 +8,9 @@ TrajectoryDisplay::TrajectoryDisplay() {
   yaw_triangle_scale_property_ = new rviz::FloatProperty(
       "YawTriangleScale", 0.5, "0.5 is the default value.", this,
       SLOT(updateYawTriangleScale()));
+  yaw_triangle_angle_property_ = new rviz::FloatProperty(
+      "YawTriangleAngle", 0.7, "0.7 is the default value.", this,
+      SLOT(updateYawTriangleAngle()));
   yaw_num_property_ = new rviz::IntProperty(
       "NumYaw", 20, "Number of yaw samples of trajectory to display.", this,
       SLOT(updateYawNum()));
@@ -140,6 +143,10 @@ void TrajectoryDisplay::updateYawTriangleScale() {
   visualizeMessage();
 }
 
+void TrajectoryDisplay::updateYawTriangleAngle() {
+  visualizeMessage();
+}
+
 void TrajectoryDisplay::updateNum() {
   visualizeMessage();
 }
@@ -167,8 +174,9 @@ void TrajectoryDisplay::visualizeMessage() {
       !vel_color_property_ || !acc_color_property_ || !yaw_color_property_ ||
       !pos_scale_property_ || !vel_scale_property_ || !acc_scale_property_ ||
       !yaw_scale_property_ || !yaw_triangle_scale_property_ ||
-      !vel_vis_property_ || !acc_vis_property_ || !jrk_vis_property_ ||
-      !yaw_vis_property_ || !num_property_ || !yaw_num_property_)
+      !yaw_triangle_angle_property_ || !vel_vis_property_ ||
+      !acc_vis_property_ || !jrk_vis_property_ || !yaw_vis_property_ ||
+      !num_property_ || !yaw_num_property_)
     return;
 
   visual_.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
@@ -193,6 +201,9 @@ void TrajectoryDisplay::visualizeMessage() {
 
   float yaw_tria_scale = yaw_triangle_scale_property_->getFloat();
   visual_->setYawTriangleScale(yaw_tria_scale);
+
+  float yaw_tria_angle = yaw_triangle_angle_property_->getFloat();
+  visual_->setYawTriangleAngle(yaw_tria_angle);
 
   visual_->setMessage(trajectory_);
 

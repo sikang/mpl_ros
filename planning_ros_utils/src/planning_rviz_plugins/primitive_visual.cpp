@@ -184,4 +184,9 @@ void PrimitiveVisual::setYawScale(float s) {
 void PrimitiveVisual::setYawTriangleScale(float s) {
   syaw_ = s;
 }
+
+void PrimitiveVisual::setYawTriangleAngle(float d) {
+  dyaw_ = d;
+}
+
 }

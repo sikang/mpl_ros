@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Trajectory1
+        - /PrimitiveArray1
       Splitter Ratio: 0.5
     Tree Height: 669
   - Class: rviz/Selection
@@ -132,7 +134,7 @@ Visualization Manager:
       NumYaw: 20
       PosColor: 204; 51; 204
       PosScale: 0.100000001
-      Topic: /test_primitive/trajectory_refined
+      Topic: /test_primitive/trajectory
       Unreliable: false
       Value: true
       VelColor: 85; 85; 255
@@ -140,6 +142,7 @@ Visualization Manager:
       VelVis: false
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
       YawTriangleScale: 0.5
       YawVis: true
     - AccColor: 10; 200; 55
@@ -163,6 +166,7 @@ Visualization Manager:
       VelVis: false
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
       YawTriangleScale: 0.5
       YawVis: false
     - Alpha: 1
@@ -217,7 +221,7 @@ Visualization Manager:
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
       YawTriangleScale: 0.5
-      YawVis: false
+      YawVis: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -252,11 +256,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 41.9758263
+      Scale: 39.5974731
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 9.19943428
-      Y: 9.20317841
+      X: 11.6636181
+      Y: 7.72745943
     Saved: ~
 Window Geometry:
   Displays:

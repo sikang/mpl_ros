@@ -77,6 +77,53 @@ int main(int argc, char **argv) {
   map.header = header;
   map_pub.publish(map);
 
+  // Initialize planner
+  double dt, v_max, a_max, yaw_max;
+  double u, u_yaw, w;
+  int num, ndt;
+  bool use_3d, use_yaw;
+  nh.param("dt", dt, 1.0);
+  nh.param("ndt", ndt, -1);
+  nh.param("v_max", v_max, 2.0);
+  nh.param("a_max", a_max, 1.0);
+  nh.param("yaw_max", yaw_max, -1.0);
+  nh.param("w", w, 1.0);
+  nh.param("u", u, 1.0);
+  nh.param("u_yaw", u_yaw, 0.3);
+  nh.param("num", num, 1);
+  nh.param("use_3d", use_3d, false);
+  nh.param("use_yaw", use_yaw, false);
+
+  vec_E<VecDf> U;
+  const decimal_t du = u / num;
+  if (use_3d && !use_yaw) {
+    for (decimal_t dx = -u; dx <= u; dx += du)
+      for (decimal_t dy = -u; dy <= u; dy += du)
+        for (decimal_t dz = -u; dz <= u; dz += du)
+          U.push_back(Vec3f(dx, dy, dz));
+  } else if(!use_3d && !use_yaw) {
+    for (decimal_t dx = -u; dx <= u; dx += du)
+      for (decimal_t dy = -u; dy <= u; dy += du)
+        U.push_back(Vec3f(dx, dy, 0));
+  } else if(!use_3d && use_yaw) {
+    for (decimal_t dx = -u; dx <= u; dx += du)
+      for (decimal_t dy = -u; dy <= u; dy += du)
+        for (decimal_t dyaw = -u_yaw; dyaw <= u_yaw; dyaw += u_yaw) {
+          Vec4f vec;
+          vec << dx, dy, 0, dyaw;
+          U.push_back(vec);
+        }
+  } else if(use_3d && use_yaw) {
+    for (decimal_t dx = -u; dx <= u; dx += du)
+      for (decimal_t dy = -u; dy <= u; dy += du)
+        for (decimal_t dz = -u; dz <= u; dz += du)
+          for (decimal_t dyaw = -u_yaw; dyaw <= u_yaw; dyaw += u_yaw) {
+            Vec4f vec;
+            vec << dx, dy, dz, dyaw;
+            U.push_back(vec);
+          }
+  }
+
   // Set start and goal
   double start_x, start_y, start_z;
   nh.param("start_x", start_x, 12.5);
@@ -101,7 +148,7 @@ int main(int argc, char **argv) {
   start.use_vel = true;
   start.use_acc = false;
   start.use_jrk = false;
-  start.use_yaw = false;
+  start.use_yaw = use_yaw;
 
   Waypoint3D goal(start.control);
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
@@ -109,43 +156,17 @@ int main(int argc, char **argv) {
   goal.acc = Vec3f(0, 0, 0);
   goal.jrk = Vec3f(0, 0, 0);
 
-  // Initialize planner
-  double dt, v_max, a_max, u_max;
-  int max_num, num, ndt;
-  bool use_3d;
-  nh.param("dt", dt, 1.0);
-  nh.param("ndt", ndt, -1);
-  nh.param("v_max", v_max, 2.0);
-  nh.param("a_max", a_max, 1.0);
-  nh.param("u_max", u_max, 1.0);
-  nh.param("max_num", max_num, -1);
-  nh.param("num", num, 1);
-  nh.param("use_3d", use_3d, false);
-
-  vec_E<VecDf> U;
-  const decimal_t du = u_max / num;
-  if (use_3d) {
-    decimal_t du_z = u_max / num;
-    for (decimal_t dx = -u_max; dx <= u_max; dx += du)
-      for (decimal_t dy = -u_max; dy <= u_max; dy += du)
-        for (decimal_t dz = -u_max; dz <= u_max;
-             dz += du_z) // here we reduce the z control
-          U.push_back(Vec3f(dx, dy, dz));
-  } else {
-    for (decimal_t dx = -u_max; dx <= u_max; dx += du)
-      for (decimal_t dy = -u_max; dy <= u_max; dy += du)
-        U.push_back(Vec3f(dx, dy, 0));
-  }
-
   std::unique_ptr<MPL::VoxelMapPlanner> planner_ptr;
 
   planner_ptr.reset(new MPL::VoxelMapPlanner(true));
   planner_ptr->setMapUtil(map_util); // Set collision checking function
   planner_ptr->setVmax(v_max);       // Set max velocity
   planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
+  planner_ptr->setYawmax(yaw_max);       // Set max acceleration (as control input)
+  planner_ptr->setW(w);            // Set dt for each primitive
   planner_ptr->setDt(dt);            // Set dt for each primitive
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
-  planner_ptr->setU(U); // 2D discretization with 1
+  planner_ptr->setU(U); // Set control input
   planner_ptr->setTol(0.5, 0.5, 1); // Tolerance for goal region
 
   // Planning thread!

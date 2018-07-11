@@ -25,10 +25,14 @@
     <!-- Set dynamic constraints -->
     <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
+    <param name="yaw_max" value="0.5"/>
+    <param name="u" value="1.0"/>
+    <param name="u_yaw" value="0.5"/>
+    <param name="w" value="1"/>
     <param name="dt" value="1"/>
-    <param name="ndt" value="-1"/>
-    <param name="kp" value="4"/>
-    <param name="kv" value="3"/>
+    <param name="ndt" value="0"/>
+    <param name="use_3d" value="false"/>
+    <param name="use_yaw" value="true"/>
   </node>
 
 </launch>

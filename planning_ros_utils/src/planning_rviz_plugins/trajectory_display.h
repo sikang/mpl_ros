@@ -39,6 +39,7 @@ private Q_SLOTS:
   void updateJrkScale();
   void updateYawScale();
   void updateYawTriangleScale();
+  void updateYawTriangleAngle();
   void updateVelVis();
   void updateAccVis();
   void updateJrkVis();
@@ -63,6 +64,7 @@ private:
   rviz::FloatProperty *jrk_scale_property_;
   rviz::FloatProperty *yaw_scale_property_;
   rviz::FloatProperty *yaw_triangle_scale_property_;
+  rviz::FloatProperty *yaw_triangle_angle_property_;
   rviz::BoolProperty *vel_vis_property_;
   rviz::BoolProperty *acc_vis_property_;
   rviz::BoolProperty *jrk_vis_property_;

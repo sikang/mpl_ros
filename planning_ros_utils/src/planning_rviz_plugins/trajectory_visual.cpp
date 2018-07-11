@@ -181,4 +181,9 @@ void TrajectoryVisual::setYawScale(float s) {
 void TrajectoryVisual::setYawTriangleScale(float s) {
   syaw_ = s;
 }
+
+void TrajectoryVisual::setYawTriangleAngle(float d) {
+  dyaw_ = d;
+}
+
 }

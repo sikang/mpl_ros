@@ -127,7 +127,7 @@ inline Primitive2D toPrimitive2D(const planning_ros_msgs::Primitive &pr) {
   cs.push_back(cy);
   cs.push_back(cyaw);
 
-  return Primitive2D(cs, pr.t, Control::SNP);
+  return Primitive2D(cs, pr.t, Control::SNPxYAW);
 }
 
 /// ROS message to Primitive3D class
@@ -145,7 +145,7 @@ inline Primitive3D toPrimitive3D(const planning_ros_msgs::Primitive &pr) {
   cs.push_back(cz);
   cs.push_back(cyaw);
 
-  return Primitive3D(cs, pr.t, Control::SNP);
+  return Primitive3D(cs, pr.t, Control::SNPxYAW);
 }
 
 /// ROS message to Trajectory2D class
@@ -181,9 +181,9 @@ inline Trajectory2D toTrajectory2D(const planning_ros_msgs::Trajectory &traj_msg
     traj.total_t_ = traj.taus.back();
   return traj;
 }
+
 /// ROS message to Trajectory3D class
-inline Trajectory3D toTrajectory3D(
-    const planning_ros_msgs::Trajectory &traj_msg) { // Constructor from ros msg
+inline Trajectory3D toTrajectory3D(const planning_ros_msgs::Trajectory &traj_msg) {
   Trajectory3D traj;
   traj.taus.push_back(0);
   for (const auto &it : traj_msg.primitives) {
