@@ -2,9 +2,15 @@
 
 namespace planning_rviz_plugins {
 TrajectoryDisplay::TrajectoryDisplay() {
-  num_property_ = new rviz::IntProperty("Num of samples", 20,
-                                        "Number of samples to display.", this,
-                                        SLOT(updateNum()));
+  num_property_ = new rviz::IntProperty(
+      "Num of samples", 100, "Number of samples of trajectory to display.",
+      this, SLOT(updateNum()));
+  yaw_triangle_scale_property_ = new rviz::FloatProperty(
+      "YawTriangleScale", 0.5, "0.5 is the default value.", this,
+      SLOT(updateYawTriangleScale()));
+  yaw_num_property_ = new rviz::IntProperty(
+      "NumYaw", 20, "Number of yaw samples of trajectory to display.", this,
+      SLOT(updateYawNum()));
   pos_color_property_ = new rviz::ColorProperty(
       "PosColor", QColor(204, 51, 204), "Color to draw the Pos.", this,
       SLOT(updatePosColorAndAlpha()));
@@ -17,8 +23,11 @@ TrajectoryDisplay::TrajectoryDisplay() {
   jrk_color_property_ = new rviz::ColorProperty("JrkColor", QColor(200, 20, 55),
                                                 "Color to draw the Acc.", this,
                                                 SLOT(updateJrkColorAndAlpha()));
+  yaw_color_property_ = new rviz::ColorProperty("YawColor", QColor(100, 20, 55),
+                                                "Color to draw the Yaw.", this,
+                                                SLOT(updateYawColorAndAlpha()));
   pos_scale_property_ =
-      new rviz::FloatProperty("PosScale", 0.02, "0.02 is the default value.",
+      new rviz::FloatProperty("PosScale", 0.1, "0.1 is the default value.",
                               this, SLOT(updatePosScale()));
   vel_scale_property_ =
       new rviz::FloatProperty("VelScale", 0.02, "0.02 is the default value.",
@@ -29,12 +38,17 @@ TrajectoryDisplay::TrajectoryDisplay() {
   jrk_scale_property_ =
       new rviz::FloatProperty("JrkScale", 0.02, "0.02 is the default value.",
                               this, SLOT(updateJrkScale()));
+  yaw_scale_property_ =
+    new rviz::FloatProperty("YawScale", 0.05, "0.05 is the default value.",
+                            this, SLOT(updateYawScale()));
   vel_vis_property_ = new rviz::BoolProperty(
-      "Visualize Vel", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
+    "VelVis", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
   acc_vis_property_ = new rviz::BoolProperty(
-      "Visualize Acc", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
+    "AccVis", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
   jrk_vis_property_ = new rviz::BoolProperty(
-      "Visualize Jrk", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
+    "JrkVis", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
+  yaw_vis_property_ = new rviz::BoolProperty(
+    "YawVis", 0, "Visualize Yaw?", this, SLOT(updateYawVis()));
 }
 
 void TrajectoryDisplay::onInitialize() { MFDClass::onInitialize(); }
@@ -47,52 +61,49 @@ void TrajectoryDisplay::reset() {
 }
 
 void TrajectoryDisplay::updateVelVis() {
-  bool vis = vel_vis_property_->getBool();
-  if (visual_)
-    visual_->setVelVis(vis);
   visualizeMessage();
 }
 
 void TrajectoryDisplay::updateAccVis() {
-  bool vis = acc_vis_property_->getBool();
-  if (visual_)
-    visual_->setAccVis(vis);
   visualizeMessage();
 }
 
 void TrajectoryDisplay::updateJrkVis() {
-  bool vis = jrk_vis_property_->getBool();
-  if (visual_)
-    visual_->setJrkVis(vis);
+  visualizeMessage();
+}
+
+void TrajectoryDisplay::updateYawVis() {
   visualizeMessage();
 }
 
 void TrajectoryDisplay::updatePosColorAndAlpha() {
-  float alpha = 1;
   Ogre::ColourValue color = pos_color_property_->getOgreColor();
   if (visual_)
-    visual_->setPosColor(color.r, color.g, color.b, alpha);
+    visual_->setPosColor(color.r, color.g, color.b, 1);
 }
 
 void TrajectoryDisplay::updateVelColorAndAlpha() {
-  float alpha = 1;
   Ogre::ColourValue color = vel_color_property_->getOgreColor();
   if (visual_)
-    visual_->setVelColor(color.r, color.g, color.b, alpha);
+    visual_->setVelColor(color.r, color.g, color.b, 1);
 }
 
 void TrajectoryDisplay::updateAccColorAndAlpha() {
-  float alpha = 1;
   Ogre::ColourValue color = acc_color_property_->getOgreColor();
   if (visual_)
-    visual_->setAccColor(color.r, color.g, color.b, alpha);
+    visual_->setAccColor(color.r, color.g, color.b, 1);
 }
 
 void TrajectoryDisplay::updateJrkColorAndAlpha() {
-  float alpha = 1;
   Ogre::ColourValue color = jrk_color_property_->getOgreColor();
   if (visual_)
-    visual_->setJrkColor(color.r, color.g, color.b, alpha);
+    visual_->setJrkColor(color.r, color.g, color.b, 1);
+}
+
+void TrajectoryDisplay::updateYawColorAndAlpha() {
+  Ogre::ColourValue color = yaw_color_property_->getOgreColor();
+  if (visual_)
+    visual_->setYawColor(color.r, color.g, color.b, 1);
 }
 
 void TrajectoryDisplay::updatePosScale() {
@@ -119,10 +130,22 @@ void TrajectoryDisplay::updateJrkScale() {
     visual_->setJrkScale(s);
 }
 
-void TrajectoryDisplay::updateNum() {
-  float n = num_property_->getInt();
+void TrajectoryDisplay::updateYawScale() {
+ float s = yaw_scale_property_->getFloat();
   if (visual_)
-    visual_->setNum(n);
+    visual_->setYawScale(s);
+}
+
+void TrajectoryDisplay::updateYawTriangleScale() {
+  visualizeMessage();
+}
+
+void TrajectoryDisplay::updateNum() {
+  visualizeMessage();
+}
+
+void TrajectoryDisplay::updateYawNum() {
+  visualizeMessage();
 }
 
 void TrajectoryDisplay::processMessage(
@@ -140,44 +163,63 @@ void TrajectoryDisplay::processMessage(
 }
 
 void TrajectoryDisplay::visualizeMessage() {
-  std::shared_ptr<TrajectoryVisual> visual;
-  visual.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
+  if (trajectory_.primitives.empty() || !pos_color_property_ ||
+      !vel_color_property_ || !acc_color_property_ || !yaw_color_property_ ||
+      !pos_scale_property_ || !vel_scale_property_ || !acc_scale_property_ ||
+      !yaw_scale_property_ || !yaw_triangle_scale_property_ ||
+      !vel_vis_property_ || !acc_vis_property_ || !jrk_vis_property_ ||
+      !yaw_vis_property_ || !num_property_ || !yaw_num_property_)
+    return;
+
+  visual_.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
 
   float n = num_property_->getInt();
-  visual->setNum(n);
+  visual_->setNum(n);
+
+  float yaw_n = yaw_num_property_->getInt();
+  visual_->setYawNum(yaw_n);
 
   bool vel_vis = vel_vis_property_->getBool();
-  visual->setVelVis(vel_vis);
+  visual_->setVelVis(vel_vis);
 
   bool acc_vis = acc_vis_property_->getBool();
-  visual->setAccVis(acc_vis);
+  visual_->setAccVis(acc_vis);
 
   bool jrk_vis = jrk_vis_property_->getBool();
-  visual->setJrkVis(jrk_vis);
+  visual_->setJrkVis(jrk_vis);
 
-  visual->setMessage(trajectory_);
-  visual->setFramePosition(position_);
-  visual->setFrameOrientation(orientation_);
+  bool yaw_vis = yaw_vis_property_->getBool();
+  visual_->setYawVis(yaw_vis);
+
+  float yaw_tria_scale = yaw_triangle_scale_property_->getFloat();
+  visual_->setYawTriangleScale(yaw_tria_scale);
+
+  visual_->setMessage(trajectory_);
+
+  visual_->setFramePosition(position_);
+  visual_->setFrameOrientation(orientation_);
 
   float pos_scale = pos_scale_property_->getFloat();
-  visual->setPosScale(pos_scale);
+  visual_->setPosScale(pos_scale);
   float vel_scale = vel_scale_property_->getFloat();
-  visual->setVelScale(vel_scale);
+  visual_->setVelScale(vel_scale);
   float acc_scale = acc_scale_property_->getFloat();
-  visual->setAccScale(acc_scale);
+  visual_->setAccScale(acc_scale);
   float jrk_scale = jrk_scale_property_->getFloat();
-  visual->setJrkScale(jrk_scale);
+  visual_->setJrkScale(jrk_scale);
+  float yaw_scale = yaw_scale_property_->getFloat();
+  visual_->setYawScale(yaw_scale);
 
   Ogre::ColourValue pos_color = pos_color_property_->getOgreColor();
-  visual->setPosColor(pos_color.r, pos_color.g, pos_color.b, 1);
+  visual_->setPosColor(pos_color.r, pos_color.g, pos_color.b, 1);
   Ogre::ColourValue vel_color = vel_color_property_->getOgreColor();
-  visual->setVelColor(vel_color.r, vel_color.g, vel_color.b, 1);
+  visual_->setVelColor(vel_color.r, vel_color.g, vel_color.b, 1);
   Ogre::ColourValue acc_color = acc_color_property_->getOgreColor();
-  visual->setAccColor(acc_color.r, acc_color.g, acc_color.b, 1);
+  visual_->setAccColor(acc_color.r, acc_color.g, acc_color.b, 1);
   Ogre::ColourValue jrk_color = jrk_color_property_->getOgreColor();
-  visual->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
-
-  visual_ = visual;
+  visual_->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
+  Ogre::ColourValue yaw_color = yaw_color_property_->getOgreColor();
+  visual_->setYawColor(yaw_color.r, yaw_color.g, yaw_color.b, 1);
 }
 }
 

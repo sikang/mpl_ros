@@ -121,30 +121,38 @@ Visualization Manager:
       Value: true
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
+      AccVis: false
       Class: planning_rviz_plugins/Trajectory
-      Enabled: false
+      Enabled: true
       JrkColor: 200; 20; 55
       JrkScale: 0.0199999996
+      JrkVis: false
       Name: Trajectory
       Num of samples: 200
+      NumYaw: 20
       PosColor: 204; 51; 204
       PosScale: 0.100000001
-      Topic: /test_primitive/trajectory
+      Topic: /test_primitive/trajectory_refined
       Unreliable: false
-      Value: false
+      Value: true
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
-      Visualize Acc: true
-      Visualize Jrk: false
-      Visualize Vel: true
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleScale: 0.5
+      YawVis: true
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
+      AccVis: false
       Class: planning_rviz_plugins/Trajectory
       Enabled: false
       JrkColor: 200; 20; 55
       JrkScale: 0.0199999996
+      JrkVis: false
       Name: Trajectory_Refined
       Num of samples: 200
+      NumYaw: 2
       PosColor: 255; 170; 0
       PosScale: 0.100000001
       Topic: /test_primitive/trajectory_refined
@@ -152,9 +160,11 @@ Visualization Manager:
       Value: false
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
-      Visualize Acc: true
-      Visualize Jrk: false
-      Visualize Vel: true
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleScale: 0.5
+      YawVis: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -187,10 +197,12 @@ Visualization Manager:
       Value: true
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
+      AccVis: false
       Class: planning_rviz_plugins/PrimitiveArray
-      Enabled: true
+      Enabled: false
       JrkColor: 200; 20; 55
       JrkScale: 0.0199999996
+      JrkVis: false
       Name: PrimitiveArray
       Num: 20
       NumYaw: 2
@@ -198,16 +210,14 @@ Visualization Manager:
       PosScale: 0.100000001
       Topic: /test_primitive/primitives
       Unreliable: false
-      Value: true
+      Value: false
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
-      VisAcc: true
-      VisJrk: false
-      VisVel: true
-      VisYaw: true
+      VelVis: false
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
       YawTriangleScale: 0.5
+      YawVis: false
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255

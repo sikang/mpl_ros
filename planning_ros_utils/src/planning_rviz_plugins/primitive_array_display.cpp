@@ -2,16 +2,15 @@
 
 namespace planning_rviz_plugins {
 PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
-  num_property_ = new rviz::IntProperty("Num", 10,
-                                        "Number of samples of each primitive to display.", this,
-                                        SLOT(updateNum()));
-  yaw_triangle_scale_property_ =
-    new rviz::FloatProperty("YawTriangleScale", 0.5, "0.5 is the default value.",
-                            this, SLOT(updateYawTriangleScale()));
-
-  yaw_num_property_ = new rviz::IntProperty("NumYaw", 2,
-                                        "Number of yaw samples of each primitive to display.", this,
-                                        SLOT(updateYawNum()));
+  num_property_ = new rviz::IntProperty(
+      "Num", 10, "Number of samples of each primitive to display.", this,
+      SLOT(updateNum()));
+  yaw_triangle_scale_property_ = new rviz::FloatProperty(
+      "YawTriangleScale", 0.5, "0.5 is the default value.", this,
+      SLOT(updateYawTriangleScale()));
+  yaw_num_property_ = new rviz::IntProperty(
+      "NumYaw", 2, "Number of yaw samples of each primitive to display.", this,
+      SLOT(updateYawNum()));
   pos_color_property_ = new rviz::ColorProperty(
       "PosColor", QColor(204, 51, 204), "Color to draw the Pos.", this,
       SLOT(updatePosColorAndAlpha()));
@@ -43,13 +42,13 @@ PrimitiveArrayDisplay::PrimitiveArrayDisplay() {
     new rviz::FloatProperty("YawScale", 0.05, "0.05 is the default value.",
                             this, SLOT(updateYawScale()));
   vel_vis_property_ = new rviz::BoolProperty(
-    "VisVel", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
+    "VelVis", 0, "Visualize Vel?", this, SLOT(updateVelVis()));
   acc_vis_property_ = new rviz::BoolProperty(
-    "VisAcc", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
+    "AccVis", 0, "Visualize Acc?", this, SLOT(updateAccVis()));
   jrk_vis_property_ = new rviz::BoolProperty(
-    "VisJrk", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
+    "JrkVis", 0, "Visualize Jrk?", this, SLOT(updateJrkVis()));
   yaw_vis_property_ = new rviz::BoolProperty(
-    "VisYaw", 0, "Visualize Yaw?", this, SLOT(updateYawVis()));
+    "YawVis", 0, "Visualize Yaw?", this, SLOT(updateYawVis()));
 }
 
 void PrimitiveArrayDisplay::onInitialize() { MFDClass::onInitialize(); }
@@ -141,6 +140,14 @@ void PrimitiveArrayDisplay::updateYawTriangleScale() {
   visualizeMessage();
 }
 
+void PrimitiveArrayDisplay::updateNum() {
+  visualizeMessage();
+}
+
+void PrimitiveArrayDisplay::updateYawNum() {
+  visualizeMessage();
+}
+
 void PrimitiveArrayDisplay::processMessage(
     const planning_ros_msgs::PrimitiveArray::ConstPtr &msg) {
   if (!context_->getFrameManager()->getTransform(
@@ -152,14 +159,6 @@ void PrimitiveArrayDisplay::processMessage(
 
   prs_msg_ = *msg;
 
-  visualizeMessage();
-}
-
-void PrimitiveArrayDisplay::updateNum() {
-  visualizeMessage();
-}
-
-void PrimitiveArrayDisplay::updateYawNum() {
   visualizeMessage();
 }
 
@@ -221,7 +220,6 @@ void PrimitiveArrayDisplay::visualizeMessage() {
   visual_->setJrkColor(jrk_color.r, jrk_color.g, jrk_color.b, 1);
   Ogre::ColourValue yaw_color = yaw_color_property_->getOgreColor();
   visual_->setYawColor(yaw_color.r, yaw_color.g, yaw_color.b, 1);
-
 }
 }
 

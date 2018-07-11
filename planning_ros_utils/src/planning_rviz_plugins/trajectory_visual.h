@@ -16,38 +16,47 @@ public:
 
   virtual ~TrajectoryVisual();
 
-  void setNum(int n);
   void setMessage(const planning_ros_msgs::Trajectory &msg);
-  void addMessage(const planning_ros_msgs::Trajectory &msg);
 
   void setFramePosition(const Ogre::Vector3 &position);
   void setFrameOrientation(const Ogre::Quaternion &orientation);
 
+  void setNum(int n);
+  void setYawNum(int n);
   void setPosColor(float r, float g, float b, float a);
   void setVelColor(float r, float g, float b, float a);
   void setAccColor(float r, float g, float b, float a);
   void setJrkColor(float r, float g, float b, float a);
+  void setYawColor(float r, float g, float b, float a);
   void setPosScale(float s);
   void setVelScale(float s);
   void setAccScale(float s);
   void setJrkScale(float s);
+  void setYawScale(float s);
+  void setYawTriangleScale(float s);
   void setVelVis(bool vis);
   void setAccVis(bool vis);
   void setJrkVis(bool vis);
+  void setYawVis(bool vis);
 
 private:
   std::vector<std::unique_ptr<rviz::BillboardLine>> poss_;
   std::vector<std::unique_ptr<rviz::BillboardLine>> vels_;
   std::vector<std::unique_ptr<rviz::BillboardLine>> accs_;
   std::vector<std::unique_ptr<rviz::BillboardLine>> jrks_;
+  std::vector<std::unique_ptr<rviz::BillboardLine>> yaws_;
 
   Ogre::SceneNode *frame_node_;
   Ogre::SceneManager *scene_manager_;
 
   int num_;
+  int yaw_num_;
+  decimal_t dyaw_{M_PI/6};
+  decimal_t syaw_{0.25};
   bool vel_vis_;
   bool acc_vis_;
   bool jrk_vis_;
+  bool yaw_vis_;
 };
 }
 

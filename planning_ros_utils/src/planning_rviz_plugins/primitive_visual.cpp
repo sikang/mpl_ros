@@ -48,31 +48,31 @@ void PrimitiveVisual::setMessage(const std::vector<planning_ros_msgs::Primitive>
 
       if(i < waypoints.size() - 1) {
         const auto p2 = waypoints[i+1];
-        Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));
+        const Ogre::Vector3 pos2(p2.pos(0), p2.pos(1), p2.pos(2));
         poss_[n*(num_-1)+i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
         poss_[n*(num_-1)+i]->addPoint(pos1);
         poss_[n*(num_-1)+i]->addPoint(pos2);
       }
 
       if (vel_vis_) {
-        Vec3f p3 = p1.pos + R * p1.vel;
-        Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
+        const Vec3f p3 = p1.pos + R * p1.vel;
+        const Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
         vels_[n*num_+i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
         vels_[n*num_+i]->addPoint(pos1);
         vels_[n*num_+i]->addPoint(pos3);
       }
 
       if (acc_vis_) {
-        Vec3f p3 = p1.pos + R * p1.acc;
-        Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
+        const Vec3f p3 = p1.pos + R * p1.acc;
+        const Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
         accs_[n*num_+i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
         accs_[n*num_+i]->addPoint(pos1);
         accs_[n*num_+i]->addPoint(pos3);
       }
 
       if (jrk_vis_) {
-        Vec3f p3 = p1.pos + R * p1.jrk;
-        Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
+        const Vec3f p3 = p1.pos + R * p1.jrk;
+        const Ogre::Vector3 pos3(p3(0), p3(1), p3(2));
         jrks_[n*num_+i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
         jrks_[n*num_+i]->addPoint(pos1);
         jrks_[n*num_+i]->addPoint(pos3);
