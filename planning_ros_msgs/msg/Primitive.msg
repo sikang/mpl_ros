@@ -3,5 +3,6 @@ Header header
 float64[] cx
 float64[] cy
 float64[] cz
+float64[] cyaw
 # t is the execution time
 float64 t

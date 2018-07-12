@@ -1,5 +1,5 @@
 <launch>
-  <arg name="test" default="test_primitive_cloud"/>
+  <arg name="test" default="map_planner_node"/>
 
   <node pkg="rviz"
     type="rviz"

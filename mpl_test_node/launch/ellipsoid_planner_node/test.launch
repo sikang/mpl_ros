@@ -8,7 +8,7 @@
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
   <node pkg="mpl_test_node"
-    type="test_primitive_cloud"
+    type="ellipsoid_planner_node"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">

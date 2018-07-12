@@ -1,0 +1,15 @@
+<launch>
+  <arg name="debug" default="false"/>
+  <!--<arg name="debug_valgrind" default="false"/>-->
+
+  <arg name="prefix" value="" unless="$(arg debug)"/>
+  <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
+
+  <node pkg="mpl_test_node"
+    type="traj_solver_node"
+    name="test_primitive"
+    launch-prefix="$(arg prefix)"
+    output="screen">
+ </node>
+
+</launch>

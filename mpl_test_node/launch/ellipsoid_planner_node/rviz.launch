@@ -1,5 +1,5 @@
 <launch>
-  <arg name="test" default="test_primitive_map"/>
+  <arg name="test" default="ellipsoid_planner_node"/>
 
   <node pkg="rviz"
     type="rviz"

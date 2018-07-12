@@ -9,18 +9,18 @@
 
 #include <rviz/load_resource.h>
 
-#include <planning_ros_msgs/Trajectory.h>
+#include <planning_ros_msgs/PrimitiveArray.h>
 #include <rviz/message_filter_display.h>
 
-#include "trajectory_visual.h"
+#include "primitive_visual.h"
 
 namespace planning_rviz_plugins {
-class TrajectoryDisplay
-    : public rviz::MessageFilterDisplay<planning_ros_msgs::Trajectory> {
+class PrimitiveArrayDisplay
+    : public rviz::MessageFilterDisplay<planning_ros_msgs::PrimitiveArray> {
   Q_OBJECT
 public:
-  TrajectoryDisplay();
-  virtual ~TrajectoryDisplay();
+  PrimitiveArrayDisplay();
+  virtual ~PrimitiveArrayDisplay();
 
 protected:
   virtual void onInitialize();
@@ -48,10 +48,10 @@ private Q_SLOTS:
   void updateYawNum();
 
 private:
-  void processMessage(const planning_ros_msgs::Trajectory::ConstPtr &msg);
+  void processMessage(const planning_ros_msgs::PrimitiveArray::ConstPtr &msg);
   void visualizeMessage();
 
-  std::shared_ptr<TrajectoryVisual> visual_;
+  std::shared_ptr<PrimitiveVisual> visual_;
 
   rviz::ColorProperty *pos_color_property_;
   rviz::ColorProperty *vel_color_property_;
@@ -75,6 +75,6 @@ private:
   Ogre::Vector3 position_;
   Ogre::Quaternion orientation_;
 
-  planning_ros_msgs::Trajectory trajectory_;
+  planning_ros_msgs::PrimitiveArray prs_msg_;
 };
 }

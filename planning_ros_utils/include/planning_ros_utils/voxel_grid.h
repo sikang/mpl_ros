@@ -1,17 +1,17 @@
 #ifndef VOXEL_GRID_H
 #define VOXEL_GRID_H
 
-#include <motion_primitive_library/common/data_type.h>
-#include <planning_ros_msgs/VoxelMap.h>
 #include <boost/multi_array.hpp>
+#include <mpl_basis/data_type.h>
+#include <planning_ros_msgs/VoxelMap.h>
 
 class VoxelGrid {
- public:
+public:
   VoxelGrid(Vec3f origin, Vec3f dim, float res);
   void clear();
 
   vec_Vec3f getCloud();
-  vec_Vec3f getLocalCloud(const Vec3f& pos, const Vec3f& ori, const Vec3f& dim);
+  vec_Vec3f getLocalCloud(const Vec3f &pos, const Vec3f &ori, const Vec3f &dim);
   planning_ros_msgs::VoxelMap getMap();
   planning_ros_msgs::VoxelMap getInflatedMap();
 
@@ -19,15 +19,16 @@ class VoxelGrid {
 
   void addCloud(const vec_Vec3f &pts);
 
-  vec_Vec3i addCloud(const vec_Vec3f &pts, const vec_Vec3i& ns);
+  vec_Vec3i addCloud(const vec_Vec3f &pts, const vec_Vec3i &ns);
 
   void decay();
 
   void fill(int nx, int ny);
   void fill(int nx, int ny, int nz);
   void clear(int nx, int ny);
- private:
-  Vec3i floatToInt(const Vec3f& pt);
+
+private:
+  Vec3i floatToInt(const Vec3f &pt);
   Vec3f intToFloat(const Vec3i &pn);
   bool isOutSide(const Vec3i &pn);
 

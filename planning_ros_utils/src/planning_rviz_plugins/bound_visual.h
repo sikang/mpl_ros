@@ -1,14 +1,13 @@
 #ifndef BOUND_VISUAL_H
 #define BOUND_VISUAL_H
 
-#include <motion_primitive_library/common/data_type.h>
+#include <mpl_basis/data_type.h>
 
-#include <OGRE/OgreVector3.h>
-#include <OGRE/OgreSceneNode.h>
 #include <OGRE/OgreSceneManager.h>
+#include <OGRE/OgreSceneNode.h>
+#include <OGRE/OgreVector3.h>
 
 #include <rviz/ogre_helpers/billboard_line.h>
-
 
 namespace planning_rviz_plugins {
 class BoundVisual {

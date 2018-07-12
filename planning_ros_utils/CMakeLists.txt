@@ -6,10 +6,11 @@ find_package(catkin REQUIRED COMPONENTS rviz roscpp)
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules)
 find_package(Eigen3 REQUIRED)
-FIND_PACKAGE(VTK REQUIRED)
-FIND_PACKAGE(motion_primitive_library REQUIRED)
+find_package(VTK REQUIRED)
+find_package(motion_primitive_library REQUIRED)
+find_package(SDL REQUIRED)
+find_package(SDL_image REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIRS} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
-
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -36,12 +37,20 @@ if(NOT VTK_FOUND)
   message("VTK was not found")
 else(NOT VTK_FOUND)
   include(${VTK_USE_FILE})
-  cs_add_executable(mesh_sampling src/planning_ros_utils/mesh_sampling.cpp)
+  cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
 endif(NOT VTK_FOUND)
 
-cs_add_library(voxel_grid src/planning_ros_utils/voxel_grid.cpp)
-cs_add_executable(cloud_to_map src/planning_ros_utils/cloud_to_map.cpp)
+cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
+cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
 target_link_libraries(cloud_to_map voxel_grid)
+
+cs_add_executable(image_to_map src/mapping_utils/image_to_map.cpp)
+target_link_libraries(image_to_map
+  ${SDL_LIBRARY}
+  ${SDL_IMAGE_LIBRARIES})
+
+cs_add_executable(trajectory_extractor_node src/planning_utils/trajectory_extractor_node.cpp)
+target_link_libraries(trajectory_extractor_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
 set(SOURCE_FILES
   src/planning_rviz_plugins/bound_visual.cpp
@@ -52,9 +61,8 @@ set(SOURCE_FILES
   src/planning_rviz_plugins/map_display.cpp
   src/planning_rviz_plugins/path_display.cpp
   src/planning_rviz_plugins/path_array_display.cpp
-  src/planning_rviz_plugins/primitives_display.cpp
+  src/planning_rviz_plugins/primitive_array_display.cpp
   src/planning_rviz_plugins/trajectory_display.cpp
-  src/planning_ros_utils/primitive_ros_utils.cpp
   ${MOC_FILES})
 
 cs_add_library(planning_rviz_plugins ${SOURCE_FILES})

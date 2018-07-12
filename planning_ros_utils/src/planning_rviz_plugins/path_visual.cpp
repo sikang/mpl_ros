@@ -17,10 +17,8 @@ void PathVisual::setMessage(const vec_Vec3f &path) {
   if (path.empty())
     return;
 
-  for (const auto& it: path) {
-    if (std::isnan(it(0)) ||
-        std::isnan(it(1)) ||
-        std::isnan(it(2)))
+  for (const auto &it : path) {
+    if (std::isnan(it(0)) || std::isnan(it(1)) || std::isnan(it(2)))
       return;
   }
 
@@ -33,10 +31,10 @@ void PathVisual::setMessage(const vec_Vec3f &path) {
   for (auto &it : lines_)
     it.reset(new rviz::BillboardLine(scene_manager_, frame_node_));
 
-  for (int i = 0; i < (int) path.size(); i++) {
+  for (int i = 0; i < (int)path.size(); i++) {
     Ogre::Vector3 pos(path[i](0), path[i](1), path[i](2));
-    if(i < (int) path.size() - 1) {
-      Ogre::Vector3 pos2(path[i+1](0), path[i+1](1), path[i+1](2));
+    if (i < (int)path.size() - 1) {
+      Ogre::Vector3 pos2(path[i + 1](0), path[i + 1](1), path[i + 1](2));
       lines_[i]->addPoint(pos);
       lines_[i]->addPoint(pos2);
     }
@@ -53,19 +51,20 @@ void PathVisual::addMessage(const vec_Vec3f &path) {
 
   for (unsigned int i = nodes_prev_size; i < nodes_.size(); i++)
     nodes_[i].reset(new rviz::Shape(rviz::Shape::Type::Sphere, scene_manager_,
-                             frame_node_));
+                                    frame_node_));
 
   unsigned int lines_prev_size = lines_.size();
   lines_.resize(lines_prev_size + path.size() - 1);
 
-  for (unsigned int i = lines_prev_size; i < lines_prev_size + path.size() - 1; i++) {
+  for (unsigned int i = lines_prev_size; i < lines_prev_size + path.size() - 1;
+       i++) {
     lines_[i].reset(new rviz::BillboardLine(scene_manager_, frame_node_));
   }
 
-  for (int i = 0; i < (int) path.size(); i++) {
+  for (int i = 0; i < (int)path.size(); i++) {
     Ogre::Vector3 pos(path[i](0), path[i](1), path[i](2));
-    if(i < (int) path.size() - 1) {
-      Ogre::Vector3 pos2(path[i+1](0), path[i+1](1), path[i+1](2));
+    if (i < (int)path.size() - 1) {
+      Ogre::Vector3 pos2(path[i + 1](0), path[i + 1](1), path[i + 1](2));
       lines_[i + lines_prev_size]->addPoint(pos);
       lines_[i + lines_prev_size]->addPoint(pos2);
     }
@@ -82,7 +81,7 @@ void PathVisual::setFrameOrientation(const Ogre::Quaternion &orientation) {
 }
 
 void PathVisual::setLineColor(float r, float g, float b, float a) {
-  for(auto& it: lines_)
+  for (auto &it : lines_)
     it->setColor(r, g, b, a);
 }
 

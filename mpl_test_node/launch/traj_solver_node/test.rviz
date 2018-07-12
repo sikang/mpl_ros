@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /PointCloud1/Autocompute Value Bounds1
       Splitter Ratio: 0.5
     Tree Height: 669
   - Class: rviz/Selection
@@ -27,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: VoxelMap
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -56,70 +55,112 @@ Visualization Manager:
       Radius: 0.100000001
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: 0
-        Value: false
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud
-      Color: 255; 255; 255
-      Color Transformer: AxisColor
-      Decay Time: 0
-      Enabled: false
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.100000001
-      Style: Flat Squares
-      Topic: /cloud
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 0.0500000007
-        Min Value: 0.0500000007
-        Value: true
-      Axis: Z
-      BoundScale: 0.100000001
-      Channel Name: intensity
-      Class: planning_rviz_plugins/VoxelMap
-      Color: 255; 255; 255
-      Color Transformer: AxisColor
-      Decay Time: 0
+    - Class: planning_rviz_plugins/Path
       Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      MeshAlpha: 0.200000003
-      MeshColor: 0; 170; 255
-      MeshHeight: 0.5
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: VoxelMap
-      Position Transformer: XYZ
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.100000001
-      State: Occupied
-      Style: Boxes
-      Topic: /voxel_map
+      LineColor: 204; 51; 204
+      LineScale: 0.00999999978
+      Name: Path
+      NodeColor: 85; 85; 255
+      NodeScale: 0.200000003
+      Topic: /test_primitive/path
       Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
       Value: true
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      AccVis: false
+      Class: planning_rviz_plugins/Trajectory
+      Enabled: true
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      JrkVis: false
+      Name: min_vel
+      Num of samples: 200
+      NumYaw: 20
+      PosColor: 68; 17; 68
+      PosScale: 0.100000001
+      Topic: /test_primitive/min_vel_trajectory
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
+      YawTriangleScale: 0.5
+      YawVis: false
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      AccVis: false
+      Class: planning_rviz_plugins/Trajectory
+      Enabled: true
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      JrkVis: false
+      Name: min_acc
+      Num of samples: 200
+      NumYaw: 20
+      PosColor: 68; 17; 68
+      PosScale: 0.100000001
+      Topic: /test_primitive/min_acc_trajectory
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
+      YawTriangleScale: 0.5
+      YawVis: false
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      AccVis: false
+      Class: planning_rviz_plugins/Trajectory
+      Enabled: true
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      JrkVis: false
+      Name: min_jrk
+      Num of samples: 198
+      NumYaw: 20
+      PosColor: 68; 17; 68
+      PosScale: 0.100000001
+      Topic: /test_primitive/min_jrk_trajectory
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
+      YawTriangleScale: 0.5
+      YawVis: false
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      AccVis: false
+      Class: planning_rviz_plugins/Trajectory
+      Enabled: false
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      JrkVis: false
+      Name: min_snp
+      Num of samples: 200
+      NumYaw: 20
+      PosColor: 68; 17; 68
+      PosScale: 0.100000001
+      Topic: /test_primitive/min_snp_trajectory
+      Unreliable: false
+      Value: false
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
+      YawTriangleScale: 0.5
+      YawVis: false
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -144,26 +185,21 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/XYOrbit
-      Distance: 20.4426022
+      Angle: 0
+      Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: 16.2379017
-        Y: 2.04667044
-        Z: -2.05039978e-05
-      Focal Shape Fixed Size: true
-      Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.679797292
+      Scale: 162.592819
       Target Frame: <Fixed Frame>
-      Value: XYOrbit (rviz)
-      Yaw: 5.64542055
+      Value: TopDownOrtho (rviz)
+      X: 2.60836983
+      Y: 0.930059195
     Saved: ~
 Window Geometry:
   Displays:

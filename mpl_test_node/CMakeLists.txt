@@ -11,12 +11,17 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIR
 
 catkin_simple()
 
-cs_add_executable(test_primitive_map src/test_primitive_map.cpp)
-target_link_libraries(test_primitive_map ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
-cs_add_executable(test_primitive_replan src/test_primitive_replan.cpp)
-target_link_libraries(test_primitive_replan ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
-cs_add_executable(test_primitive_cloud src/test_primitive_cloud.cpp)
-target_link_libraries(test_primitive_cloud ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+cs_add_executable(map_planner_node src/map_planner_node.cpp)
+target_link_libraries(map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+
+cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
+target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+
+cs_add_executable(map_replanner_node src/map_replanner_node.cpp)
+target_link_libraries(map_replanner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+
+cs_add_executable(traj_solver_node src/traj_solver_node.cpp)
+target_link_libraries(traj_solver_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
 cs_install()
 
