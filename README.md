@@ -11,8 +11,9 @@ Packages:
   - `mpl_test_node`: examples code for simple testing
 
 ## Installation
-#### Prerequisite:
+#### Dependancy:
   - `ROS`(Indigo+)
+  - `SDL`(`sudo apt install libsdl1.2-dev`)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
   - [`DecompROS`](https://github.com/sikang/DecompROS)
 

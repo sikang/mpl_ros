@@ -24,6 +24,7 @@ build:
         sudo apt-get update
         rosdep update
         rosdep install --from-paths . --ignore-src -y -r --as-root apt:false
+        sudo apt install -y libsdl1.2-dev
     - script:
       name: build
       code: |
