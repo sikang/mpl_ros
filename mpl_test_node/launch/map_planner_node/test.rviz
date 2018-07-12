@@ -142,9 +142,9 @@ Visualization Manager:
       VelVis: true
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
-      YawTriangleAngle: 0.699999988
+      YawTriangleAngle: 0.5
       YawTriangleScale: 0.5
-      YawVis: false
+      YawVis: true
     - AccColor: 10; 200; 55
       AccScale: 0.0199999996
       AccVis: false
@@ -279,5 +279,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 1920
-  Y: 48
+  X: 3840
+  Y: 24
