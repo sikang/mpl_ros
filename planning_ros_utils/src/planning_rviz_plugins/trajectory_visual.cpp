@@ -19,8 +19,22 @@ void TrajectoryVisual::setMessage(const planning_ros_msgs::Trajectory &msg) {
   jrks_.clear();
   yaws_.clear();
 
-  if (num_ < 0)
+  if (num_ < 2)
     return;
+  for (const auto& pr: msg.primitives) {
+    for(size_t i = 0; i < pr.cx.size(); i++)
+      if(std::isnan(pr.cx[i]) || std::isinf(pr.cx[i]))
+        return;
+    for(size_t i = 0; i < pr.cy.size(); i++)
+      if(std::isnan(pr.cy[i]) || std::isinf(pr.cy[i]))
+        return;
+    for(size_t i = 0; i < pr.cz.size(); i++)
+      if(std::isnan(pr.cz[i]) || std::isinf(pr.cz[i]))
+        return;
+    for(size_t i = 0; i < pr.cyaw.size(); i++)
+      if(std::isnan(pr.cyaw[i]) || std::isinf(pr.cyaw[i]))
+        return;
+  }
 
   poss_.resize(num_-1);
   if (vel_vis_)

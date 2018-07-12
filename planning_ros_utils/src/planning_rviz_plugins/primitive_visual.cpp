@@ -21,6 +21,21 @@ void PrimitiveVisual::setMessage(const std::vector<planning_ros_msgs::Primitive>
 
   if (num_ < 2)
     return;
+  for (const auto& pr: msgs) {
+    for(size_t i = 0; i < pr.cx.size(); i++)
+      if(std::isnan(pr.cx[i]) || std::isinf(pr.cx[i]))
+        return;
+    for(size_t i = 0; i < pr.cy.size(); i++)
+      if(std::isnan(pr.cy[i]) || std::isinf(pr.cy[i]))
+        return;
+    for(size_t i = 0; i < pr.cz.size(); i++)
+      if(std::isnan(pr.cz[i]) || std::isinf(pr.cz[i]))
+        return;
+    for(size_t i = 0; i < pr.cyaw.size(); i++)
+      if(std::isnan(pr.cyaw[i]) || std::isinf(pr.cyaw[i]))
+        return;
+  }
+
 
   const unsigned int N = msgs.size();
 
