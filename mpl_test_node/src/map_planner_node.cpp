@@ -1,7 +1,6 @@
 #include "bag_reader.hpp"
-//#include <decomp_ros_utils/data_ros_utils.h>
 #include <mpl_planner/planner/map_planner.h>
-#include <mpl_traj_solver/poly_solver.h>
+#include <mpl_traj_solver/traj_solver.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
@@ -69,8 +68,22 @@ int main(int argc, char **argv) {
 
   // Free unknown space and dilate obstacles
   map_util->freeUnknown();
-  // map_util->dilate(0.2, 0.1);
-  // map_util->dilating();
+  // Inflate obstacle using robot radius (>0)
+  double robot_r = 0.0;
+  if(robot_r > 0) {
+    vec_Vec3i ns;
+    int rn = std::ceil(robot_r / map_util->getRes());
+    for(int nx = -rn; nx <= rn; nx++) {
+      for(int ny = -rn; ny <= rn; ny++) {
+        if(nx == 0 && ny == 0)
+          continue;
+        if(std::hypot(nx, ny) > rn)
+          continue;
+        ns.push_back(Vec3i(nx, ny, 0));
+      }
+    }
+    map_util->dilate(ns);
+  }
 
   // Publish the dilated map for visualization
   getMap(map_util, map);
@@ -93,6 +106,7 @@ int main(int argc, char **argv) {
   nh.param("use_3d", use_3d, false);
   nh.param("use_yaw", use_yaw, false);
 
+  // Set control input
   vec_E<VecDf> U; // Control input
   const decimal_t du = u / num;
   if (use_3d && !use_yaw) {
@@ -170,7 +184,7 @@ int main(int argc, char **argv) {
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_ptr->setU(U); // Set control input
   planner_ptr->setTol(0.2); // Tolerance for goal region
-  planner_ptr->setHeurIgnoreDynamics(true);
+  //planner_ptr->setHeurIgnoreDynamics(true);
 
   // Planning thread!
   ros::Time t0 = ros::Time::now();
@@ -185,7 +199,7 @@ int main(int argc, char **argv) {
              (ros::Time::now() - t0).toSec(),
              planner_ptr->getCloseSet().size());
 
-    const auto traj = planner_ptr->getTraj();
+    auto traj = planner_ptr->getTraj();
     // Publish trajectory as primitives
     planning_ros_msgs::PrimitiveArray prs_msg =
       toPrimitiveArrayROSMsg(traj.getPrimitives());
@@ -197,28 +211,31 @@ int main(int argc, char **argv) {
     traj_msg.header = header;
     traj_pub.publish(traj_msg);
 
-    printf("==================  Raw traj -- total J in ACC: %f, total time: %f\n",
-           traj.J(Control::ACC), traj.getTotalTime());
+    printf("Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
+           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
 
     // Get intermediate waypoints
-    const auto waypoints = traj.getWaypoints();
+    auto waypoints = traj.getWaypoints();
+    for(int i = 1; i < waypoints.size() - 1; i++)
+      waypoints[i].control = Control::VEL;
     // Get time allocation
-    const auto dts = traj.getSegmentTimes();
+    auto dts = traj.getSegmentTimes();
 
     // Generate higher order polynomials
-    PolySolver3D poly_solver(2, 3);
-    poly_solver.solve(waypoints, dts);
-
-    auto traj_refined = Trajectory3D(poly_solver.getTrajectory()->toPrimitives());
+    TrajSolver3D traj_solver(Control::JRK);
+    traj_solver.setWaypoints(waypoints);
+    traj_solver.setDts(dts);
+    traj = traj_solver.solve();
 
     // Publish refined trajectory
-    planning_ros_msgs::Trajectory refined_traj_msg =
-      toTrajectoryROSMsg(traj_refined);
+    planning_ros_msgs::Trajectory refined_traj_msg = toTrajectoryROSMsg(traj);
     refined_traj_msg.header = header;
     refined_traj_pub.publish(refined_traj_msg);
 
-    printf("================ Refined traj -- total J in ACC: %f, total time: %f\n",
-           traj_refined.J(Control::ACC), traj_refined.getTotalTime());
+    printf("Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
+           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
   }
 
   // Publish expanded nodes
@@ -235,16 +252,6 @@ int main(int argc, char **argv) {
   pt2.x = goal_x, pt2.y = goal_y, pt2.z = goal_z;
   sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
   sg_pub.publish(sg_cloud);
-
-
-  // Publish primitives
-  /*
-  planning_ros_msgs::PrimitiveArray prs_msg =
-      toPrimitiveArrayROSMsg(planner_ptr->getPrimitivesToGoal());
-  prs_msg.header = header;
-  prs_pub.publish(prs_msg);
-  */
-
 
   ros::spin();
 
