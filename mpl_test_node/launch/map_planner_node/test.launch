@@ -34,4 +34,13 @@
     <param name="use_yaw" value="true"/>
   </node>
 
+  <node pkg="planning_ros_utils"
+    name="trajectory_extractor"
+    type="trajectory_extractor_node"
+    output="screen">
+    <remap from="~trajectory" to="test_primitive/trajectory"/>
+    <param name="file" value="$(find mpl_test_node)/launch/map_planner_node/trajectory_command.bag"/>
+    <param name="topic" value="command"/>
+  </node>
+
 </launch>

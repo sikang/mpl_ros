@@ -25,6 +25,8 @@ class TrajectoryExtractor {
       cmd_array_[i].jerk.x = ws[i].jrk(0);
       cmd_array_[i].jerk.y = ws[i].jrk(1);
       cmd_array_[i].jerk.z = ws[i].jrk(2);
+      cmd_array_[i].yaw = ws[i].yaw;
+      cmd_array_[i].yaw_dot = ws[i].yaw_dot;
     }
   }
 
