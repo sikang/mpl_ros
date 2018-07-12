@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 
   // Initialize planner
   double dt, v_max, a_max, yaw_max;
-  double u, u_yaw, w;
+  double u, u_yaw;
   int num, ndt;
   bool use_3d, use_yaw;
   nh.param("dt", dt, 1.0);
@@ -87,25 +87,27 @@ int main(int argc, char **argv) {
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
   nh.param("yaw_max", yaw_max, -1.0);
-  nh.param("w", w, 1.0);
   nh.param("u", u, 1.0);
   nh.param("u_yaw", u_yaw, 0.3);
   nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
   nh.param("use_yaw", use_yaw, false);
 
-  vec_E<VecDf> U;
+  vec_E<VecDf> U; // Control input
   const decimal_t du = u / num;
   if (use_3d && !use_yaw) {
+    // consider primitive in z-axis, without yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
         for (decimal_t dz = -u; dz <= u; dz += du)
           U.push_back(Vec3f(dx, dy, dz));
   } else if(!use_3d && !use_yaw) {
+    // consider 2D primitive, without yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
         U.push_back(Vec3f(dx, dy, 0));
   } else if(!use_3d && use_yaw) {
+    // consider 2D primitive, with yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
         for (decimal_t dyaw = -u_yaw; dyaw <= u_yaw; dyaw += u_yaw) {
@@ -114,6 +116,7 @@ int main(int argc, char **argv) {
           U.push_back(vec);
         }
   } else if(use_3d && use_yaw) {
+    // consider primitive in z-axis, with yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
         for (decimal_t dz = -u; dz <= u; dz += du)
@@ -144,13 +147,13 @@ int main(int argc, char **argv) {
   start.acc = Vec3f(0, 0, 0);
   start.jrk = Vec3f(0, 0, 0);
   start.yaw = 0;
-  start.use_pos = true;
+  start.qse_pos = true;
   start.use_vel = true;
   start.use_acc = false;
   start.use_jrk = false;
-  start.use_yaw = use_yaw;
+  start.use_yaw = use_yaw; // if true, yaw is also propogated
 
-  Waypoint3D goal(start.control);
+  Waypoint3D goal(start.control); // initialized with the same control as start
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -162,12 +165,12 @@ int main(int argc, char **argv) {
   planner_ptr->setMapUtil(map_util); // Set collision checking function
   planner_ptr->setVmax(v_max);       // Set max velocity
   planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
-  planner_ptr->setYawmax(yaw_max);       // Set max acceleration (as control input)
-  planner_ptr->setW(w);            // Set dt for each primitive
+  planner_ptr->setYawmax(yaw_max);       // Set yaw threshold
   planner_ptr->setDt(dt);            // Set dt for each primitive
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_ptr->setU(U); // Set control input
-  planner_ptr->setTol(0.5, 0.5, 1); // Tolerance for goal region
+  planner_ptr->setTol(0.2); // Tolerance for goal region
+  planner_ptr->setHeurIgnoreDynamics(true);
 
   // Planning thread!
   ros::Time t0 = ros::Time::now();
