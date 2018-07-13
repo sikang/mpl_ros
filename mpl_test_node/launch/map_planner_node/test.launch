@@ -31,7 +31,7 @@
     <param name="dt" value="1"/>
     <param name="ndt" value="0"/>
     <param name="use_3d" value="false"/>
-    <param name="use_yaw" value="true"/>
+    <param name="use_yaw" value="false"/>
   </node>
 
   <node pkg="planning_ros_utils"
