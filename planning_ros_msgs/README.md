@@ -1,7 +1,10 @@
-ROS messages:
-  - `Arrows`
+planning ROS message list:
   - `Log`
-  - `Path`
+  - `Path`: can be visualized in Rviz
+  - `PathArray`: can be visualized in Rviz
   - `Primitive`
-  - `Trajectory`
-  - `VoxelMap`
+  - `PrimitiveArray`: can be visualized in Rviz
+  - `LambdaSeg`
+  - `Trajectory`: can be visualized in Rviz
+  - `TrajectoryCommand`
+  - `VoxelMap`: can be visualized in Rviz

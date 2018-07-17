@@ -3,7 +3,6 @@
 
 #include <mpl_basis/data_type.h>
 #include <geometry_msgs/Twist.h>
-#include <planning_ros_msgs/Arrows.h>
 #include <planning_ros_msgs/PathArray.h>
 #include <sensor_msgs/PointCloud.h>
 #include <tf_conversions/tf_eigen.h>
@@ -135,26 +134,6 @@ path_array_to_ros(const std::vector<std::pair<std::string, vec_Vec3f>> &paths) {
     }
     msg.paths.push_back(path_msg);
   }
-  return msg;
-}
-
-inline planning_ros_msgs::Arrows
-pairs_to_arrows(const vec_E<std::pair<Vec3f, Vec3f>> &vs) {
-  planning_ros_msgs::Arrows msg;
-
-  for (const auto &v : vs) {
-    geometry_msgs::Point pt;
-    pt.x = v.first(0);
-    pt.y = v.first(1);
-    pt.z = v.first(2);
-    geometry_msgs::Point dir;
-    dir.x = v.second(0);
-    dir.y = v.second(1);
-    dir.z = v.second(2);
-    msg.points.push_back(pt);
-    msg.directions.push_back(dir);
-  }
-
   return msg;
 }
 
