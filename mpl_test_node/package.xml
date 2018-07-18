@@ -12,6 +12,7 @@
   <depend>roscpp</depend>
   <depend>rosbag</depend>
   <depend>motion_primitive_library</depend>
+  <depend>mpl_external_planner</depend>
   <depend>decomp_ros_msgs</depend>
   <depend>decomp_ros_utils</depend>
   <depend>planning_ros_msgs</depend>

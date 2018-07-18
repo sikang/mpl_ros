@@ -15,7 +15,7 @@ public:
   BoundVisual(Ogre::SceneManager *scene_manager, Ogre::SceneNode *parent_node);
   ~BoundVisual();
 
-  void setMessage(const BoundVec3f &bds);
+  void setMessage(const vec_E<vec_Vec3f> &bds);
   void setFramePosition(const Ogre::Vector3 &position);
   void setFrameOrientation(const Ogre::Quaternion &orientation);
 

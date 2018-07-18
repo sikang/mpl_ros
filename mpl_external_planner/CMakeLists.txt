@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(mpl_external_planner)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations")
+
+find_package(catkin_simple REQUIRED)
+find_package(cmake_modules REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(motion_primitive_library REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIRS})
+
+catkin_simple()
+
+cs_add_library(ellipsoid_planner src/ellipsoid_planner.cpp)
+target_link_libraries(ellipsoid_planner ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+
+cs_install()
+
+cs_export()

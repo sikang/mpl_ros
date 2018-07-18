@@ -1,6 +1,6 @@
 #include "bag_reader.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
-#include <mpl_planner/planner/ellipsoid_planner.h>
+#include <mpl_external_planner/ellipsoid_planner/ellipsoid_planner.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
 
   ros::Publisher es_pub =
-      nh.advertise<decomp_ros_msgs::Ellipsoids>("ellipsoids", 1, true);
+      nh.advertise<decomp_ros_msgs::EllipsoidArray>("ellipsoids", 1, true);
   ros::Publisher sg_pub =
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher traj_pub =
@@ -187,9 +187,9 @@ int main(int argc, char **argv) {
            "total time: %f\n",
            traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
 
-    vec_Ellipsoid Es =
+    vec_E<Ellipsoid3D> Es =
         sample_ellipsoids(traj, Vec3f(robot_radius, robot_radius, 0.1), 50);
-    decomp_ros_msgs::Ellipsoids es_msg = DecompROS::ellipsoids_to_ros(Es);
+    decomp_ros_msgs::EllipsoidArray es_msg = DecompROS::ellipsoid_array_to_ros(Es);
     es_msg.header.frame_id = "map";
     es_pub.publish(es_msg);
 

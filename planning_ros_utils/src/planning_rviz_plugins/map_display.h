@@ -41,8 +41,8 @@ protected:
 
   void processMessage(const planning_ros_msgs::VoxelMapConstPtr &map);
   void visualizeMessage(int state);
-  BoundVec3f getSpace();
   void visualizeMesh(const vec_Vec3f &pts, double res);
+  vec_E<vec_Vec3f> getBound();
 
   rviz::EnumProperty *state_property_;
   rviz::FloatProperty *bound_scale_property_;

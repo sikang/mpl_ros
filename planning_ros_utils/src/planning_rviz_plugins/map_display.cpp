@@ -75,7 +75,7 @@ void MapDisplay::onInitialize() {
   point_cloud_common_->initialize(context_, scene_node_);
 }
 
-BoundVec3f MapDisplay::getSpace() {
+vec_E<vec_Vec3f> MapDisplay::getBound() {
   Vec3i dim = map_util_->getDim();
   Vec3f ori = map_util_->getOrigin();
   float res = map_util_->getRes();
@@ -133,7 +133,6 @@ BoundVec3f MapDisplay::getSpace() {
    *
    */
 
-  BoundVec3f bs(6);
   vec_Vec3f f1(4), f2(4), f3(4), f4(4), f5(4), f6(4);
 
   f1[0] = cs[0];
@@ -166,6 +165,7 @@ BoundVec3f MapDisplay::getSpace() {
   f6[2] = cs[4];
   f6[3] = cs[5];
 
+  vec_E<vec_Vec3f> bs(6);
   bs[0] = f1;
   bs[1] = f2;
   bs[2] = f3;
@@ -187,12 +187,11 @@ void MapDisplay::processMessage(
     return;
   }
 
-  BoundVec3f bound = getSpace();
   std::shared_ptr<BoundVisual> visual;
   visual.reset(new BoundVisual(context_->getSceneManager(), scene_node_));
 
   // Now set or update the contents of the chosen visual.
-  visual->setMessage(bound);
+  visual->setMessage(getBound());
   visual->setFramePosition(position_);
   visual->setFrameOrientation(orientation_);
 
