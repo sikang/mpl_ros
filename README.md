@@ -8,6 +8,7 @@ Packages:
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
+  - `mpl_external_planner`: planner that uses the
   - `mpl_test_node`: examples code for simple testing
 
 ## Installation
