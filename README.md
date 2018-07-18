@@ -8,6 +8,7 @@ Packages:
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
+  - `DecompROS`: convex decomposition tool
   - `mpl_external_planner`: planner that uses the
   - `mpl_test_node`: examples code for simple testing
 
@@ -16,9 +17,8 @@ Packages:
   - `ROS`(Indigo+)
   - `SDL`(`sudo apt install -y libsdl1.2-dev libsdl-image1.2-dev`)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
-  - [`DecompROS`](https://github.com/sikang/DecompROS)
 
-If the submodule `motion_primitive_library` is not initialized yet, run following commands at first:
+To initialize the submodule `motion_primitive_library` and `DecompROS`, run following commands at first:
 ```bash
 $ cd /PATH/TO/mpl_ros
 $ git submodule update --init
