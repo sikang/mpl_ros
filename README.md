@@ -38,8 +38,8 @@ $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ catkin b
 ```
 
-## Usage
-Simple test using the built-in data can be run using the following commands:
+## Example1 (plan in occ/voxel map)
+Simple test using the built-in data in a voxel map can be run using the following commands:
 ```bash
 $ cd ./mpl_test_node/launch/map_planner_node
 $ roslaunch rviz.launch
@@ -48,17 +48,37 @@ $ roslaunch test.launch
 It also extracts the control commands for the generated trajectory and saves as
 `trajectory_commands.bag`.
 
+
+The planning results are visualized in Rviz as following:
+
+<img src="./mpl_test_node/samples/sample1.png" width="220"> <img src="./mpl_test_node/samples/sample2.png" width="256">
+
+
+## Example2 (plan in polygonal map)
+The planner can also take input polygonal map for collision checking. When the
+obstacles are not static, it's able to find the trajectory that avoids future
+collision:
+```bash
+$ cd ./mpl_test_node/launch/poly_map_planner_node
+$ roslaunch rviz.launch
+$ roslaunch test.launch
+```
+
+<img src="./mpl_test_node/samples/sample4.png" width="328"> <img src="./mpl_test_node/samples/sample5.png" width="328">
+
+<img src="./mpl_test_node/samples/sample.gif" width="656">
+
+
+## Example3 (plan in SE(3) with ellispoid model)
 Another example using ellipsoid model can be found in `mpl_test_node/launch/ellipsoid_planner_node`, in which a point cloud is used as obstacles, and the robot is modeled as the ellipsoid. More information can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](http://ieeexplore.ieee.org/document/8264768/).
+```bash
+$ cd ./mpl_test_node/launch/ellispoid_planner_node
+$ roslaunch rviz.launch
+$ roslaunch test.launch
+```
+<img src="./mpl_test_node/samples/sample3.png" width="328">
 
-The planned trajectory and voxel map are visualized in Rviz as:
-
-<img src="./mpl_test_node/samples/sample1.png" width="200"> <img src="./mpl_test_node/samples/sample2.png" width="256"> <img src="./mpl_test_node/samples/sample3.png" width="328">
-
-Planning with moving obstacles
-<img src="./mpl_test_node/samples/sample4.gif">
-
-
-## Use Maps
+## Example Maps
 The built-in maps are listed as below:
 
 Simple | Levine | Skir | Office
