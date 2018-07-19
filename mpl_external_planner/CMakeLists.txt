@@ -12,9 +12,6 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIR
 
 catkin_simple()
 
-cs_add_library(ellipsoid_planner src/ellipsoid_planner.cpp)
-target_link_libraries(ellipsoid_planner ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
-
 cs_install()
 
 cs_export()

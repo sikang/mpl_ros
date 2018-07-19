@@ -14,9 +14,8 @@ typedef pcl::PointCloud<PCLPoint> PCLPointCloud;
 typedef pcl::KdTreeFLANN<PCLPoint> KDTree;
 
 /**
- * @brief Collision checking inside a Safe Flight Corridor (SFC)
+ * @brief Collision checking inside a point cloud
  *
- * SFC is an ordered collection of convex polyhedra that models free space
  */
 class EllipsoidUtil {
   public:

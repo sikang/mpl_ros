@@ -20,10 +20,17 @@ public:
    * @brief Simple constructor
    * @param verbose enable print out
    */
-  EllipsoidPlanner(bool verbose);
+  EllipsoidPlanner(bool verbose) {
+    planner_verbose_ = verbose;
+    if (planner_verbose_)
+      printf(ANSI_COLOR_CYAN
+             "[EllipsoidPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
+  }
   /// Set map util
-  void setMap(const vec_Vec3f &obs, decimal_t r,
-              const Vec3f &ori, const Vec3f &dim);
+  void setMap(const vec_Vec3f &obs, decimal_t r, const Vec3f &ori,
+              const Vec3f &dim) {
+    ENV_.reset(new MPL::env_cloud(obs, r, ori, dim));
+  }
 };
 }
 

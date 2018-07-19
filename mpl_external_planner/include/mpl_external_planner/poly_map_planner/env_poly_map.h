@@ -1,39 +1,40 @@
 /**
- * @file env_cloud.h
- * @biref environment for planning using point cloud
+ * @file env_poly_map.h
+ * @biref environment for planning using polyhedron
  */
 
-#ifndef MPL_ENV_CLOUD_H
-#define MPL_ENV_CLOUD_H
-#include <mpl_external_planner/ellipsoid_planner/ellipsoid_util.h>
+#ifndef MPL_ENV_POLY_MAP_H
+#define MPL_ENV_POLY_MAP_H
+#include <mpl_external_planner/poly_map_planner/poly_map_util.h>
 #include <mpl_planner/common/env_base.h>
 
 namespace MPL {
 
 /**
- * @brief Point cloud environment
+ * @brief Polyhedron environment
  */
-class env_cloud : public env_base<3> {
+template <int Dim>
+class env_poly_map : public env_base<Dim> {
 protected:
-  std::unique_ptr<EllipsoidUtil> map_util_;
+  std::unique_ptr<PolyMapUtil<Dim>> map_util_;
 
 public:
   /// Simple constructor
-  env_cloud() {}
+  env_poly_map() {}
   /// Simple constructor
-  env_cloud(const vec_Vec3f &obs, decimal_t r, const Vec3f &ori,
-            const Vec3f &dim) {
-    map_util_.reset(new EllipsoidUtil(r));
-    map_util_->setObstacles(obs);
+  env_poly_map(const Vecf<Dim> &ori, const Vecf<Dim> &dim,
+               const vec_E<Polyhedron<Dim>>& polys) {
+    map_util_.reset(new PolyMapUtil<Dim>());
     map_util_->setBoundingBox(ori, dim);
+    for(const auto& poly: polys)
+      map_util_->addObstacle(poly);
   }
 
-  ~env_cloud() {}
+  ~env_poly_map() {}
 
   /// Check if a point is in free space
-  bool is_free(const Vec3f &pt) const {
-    return true;
-    // return map_util_->isFree(pt);
+  bool is_free(const Vecf<Dim> &pt) const {
+    return map_util_->isFree(pt);
   }
 
   /**
@@ -48,7 +49,7 @@ public:
    * When goal is outside, extra step is needed for finding optimal trajectory
    * Here we use Heuristic function and multiply with 2
    */
-  void get_succ(const Waypoint3D &curr, vec_E<Waypoint3D> &succ,
+  void get_succ(const Waypoint<Dim> &curr, vec_E<Waypoint<Dim>> &succ,
                 std::vector<Key> &succ_idx, std::vector<decimal_t> &succ_cost,
                 std::vector<int> &action_idx) const {
     succ.clear();
@@ -56,27 +57,21 @@ public:
     succ_cost.clear();
     action_idx.clear();
 
-    //expanded_nodes_.push_back(curr.pos);
-    // ws_.push_back(curr);
-    for (int i = 0; i < (int)U_.size(); i++) {
-      Primitive3D pr(curr, U_[i], dt_);
-      Waypoint3D tn = pr.evaluate(dt_);
+    for (size_t i = 0; i < this->U_.size(); i++) {
+      Primitive<Dim> pr(curr, this->U_[i], this->dt_);
+      Waypoint<Dim> tn = pr.evaluate(this->dt_);
       if(tn == curr)
         continue;
-      if (validate_primitive(pr, v_max_, a_max_, j_max_)) {
+      if (validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_)) {
         bool valid = map_util_->isFree(pr);
         if (valid) {
-          // primitives_.push_back(pr);
           succ.push_back(tn);
-          succ_idx.push_back(state_to_idx(tn));
-          succ_cost.push_back(pr.J(pr.control()) + w_ * dt_);
+          succ_idx.push_back(this->state_to_idx(tn));
+          succ_cost.push_back(pr.J(pr.control()) + this->w_ * this->dt_);
           action_idx.push_back(i);
         }
       }
     }
-
-    // if(t_max_ > 0 && curr.t >= t_max_)
-    // return;
   }
 };
 }

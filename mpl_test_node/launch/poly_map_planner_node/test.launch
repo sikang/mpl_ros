@@ -1,0 +1,28 @@
+<launch>
+  <arg name="debug" default="false"/>
+  <!--<arg name="debug_valgrind" default="false"/>-->
+
+  <arg name="prefix" value="" unless="$(arg debug)"/>
+  <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
+
+  <node pkg="mpl_test_node"
+    type="poly_map_planner_node"
+    name="test_primitive"
+    launch-prefix="$(arg prefix)"
+    output="screen">
+    <!-- Set start and goal -->
+    <param name="goal_x" value="18"/>
+    <param name="goal_y" value="5"/>
+    <param name="start_vx" value="0.0"/>
+    <param name="start_vy" value="0.0"/>
+    <param name="start_x" value="2.0"/>
+    <param name="start_y" value="1.0"/>
+    <!-- Set dynamic constraints -->
+    <param name="v_max" value="2.0"/>
+    <param name="a_max" value="1.0"/>
+    <param name="u" value="1.0"/>
+    <param name="dt" value="1"/>
+    <param name="ndt" value="0"/>
+  </node>
+
+</launch>
