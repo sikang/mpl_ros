@@ -21,7 +21,7 @@ Packages:
 To initialize the submodule `motion_primitive_library` and `DecompROS`, run following commands at first:
 ```bash
 $ cd /PATH/TO/mpl_ros
-$ git submodule update --init
+$ git submodule update --init --recursive
 ```
 
 #### 1) Using Catkin:
