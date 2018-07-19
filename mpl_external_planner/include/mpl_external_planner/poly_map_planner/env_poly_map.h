@@ -30,8 +30,7 @@ public:
 
   /// Check if a point is in free space
   bool is_free(const Vecf<Dim> &pt) const {
-    return true;
-    //return map_util_->isFree(pt, t);
+    return map_util_->isFree(pt, 0);
   }
 
 	///Genegrate Key from state

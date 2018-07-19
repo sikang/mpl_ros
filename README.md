@@ -52,7 +52,11 @@ Another example using ellipsoid model can be found in `mpl_test_node/launch/elli
 
 The planned trajectory and voxel map are visualized in Rviz as:
 
-<img src="./mpl_test_node/samples/sample1.png" width="256"> <img src="./mpl_test_node/samples/sample2.png" width="256"> <img src="./mpl_test_node/samples/sample3.png" width="328">
+<img src="./mpl_test_node/samples/sample1.png" width="200"> <img src="./mpl_test_node/samples/sample2.png" width="256"> <img src="./mpl_test_node/samples/sample3.png" width="328">
+
+Planning with moving obstacles
+<img src="./mpl_test_node/samples/sample4.gif">
+
 
 ## Use Maps
 The built-in maps are listed as below:

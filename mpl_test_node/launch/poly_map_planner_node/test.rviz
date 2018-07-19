@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /map1/Autocompute Value Bounds1
-        - /Bound1
       Splitter Ratio: 0.5
     Tree Height: 747
   - Class: rviz/Selection
@@ -96,7 +95,7 @@ Visualization Manager:
       JrkScale: 0.0199999996
       JrkVis: false
       Name: Trajectory
-      Num of samples: 50
+      Num of samples: 200
       NumYaw: 20
       PosColor: 204; 51; 204
       PosScale: 0.0500000007
@@ -105,7 +104,7 @@ Visualization Manager:
       Value: true
       VelColor: 85; 85; 255
       VelScale: 0.0199999996
-      VelVis: false
+      VelVis: true
       YawColor: 100; 20; 55
       YawScale: 0.0500000007
       YawTriangleAngle: 0.699999988
@@ -153,7 +152,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -170,7 +169,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 0.5
       Class: decomp_rviz_plugins/EllipsoidArray
       Color: 204; 51; 204
@@ -229,7 +228,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -0.0149963014
+      Angle: 3.69176269e-06
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
@@ -239,11 +238,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 48.276123
+      Scale: 43.6787796
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 10.7219114
-      Y: 2.76572824
+      X: 10.9398279
+      Y: 2.73615527
     Saved: ~
 Window Geometry:
   Displays:
@@ -261,5 +260,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 1556
-  Y: 145
+  X: 416
+  Y: 165
