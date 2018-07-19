@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
 
-  vec_E<Polyhedron2D> poly_obs;
   vec_E<PolyhedronObstacle2D> obs;
 
   Polyhedron2D rec1;
@@ -28,31 +27,36 @@ int main(int argc, char **argv) {
   rec1.add(Hyperplane2D(Vec2f(6.5, 2.5), Vec2f::UnitX()));
   rec1.add(Hyperplane2D(Vec2f(6, 1.0), -Vec2f::UnitY()));
   rec1.add(Hyperplane2D(Vec2f(6, 4.0), Vec2f::UnitY()));
-  PolyhedronObstacle2D obs1;
-  obs1.vs_ = rec1.hyperplanes();
-  obs1.v_ = Vec2f(0, 0);
-  poly_obs.push_back(rec1);
-  obs.push_back(obs1);
+  obs.push_back(PolyhedronObstacle2D(rec1, Vec2f(-0.5, 0)));
 
   Polyhedron2D rec2;
   rec2.add(Hyperplane2D(Vec2f(15.5, 4.5), -Vec2f::UnitX()));
   rec2.add(Hyperplane2D(Vec2f(16.5, 4.5), Vec2f::UnitX()));
   rec2.add(Hyperplane2D(Vec2f(16, 3.0), -Vec2f::UnitY()));
   rec2.add(Hyperplane2D(Vec2f(16, 6.0), Vec2f::UnitY()));
-  PolyhedronObstacle2D obs2;
-  obs2.vs_ = rec2.hyperplanes();
-  poly_obs.push_back(rec2);
-  obs.push_back(obs2);
+  obs.push_back(PolyhedronObstacle2D(rec2));
 
   Polyhedron2D rec3;
-  rec3.add(Hyperplane2D(Vec2f(9.5, 2.5), -Vec2f::UnitX()));
-  rec3.add(Hyperplane2D(Vec2f(16.5, 2.5), Vec2f::UnitX()));
-  rec3.add(Hyperplane2D(Vec2f(14, 2.0), -Vec2f::UnitY()));
-  rec3.add(Hyperplane2D(Vec2f(14, 3.0), Vec2f::UnitY()));
-  PolyhedronObstacle2D obs3;
-  obs3.vs_ = rec3.hyperplanes();
-  poly_obs.push_back(rec3);
-  obs.push_back(obs3);
+  rec3.add(Hyperplane2D(Vec2f(9.5, 0.5), -Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(16.5, 0.5), Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(14, 0.0), -Vec2f::UnitY()));
+  rec3.add(Hyperplane2D(Vec2f(14, 1.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec3, Vec2f(0.0, 0.25)));
+
+  Polyhedron2D rec4;
+  rec4.add(Hyperplane2D(Vec2f(15.5, 3.0), -Vec2f::UnitX()));
+  rec4.add(Hyperplane2D(Vec2f(16.5, 3.0), Vec2f::UnitX()));
+  rec4.add(Hyperplane2D(Vec2f(16, 2.0), -Vec2f::UnitY()));
+  rec4.add(Hyperplane2D(Vec2f(16, 3.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec4, Vec2f(0.0, -0.1)));
+
+  Polyhedron2D rec5;
+  rec5.add(Hyperplane2D(Vec2f(6.5, 0.5), -Vec2f::UnitX()));
+  rec5.add(Hyperplane2D(Vec2f(15.5, 0.5), Vec2f::UnitX()));
+  rec5.add(Hyperplane2D(Vec2f(7, -2.0), -Vec2f::UnitY()));
+  rec5.add(Hyperplane2D(Vec2f(7, -1.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec5, Vec2f(-0.1, 0.3)));
+
 
 
   Vec2f origin, dim;
@@ -95,7 +99,7 @@ int main(int argc, char **argv) {
   nh.param("goal_y", goal_y, 16.6);
 
   bool use_acc, use_jrk;
-  nh.param("use_acc", use_acc, true);
+  nh.param("use_acc", use_acc, false);
   nh.param("use_jrk", use_jrk, false);
 
   Waypoint2D start;
@@ -115,15 +119,6 @@ int main(int argc, char **argv) {
   goal.acc = Vec2f::Zero();
   goal.jrk = Vec2f::Zero();
 
-  // Publish location of start and goal
-  sensor_msgs::PointCloud sg_cloud;
-  sg_cloud.header.frame_id = "map";
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = start_x, pt1.y = start_y, pt1.z = 0;
-  pt2.x = goal_x, pt2.y = goal_y, pt2.z = 0;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
-  sg_pub.publish(sg_cloud);
-
   // Set input control
   vec_E<VecDf> U;
   const decimal_t du = u / num;
@@ -133,34 +128,28 @@ int main(int argc, char **argv) {
   planner_ptr->setU(U); // Set discretization with 1 and efforts
 
   auto t0 = ros::Time::now();
-  bool valid = planner_ptr->plan(start, goal);
-
-   if (!valid) {
+  if(!planner_ptr->plan(start, goal)) {
     ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
              (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
-  } else {
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
-             (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
-
-    // Publish trajectory
-    auto traj = planner_ptr->getTraj();
-    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-    traj_msg.header.frame_id = "map";
-    traj_pub.publish(traj_msg);
-
-    printf("================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
-           "total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
+    return -1;
   }
+  ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
+           (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
+
+  // Publish trajectory
+  auto traj = planner_ptr->getTraj();
+  planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
+  traj_msg.header.frame_id = "map";
+  traj_pub.publish(traj_msg);
+
+  printf("================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
+         "total time: %f\n",
+         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
 
   // Publish expanded nodes
   sensor_msgs::PointCloud ps = vec_to_cloud(vec2_to_vec3(planner_ptr->getCloseSet()));
   ps.header.frame_id = "map";
   ps_pub.publish(ps);
-
-  decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
-  poly_msg.header.frame_id = "map";
-  poly_pub.publish(poly_msg);
 
   vec_E<Polyhedron2D> bbox;
   bbox.push_back(planner_ptr->getBoundingBox());
@@ -168,7 +157,36 @@ int main(int argc, char **argv) {
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
 
-  ros::spin();
+  ros::Rate loop_rate(10);
+
+  t0 = ros::Time::now();
+  while (ros::ok()) {
+    double dt = (ros::Time::now() - t0).toSec();
+    if(dt < traj.getTotalTime()) {
+      vec_E<Polyhedron2D> poly_obs;
+      for(const auto& it: obs)
+        poly_obs.push_back(it.poly(dt));
+      decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
+      poly_msg.header.frame_id = "map";
+      poly_pub.publish(poly_msg);
+
+      auto curr = traj.evaluate(dt);
+      // Publish location of start and goal
+      sensor_msgs::PointCloud sg_cloud;
+      sg_cloud.header.frame_id = "map";
+      geometry_msgs::Point32 pt1, pt2;
+      pt1.x = curr.pos(0), pt1.y = curr.pos(1), pt1.z = 0;
+      pt2.x = goal_x, pt2.y = goal_y, pt2.z = 0;
+      sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
+      sg_pub.publish(sg_cloud);
+    }
+    else
+      t0 = ros::Time::now();
+
+    ros::spinOnce();
+
+    loop_rate.sleep();
+  }
 
   return 0;
 }

@@ -15,10 +15,10 @@
     <param name="goal_y" value="5"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
-    <param name="start_x" value="1.0"/>
+    <param name="start_x" value="4.0"/>
     <param name="start_y" value="2.5"/>
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="2.0"/>
+    <param name="v_max" value="1.0"/>
     <param name="a_max" value="1.0"/>
     <param name="u" value="0.5"/>
     <param name="dt" value="1.0"/>

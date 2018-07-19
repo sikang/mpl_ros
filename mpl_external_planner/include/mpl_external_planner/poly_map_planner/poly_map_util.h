@@ -53,7 +53,7 @@ class PolyMapUtil {
 			if (!bbox_.inside(pt))
 				return false;
 			for(const auto& poly: poly_obs_) {
-				if(poly.inside(pt - t*poly.v_))
+				if(poly.inside(pt - t*poly.v()))
 					return false;
 			}
 			return true;

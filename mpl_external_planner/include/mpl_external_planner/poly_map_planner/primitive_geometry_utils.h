@@ -46,7 +46,7 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronObstacle<Dim>& poly, deci
 	for(int i = 0; i < Dim; i++)
 		cs[i] = pr.pr(i).coeff();
 
-  for(const auto& v: poly.hyperplanes()){
+  for(const auto& v: poly.hyperplanes()) {
     const auto n = v.n_;
     decimal_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
     for(int i = 0; i < Dim; i++) {
@@ -54,22 +54,26 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronObstacle<Dim>& poly, deci
       b += n(i)*cs[i](1);
       c += n(i)*cs[i](2);
       d += n(i)*cs[i](3);
-      e += n(i)*cs[i](4) - n(i)*poly.v_(i);
+      e += n(i)*cs[i](4);
       f += n(i)*cs[i](5);
     }
     a /= 120;
     b /= 24;
     c /= 6;
     d /= 2;
-    e /= 1;
-    f -= n.dot(v.p_+poly.v_*t);
+    e -= n.dot(poly.v());
+    f -= n.dot(v.p_+poly.v()*t);
+
+    //std::cout << "poly p: " << (poly.v_ * t + v.p_).transpose() << std::endl;
+    //std::cout << "poly v: " << poly.v_.transpose() << std::endl;
 
     std::vector<decimal_t> ts = solve(a, b, c, d, e, f);
-    //printf("a, b, c, d, e: %f, %f, %f, %f, %f\n", a, b, c, d, e);
+    //printf("a, b, c, d, e, f: %.1f, %.1f, %.1f, %.1f, %.1f, %.1f\n", a, b, c, d, e, f);
     for(const auto& it: ts) {
+      //std::cout << "t: " << it << std::endl;
       if(it >= 0 && it <= pr.t()) {
         auto w = pr.evaluate(it);
-        if(poly.inside(w.pos))
+        if(poly.inside(w.pos - poly.v()*(it+t)))
           return true;
       }
     }
