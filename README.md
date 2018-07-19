@@ -51,7 +51,9 @@ It also extracts the control commands for the generated trajectory and saves as
 
 The planning results are visualized in Rviz as following:
 
-<img src="./mpl_test_node/samples/sample1.png" width="220"> <img src="./mpl_test_node/samples/sample2.png" width="256">
+2D Occ Map | 3D Voxel Map
+:--------- | :-----------
+<img src="./mpl_test_node/samples/sample1.png" width="220"> | <img src="./mpl_test_node/samples/sample2.png" width="256">
 
 
 ## Example2 (plan in polygonal map)
@@ -63,8 +65,9 @@ $ cd ./mpl_test_node/launch/poly_map_planner_node
 $ roslaunch rviz.launch
 $ roslaunch test.launch
 ```
-
-<img src="./mpl_test_node/samples/sample4.png" width="328"> <img src="./mpl_test_node/samples/sample5.png" width="328">
+Static Obstacles | Moving Obtacles
+:--------------- | :--------------
+<img src="./mpl_test_node/samples/sample4.png" width="328"> | <img src="./mpl_test_node/samples/sample5.png" width="328">
 
 <img src="./mpl_test_node/samples/sample.gif" width="656">
 
