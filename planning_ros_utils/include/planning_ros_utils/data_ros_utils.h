@@ -7,48 +7,13 @@
 #include <sensor_msgs/PointCloud.h>
 #include <tf_conversions/tf_eigen.h>
 
-inline Vec3f pose_to_eigen(const geometry_msgs::Pose &pose) {
-  return Vec3f(pose.position.x, pose.position.y, pose.position.z);
-}
+inline vec_Vec3f vec2_to_vec3(const vec_Vec2f& pts2d, decimal_t z = 0) {
+  vec_Vec3f pts(pts2d.size());
 
-inline Vec3f twist_to_eigen(const geometry_msgs::Twist &twist) {
-  return Vec3f(twist.linear.x, twist.linear.y, twist.linear.z);
-}
+  for(size_t i = 0; i < pts.size(); i++)
+    pts[i] = Vec3f(pts2d[i](0), pts2d[i](1), z);
 
-inline Vec3f vec_to_eigen(const geometry_msgs::Vector3 &v) {
-  return Vec3f(v.x, v.y, v.z);
-}
-
-inline geometry_msgs::Pose eigen_to_pose(const Vec3f &pose) {
-  geometry_msgs::Pose p;
-  p.position.x = pose(0);
-  p.position.y = pose(1);
-  p.position.z = pose(2);
-  p.orientation.w = 1.0;
-  return p;
-}
-
-inline geometry_msgs::Twist eigen_to_twist(const Vec3f &twist) {
-  geometry_msgs::Twist t;
-  t.linear.x = twist(0);
-  t.linear.y = twist(1);
-  t.linear.z = twist(2);
-  return t;
-}
-
-inline sensor_msgs::PointCloud
-transform_cloud(const sensor_msgs::PointCloud &cloud, const Aff3f &TF) {
-  sensor_msgs::PointCloud new_cloud = cloud;
-  int i = 0;
-  for (const auto &it : cloud.points) {
-    Vec3f raw(it.x, it.y, it.z);
-    raw = TF * raw;
-    new_cloud.points[i].x = raw(0);
-    new_cloud.points[i].y = raw(1);
-    new_cloud.points[i].z = raw(2);
-    i++;
-  }
-  return new_cloud;
+  return pts;
 }
 
 inline sensor_msgs::PointCloud vec_to_cloud(const vec_Vec3f &pts) {

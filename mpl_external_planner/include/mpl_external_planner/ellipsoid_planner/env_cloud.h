@@ -61,22 +61,16 @@ public:
     for (int i = 0; i < (int)U_.size(); i++) {
       Primitive3D pr(curr, U_[i], dt_);
       Waypoint3D tn = pr.evaluate(dt_);
-      if(tn == curr)
+      if(tn == curr || !validate_primitive(pr, v_max_, a_max_, j_max_) ||
+         !map_util_->isFree(pr))
         continue;
-      if (validate_primitive(pr, v_max_, a_max_, j_max_)) {
-        bool valid = map_util_->isFree(pr);
-        if (valid) {
-          // primitives_.push_back(pr);
-          succ.push_back(tn);
-          succ_idx.push_back(state_to_idx(tn));
-          succ_cost.push_back(pr.J(pr.control()) + w_ * dt_);
-          action_idx.push_back(i);
-        }
-      }
+      tn.t = curr.t + dt_;
+      succ.push_back(tn);
+      succ_idx.push_back(state_to_idx(tn));
+      succ_cost.push_back(pr.J(pr.control()) + w_ * dt_);
+      action_idx.push_back(i);
     }
 
-    // if(t_max_ > 0 && curr.t >= t_max_)
-    // return;
   }
 };
 }

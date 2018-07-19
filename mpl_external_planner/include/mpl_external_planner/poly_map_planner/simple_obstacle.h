@@ -1,21 +1,13 @@
-#include <decomp_geometry/ellipsoid.h>
 #include <decomp_geometry/polyhedron.h>
 
-namespace MPL {
-  ///Based obstacle class
-  template <class Geometry>
-  class BaseObstacle {
-    public:
-      ///Empty constructor
-      BaseObstacle();
-      ///Get current obstacle geometry
-      Geometry getGeometry() { return geo_; }
-      ///Update obstacle state according to dt
-      virtual void update(double dt) {}
-    protected:
-      ///Obstacle geometry
-      Geometry geo_;
-  };
+///Based obstacle class
+template <int Dim>
+struct PolyhedronObstacle : Polyhedron<Dim> {
+///Obstacle geometry
+	Vecf<Dim> v_{Vecf<Dim>::Zero()};
+};
 
+typedef PolyhedronObstacle<2> PolyhedronObstacle2D;
 
-}
+typedef PolyhedronObstacle<3> PolyhedronObstacle3D;
+

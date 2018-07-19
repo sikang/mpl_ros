@@ -27,9 +27,20 @@ public:
  }
  /// Set map util
  void setMap(const Vecf<Dim> &ori, const Vecf<Dim> &dim,
-             const vec_E<Polyhedron<Dim>>& polys) {
-   this->ENV_.reset(new MPL::env_poly_map<Dim>(ori, dim, polys));
+             const vec_E<PolyhedronObstacle<Dim>>& polys) {
+   map_util_.reset(new PolyMapUtil<Dim>());
+   map_util_->setBoundingBox(ori, dim);
+   this->ENV_.reset(new MPL::env_poly_map<Dim>(map_util_));
+   for(const auto& poly: polys)
+     map_util_->addPolyhedronObstacle(poly);
  }
+
+ Polyhedron<Dim> getBoundingBox() const {
+   return map_util_->getBoundingBox();
+ }
+
+protected:
+ std::shared_ptr<PolyMapUtil<Dim>> map_util_;
 };
 
 typedef PolyMapPlanner<2> PolyMapPlanner2D;

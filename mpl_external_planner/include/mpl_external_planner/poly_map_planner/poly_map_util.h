@@ -4,8 +4,7 @@
  */
 #ifndef MPL_POLY_MAP_UTIL_H
 #define MPL_POLY_MAP_UTIL_H
-#include <mpl_external_planner/poly_map_planner/simple_obstacle.h>
-#include <mpl_basis/primitive.h>
+#include <mpl_external_planner/poly_map_planner/primitive_geometry_utils.h>
 
 /**
  * @brief Collision checking inside a polygonal map
@@ -20,13 +19,8 @@ class PolyMapUtil {
     PolyMapUtil() {}
 
     ///Set polyhedron obstacles
-    void addObstacle(const Polyhedron<Dim>& o) {
+    void addPolyhedronObstacle(const PolyhedronObstacle<Dim>& o) {
       poly_obs_.push_back(o);
-    }
-
-    ///Set ellipsoid obstacles
-    void addObstacle(const Ellipsoid<Dim>& o) {
-      elli_obs_.push_back(o);
     }
 
     ///Set bounding box for 2D
@@ -55,51 +49,45 @@ class PolyMapUtil {
         bbox_ = Vs;
       }
 
-    bool isFree(const Vecf<Dim>& pt) const {
-      if (!bbox_.inside(pt))
-        return false;
-      for(const auto& poly: poly_obs_) {
-        if(poly.inside(pt))
-          return false;
-      }
-      for(const auto& elli: elli_obs_) {
-        if(elli.inside(pt))
-          return false;
-      }
-      return true;
-    }
+		bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
+			if (!bbox_.inside(pt))
+				return false;
+			for(const auto& poly: poly_obs_) {
+				if(poly.inside(pt - t*poly.v_))
+					return false;
+			}
+			return true;
+		}
 
-    ///Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
-    bool isFree(const Primitive<Dim> &pr) const {
+		///Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
+    bool isFree(const Primitive<Dim> &pr, decimal_t t) const {
+      for(const auto& poly: poly_obs_) {
+        if(collide(pr, poly, t))
+          return false;
+      }
+      /*
       vec_E<Waypoint<Dim>> ps = pr.sample(5);
       for (const auto &it : ps) {
         if(!isFree(it.pos))
           return false;
       }
+      */
 
       return true;
     }
 
     ///Get bounding polyhedron
-    Polyhedron3D getBoundingBox() const {
+    Polyhedron<Dim> getBoundingBox() const {
       return bbox_;
     }
 
-
-    vec_E<Ellipsoid<Dim>> getEllipsoidObs() const {
-      return elli_obs_;
-    }
-
-
-    vec_E<Polyhedron<Dim>> getPolyhedronObs() const {
+    vec_E<PolyhedronObstacle<Dim>> getPolyhedronObstacles() const {
       return poly_obs_;
     }
 
   private:
     ///Static polyhedron obstacle
-    vec_E<Polyhedron<Dim>> poly_obs_;
-    ///Static ellipsoid obstacle
-    vec_E<Ellipsoid<Dim>> elli_obs_;
+    vec_E<PolyhedronObstacle<Dim>> poly_obs_;
     ///Bounding box
     Polyhedron<Dim> bbox_;
 };

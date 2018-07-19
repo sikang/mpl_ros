@@ -10,25 +10,50 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
-  ros::Publisher es_pub =
-      nh.advertise<decomp_ros_msgs::EllipsoidArray>("ellipsoids", 1, true);
   ros::Publisher poly_pub =
-      nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
+    nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
+  ros::Publisher bound_pub =
+    nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
   ros::Publisher sg_pub =
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
 
-  vec_E<Ellipsoid2D> elli_obs;
   vec_E<Polyhedron2D> poly_obs;
+  vec_E<PolyhedronObstacle2D> obs;
 
   Polyhedron2D rec1;
   rec1.add(Hyperplane2D(Vec2f(5.5, 2.5), -Vec2f::UnitX()));
   rec1.add(Hyperplane2D(Vec2f(6.5, 2.5), Vec2f::UnitX()));
   rec1.add(Hyperplane2D(Vec2f(6, 1.0), -Vec2f::UnitY()));
   rec1.add(Hyperplane2D(Vec2f(6, 4.0), Vec2f::UnitY()));
+  PolyhedronObstacle2D obs1;
+  obs1.vs_ = rec1.hyperplanes();
+  obs1.v_ = Vec2f(0, 0);
   poly_obs.push_back(rec1);
+  obs.push_back(obs1);
+
+  Polyhedron2D rec2;
+  rec2.add(Hyperplane2D(Vec2f(15.5, 4.5), -Vec2f::UnitX()));
+  rec2.add(Hyperplane2D(Vec2f(16.5, 4.5), Vec2f::UnitX()));
+  rec2.add(Hyperplane2D(Vec2f(16, 3.0), -Vec2f::UnitY()));
+  rec2.add(Hyperplane2D(Vec2f(16, 6.0), Vec2f::UnitY()));
+  PolyhedronObstacle2D obs2;
+  obs2.vs_ = rec2.hyperplanes();
+  poly_obs.push_back(rec2);
+  obs.push_back(obs2);
+
+  Polyhedron2D rec3;
+  rec3.add(Hyperplane2D(Vec2f(9.5, 2.5), -Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(16.5, 2.5), Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(14, 2.0), -Vec2f::UnitY()));
+  rec3.add(Hyperplane2D(Vec2f(14, 3.0), Vec2f::UnitY()));
+  PolyhedronObstacle2D obs3;
+  obs3.vs_ = rec3.hyperplanes();
+  poly_obs.push_back(rec3);
+  obs.push_back(obs3);
+
 
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
@@ -38,27 +63,25 @@ int main(int argc, char **argv) {
 
   // Initialize planner
   double dt, v_max, a_max, w, epsilon, t_max;
-  double u_max;
+  double u;
   int num;
   nh.param("dt", dt, 1.0);
   nh.param("epsilon", epsilon, 1.0);
   nh.param("v_max", v_max, -1.0);
   nh.param("a_max", a_max, -1.0);
-  nh.param("u_max", u_max, 1.0);
-  nh.param("t_max", t_max, -1.0);
+  nh.param("u", u, 1.0);
   nh.param("w", w, 10.);
   nh.param("num", num, 1);
 
-  std::unique_ptr<MPL::PolyMapPlanner2D> planner_;
-  planner_.reset(new MPL::PolyMapPlanner2D(false));
-  planner_->setMap(origin, dim, poly_obs);         // Set collision checking function
-  planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)
-  planner_->setVmax(v_max);      // Set max velocity
-  planner_->setAmax(a_max);      // Set max acceleration
-  planner_->setTmax(t_max);      // Set max time
-  planner_->setDt(dt);           // Set dt for each primitive
-  planner_->setW(w);             // Set w for each primitive
-  planner_->setTol(0.5); // Tolerance for goal region
+  std::unique_ptr<MPL::PolyMapPlanner2D> planner_ptr;
+  planner_ptr.reset(new MPL::PolyMapPlanner2D(true));
+  planner_ptr->setMap(origin, dim, obs);         // Set collision checking function
+  planner_ptr->setEpsilon(epsilon); // Set greedy param (default equal to 1)
+  planner_ptr->setVmax(v_max);      // Set max velocity
+  planner_ptr->setAmax(a_max);      // Set max acceleration
+  planner_ptr->setDt(dt);           // Set dt for each primitive
+  planner_ptr->setW(w);             // Set w for each primitive
+  planner_ptr->setTol(0.5); // Tolerance for goal region
 
   // Set start and goal
   double start_x, start_y;
@@ -103,24 +126,24 @@ int main(int argc, char **argv) {
 
   // Set input control
   vec_E<VecDf> U;
-  const decimal_t du = u_max / num;
-  for (decimal_t dx = -u_max; dx <= u_max; dx += du)
-    for (decimal_t dy = -u_max; dy <= u_max; dy += du)
-      U.push_back(Vec3f(dx, dy, 0));
-  planner_->setU(U); // Set discretization with 1 and efforts
+  const decimal_t du = u / num;
+  for (decimal_t dx = -u; dx <= u; dx += du)
+    for (decimal_t dy = -u; dy <= u; dy += du)
+      U.push_back(Vec2f(dx, dy));
+  planner_ptr->setU(U); // Set discretization with 1 and efforts
 
   auto t0 = ros::Time::now();
-  bool valid = planner_->plan(start, goal);
+  bool valid = planner_ptr->plan(start, goal);
 
    if (!valid) {
     ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
-             (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+             (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
   } else {
     ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
-             (ros::Time::now() - t0).toSec(), planner_->getCloseSet().size());
+             (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
 
     // Publish trajectory
-    auto traj = planner_->getTraj();
+    auto traj = planner_ptr->getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
@@ -130,13 +153,20 @@ int main(int argc, char **argv) {
            traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
   }
 
-  decomp_ros_msgs::EllipsoidArray es_msg = DecompROS::ellipsoid_array_to_ros(elli_obs);
-  es_msg.header.frame_id = "map";
-  es_pub.publish(es_msg);
+  // Publish expanded nodes
+  sensor_msgs::PointCloud ps = vec_to_cloud(vec2_to_vec3(planner_ptr->getCloseSet()));
+  ps.header.frame_id = "map";
+  ps_pub.publish(ps);
 
   decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
   poly_msg.header.frame_id = "map";
   poly_pub.publish(poly_msg);
+
+  vec_E<Polyhedron2D> bbox;
+  bbox.push_back(planner_ptr->getBoundingBox());
+  decomp_ros_msgs::PolyhedronArray bbox_msg = DecompROS::polyhedron_array_to_ros(bbox);
+  bbox_msg.header.frame_id = "map";
+  bound_pub.publish(bbox_msg);
 
   ros::spin();
 
