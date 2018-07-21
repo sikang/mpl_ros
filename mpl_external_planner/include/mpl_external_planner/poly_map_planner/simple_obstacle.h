@@ -4,6 +4,7 @@
 template <int Dim>
 class PolyhedronObstacle {
  public:
+  PolyhedronObstacle() {}
   PolyhedronObstacle(const Polyhedron<Dim>& poly) : poly_(poly) {}
   PolyhedronObstacle(const Polyhedron<Dim>& poly, const Vecf<Dim>& v) : poly_(poly), v_(v) {}
   bool inside (const Vecf<Dim>& pt) const { return poly_.inside(pt); }

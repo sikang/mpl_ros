@@ -1,0 +1,21 @@
+<launch>
+  <arg name="debug" default="false"/>
+  <!--<arg name="debug_valgrind" default="false"/>-->
+
+  <arg name="prefix" value="" unless="$(arg debug)"/>
+  <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
+
+  <node pkg="mpl_test_node"
+    type="multi_robot_node"
+    name="test_primitive"
+    launch-prefix="$(arg prefix)"
+    output="screen">
+    <!-- Set dynamic constraints -->
+    <param name="v_max" value="1.0"/>
+    <param name="a_max" value="1.0"/>
+    <param name="u" value="0.5"/>
+    <param name="dt" value="1.0"/>
+    <param name="ndt" value="0"/>
+  </node>
+
+</launch>
