@@ -9,15 +9,11 @@ using namespace MPL;
 template <int Dim>
 class Robot {
  public:
-  Robot(const Polyhedron<Dim>& poly, const Vecf<Dim>& pos) {
-    auto polygon = poly;
-    for(auto& it: polygon.vs_) {
-      it.p_ += pos;
-    }
+  Robot() {}
 
-    geometry_ = PolyhedronObstacle<Dim>(polygon);
-    set_start(pos);
-  }
+  ~Robot() {}
+
+  Robot(const Polyhedron<Dim>& poly) : poly_(poly) {}
 
   void set_v_max(decimal_t v) { v_max_ = v; }
 
@@ -45,38 +41,61 @@ class Robot {
     goal_ = goal;
   }
 
-  void set_obs(const Vecf<Dim>& origin, const Vecf<Dim>& dim,
-               const vec_E<PolyhedronObstacle<Dim>>& obs) {
+  void set_map(const Vecf<Dim>& origin, const Vecf<Dim>& dim) {
+    origin_ = origin;
+    dim_ = dim;
+  }
+
+  void set_obs(const vec_E<PolyhedronObstacle<Dim>>& obs) {
+    obs_ = obs;
+  }
+
+  bool plan(decimal_t t) {
+    if(t > 0)
+      start_ = traj_.evaluate(t - traj_t_);
+    if(t - traj_t_ < dt_)
+      return true;
+
     planner_ptr.reset(new MPL::PolyMapPlanner<Dim>(false));
-    planner_ptr->setMap(origin, dim, obs);         // Set collision checking function
+    planner_ptr->setMap(origin_, dim_, obs_);// Set collision checking function
     planner_ptr->setVmax(v_max_);      // Set max velocity
     planner_ptr->setAmax(a_max_);      // Set max acceleration
     planner_ptr->setDt(dt_);           // Set dt for each primitive
     planner_ptr->setTol(0.5); // Tolerance for goal region
     planner_ptr->setU(U_); // Set discretization with 1 and efforts
-  }
 
-  bool plan() {
     if(!planner_ptr->plan(start_, goal_))
       return false;
 
-    auto traj = planner_ptr->getTraj();
-    start_ = traj.evaluate(dt_);
-    geometry_ = PolyhedronObstacle<Dim>(geometry_.poly(dt_), start_.vel);
+    traj_ = planner_ptr->getTraj();
+    traj_t_ = t;
     return true;
   }
 
-
-  Trajectory<Dim> get_trajectory() const {
-    return planner_ptr->getTraj();
+  Waypoint<Dim> get_state(decimal_t t) const {
+    return traj_.evaluate(t - traj_t_);
   }
 
-  PolyhedronObstacle<Dim> get_geometry() const {
-    return geometry_;
+  Trajectory<Dim> get_trajectory() const {
+    return traj_;
+  }
+
+  PolyhedronObstacle<Dim> get_geometry(decimal_t t) const {
+    auto state = get_state(t);
+    auto polygon = poly_;
+    for(auto& it: polygon.vs_) {
+      it.p_ += state.pos;
+    }
+
+    return PolyhedronObstacle<Dim>(polygon, state.vel);
+  }
+
+  Polyhedron<Dim> get_bbox() const {
+    return planner_ptr->getBoundingBox();
   }
 
  private:
-  PolyhedronObstacle<Dim> geometry_;
+  Polyhedron<Dim> poly_;
   std::unique_ptr<PolyMapPlanner<Dim>> planner_ptr;
   decimal_t v_max_{1};
   decimal_t a_max_{1};
@@ -85,6 +104,11 @@ class Robot {
   Waypoint<Dim> start_;
   Waypoint<Dim> goal_;
   Control::Control control_{Control::ACC};
+  Vecf<Dim> origin_;
+  Vecf<Dim> dim_;
+  Trajectory<Dim> traj_;
+  vec_E<PolyhedronObstacle<Dim>> obs_;
+  decimal_t traj_t_{-10000};
 };
 
 int main(int argc, char **argv) {
@@ -95,8 +119,8 @@ int main(int argc, char **argv) {
     nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
   ros::Publisher bound_pub =
     nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
-  ros::Publisher sg_pub =
-      nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
+  ros::Publisher cloud_pub =
+      nh.advertise<sensor_msgs::PointCloud>("states", 1, true);
   ros::Publisher traj1_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory1", 1, true);
   ros::Publisher traj2_pub =
@@ -132,40 +156,56 @@ int main(int argc, char **argv) {
     for (decimal_t dy = -u; dy <= u; dy += du)
       U.push_back(Vec2f(dx, dy));
 
-  Robot<2> robot1(rec, Vec2f(1, 0));
+  Robot<2> robot1(rec);
   robot1.set_v_max(v_max);
   robot1.set_a_max(a_max);
   robot1.set_u(U);
-  robot1.set_goal(Vec2f(10, 0));
+  robot1.set_map(origin, dim);
+  robot1.set_start(Vec2f(1, 0.1));
+  robot1.set_goal(Vec2f(9.5, 0));
+  robot1.plan(0);
 
-  Robot<2> robot2(rec, Vec2f(9, 0));
+  Robot<2> robot2(rec);
   robot2.set_v_max(v_max);
   robot2.set_a_max(a_max);
   robot2.set_u(U);
-  robot2.set_goal(Vec2f(0, 0));
+  robot2.set_map(origin, dim);
+  robot2.set_start(Vec2f(9, 0));
+  robot2.set_goal(Vec2f(0.5, 0));
+  robot2.plan(0);
 
 
   /*
+  vec_E<Robot<2>> robots;
+  robots.push_back(robot1);
+  robots.push_back(robot2);
+  */
+
   vec_E<Polyhedron2D> bbox;
-  bbox.push_back(planner_ptr->getBoundingBox());
+  bbox.push_back(robot1.get_bbox());
   decomp_ros_msgs::PolyhedronArray bbox_msg = DecompROS::polyhedron_array_to_ros(bbox);
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
-  */
 
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(5);
+  decimal_t update_t = 0.1;
+  decimal_t time = 0;
 
   while (ros::ok()) {
+    time += update_t;
     vec_E<PolyhedronObstacle2D> obs1;
-    obs1.push_back(robot2.get_geometry());
-    robot1.set_obs(origin, dim, obs1);
-    robot1.plan();
+    decimal_t d = (robot2.get_state(time).pos - robot1.get_state(time).pos).norm();
+    obs1.push_back(robot2.get_geometry(time));
+    if(d < 2)
+    robot1.set_obs(obs1);
 
     vec_E<PolyhedronObstacle2D> obs2;
-    obs2.push_back(robot1.get_geometry());
-    robot2.set_obs(origin, dim, obs2);
-    robot2.plan();
+    obs2.push_back(robot1.get_geometry(time));
+    if(d < 2)
+    robot2.set_obs(obs2);
 
+    robot1.plan(time);
+    robot2.plan(time);
 
     // Publish trajectory
     auto traj1 = robot1.get_trajectory();
@@ -186,6 +226,14 @@ int main(int argc, char **argv) {
     decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
     poly_msg.header.frame_id = "map";
     poly_pub.publish(poly_msg);
+
+    vec_Vec2f states;
+    states.push_back(robot1.get_state(time).pos);
+    states.push_back(robot2.get_state(time).pos);
+
+    auto cloud_msg = vec_to_cloud(vec2_to_vec3(states));
+    cloud_msg.header.frame_id = "map";
+    cloud_pub.publish(cloud_msg);
 
     ros::spinOnce();
 
