@@ -40,7 +40,6 @@ public:
    * @brief Get successor
    * @param curr The node to expand
    * @param succ The array stores valid successors
-   * @param succ_idx The array stores successors' Key
    * @param succ_cost The array stores cost along valid edges
    * @param action_idx The array stores corresponding idx of control for each
    * successor
@@ -49,10 +48,9 @@ public:
    * Here we use Heuristic function and multiply with 2
    */
   void get_succ(const Waypoint3D &curr, vec_E<Waypoint3D> &succ,
-                std::vector<Key> &succ_idx, std::vector<decimal_t> &succ_cost,
+                std::vector<decimal_t> &succ_cost,
                 std::vector<int> &action_idx) const {
     succ.clear();
-    succ_idx.clear();
     succ_cost.clear();
     action_idx.clear();
 
@@ -66,7 +64,6 @@ public:
         continue;
       tn.t = curr.t + dt_;
       succ.push_back(tn);
-      succ_idx.push_back(state_to_idx(tn));
       succ_cost.push_back(pr.J(pr.control()) + w_ * dt_);
       action_idx.push_back(i);
     }

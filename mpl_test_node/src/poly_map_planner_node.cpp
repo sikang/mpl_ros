@@ -23,39 +23,60 @@ int main(int argc, char **argv) {
   vec_E<PolyhedronObstacle2D> obs;
 
   Polyhedron2D rec1;
-  rec1.add(Hyperplane2D(Vec2f(5.5, 2.5), -Vec2f::UnitX()));
-  rec1.add(Hyperplane2D(Vec2f(6.5, 2.5), Vec2f::UnitX()));
-  rec1.add(Hyperplane2D(Vec2f(6, 1.0), -Vec2f::UnitY()));
-  rec1.add(Hyperplane2D(Vec2f(6, 4.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec1, Vec2f(-0.5, 0)));
+  rec1.add(Hyperplane2D(Vec2f(5, 10.5), -Vec2f::UnitX()));
+  rec1.add(Hyperplane2D(Vec2f(6, 10.5), Vec2f::UnitX()));
+  rec1.add(Hyperplane2D(Vec2f(5.5, 6), -Vec2f::UnitY()));
+  rec1.add(Hyperplane2D(Vec2f(5.5, 16.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec1, Vec2f(0, -0.5)));
 
   Polyhedron2D rec2;
-  rec2.add(Hyperplane2D(Vec2f(15.5, 4.5), -Vec2f::UnitX()));
-  rec2.add(Hyperplane2D(Vec2f(16.5, 4.5), Vec2f::UnitX()));
-  rec2.add(Hyperplane2D(Vec2f(16, 3.0), -Vec2f::UnitY()));
-  rec2.add(Hyperplane2D(Vec2f(16, 6.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec2));
+  rec2.add(Hyperplane2D(Vec2f(5, -4.5), -Vec2f::UnitX()));
+  rec2.add(Hyperplane2D(Vec2f(6, -4.5), Vec2f::UnitX()));
+  rec2.add(Hyperplane2D(Vec2f(5.5, -11), -Vec2f::UnitY()));
+  rec2.add(Hyperplane2D(Vec2f(5.5, -1), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec2, Vec2f(0, 0.5)));
 
   Polyhedron2D rec3;
-  rec3.add(Hyperplane2D(Vec2f(9.5, 0.5), -Vec2f::UnitX()));
-  rec3.add(Hyperplane2D(Vec2f(16.5, 0.5), Vec2f::UnitX()));
-  rec3.add(Hyperplane2D(Vec2f(14, 0.0), -Vec2f::UnitY()));
-  rec3.add(Hyperplane2D(Vec2f(14, 1.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec3, Vec2f(0.0, 0.25)));
+  rec3.add(Hyperplane2D(Vec2f(9, 0.5), -Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(10, 0.5), Vec2f::UnitX()));
+  rec3.add(Hyperplane2D(Vec2f(9.5, 0.0), -Vec2f::UnitY()));
+  rec3.add(Hyperplane2D(Vec2f(9.5, 10.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec3, Vec2f(0.0, -0.5)));
 
   Polyhedron2D rec4;
-  rec4.add(Hyperplane2D(Vec2f(15.5, 3.0), -Vec2f::UnitX()));
-  rec4.add(Hyperplane2D(Vec2f(16.5, 3.0), Vec2f::UnitX()));
-  rec4.add(Hyperplane2D(Vec2f(16, 2.0), -Vec2f::UnitY()));
-  rec4.add(Hyperplane2D(Vec2f(16, 3.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec4, Vec2f(0.0, -0.1)));
+  rec4.add(Hyperplane2D(Vec2f(9, 0.5), -Vec2f::UnitX()));
+  rec4.add(Hyperplane2D(Vec2f(10, 0.5), Vec2f::UnitX()));
+  rec4.add(Hyperplane2D(Vec2f(9.5, -5), -Vec2f::UnitY()));
+  rec4.add(Hyperplane2D(Vec2f(9.5, 5.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec4, Vec2f(0.0, 0.5)));
 
   Polyhedron2D rec5;
-  rec5.add(Hyperplane2D(Vec2f(6.5, 0.5), -Vec2f::UnitX()));
-  rec5.add(Hyperplane2D(Vec2f(15.5, 0.5), Vec2f::UnitX()));
-  rec5.add(Hyperplane2D(Vec2f(7, -2.0), -Vec2f::UnitY()));
-  rec5.add(Hyperplane2D(Vec2f(7, -1.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec5, Vec2f(-0.1, 0.3)));
+  rec5.add(Hyperplane2D(Vec2f(5, 0.5), -Vec2f::UnitX()));
+  rec5.add(Hyperplane2D(Vec2f(6, 0.5), Vec2f::UnitX()));
+  rec5.add(Hyperplane2D(Vec2f(5.5, 0), -Vec2f::UnitY()));
+  rec5.add(Hyperplane2D(Vec2f(5.5, 10.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec5, Vec2f(0.0, 0.5)));
+
+  Polyhedron2D rec6;
+  rec6.add(Hyperplane2D(Vec2f(5, 0.5), -Vec2f::UnitX()));
+  rec6.add(Hyperplane2D(Vec2f(6, 0.5), Vec2f::UnitX()));
+  rec6.add(Hyperplane2D(Vec2f(5.5, -5.0), -Vec2f::UnitY()));
+  rec6.add(Hyperplane2D(Vec2f(5.5, 5.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec6, Vec2f(0.0, -0.5)));
+
+  Polyhedron2D rec7;
+  rec7.add(Hyperplane2D(Vec2f(9, 0.5), -Vec2f::UnitX()));
+  rec7.add(Hyperplane2D(Vec2f(10, 0.5), Vec2f::UnitX()));
+  rec7.add(Hyperplane2D(Vec2f(9.5, 11.0), -Vec2f::UnitY()));
+  rec7.add(Hyperplane2D(Vec2f(9.5, 21.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec7, Vec2f(0.0, -0.5)));
+
+  Polyhedron2D rec8;
+  rec8.add(Hyperplane2D(Vec2f(9, 0.5), -Vec2f::UnitX()));
+  rec8.add(Hyperplane2D(Vec2f(10, 0.5), Vec2f::UnitX()));
+  rec8.add(Hyperplane2D(Vec2f(9.5, -16), -Vec2f::UnitY()));
+  rec8.add(Hyperplane2D(Vec2f(9.5, -6.0), Vec2f::UnitY()));
+  obs.push_back(PolyhedronObstacle2D(rec8, Vec2f(0.0, 0.5)));
 
 
 
@@ -85,7 +106,7 @@ int main(int argc, char **argv) {
   planner_ptr->setAmax(a_max);      // Set max acceleration
   planner_ptr->setDt(dt);           // Set dt for each primitive
   planner_ptr->setW(w);             // Set w for each primitive
-  planner_ptr->setTol(0.5); // Tolerance for goal region
+  planner_ptr->setTol(0.5, 0.5); // Tolerance for goal region
 
   // Set start and goal
   double start_x, start_y;

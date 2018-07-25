@@ -55,54 +55,6 @@ Visualization Manager:
       Radius: 0.100000001
       Reference Frame: <Fixed Frame>
       Value: true
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      AccVis: false
-      Class: planning_rviz_plugins/Trajectory
-      Enabled: true
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      JrkVis: false
-      Name: Trajectory
-      Num of samples: 200
-      NumYaw: 20
-      PosColor: 255; 0; 0
-      PosScale: 0.0500000007
-      Topic: /test_primitive/trajectory1
-      Unreliable: false
-      Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      VelVis: false
-      YawColor: 100; 20; 55
-      YawScale: 0.0500000007
-      YawTriangleAngle: 0.699999988
-      YawTriangleScale: 0.5
-      YawVis: false
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      AccVis: false
-      Class: planning_rviz_plugins/Trajectory
-      Enabled: true
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      JrkVis: false
-      Name: Trajectory
-      Num of samples: 100
-      NumYaw: 20
-      PosColor: 204; 51; 204
-      PosScale: 0.100000001
-      Topic: /test_primitive/trajectory2
-      Unreliable: false
-      Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      VelVis: false
-      YawColor: 100; 20; 55
-      YawScale: 0.0500000007
-      YawTriangleAngle: 0.699999988
-      YawTriangleScale: 0.5
-      YawVis: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -128,18 +80,10 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.400000006
       Style: Spheres
-      Topic: /test_primitive/states
+      Topic: /states
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
-    - Alpha: 0.5
-      Class: decomp_rviz_plugins/EllipsoidArray
-      Color: 204; 51; 204
-      Enabled: true
-      Name: EllipsoidArray
-      Topic: /test_primitive/ellipsoids
-      Unreliable: false
       Value: true
     - Alpha: 0.200000003
       BoundColor: 255; 0; 0
@@ -149,7 +93,7 @@ Visualization Manager:
       Name: PolyhedronArray
       Scale: 0.100000001
       State: Mesh
-      Topic: /test_primitive/polyhedrons
+      Topic: polyhedrons
       Unreliable: false
       Value: true
       VsColor: 0; 255; 0
@@ -167,6 +111,41 @@ Visualization Manager:
       Value: true
       VsColor: 0; 255; 0
       VsScale: 1
+    - Class: planning_rviz_plugins/PathArray
+      Enabled: true
+      ID: All
+      LineColor: 0; 0; 255
+      LineScale: 0.0500000007
+      Name: PathArray
+      NodeColor: 85; 85; 255
+      NodeScale: 0
+      Topic: paths
+      Unreliable: false
+      Value: true
+    - AccColor: 10; 200; 55
+      AccScale: 0.0199999996
+      AccVis: false
+      Class: planning_rviz_plugins/PrimitiveArray
+      Enabled: true
+      JrkColor: 200; 20; 55
+      JrkScale: 0.0199999996
+      JrkVis: false
+      Name: PrimitiveArray
+      Num: 10
+      NumYaw: 2
+      PosColor: 204; 51; 204
+      PosScale: 0.0500000007
+      Topic: prs
+      Unreliable: false
+      Value: true
+      VelColor: 85; 85; 255
+      VelScale: 0.0199999996
+      VelVis: false
+      YawColor: 100; 20; 55
+      YawScale: 0.0500000007
+      YawTriangleAngle: 0.699999988
+      YawTriangleScale: 0.5
+      YawVis: false
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -201,11 +180,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 43.6787796
+      Scale: 68.7294083
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 10.9398279
-      Y: 2.73615527
+      X: 5.3621583
+      Y: -0.131871775
     Saved: ~
 Window Geometry:
   Displays:

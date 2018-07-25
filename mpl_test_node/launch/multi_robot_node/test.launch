@@ -11,11 +11,12 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="1.0"/>
+    <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
-    <param name="u" value="0.5"/>
-    <param name="dt" value="1.0"/>
+    <param name="u" value="1.0"/>
+    <param name="dt" value="0.5"/>
     <param name="ndt" value="0"/>
+    <param name="file" value="$(find mpl_test_node)/launch/multi_robot_node/sim.bag"/>
   </node>
 
 </launch>

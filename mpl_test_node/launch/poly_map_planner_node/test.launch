@@ -9,16 +9,18 @@
     type="poly_map_planner_node"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
+    clear_params="true"
     output="screen">
     <!-- Set start and goal -->
-    <param name="goal_x" value="18"/>
-    <param name="goal_y" value="5"/>
+    <param name="goal_x" value="10.5"/>
+    <param name="goal_y" value="2.5"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
     <param name="start_x" value="4.0"/>
     <param name="start_y" value="2.5"/>
+    <!--<param name="origin_x" value="2.0"/>-->
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="1.0"/>
+    <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="u" value="0.5"/>
     <param name="dt" value="1.0"/>
