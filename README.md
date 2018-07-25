@@ -69,10 +69,9 @@ Static Obstacles | Moving Obtacles
 :--------------- | :--------------
 <img src="./mpl_test_node/samples/sample4.png" width="328"> | <img src="./mpl_test_node/samples/sample5.png" width="328">
 
-<img src="./mpl_test_node/samples/sample1.gif" width="656">
+<img src="./mpl_test_node/samples/sample1.gif" width="696">
 
-Through one plan, the robot can choose the optimal timing for waiting and moving ahead in a
-obstacle course similar to the scene in Star Wars Episode I:
+Through only one plan, the robot finds the optimal timing for waiting and moving ahead in the following obstacle course:
 
 <img src="./mpl_test_node/samples/sample2.gif" width="328">
 
