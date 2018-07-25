@@ -55,9 +55,8 @@ public:
 			Primitive<Dim> pr(curr, this->U_[i], this->dt_);
 			Waypoint<Dim> tn = pr.evaluate(this->dt_);
 			if(!map_util_->isFree(tn.pos, curr.t+this->dt_) ||
+         !map_util_->isFree(pr, curr.t) ||
 				 !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
-				continue;
-			if(!map_util_->isFree(pr, curr.t))
 				continue;
 			tn.t = curr.t + this->dt_;
       tn.enable_t = true;

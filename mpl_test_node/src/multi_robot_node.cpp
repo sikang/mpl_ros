@@ -53,8 +53,12 @@ class Robot {
     init_t_ = t;
   }
 
-  void set_obs(const vec_E<PolyhedronObstacle<Dim>>& obs) {
-    obs_ = obs;
+  void set_static_obs(const vec_E<PolyhedronObstacle<Dim>>& obs) {
+    static_obs_ = obs;
+  }
+
+  void set_linear_obs(const vec_E<PolyhedronLinearObstacle<Dim>>& obs) {
+    linear_obs_ = obs;
   }
 
   bool plan(decimal_t t) {
@@ -73,7 +77,9 @@ class Robot {
 
     //printf("plan: %.2f\n", t);
     planner_ptr.reset(new MPL::PolyMapPlanner<Dim>(false));
-    planner_ptr->setMap(origin_, dim_, obs_);// Set collision checking function
+    planner_ptr->setMap(origin_, dim_);// Set collision checking function
+    planner_ptr->setStaticObstacles(static_obs_);
+    planner_ptr->setLinearObstacles(linear_obs_);
     planner_ptr->setVmax(v_max_);      // Set max velocity
     planner_ptr->setAmax(a_max_);      // Set max acceleration
     planner_ptr->setDt(dt_);           // Set dt for each primitive
@@ -101,14 +107,11 @@ class Robot {
     return traj_.getPrimitives();
   }
 
-  PolyhedronObstacle<Dim> get_geometry(decimal_t t) const {
+  PolyhedronLinearObstacle<Dim> get_linear_geometry(decimal_t t) const {
     auto state = get_state(t);
     auto polygon = poly_;
-    for(auto& it: polygon.vs_) {
-      it.p_ += state.pos;
-    }
 
-    return PolyhedronObstacle<Dim>(polygon, state.vel);
+    return PolyhedronLinearObstacle<Dim>(polygon, state.pos, state.vel);
   }
 
   Polyhedron<Dim> get_bbox() const {
@@ -132,28 +135,28 @@ class Robot {
   Vecf<Dim> origin_;
   Vecf<Dim> dim_;
   Trajectory<Dim> traj_;
-  vec_E<PolyhedronObstacle<Dim>> obs_;
+  vec_E<PolyhedronObstacle<Dim>> static_obs_;
+  vec_E<PolyhedronLinearObstacle<Dim>> linear_obs_;
   vec_Vecf<Dim> history_;
   decimal_t init_t_{0};
   decimal_t traj_t_{-10000};
 };
 
 vec_E<Polyhedron2D> set_obs(vec_E<Robot<2>>& robots, decimal_t time,
-                            const vec_E<PolyhedronObstacle2D>& external_obs) {
+                            const vec_E<PolyhedronObstacle2D>& external_static_obs) {
   vec_E<Polyhedron2D> poly_obs;
   for(size_t i = 0; i < robots.size(); i++) {
-    vec_E<PolyhedronObstacle2D> obs;
+    vec_E<PolyhedronLinearObstacle2D> linear_obs;
     for(size_t j = 0; j < robots.size(); j++) {
       if(i != j)
-        obs.push_back(robots[j].get_geometry(time));
+        linear_obs.push_back(robots[j].get_linear_geometry(time));
     }
-    for(const auto& it: external_obs)
-      obs.push_back(it);
-    robots[i].set_obs(obs);
-    poly_obs.push_back(robots[i].get_geometry(time).poly());
+    robots[i].set_static_obs(external_static_obs);
+    robots[i].set_linear_obs(linear_obs);
+    poly_obs.push_back(robots[i].get_linear_geometry(time).poly(0));
   }
-  for(const auto& it: external_obs)
-    poly_obs.push_back(it.poly());
+  for(const auto& it: external_static_obs)
+    poly_obs.push_back(it.poly(0));
   return poly_obs;
 }
 
@@ -314,13 +317,13 @@ int main(int argc, char **argv) {
   rec2.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
   rec2.add(Hyperplane2D(Vec2f(5, 0.2), -Vec2f::UnitY()));
   rec2.add(Hyperplane2D(Vec2f(5, 5.5), Vec2f::UnitY()));
-  static_obs.push_back(PolyhedronObstacle2D(rec2));
+  static_obs.push_back(PolyhedronObstacle2D(rec2, Vec2f::Zero()));
   Polyhedron2D rec3;
   rec3.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
   rec3.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
   rec3.add(Hyperplane2D(Vec2f(5, -5.5), -Vec2f::UnitY()));
   rec3.add(Hyperplane2D(Vec2f(5, -0.2), Vec2f::UnitY()));
-  static_obs.push_back(PolyhedronObstacle2D(rec3));
+  static_obs.push_back(PolyhedronObstacle2D(rec3, Vec2f::Zero()));
 
   vec_E<Polyhedron2D> bbox;
   bbox.push_back(robots.front().get_bbox());

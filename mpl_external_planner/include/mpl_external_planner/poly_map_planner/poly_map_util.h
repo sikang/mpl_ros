@@ -18,10 +18,21 @@ class PolyMapUtil {
      */
     PolyMapUtil() {}
 
-    ///Set polyhedron obstacles
-    void addPolyhedronObstacle(const PolyhedronObstacle<Dim>& o) {
-      poly_obs_.push_back(o);
+    ///Set static polyhedron obstacles
+    void addStaticObstacle(const PolyhedronObstacle<Dim>& o) {
+      static_obs_.push_back(o);
     }
+
+    ///Set linear polyhedron obstacles
+    void addLinearObstacle(const PolyhedronLinearObstacle<Dim>& o) {
+      linear_obs_.push_back(o);
+    }
+
+    ///Set non-linear polyhedron obstacles
+    void addNonlinearObstacle(const PolyhedronNonlinearObstacle<Dim>& o) {
+      nonlinear_obs_.push_back(o);
+    }
+
 
     ///Set bounding box for 2D
     template<int U = Dim>
@@ -52,8 +63,16 @@ class PolyMapUtil {
 		bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
 			if (!bbox_.inside(pt))
 				return false;
-			for(const auto& poly: poly_obs_) {
-				if(poly.inside(pt - t*poly.v()))
+			for(const auto& poly: static_obs_) {
+				if(poly.inside(pt))
+					return false;
+			}
+			for(const auto& poly: linear_obs_) {
+				if(poly.inside(pt, t))
+					return false;
+			}
+			for(const auto& poly: nonlinear_obs_) {
+				if(poly.inside(pt, t))
 					return false;
 			}
 			return true;
@@ -61,18 +80,20 @@ class PolyMapUtil {
 
 		///Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
     bool isFree(const Primitive<Dim> &pr, decimal_t t) const {
-      for(const auto& poly: poly_obs_) {
+      for(const auto& poly: static_obs_) {
+        if(collide(pr, poly))
+          return false;
+      }
+
+      for(const auto& poly: linear_obs_) {
         if(collide(pr, poly, t))
           return false;
       }
-      /*
-      vec_E<Waypoint<Dim>> ps = pr.sample(5);
-      for (const auto &it : ps) {
-        if(!isFree(it.pos))
+
+      for(const auto& poly: nonlinear_obs_) {
+        if(collide(pr, poly, t))
           return false;
       }
-      */
-
       return true;
     }
 
@@ -81,13 +102,25 @@ class PolyMapUtil {
       return bbox_;
     }
 
-    vec_E<PolyhedronObstacle<Dim>> getPolyhedronObstacles() const {
-      return poly_obs_;
+    vec_E<Polyhedron<Dim>> getPolyhedrons(decimal_t time) const {
+      vec_E<Polyhedron<Dim>> poly_obs;
+      for(const auto& it: static_obs_)
+        poly_obs.push_back(it.poly(time));
+      for(const auto& it: linear_obs_)
+        poly_obs.push_back(it.poly(time));
+      for(const auto& it: nonlinear_obs_)
+        poly_obs.push_back(it.poly(time));
+
+      return poly_obs;
     }
 
   private:
     ///Static polyhedron obstacle
-    vec_E<PolyhedronObstacle<Dim>> poly_obs_;
+    vec_E<PolyhedronObstacle<Dim>> static_obs_;
+    ///Static polyhedron obstacle
+    vec_E<PolyhedronLinearObstacle<Dim>> linear_obs_;
+    ///Static polyhedron obstacle
+    vec_E<PolyhedronNonlinearObstacle<Dim>> nonlinear_obs_;
     ///Bounding box
     Polyhedron<Dim> bbox_;
 };

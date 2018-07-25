@@ -20,43 +20,43 @@ int main(int argc, char **argv) {
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
 
-  vec_E<PolyhedronObstacle2D> obs;
+  vec_E<PolyhedronObstacle2D> static_obs;
+  vec_E<PolyhedronLinearObstacle2D> linear_obs;
 
   Polyhedron2D rec1;
   rec1.add(Hyperplane2D(Vec2f(5.5, 2.5), -Vec2f::UnitX()));
   rec1.add(Hyperplane2D(Vec2f(6.5, 2.5), Vec2f::UnitX()));
   rec1.add(Hyperplane2D(Vec2f(6, 1.0), -Vec2f::UnitY()));
   rec1.add(Hyperplane2D(Vec2f(6, 4.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec1, Vec2f(-0.5, 0)));
+  linear_obs.push_back(PolyhedronLinearObstacle2D(rec1, Vec2f::Zero(), Vec2f(-0.5, 0)));
 
   Polyhedron2D rec2;
   rec2.add(Hyperplane2D(Vec2f(15.5, 4.5), -Vec2f::UnitX()));
   rec2.add(Hyperplane2D(Vec2f(16.5, 4.5), Vec2f::UnitX()));
   rec2.add(Hyperplane2D(Vec2f(16, 3.0), -Vec2f::UnitY()));
   rec2.add(Hyperplane2D(Vec2f(16, 6.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec2));
+  static_obs.push_back(PolyhedronObstacle2D(rec2, Vec2f::Zero()));
 
   Polyhedron2D rec3;
   rec3.add(Hyperplane2D(Vec2f(9.5, 0.5), -Vec2f::UnitX()));
   rec3.add(Hyperplane2D(Vec2f(16.5, 0.5), Vec2f::UnitX()));
   rec3.add(Hyperplane2D(Vec2f(14, 0.0), -Vec2f::UnitY()));
   rec3.add(Hyperplane2D(Vec2f(14, 1.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec3, Vec2f(0.0, 0.25)));
+  linear_obs.push_back(PolyhedronLinearObstacle2D(rec3, Vec2f::Zero(), Vec2f(0.0, 0.25)));
 
   Polyhedron2D rec4;
   rec4.add(Hyperplane2D(Vec2f(15.5, 3.0), -Vec2f::UnitX()));
   rec4.add(Hyperplane2D(Vec2f(16.5, 3.0), Vec2f::UnitX()));
   rec4.add(Hyperplane2D(Vec2f(16, 2.0), -Vec2f::UnitY()));
   rec4.add(Hyperplane2D(Vec2f(16, 3.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec4, Vec2f(0.0, -0.1)));
+  linear_obs.push_back(PolyhedronLinearObstacle2D(rec4, Vec2f::Zero(), Vec2f(0.0, -0.1)));
 
   Polyhedron2D rec5;
   rec5.add(Hyperplane2D(Vec2f(6.5, 0.5), -Vec2f::UnitX()));
   rec5.add(Hyperplane2D(Vec2f(15.5, 0.5), Vec2f::UnitX()));
   rec5.add(Hyperplane2D(Vec2f(7, -2.0), -Vec2f::UnitY()));
   rec5.add(Hyperplane2D(Vec2f(7, -1.0), Vec2f::UnitY()));
-  obs.push_back(PolyhedronObstacle2D(rec5, Vec2f(-0.1, 0.3)));
-
+  linear_obs.push_back(PolyhedronLinearObstacle2D(rec5, Vec2f::Zero(), Vec2f(-0.1, 0.3)));
 
 
   Vec2f origin, dim;
@@ -79,7 +79,9 @@ int main(int argc, char **argv) {
 
   std::unique_ptr<MPL::PolyMapPlanner2D> planner_ptr;
   planner_ptr.reset(new MPL::PolyMapPlanner2D(true));
-  planner_ptr->setMap(origin, dim, obs);         // Set collision checking function
+  planner_ptr->setMap(origin, dim);         // Set collision checking function
+  planner_ptr->setStaticObstacles(static_obs);
+  planner_ptr->setLinearObstacles(linear_obs);
   planner_ptr->setEpsilon(epsilon); // Set greedy param (default equal to 1)
   planner_ptr->setVmax(v_max);      // Set max velocity
   planner_ptr->setAmax(a_max);      // Set max acceleration
@@ -163,9 +165,7 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     double dt = (ros::Time::now() - t0).toSec();
     if(dt < traj.getTotalTime()) {
-      vec_E<Polyhedron2D> poly_obs;
-      for(const auto& it: obs)
-        poly_obs.push_back(it.poly(dt));
+      vec_E<Polyhedron2D> poly_obs = planner_ptr->getPolyhedrons(dt);
       decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
       poly_msg.header.frame_id = "map";
       poly_pub.publish(poly_msg);

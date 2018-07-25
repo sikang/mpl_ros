@@ -12,7 +12,7 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${MOTION_PRIMITIVE_LIBRARY_INCLUDE_DIR
 
 catkin_simple()
 
-#cs_add_executable(test_primitive_collide.cpp src/test_primitive_collide.cpp)
+cs_add_executable(test_primitive_collide.cpp src/test_primitive_collide.cpp)
 
 cs_install()
 

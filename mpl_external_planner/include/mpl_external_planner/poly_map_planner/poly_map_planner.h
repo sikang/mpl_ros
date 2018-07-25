@@ -26,13 +26,29 @@ public:
      printf(ANSI_COLOR_CYAN "[PolyMapPlanner] PLANNER VERBOSE ON\n" ANSI_COLOR_RESET);
  }
  /// Set map util
- void setMap(const Vecf<Dim> &ori, const Vecf<Dim> &dim,
-             const vec_E<PolyhedronObstacle<Dim>>& polys) {
+ void setMap(const Vecf<Dim> &ori, const Vecf<Dim> &dim) {
    map_util_.reset(new PolyMapUtil<Dim>());
    map_util_->setBoundingBox(ori, dim);
    this->ENV_.reset(new MPL::env_poly_map<Dim>(map_util_));
+ }
+
+ void setStaticObstacles(const vec_E<PolyhedronObstacle<Dim>>& polys) {
    for(const auto& poly: polys)
-     map_util_->addPolyhedronObstacle(poly);
+     map_util_->addStaticObstacle(poly);
+ }
+
+ void setLinearObstacles(const vec_E<PolyhedronLinearObstacle<Dim>>& polys) {
+   for(const auto& poly: polys)
+     map_util_->addLinearObstacle(poly);
+ }
+
+ void setNonlinearObstacles(const vec_E<PolyhedronNonlinearObstacle<Dim>>& polys) {
+   for(const auto& poly: polys)
+     map_util_->addNonlinearObstacle(poly);
+ }
+
+ vec_E<Polyhedron<Dim>> getPolyhedrons(decimal_t time) const {
+   return map_util_->getPolyhedrons(time);
  }
 
  Polyhedron<Dim> getBoundingBox() const {
