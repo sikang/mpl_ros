@@ -72,8 +72,13 @@ Static Obstacles | Moving Obtacles
 <img src="./mpl_test_node/samples/sample1.gif" width="696">
 
 Through only one plan, the robot finds the optimal timing for waiting and moving ahead in the following obstacle course:
+```bash
+$ cd ./mpl_test_node/launch/nonlinear_obstacle_node
+$ roslaunch rviz.launch
+$ roslaunch test.launch
+```
 
-<img src="./mpl_test_node/samples/sample2.gif" width="328">
+<img src="./mpl_test_node/samples/sample2.gif" width="696">
 
 ## Example3 (plan in SE(3) with ellispoid model)
 Another example using ellipsoid model can be found in `mpl_test_node/launch/ellipsoid_planner_node`, in which a point cloud is used as obstacles, and the robot is modeled as the ellipsoid. More information can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](http://ieeexplore.ieee.org/document/8264768/).
