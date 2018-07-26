@@ -18,7 +18,7 @@ vec_E<Polyhedron2D> set_obs(vec_E<Robot<2>>& robots, decimal_t time,
     vec_E<PolyhedronNonlinearObstacle2D> nonlinear_obs;
     for(size_t j = 0; j < robots.size(); j++) {
       if(i != j)
-        nonlinear_obs.push_back(robots[j].get_nonlinear_obstacle(time));
+        nonlinear_obs.push_back(robots[j].get_nonlinear_obstacle(time, 0));
         //linear_obs.push_back(robots[j].get_linear_obstacle(time));
     }
     robots[i].set_static_obs(external_static_obs);
@@ -36,9 +36,10 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
 
   std::string file_name;
-  std::string states_name, polys_name, paths_name, prs_name;
+  std::string states_name, starts_name, polys_name, paths_name, prs_name;
   nh.param("file", file_name, std::string("sim.bag"));
   nh.param("states_name", states_name, std::string("/states"));
+  nh.param("starts_name", starts_name, std::string("/starts"));
   nh.param("polys_name", polys_name, std::string("/polyhedrons"));
   nh.param("paths_name", paths_name, std::string("/paths"));
   nh.param("prs_name", prs_name, std::string("/prs"));
@@ -47,8 +48,10 @@ int main(int argc, char **argv) {
     nh.advertise<decomp_ros_msgs::PolyhedronArray>(polys_name, 1, true);
   ros::Publisher bound_pub =
     nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
-  ros::Publisher cloud_pub =
+  ros::Publisher state_pub =
       nh.advertise<sensor_msgs::PointCloud>(states_name, 1, true);
+  ros::Publisher start_pub =
+      nh.advertise<sensor_msgs::PointCloud>(starts_name, 1, true);
   ros::Publisher prs_pub =
       nh.advertise<planning_ros_msgs::PrimitiveArray>(prs_name, 1, true);
   ros::Publisher path_pub =
@@ -84,7 +87,7 @@ int main(int argc, char **argv) {
       U.push_back(Vec2f(dx, dy));
 
   // Create a team of 8 robots
-  Robot2D robot1(rec);
+  Robot2D robot1(rec, "robot1", true);
   robot1.set_v_max(v_max);
   robot1.set_a_max(a_max);
   robot1.set_u(U);
@@ -94,7 +97,7 @@ int main(int argc, char **argv) {
   robot1.set_goal(Vec2f(10, 5));
   robot1.plan(0);
 
-  Robot2D robot2(rec);
+  Robot2D robot2(rec, "robot2", true);
   robot2.set_v_max(v_max);
   robot2.set_a_max(a_max);
   robot2.set_u(U);
@@ -104,7 +107,7 @@ int main(int argc, char **argv) {
   robot2.set_goal(Vec2f(10, 0));
   robot2.plan(0.01);
 
-  Robot2D robot3(rec);
+  Robot2D robot3(rec, "robot3", true);
   robot3.set_v_max(v_max);
   robot3.set_a_max(a_max);
   robot3.set_u(U);
@@ -114,7 +117,7 @@ int main(int argc, char **argv) {
   robot3.set_goal(Vec2f(10, -5));
   robot3.plan(0.02);
 
-  Robot2D robot4(rec);
+  Robot2D robot4(rec, "robot4", true);
   robot4.set_v_max(v_max);
   robot4.set_a_max(a_max);
   robot4.set_u(U);
@@ -124,7 +127,7 @@ int main(int argc, char **argv) {
   robot4.set_goal(Vec2f(5, -5));
   robot4.plan(0.03);
 
-  Robot2D robot5(rec);
+  Robot2D robot5(rec, "robot5", true);
   robot5.set_v_max(v_max);
   robot5.set_a_max(a_max);
   robot5.set_u(U);
@@ -134,7 +137,7 @@ int main(int argc, char **argv) {
   robot5.set_goal(Vec2f(0, -5));
   robot5.plan(0.04);
 
-  Robot2D robot6(rec);
+  Robot2D robot6(rec, "robot6", true);
   robot6.set_v_max(v_max);
   robot6.set_a_max(a_max);
   robot6.set_u(U);
@@ -145,7 +148,7 @@ int main(int argc, char **argv) {
   robot6.plan(0.05);
 
 
-  Robot2D robot7(rec);
+  Robot2D robot7(rec, "robot7", true);
   robot7.set_v_max(v_max);
   robot7.set_a_max(a_max);
   robot7.set_u(U);
@@ -156,7 +159,7 @@ int main(int argc, char **argv) {
   robot7.plan(0.06);
 
 
-  Robot2D robot8(rec);
+  Robot2D robot8(rec, "robot8", true);
   robot8.set_v_max(v_max);
   robot8.set_a_max(a_max);
   robot8.set_u(U);
@@ -199,7 +202,8 @@ int main(int argc, char **argv) {
   decimal_t time = 0;
   ros::Time t0 = ros::Time::now();
 
-  std::vector<sensor_msgs::PointCloud> cloud_msgs;
+  std::vector<sensor_msgs::PointCloud> state_msgs;
+  std::vector<sensor_msgs::PointCloud> start_msgs;
   std::vector<decomp_ros_msgs::PolyhedronArray> poly_msgs;
   std::vector<planning_ros_msgs::PathArray> path_msgs;
   std::vector<planning_ros_msgs::PrimitiveArray> prs_msgs;
@@ -209,8 +213,21 @@ int main(int argc, char **argv) {
     // set obstacle simultaneously
     auto poly_obs = set_obs(robots, time, static_obs);
 
-    for(auto& it: robots)
-      it.plan(time); // plan
+    // plan
+    bool safe = true;
+    for(auto& it: robots) {
+      if(!it.plan(time)) {
+        safe = false;
+        break;
+      }
+    }
+
+    if(!safe) {
+      ROS_INFO("Robot fails to plan, ABORT!");
+      break;
+    }
+
+
 
     // Reduce the size of obstacles manually.
     for(auto& it: poly_obs) {
@@ -228,7 +245,9 @@ int main(int argc, char **argv) {
     vec_E<vec_Vec3f> path_array;
     vec_E<Primitive2D> prs_array;
     vec_Vec2f states;
+    vec_Vec2f starts;
     for(auto& it: robots) {
+      starts.push_back(it.get_start().pos);
       states.push_back(it.get_state(time).pos);
       auto prs = it.get_primitives();
       prs_array.insert(prs_array.end(), prs.begin(), prs.end());
@@ -247,23 +266,43 @@ int main(int argc, char **argv) {
     prs_pub.publish(prs_msg);
     prs_msgs.push_back(prs_msg);
 
-    auto cloud_msg = vec_to_cloud(vec2_to_vec3(states));
-    cloud_msg.header.frame_id = "map";
-    cloud_msg.header.stamp = t0 + ros::Duration(time);
-    cloud_pub.publish(cloud_msg);
-    cloud_msgs.push_back(cloud_msg);
+    auto state_msg = vec_to_cloud(vec2_to_vec3(states));
+    state_msg.header.frame_id = "map";
+    state_msg.header.stamp = t0 + ros::Duration(time);
+    state_pub.publish(state_msg);
+    state_msgs.push_back(state_msg);
+
+    auto start_msg = vec_to_cloud(vec2_to_vec3(starts));
+    start_msg.header.frame_id = "map";
+    start_msg.header.stamp = t0 + ros::Duration(time);
+    start_pub.publish(start_msg);
+    start_msgs.push_back(start_msg);
+
+    bool reached = true;
+    for(const auto& it: robots)
+      if(!it.reached(time))
+        reached = false;
+
+    if(reached) {
+      ROS_INFO("All robots reached!");
+      break;
+    }
 
     ros::spinOnce();
 
     loop_rate.sleep();
   }
 
+  ROS_WARN("Total time: %f", (ros::Time::now() - t0).toSec());
+
   // Write to bag (optional)
   rosbag::Bag bag;
   bag.open(file_name, rosbag::bagmode::Write);
 
-  for(const auto& it: cloud_msgs)
+  for(const auto& it: state_msgs)
     bag.write(states_name, it.header.stamp, it);
+  for(const auto& it: start_msgs)
+    bag.write(starts_name, it.header.stamp, it);
   for(const auto& it: poly_msgs)
     bag.write(polys_name, it.header.stamp, it);
   for(const auto& it: path_msgs)

@@ -109,9 +109,17 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronNonlinearObstacle<Dim>& p
 
   /// if the time over the total trajectory time, use last state of traj as static obstacle
   if(start_id < 0) {
-    return collide(
-      pr, PolyhedronObstacle<Dim>(poly.geometry(),
-                                  traj.evaluate(traj_t).pos));
+    if(traj_t <= traj.getTotalTime() && traj_t >= 0)
+      return collide(pr, PolyhedronObstacle<Dim>(poly.geometry(),
+                                                 traj.evaluate(traj_t).pos));
+    else if (traj_t < 0 && !poly.disappear_front_)
+      return collide(pr, PolyhedronObstacle<Dim>(poly.geometry(),
+                                                 traj.evaluate(traj_t).pos));
+    else if(traj_t > traj.getTotalTime() && !poly.disappear_back_)
+      return collide(pr, PolyhedronObstacle<Dim>(poly.geometry(),
+                                                 traj.evaluate(traj_t).pos));
+    else
+      return false;
   }
 
   for(size_t id = start_id; id < segs.size(); id++) {

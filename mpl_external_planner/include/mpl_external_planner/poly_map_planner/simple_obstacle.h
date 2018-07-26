@@ -70,8 +70,16 @@ class PolyhedronNonlinearObstacle : public PolyhedronObstacle<Dim> {
       : PolyhedronObstacle<Dim>(poly, traj.evaluate(t).pos), traj_(traj),
         start_t_(t) {}
   bool inside(const Vecf<Dim> &pt, decimal_t t) const {
-    const auto w = traj_.evaluate(t+start_t_);
-    return this->poly_.inside(pt - w.pos);
+    t += start_t_;
+    const auto w = traj_.evaluate(t);
+    if(t <= traj_.getTotalTime() && t >= 0)
+      return this->poly_.inside(pt - w.pos);
+    else if(t < 0 && !disappear_front_)
+      return this->poly_.inside(pt - w.pos);
+    else if(t > traj_.getTotalTime() && !disappear_back_)
+      return this->poly_.inside(pt - w.pos);
+    else
+      return false;
   }
   Polyhedron<Dim> poly(decimal_t t) const {
     const auto w = traj_.evaluate(t+start_t_);
@@ -83,10 +91,12 @@ class PolyhedronNonlinearObstacle : public PolyhedronObstacle<Dim> {
   decimal_t start_t() const { return start_t_; }
 
   Trajectory<Dim> traj() const { return traj_; }
+
+  bool disappear_front_{false};
+  bool disappear_back_{false};
  protected:
   Trajectory<Dim> traj_;
   decimal_t start_t_{0};
-
 };
 
 typedef PolyhedronNonlinearObstacle<2> PolyhedronNonlinearObstacle2D;
