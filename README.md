@@ -38,7 +38,7 @@ $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ catkin b
 ```
 
-## Example1 (plan in occ/voxel map)
+## Example 1 (plan in occ/voxel map)
 Simple test using the built-in data in a voxel map can be run using the following commands:
 ```bash
 $ cd ./mpl_test_node/launch/map_planner_node
@@ -56,7 +56,7 @@ The planning results are visualized in Rviz as following:
 <img src="./mpl_test_node/samples/sample1.png" width="220"> | <img src="./mpl_test_node/samples/sample2.png" width="256">
 
 
-## Example2 (plan in polygonal map)
+## Example 2 (plan in polygonal map)
 The planner can also take input polygonal map for collision checking. When the
 obstacles are not static, it's able to find the trajectory that avoids future
 collision:
@@ -71,7 +71,7 @@ Static Obstacles | Moving Obtacles
 
 <img src="./mpl_test_node/samples/sample1.gif" width="696">
 
-Through only one plan, the robot finds the optimal timing for waiting and moving ahead in the following obstacle course:
+Even if the trajectories of obstacles are non-linear, our planner could find the optimal maneuver for the robot with certain dynamic constraints through one plan:
 ```bash
 $ cd ./mpl_test_node/launch/nonlinear_obstacle_node
 $ roslaunch rviz.launch
@@ -80,7 +80,18 @@ $ roslaunch test.launch
 
 <img src="./mpl_test_node/samples/sample2.gif" width="696">
 
-## Example3 (plan in SE(3) with ellispoid model)
+## Example 3 (multi-robot decentralized planning)
+We can build a team of robots that move simultaneously in a constrained environments without internal collision.
+In the following demo, each robot replans constantly at 2Hz and it runs its own planner that tries to reach the pre-allocate goal as fast as possible.
+We assume the robot knows other robots' trajectory at the time when it's planning.
+
+Star  | Tunnel
+:---- | :----
+<img src="./mpl_test_node/samples/sample3.gif" width="328"> | <img src="./mpl_test_node/samples/sample4.gif" width="328">
+
+
+
+## Example 4 (plan in SE(3) with ellispoid model)
 Another example using ellipsoid model can be found in `mpl_test_node/launch/ellipsoid_planner_node`, in which a point cloud is used as obstacles, and the robot is modeled as the ellipsoid. More information can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](http://ieeexplore.ieee.org/document/8264768/).
 ```bash
 $ cd ./mpl_test_node/launch/ellispoid_planner_node
