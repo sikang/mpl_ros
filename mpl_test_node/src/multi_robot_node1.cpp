@@ -1,7 +1,9 @@
+/**
+ * @brief Multi-robot test node in a tunnel case
+ */
 #include "bag_writter.hpp"
 #include "robot.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
-#include <mpl_external_planner/poly_map_planner/poly_map_planner.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
@@ -16,13 +18,13 @@ vec_E<Polyhedron2D> set_obs(vec_E<Robot<2>>& robots, decimal_t time,
     vec_E<PolyhedronNonlinearObstacle2D> nonlinear_obs;
     for(size_t j = 0; j < robots.size(); j++) {
       if(i != j)
-        nonlinear_obs.push_back(robots[j].get_nonlinear_geometry(time));
-        //linear_obs.push_back(robots[j].get_linear_geometry(time));
+        nonlinear_obs.push_back(robots[j].get_nonlinear_obstacle(time));
+        //linear_obs.push_back(robots[j].get_linear_obstacle(time));
     }
     robots[i].set_static_obs(external_static_obs);
     robots[i].set_linear_obs(linear_obs);
     robots[i].set_nonlinear_obs(nonlinear_obs);
-    poly_obs.push_back(robots[i].get_nonlinear_geometry(time).poly(0));
+    poly_obs.push_back(robots[i].get_nonlinear_obstacle(time).poly(0));
   }
   for(const auto& it: external_static_obs)
     poly_obs.push_back(it.poly(0));
@@ -81,7 +83,8 @@ int main(int argc, char **argv) {
     for (decimal_t dy = -u; dy <= u; dy += du)
       U.push_back(Vec2f(dx, dy));
 
-  Robot<2> robot1(rec);
+  // Create a team of 5 robots
+  Robot2D robot1(rec);
   robot1.set_v_max(v_max);
   robot1.set_a_max(a_max);
   robot1.set_u(U);
@@ -89,9 +92,9 @@ int main(int argc, char **argv) {
   robot1.set_map(origin, dim);
   robot1.set_start(Vec2f(0, -5));
   robot1.set_goal(Vec2f(10, -5));
-  robot1.plan(0);
+  robot1.plan(0); // need to set a small difference in the starting time
 
-  Robot<2> robot2(rec);
+  Robot2D robot2(rec);
   robot2.set_v_max(v_max);
   robot2.set_a_max(a_max);
   robot2.set_u(U);
@@ -99,9 +102,9 @@ int main(int argc, char **argv) {
   robot2.set_map(origin, dim);
   robot2.set_start(Vec2f(0, -2.5));
   robot2.set_goal(Vec2f(10, -2.5));
-  robot2.plan(0.01);
+  robot2.plan(0.01); // need to set a small difference in the starting time
 
-  Robot<2> robot3(rec);
+  Robot2D robot3(rec);
   robot3.set_v_max(v_max);
   robot3.set_a_max(a_max);
   robot3.set_u(U);
@@ -109,9 +112,9 @@ int main(int argc, char **argv) {
   robot3.set_map(origin, dim);
   robot3.set_start(Vec2f(0, 0));
   robot3.set_goal(Vec2f(10, 0));
-  robot3.plan(0.02);
+  robot3.plan(0.02); // need to set a small difference in the starting time
 
-  Robot<2> robot4(rec);
+  Robot2D robot4(rec);
   robot4.set_v_max(v_max);
   robot4.set_a_max(a_max);
   robot4.set_u(U);
@@ -121,7 +124,7 @@ int main(int argc, char **argv) {
   robot4.set_goal(Vec2f(10, 2.5));
   robot4.plan(0.03);
 
-  Robot<2> robot5(rec);
+  Robot2D robot5(rec);
   robot5.set_v_max(v_max);
   robot5.set_a_max(a_max);
   robot5.set_u(U);
@@ -132,20 +135,15 @@ int main(int argc, char **argv) {
   robot5.plan(0.04);
 
 
-  vec_E<Robot<2>> robots;
+  vec_E<Robot2D> robots;
   robots.push_back(robot1);
   robots.push_back(robot2);
   robots.push_back(robot3);
   robots.push_back(robot4);
   robots.push_back(robot5);
 
+  // Build the obstacle course
   vec_E<PolyhedronObstacle2D> static_obs;
-  Polyhedron2D rec1;
-  rec1.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
-  rec1.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
-  rec1.add(Hyperplane2D(Vec2f(5, -1), -Vec2f::UnitY()));
-  rec1.add(Hyperplane2D(Vec2f(5, 1), Vec2f::UnitY()));
-  //static_obs.push_back(PolyhedronObstacle2D(rec1));
 
   Polyhedron2D rec2;
   rec2.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
@@ -153,6 +151,7 @@ int main(int argc, char **argv) {
   rec2.add(Hyperplane2D(Vec2f(5, 0.2), -Vec2f::UnitY()));
   rec2.add(Hyperplane2D(Vec2f(5, 5.5), Vec2f::UnitY()));
   static_obs.push_back(PolyhedronObstacle2D(rec2, Vec2f::Zero()));
+
   Polyhedron2D rec3;
   rec3.add(Hyperplane2D(Vec2f(4, 0), -Vec2f::UnitX()));
   rec3.add(Hyperplane2D(Vec2f(6, 0), Vec2f::UnitX()));
@@ -167,6 +166,7 @@ int main(int argc, char **argv) {
   bbox_msg.header.stamp = ros::Time::now();
   bound_pub.publish(bbox_msg);
 
+  // Start the replan loop
   ros::Rate loop_rate(100);
   decimal_t update_t = 0.01;
   decimal_t time = 0;
@@ -178,18 +178,20 @@ int main(int argc, char **argv) {
   std::vector<planning_ros_msgs::PrimitiveArray> prs_msgs;
   while (ros::ok()) {
     time += update_t;
-    std::vector<decimal_t> ts;
 
-    auto poly_obs = set_obs(robots, time, static_obs);
+    // set obstacle simultaneously
+    auto poly_obs = set_obs(robots, time, static_obs); // set obstacles at time
 
     for(auto& it: robots)
-      it.plan(time);
+      it.plan(time); // plan
 
+    // Reduce the size of obstacles manually.
     for(auto& it: poly_obs) {
       for(auto& itt: it.vs_)
         itt.p_ -= itt.n_ * 0.25;
     }
 
+    // Visualizing
     decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
     poly_msg.header.frame_id = "map";
     poly_msg.header.stamp = t0 + ros::Duration(time);
@@ -229,6 +231,7 @@ int main(int argc, char **argv) {
     loop_rate.sleep();
   }
 
+  // Write to bag (optional)
   rosbag::Bag bag;
   bag.open(file_name, rosbag::bagmode::Write);
 
@@ -242,13 +245,6 @@ int main(int argc, char **argv) {
     bag.write(prs_name, it.header.stamp, it);
 
   bag.close();
-
-  /*
-  write_bag<sensor_msgs::PointCloud>(file_name, states_name, cloud_msgs);
-  write_bag<decomp_ros_msgs::PolyhedronArray>(file_name, polys_name, poly_msgs);
-  write_bag<planning_ros_msgs::PathArray>(file_name, paths_name, path_msgs);
-  write_bag<planning_ros_msgs::PrimitiveArray>(file_name, prs_name, prs_msgs);
-  */
 
   return 0;
 }

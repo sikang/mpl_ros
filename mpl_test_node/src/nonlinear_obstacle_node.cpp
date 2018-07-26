@@ -6,6 +6,7 @@
 
 using namespace MPL;
 
+// Generate linear trajectory: going up and down once, `t` is the delay time
 Trajectory2D generate_linear_traj(const Vec2f& start, decimal_t v, decimal_t t) {
   Waypoint2D s1;
   s1.pos = start;
@@ -32,6 +33,7 @@ Trajectory2D generate_linear_traj(const Vec2f& start, decimal_t v, decimal_t t) 
   return Trajectory2D(segs);
 }
 
+// Generate 2nd order trajectory: going back and forth once, `t` is the delay time
 Trajectory2D generate_nonlinear_traj(const Vec2f& start, const Vec2f& a, decimal_t t) {
   Waypoint2D s1;
   s1.pos = start;
@@ -205,6 +207,7 @@ int main(int argc, char **argv) {
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
 
+  // Show animation
   ros::Rate loop_rate(10);
 
   t0 = ros::Time::now();
