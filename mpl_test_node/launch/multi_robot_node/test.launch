@@ -1,12 +1,15 @@
 <launch>
   <arg name="debug" default="false"/>
+  <arg name="example" default="1"/>
   <!--<arg name="debug_valgrind" default="false"/>-->
 
   <arg name="prefix" value="" unless="$(arg debug)"/>
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
+  <param name="use_sim_time" value="false" />
+
   <node pkg="mpl_test_node"
-    type="multi_robot_node"
+    type="multi_robot_node$(arg example)"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">
