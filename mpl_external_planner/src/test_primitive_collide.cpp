@@ -30,28 +30,30 @@ int main() {
   decimal_t t1 = 1;
   Primitive2D seg1(s1, u1, t1);
 
+  /*
   Waypoint2D s2 = seg1.evaluate(seg1.t());
   Vec2f u2 = Vec2f(-1, 0);
   decimal_t t2 = 1;
 
   Primitive2D seg2(s2, u2, t2);
+  */
 
   printf("seg1: \n");
   print(seg1);
-  printf("seg2: \n");
-  print(seg2);
+  //printf("seg2: \n");
+  //print(seg2);
 
   vec_E<Primitive2D> segs;
   segs.push_back(seg1);
-  segs.push_back(seg2);
+  //segs.push_back(seg2);
 
   Trajectory2D traj(segs);
 
   Polyhedron2D geometry;
   geometry.add(Hyperplane2D(Vec2f(0, 0), Vec2f(-1, 0)));
-  PolyhedronNonlinearObstacle2D obs(geometry, traj, 0.5);
+  PolyhedronNonlinearObstacle2D obs(geometry, traj, 0);
 
-  collide(pr, obs, 1.0);
+  collide(pr, obs, 0.0);
 
   return 0;
 }

@@ -6,7 +6,7 @@
 
 using namespace MPL;
 
-Trajectory2D generate_traj(const Vec2f& start, decimal_t v, decimal_t t) {
+Trajectory2D generate_linear_traj(const Vec2f& start, decimal_t v, decimal_t t) {
   Waypoint2D s1;
   s1.pos = start;
   s1.vel = Vec2f(0, 0);
@@ -21,6 +21,32 @@ Trajectory2D generate_traj(const Vec2f& start, decimal_t v, decimal_t t) {
 
   Waypoint2D s2 = seg1.evaluate(seg1.t());
   Vec2f u2 = Vec2f(0, -v);
+  decimal_t t2 = t;
+
+  Primitive2D seg2(s2, u2, t2);
+
+  vec_E<Primitive2D> segs;
+  segs.push_back(seg1);
+  segs.push_back(seg2);
+
+  return Trajectory2D(segs);
+}
+
+Trajectory2D generate_nonlinear_traj(const Vec2f& start, const Vec2f& a, decimal_t t) {
+  Waypoint2D s1;
+  s1.pos = start;
+  s1.vel = Vec2f(0, 0);
+  s1.acc = Vec2f::Zero();
+  s1.jrk = Vec2f::Zero();
+  s1.control = Control::ACC;
+
+  Vec2f u1 = a;
+
+  decimal_t t1 = t;
+  Primitive2D seg1(s1, u1, t1);
+
+  Waypoint2D s2 = seg1.evaluate(seg1.t());
+  Vec2f u2 = -a;
   decimal_t t2 = t;
 
   Primitive2D seg2(s2, u2, t2);
@@ -55,11 +81,11 @@ int main(int argc, char **argv) {
   rec.add(Hyperplane2D(Vec2f(0, -1.25), -Vec2f::UnitY()));
   rec.add(Hyperplane2D(Vec2f(0, 1.25), Vec2f::UnitY()));
 
-  //nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_traj(Vec2f(4, 1.25), 1, 1.5), -2));
-  //nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_traj(Vec2f(4, -1.25), -1, 1.5), -2));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_linear_traj(Vec2f(4, 1.25), 1, 1.5), -3));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_linear_traj(Vec2f(4, -1.25), -1, 1.5), -3));
 
-  //nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_traj(Vec2f(8, 1.25), 1, 1.5), -8));
-  //nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_traj(Vec2f(8, -1.25), -1, 1.5), -8));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_linear_traj(Vec2f(8, 1.25), 1, 1.0), -10));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(rec, generate_linear_traj(Vec2f(8, -1.25), -1, 1.0), -10));
 
   Polyhedron2D short_rec;
   short_rec.add(Hyperplane2D(Vec2f(-0.5, 0), -Vec2f::UnitX()));
@@ -73,8 +99,15 @@ int main(int argc, char **argv) {
   long_rec.add(Hyperplane2D(Vec2f(0, -2), -Vec2f::UnitY()));
   long_rec.add(Hyperplane2D(Vec2f(0, 2), Vec2f::UnitY()));
 
-  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(short_rec, generate_traj(Vec2f(12, 2.0), 1, 1.5), -10));
-  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(long_rec, generate_traj(Vec2f(12, -0.5), -1, 1.5), -10));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(short_rec, generate_linear_traj(Vec2f(12, 2.0), 1, 1.5), -18));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(long_rec, generate_linear_traj(Vec2f(12, -0.5), -1, 1.5), -18));
+
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(long_rec, generate_linear_traj(Vec2f(16, 0.5), 1, 1.5), -20));
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(short_rec, generate_linear_traj(Vec2f(16, -2.0), -1, 1.5), -20));
+
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(short_rec, generate_nonlinear_traj(Vec2f(3, -2.0), Vec2f(1, 1), 2.0), -3));
+
+  nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(short_rec, generate_nonlinear_traj(Vec2f(7, -2.0), Vec2f(-1, 1), 2.0), -3));
 
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
@@ -100,7 +133,7 @@ int main(int argc, char **argv) {
   planner_ptr->setVmax(v_max);      // Set max velocity
   planner_ptr->setAmax(a_max);      // Set max acceleration
   planner_ptr->setDt(dt);           // Set dt for each primitive
-  planner_ptr->setTol(0.5); // Tolerance for goal region
+  planner_ptr->setTol(0.5, 0.1); // Tolerance for goal region
 
   // Set start and goal
   double start_x, start_y;

@@ -105,7 +105,7 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronNonlinearObstacle<Dim>& p
     T += segs[i].t();
   }
 
-  //printf("start_id: %d, traj_t: %f\n", start_id, traj_t);
+  //printf("start_id: %d, traj_t: %f, t: %f start_t: %f\n", start_id, traj_t, t, poly.start_t());
 
   /// if the time over the total trajectory time, use last state of traj as static obstacle
   if(start_id < 0) {
@@ -115,13 +115,14 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronNonlinearObstacle<Dim>& p
   }
 
   for(size_t id = start_id; id < segs.size(); id++) {
-    decimal_t start_t = T < traj_t ? traj_t : T;
-    if(start_t > t + pr.t())
+    decimal_t t_residual = T - traj_t < 0 ? 0 : T - traj_t;
+    decimal_t start_t = t_residual <= 0 ? traj_t : T;
+    if(t_residual > pr.t())
       break;
     const Waypoint<Dim> w = traj.evaluate(start_t);
-    //std::cout << "id: " << id << std::endl;
     for(const auto& hp: poly.geometry().hyperplanes()) {
       const auto n = hp.n_;
+      //std::cout << "n: " << n.transpose() << "p: " << hp.p_.transpose() << std::endl;
       decimal_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
       for(int i = 0; i < Dim; i++) {
         a += n(i)*cs[i](0);
@@ -136,18 +137,20 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronNonlinearObstacle<Dim>& p
       c /= 6;
       d /= 2;
 
-      //std::cout << "w p: " << w.pos.transpose() << std::endl;
-      //std::cout << "w v: " << w.vel.transpose() << std::endl;
-
       std::vector<decimal_t> ts = solve(a, b, c, d, e, f);
       //printf("a, b, c, d, e, f: %.1f, %.1f, %.1f, %.1f, %.1f, %.1f\n", a, b, c, d, e, f);
       for(const auto& it: ts) {
-        //std::cout << "t: " << it << std::endl;
-        if(it >= 0 && it <= pr.t() &&
-           T + segs[id].t() > it + t && T <= it + t) {
-          auto w = pr.evaluate(it);
-          if(poly.inside(w.pos, it+t)) {
-            //std::cout << "collide at t: " << it << std::endl;
+         if(it >= t_residual && it <= pr.t() &&
+           T + segs[id].t() >= it + start_t && T <= it + start_t) {
+           const auto curr = pr.evaluate(it);
+           if(poly.inside(curr.pos, it+t)) {
+             /*
+            std::cout << "collide pos: " << curr.pos.transpose() << std::endl;
+            std::cout << "w p: " << w.pos.transpose() << std::endl;
+            std::cout << "w v: " << w.vel.transpose() << std::endl;
+            printf("it: %f, t_residual: %f, T: %f, start_t: %f\n",
+                   it, t_residual, T, start_t);
+                   */
             return true;
           }
         }
