@@ -173,9 +173,9 @@ int main(int argc, char **argv) {
   robots.push_back(robot3);
   robots.push_back(robot4);
   robots.push_back(robot5);
-  //robots.push_back(robot6);
-  //robots.push_back(robot7);
-  //robots.push_back(robot8);
+  robots.push_back(robot6);
+  robots.push_back(robot7);
+  robots.push_back(robot8);
 
   // Build the obstacle course
   vec_E<PolyhedronObstacle2D> static_obs;

@@ -18,7 +18,7 @@ vec_E<Polyhedron2D> set_obs(vec_E<Robot<2>>& robots, decimal_t time,
     vec_E<PolyhedronNonlinearObstacle2D> nonlinear_obs;
     for(size_t j = 0; j < robots.size(); j++) {
       if(i != j)
-        nonlinear_obs.push_back(robots[j].get_nonlinear_obstacle(time, 0));
+        nonlinear_obs.push_back(robots[j].get_nonlinear_obstacle(time, 4));
         //linear_obs.push_back(robots[j].get_linear_obstacle(time));
     }
     robots[i].set_static_obs(external_static_obs);
