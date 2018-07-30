@@ -6,7 +6,7 @@
   <arg name="prefix" value="gdb -ex run --args" if="$(arg debug)"/>
 
   <node pkg="mpl_test_node"
-    type="map_planner_node"
+    type="distance_map_planner_node"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">
@@ -32,6 +32,7 @@
     <param name="ndt" value="0"/>
     <param name="use_3d" value="false"/>
     <param name="use_yaw" value="false"/>
+    <param name="use_local" value="true"/>
   </node>
 
   <node pkg="planning_ros_utils"
@@ -39,7 +40,7 @@
     type="trajectory_extractor_node"
     output="screen">
     <remap from="~trajectory" to="test_primitive/trajectory_refined"/>
-    <param name="file" value="$(find mpl_test_node)/launch/map_planner_node/trajectory_command.bag"/>
+    <param name="file" value="$(find mpl_test_node)/launch/distance_map_planner_node/trajectory_command.bag"/>
     <param name="topic" value="command"/>
   </node>
 

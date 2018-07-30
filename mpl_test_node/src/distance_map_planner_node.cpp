@@ -44,10 +44,10 @@ int main(int argc, char **argv) {
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher cloud_pub =
       nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
-  ros::Publisher prs_pub =
-      nh.advertise<planning_ros_msgs::PrimitiveArray>("primitives", 1, true);
   ros::Publisher traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
+  ros::Publisher prior_traj_pub =
+      nh.advertise<planning_ros_msgs::Trajectory>("prior_trajectory", 1, true);
   ros::Publisher refined_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
       "trajectory_refined", 1, true);
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
   double dt, v_max, a_max, yaw_max;
   double u, u_yaw;
   int num, ndt;
-  bool use_3d, use_yaw;
+  bool use_3d, use_yaw, use_potential, use_local;
   nh.param("dt", dt, 1.0);
   nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
@@ -105,6 +105,8 @@ int main(int argc, char **argv) {
   nh.param("num", num, 1);
   nh.param("use_3d", use_3d, false);
   nh.param("use_yaw", use_yaw, false);
+  nh.param("use_local", use_local, false);
+  nh.param("use_potential", use_potential, true);
 
   // Set control input
   vec_E<VecDf> U; // Control input
@@ -184,9 +186,8 @@ int main(int argc, char **argv) {
   planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_ptr->setU(U); // Set control input
   planner_ptr->setTol(0.5); // Tolerance for goal region
-  //planner_ptr->setHeurIgnoreDynamics(true);
 
-  // Planning thread!
+
   ros::Time t0 = ros::Time::now();
   bool valid = planner_ptr->plan(start, goal);
 
@@ -194,53 +195,97 @@ int main(int argc, char **argv) {
     ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
              (ros::Time::now() - t0).toSec(),
              planner_ptr->getCloseSet().size());
-  } else {
-    ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
-             (ros::Time::now() - t0).toSec(),
-             planner_ptr->getCloseSet().size());
-
-    auto traj = planner_ptr->getTraj();
-    // Publish trajectory as primitives
-    planning_ros_msgs::PrimitiveArray prs_msg =
-      toPrimitiveArrayROSMsg(traj.getPrimitives());
-    prs_msg.header = header;
-    prs_pub.publish(prs_msg);
-
-    // Publish trajectory
-    planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
-    traj_msg.header = header;
-    traj_pub.publish(traj_msg);
-
-    printf("Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
-           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
-
-    // Get intermediate waypoints
-    auto waypoints = traj.getWaypoints();
-    for(int i = 1; i < waypoints.size() - 1; i++)
-      waypoints[i].control = Control::VEL;
-    // Get time allocation
-    auto dts = traj.getSegmentTimes();
-
-    // Generate higher order polynomials
-    TrajSolver3D traj_solver(Control::JRK);
-    traj_solver.setWaypoints(waypoints);
-    traj_solver.setDts(dts);
-    traj = traj_solver.solve();
-
-    // Publish refined trajectory
-    planning_ros_msgs::Trajectory refined_traj_msg = toTrajectoryROSMsg(traj);
-    refined_traj_msg.header = header;
-    refined_traj_pub.publish(refined_traj_msg);
-
-    printf("Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
-           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+    return -1;
   }
 
+  ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
+           (ros::Time::now() - t0).toSec(),
+           planner_ptr->getCloseSet().size());
+
+  auto traj = planner_ptr->getTraj();
+  // Publish trajectory
+  planning_ros_msgs::Trajectory prior_traj_msg = toTrajectoryROSMsg(traj);
+  prior_traj_msg.header = header;
+  prior_traj_pub.publish(prior_traj_msg);
+
+  printf("Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
+         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+         traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+
+  planner_ptr.reset(new MPL::VoxelMapPlanner(true));
+  planner_ptr->setMapUtil(map_util); // Set collision checking function
+  planner_ptr->setVmax(v_max);       // Set max velocity
+  planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
+  planner_ptr->setYawmax(yaw_max);       // Set yaw threshold
+  planner_ptr->setDt(dt);            // Set dt for each primitive
+  planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
+  planner_ptr->setU(U); // Set control input
+  planner_ptr->setTol(0.5); // Tolerance for goal region
+
+  if(use_local) {
+    const auto ws = traj.getWaypoints();
+    vec_Vec3f path;
+    for(const auto& w: ws)
+      path.push_back(w.pos);
+    planner_ptr->setValidRegion(path, Vec3f(0.5, 0.5, 0.1)); // Set search region around path
+  }
+  if(use_potential) {
+    planner_ptr->setPotentialRadius(Vec3f(1.0, 1.0, 0.1)); // Set potential distance
+    planner_ptr->setPotentialWeight(1); // Set potential weight
+    planner_ptr->setGradientWeight(0); // Set gradient weight
+    planner_ptr->updatePotentialMap(start.pos); // Update potential map
+  }
+
+
+  // Planning thread!
+  t0 = ros::Time::now();
+  valid = planner_ptr->plan(start, goal);
+
+  if (!valid) {
+    ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
+             (ros::Time::now() - t0).toSec(),
+             planner_ptr->getCloseSet().size());
+    return -1;
+  }
+
+  ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
+           (ros::Time::now() - t0).toSec(),
+           planner_ptr->getCloseSet().size());
+
+  traj = planner_ptr->getTraj();
+  // Publish trajectory
+  planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
+  traj_msg.header = header;
+  traj_pub.publish(traj_msg);
+
+  printf("Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
+         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+         traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+
+  // Get intermediate waypoints
+  auto waypoints = traj.getWaypoints();
+  for(int i = 1; i < waypoints.size() - 1; i++)
+    waypoints[i].control = Control::VEL;
+  // Get time allocation
+  auto dts = traj.getSegmentTimes();
+
+  // Generate higher order polynomials
+  TrajSolver3D traj_solver(Control::JRK);
+  traj_solver.setWaypoints(waypoints);
+  traj_solver.setDts(dts);
+  traj = traj_solver.solve();
+
+  // Publish refined trajectory
+  planning_ros_msgs::Trajectory refined_traj_msg = toTrajectoryROSMsg(traj);
+  refined_traj_msg.header = header;
+  refined_traj_pub.publish(refined_traj_msg);
+
+  printf("Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
+         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+         traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+
   // Publish expanded nodes
-  sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
-  //sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getValidRegion());
+  sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getSearchRegion());
   ps.header = header;
   cloud_pub.publish(ps);
 
