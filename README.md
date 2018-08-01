@@ -85,8 +85,8 @@ We can build a team of robots that move simultaneously in a constrained environm
 In the following demo, each robot replans constantly at 2Hz and it runs its own planner that tries to reach the pre-allocate goal as fast as possible.
 We assume the robot knows other robots' trajectory at the time when it's planning.
 
-Star  | Tunnel
-:---- | :----
+Config1: 10 robots | Config2: 16 robots
+:----------------- | :-----------------
 <img src="./mpl_test_node/samples/sample3.gif" width="328"> | <img src="./mpl_test_node/samples/sample4.gif" width="328">
 
 

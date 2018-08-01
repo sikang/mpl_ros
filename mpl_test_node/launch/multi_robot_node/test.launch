@@ -1,6 +1,5 @@
 <launch>
   <arg name="debug" default="false"/>
-  <arg name="example" default="1"/>
   <!--<arg name="debug_valgrind" default="false"/>-->
 
   <arg name="prefix" value="" unless="$(arg debug)"/>
@@ -9,7 +8,7 @@
   <param name="use_sim_time" value="false" />
 
   <node pkg="mpl_test_node"
-    type="multi_robot_node$(arg example)"
+    type="multi_robot_node"
     name="test_primitive"
     launch-prefix="$(arg prefix)"
     output="screen">
@@ -19,6 +18,8 @@
     <param name="u" value="1.0"/>
     <param name="dt" value="0.5"/>
     <param name="ndt" value="0"/>
+    <param name="use_config1" value="false"/>
+    <param name="use_config2" value="true"/>
     <param name="file" value="$(find mpl_test_node)/launch/multi_robot_node/sim.bag"/>
   </node>
 
