@@ -9,8 +9,8 @@ Packages:
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
   - `DecompROS`: convex decomposition tool
-  - `mpl_external_planner`: planner that uses the
-  - `mpl_test_node`: examples code for simple testing
+  - `mpl_external_planner`: several planner that build on the `motion_primitive_library`
+  - `mpl_test_node`: examples code (see following Examples)
 
 ## Installation
 #### Dependancy:
@@ -18,19 +18,21 @@ Packages:
   - `SDL`(`sudo apt install -y libsdl1.2-dev libsdl-image1.2-dev`)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
 
-To initialize the submodule `motion_primitive_library` and `DecompROS`, run following commands at first:
+##### Compile
+Before compiling, make sure submodules are on their corresponding commits.
+To initialize the submodule `motion_primitive_library` and `DecompROS`, run following commands:
 ```bash
 $ cd /PATH/TO/mpl_ros
 $ git submodule update --init --recursive
 ```
 
-#### 1) Using Catkin:
+###### 1) Using Catkin:
 ```bash
 $ mv mpl_ros ~/catkin_ws/src
 $ cd ~/catkin_ws & catkin_make_isolated -DCMAKE_BUILD_TYPE=Release
 ```
 
-#### 2) Using Catkin Tools (recommended):
+###### 2) Using Catkin Tools (recommended):
 ```bash
 $ mv mpl_ros ~/catkin_ws/src
 $ cd ~/catkin_ws
@@ -38,7 +40,16 @@ $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ catkin b
 ```
 
-## Example 1 (plan in occ/voxel map)
+## Example Usage
+The planner inside `mpl_ros` including:
+  - `OccMapPlanner`: uses 2D occupancy grid map
+  - `VoxelMapPlanner`: uses 3D voxel grid map
+  - `EllipsoidPlanner`: uses 3D point cloud and model robot as ellipsoid in SE(3)
+  - `PolyMapPlanner2D`: uses 2D polygona map
+
+Following examples demonstrate some of these planners:
+
+#### Example 1 (plan in occ/voxel map)
 Simple test using the built-in data in a voxel map can be run using the following commands:
 ```bash
 $ cd ./mpl_test_node/launch/map_planner_node
@@ -56,7 +67,7 @@ The planning results are visualized in Rviz as following:
 <img src="./mpl_test_node/samples/sample1.png" width="220"> | <img src="./mpl_test_node/samples/sample2.png" width="256">
 
 
-## Example 2 (plan with moving obstacles)
+#### Example 2 (plan with moving obstacles)
 The planner can also take input polygonal map for collision checking. When the
 obstacles are not static, it's able to find the trajectory that avoids future
 collision:
@@ -80,7 +91,7 @@ $ roslaunch test.launch
 
 <img src="./mpl_test_node/samples/sample2.gif" width="696">
 
-## Example 3 (multi-robot planning)
+#### Example 3 (multi-robot planning)
 The planner can be applied to a team of robots that move in a shared constrained environments.
 In the following demo, we show examples of two configurations, in which the planner is running
 in a centralized or decentralized mode.
@@ -97,7 +108,7 @@ Config1: 10 Robots Decentralized | Config2: 16 robots Decentralized
 
 
 
-## Example 4 (plan in SE(3) with ellispoid model)
+#### Example 4 (plan in SE(3) with ellispoid model)
 Another example using ellipsoid model can be found in `mpl_test_node/launch/ellipsoid_planner_node`, in which a point cloud is used as obstacles, and the robot is modeled as the ellipsoid. More information can be found in the paper ["Search-based Motion Planning for Aggressive Flight in SE(3)"](http://ieeexplore.ieee.org/document/8264768/).
 ```bash
 $ cd ./mpl_test_node/launch/ellispoid_planner_node
@@ -106,7 +117,7 @@ $ roslaunch test.launch
 ```
 <img src="./mpl_test_node/samples/sample3.png" width="328">
 
-## Example Maps
+## Maps
 The built-in maps are listed as below:
 
 Simple | Levine | Skir | Office
