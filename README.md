@@ -90,6 +90,7 @@ In the decentralized mode, each robot replans constantly at 2Hz with partial kno
 Config1: 10 Robots Centralized | Config2: 16 Robots Centralized
 :----------------------------- | :-----------------------------
 <img src="./mpl_test_node/samples/sample3.gif" width="328"> | <img src="./mpl_test_node/samples/sample4.gif" width="328">
+
 Config1: 10 Robots Decentralized | Config2: 16 robots Decentralized
 :------------------------------- | :-------------------------------
 <img src="./mpl_test_node/samples/sample5.gif" width="328"> | <img src="./mpl_test_node/samples/sample6.gif" width="328">
