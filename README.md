@@ -56,7 +56,7 @@ The planning results are visualized in Rviz as following:
 <img src="./mpl_test_node/samples/sample1.png" width="220"> | <img src="./mpl_test_node/samples/sample2.png" width="256">
 
 
-## Example 2 (plan in polygonal map)
+## Example 2 (plan with moving obstacles)
 The planner can also take input polygonal map for collision checking. When the
 obstacles are not static, it's able to find the trajectory that avoids future
 collision:
@@ -80,14 +80,19 @@ $ roslaunch test.launch
 
 <img src="./mpl_test_node/samples/sample2.gif" width="696">
 
-## Example 3 (multi-robot decentralized planning)
-We can build a team of robots that move simultaneously in a constrained environments without internal collision.
-In the following demo, each robot replans constantly at 2Hz and it runs its own planner that tries to reach the pre-allocate goal as fast as possible.
-We assume the robot knows other robots' trajectory at the time when it's planning.
+## Example 3 (multi-robot planning)
+The planner can be applied to a team of robots that move in a shared constrained environments.
+In the following demo, we show examples of two configurations, in which the planner is running
+in a centralized or decentralized mode.
+In the centralized mode, the planner runs once in the beginning.
+In the decentralized mode, each robot replans constantly at 2Hz with partial knowledge of its surrounding obstacles.
 
-Config1: 10 robots | Config2: 16 robots
-:----------------- | :-----------------
+Config1: 10 Robots Centralized | Config2: 16 Robots Centralized
+:----------------------------- | :-----------------------------
 <img src="./mpl_test_node/samples/sample3.gif" width="328"> | <img src="./mpl_test_node/samples/sample4.gif" width="328">
+Config1: 10 Robots Decentralized | Config2: 16 robots Decentralized
+:------------------------------- | :-------------------------------
+<img src="./mpl_test_node/samples/sample5.gif" width="328"> | <img src="./mpl_test_node/samples/sample6.gif" width="328">
 
 
 
