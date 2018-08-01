@@ -1,1 +1,3 @@
 *.swp
+trajectory_command.bag
+sim.bag

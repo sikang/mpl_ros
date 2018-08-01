@@ -29,7 +29,6 @@
     <param name="u" value="1.0"/>
     <param name="u_yaw" value="0.5"/>
     <param name="dt" value="1"/>
-    <param name="ndt" value="0"/>
     <param name="use_3d" value="false"/>
     <param name="use_yaw" value="false"/>
     <param name="use_local" value="true"/>

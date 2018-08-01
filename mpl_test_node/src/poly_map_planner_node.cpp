@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
   nh.param("range_y", dim(1), 5.0);
 
   // Initialize planner
-  double dt, v_max, a_max, w, epsilon, t_max;
+  double dt, v_max, a_max, w, epsilon;
   double u;
   int num;
   nh.param("dt", dt, 1.0);

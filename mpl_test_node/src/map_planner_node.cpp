@@ -93,10 +93,9 @@ int main(int argc, char **argv) {
   // Initialize planner
   double dt, v_max, a_max, yaw_max;
   double u, u_yaw;
-  int num, ndt;
+  int num;
   bool use_3d, use_yaw;
   nh.param("dt", dt, 1.0);
-  nh.param("ndt", ndt, -1);
   nh.param("v_max", v_max, 2.0);
   nh.param("a_max", a_max, 1.0);
   nh.param("yaw_max", yaw_max, -1.0);
@@ -181,7 +180,6 @@ int main(int argc, char **argv) {
   planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
   planner_ptr->setYawmax(yaw_max);       // Set yaw threshold
   planner_ptr->setDt(dt);            // Set dt for each primitive
-  planner_ptr->setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_ptr->setU(U); // Set control input
   planner_ptr->setTol(0.5); // Tolerance for goal region
   //planner_ptr->setHeurIgnoreDynamics(true);

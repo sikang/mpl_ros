@@ -36,8 +36,6 @@ target_link_libraries(multi_robot_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 cs_add_executable(nonlinear_obstacle_node src/nonlinear_obstacle_node.cpp)
 target_link_libraries(nonlinear_obstacle_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
-
-
 cs_install()
 
 cs_export()

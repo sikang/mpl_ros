@@ -22,7 +22,6 @@
     <param name="a_max" value="1.0"/>
     <param name="u" value="0.5"/>
     <param name="dt" value="1.0"/>
-    <param name="ndt" value="0"/>
   </node>
 
 </launch>
