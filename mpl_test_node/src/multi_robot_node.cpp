@@ -107,14 +107,15 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     time += update_t;
 
-    // set obstacle simultaneously
-    auto poly_obs = robot_team->set_obs(time); // set obstacles at time
-
     // plan
-    if(!robot_team->plan(time)) {
+    //if(!robot_team->update_centralized(time)) {
+    if(!robot_team->update_decentralized(time)) {
       ROS_INFO("Robot fails to plan, ABORT!");
       break;
     }
+
+    // set obstacle simultaneously
+    auto poly_obs = robot_team->get_obs(); // set obstacles at time
 
     // Visualizing current status at 10 Hz
     if(time - prev_time >= 0.1) {

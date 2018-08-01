@@ -78,6 +78,11 @@ class Robot {
     nonlinear_obs_ = obs;
   }
 
+  /// Set traj init time manually
+  void set_traj_t(decimal_t t) {
+    traj_t_ = t;
+  }
+
   /**
    * @brief planning thread
    * @param t robot current local time
@@ -186,7 +191,7 @@ class Robot {
     return get_state(time).pos == goal.pos;
   }
 
- private:
+ protected:
   /// Robot shape
   Polyhedron<Dim> shape_;
   /// Planner

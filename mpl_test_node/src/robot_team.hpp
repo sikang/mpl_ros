@@ -53,13 +53,51 @@ class HomogeneousRobotTeam {
   /// Get robots
   std::vector<std::shared_ptr<Robot<Dim>>> get_robots() { return robots_; }
 
-  /// Plan
-  bool plan(decimal_t time) {
+  /// Get current obstacles
+  vec_E<Polyhedron<Dim>> get_obs() { return curr_obs_; }
+
+  /// Plan decentralized
+  bool update_decentralized(decimal_t time) {
+    curr_obs_ = set_obs(time);
+
     for(auto& it: robots_)
       if(!it->plan(time))
         return false;
     return true;
   }
+
+  /// Plan decentralized
+  bool update_centralized(decimal_t time) {
+    curr_obs_.clear();
+    for (const auto& it: robots_)
+      curr_obs_.push_back(it->get_nonlinear_obstacle(time).poly(0));
+    for(const auto& it: static_obs_)
+      curr_obs_.push_back(it.poly(0));
+
+    static bool planned = false;
+    if(planned)
+      return true;
+
+    for(size_t i = 0; i < robots_.size(); i++) {
+      vec_E<PolyhedronLinearObstacle<Dim>> linear_obs;
+      vec_E<PolyhedronNonlinearObstacle<Dim>> nonlinear_obs;
+      for(size_t j = 0; j < i; j++) {
+        nonlinear_obs.push_back(robots_[j]->get_nonlinear_obstacle(time, 0));
+        //linear_obs.push_back(robots_[j]->get_linear_obstacle(time));
+      }
+      robots_[i]->set_static_obs(static_obs_);
+      robots_[i]->set_linear_obs(linear_obs);
+      robots_[i]->set_nonlinear_obs(nonlinear_obs);
+      robots_[i]->set_traj_t(-1);
+
+      if(!robots_[i]->plan(0))
+        return false;
+    }
+    planned = true;
+    return true;
+  }
+
+
 
   /// Check if all robot reaches the goal
   bool finished(decimal_t time) {
@@ -93,6 +131,8 @@ protected:
   decimal_t traj_time_{4.0};
   /// Robot shape
   Polyhedron<Dim> rec_;
+  /// Obstacle course
+  vec_E<Polyhedron<Dim>> curr_obs_;
   /// Robot array
   std::vector<std::shared_ptr<Robot<Dim>>> robots_;
   /// Static Obstacle array
