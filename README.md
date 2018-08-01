@@ -8,9 +8,9 @@ Packages:
   - `motion_primitive_library`: back-end for planning trajectory in various environments
   - `planning_ros_msgs`: ROS msgs used in storing, visualizing and communicating
   - `planning_ros_utils`: ROS utils for interfacing with MPL, it also includes mapping and rviz plugins
-  - `DecompROS`: convex decomposition tool
-  - `mpl_external_planner`: several planner that build on the `motion_primitive_library`
-  - `mpl_test_node`: examples code (see following Examples)
+  - `DecompROS`: tool for convex decomposition and visualization
+  - `mpl_external_planner`: several planners that build on the `motion_primitive_library`
+  - `mpl_test_node`: example ROS nodes (see following Examples)
 
 ## Installation
 #### Dependancy:
@@ -44,8 +44,8 @@ $ catkin b
 The planner inside `mpl_ros` including:
   - `OccMapPlanner`: uses 2D occupancy grid map
   - `VoxelMapPlanner`: uses 3D voxel grid map
-  - `EllipsoidPlanner`: uses 3D point cloud and model robot as ellipsoid in SE(3)
-  - `PolyMapPlanner2D`: uses 2D polygona map
+  - `EllipsoidPlanner`: uses 3D point cloud and models robot as ellipsoid in SE(3)
+  - `PolyMapPlanner2D`: uses 2D polygonal map and moving obstacles
 
 Following examples demonstrate some of these planners:
 
