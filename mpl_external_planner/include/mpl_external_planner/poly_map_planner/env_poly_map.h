@@ -15,9 +15,6 @@ namespace MPL {
  */
 template <int Dim>
 class env_poly_map : public env_base<Dim> {
-protected:
-  std::shared_ptr<PolyMapUtil<Dim>> map_util_;
-
 public:
   /// Simple constructor
   env_poly_map() {}
@@ -51,6 +48,8 @@ public:
 		succ_cost.clear();
 		action_idx.clear();
 
+    this->expanded_nodes_.push_back(curr.pos);
+
 		for (size_t i = 0; i < this->U_.size(); i++) {
 			Primitive<Dim> pr(curr, this->U_[i], this->dt_);
       Waypoint<Dim> tn = pr.evaluate(this->dt_);
@@ -70,6 +69,10 @@ public:
 			action_idx.push_back(i);
 		}
 	}
+protected:
+  std::shared_ptr<PolyMapUtil<Dim>> map_util_;
+
+
 };
 }
 

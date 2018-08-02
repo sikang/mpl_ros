@@ -19,20 +19,19 @@ class PolyMapUtil {
     PolyMapUtil() {}
 
     ///Set static polyhedron obstacles
-    void addStaticObstacle(const PolyhedronObstacle<Dim>& o) {
-      static_obs_.push_back(o);
+    void setStaticObstacle(const vec_E<PolyhedronObstacle<Dim>>& obs) {
+      static_obs_ = obs;
     }
 
     ///Set linear polyhedron obstacles
-    void addLinearObstacle(const PolyhedronLinearObstacle<Dim>& o) {
-      linear_obs_.push_back(o);
+    void setLinearObstacle(const vec_E<PolyhedronLinearObstacle<Dim>>& obs) {
+      linear_obs_ = obs;
     }
 
     ///Set non-linear polyhedron obstacles
-    void addNonlinearObstacle(const PolyhedronNonlinearObstacle<Dim>& o) {
-      nonlinear_obs_.push_back(o);
+    void setNonlinearObstacle(const vec_E<PolyhedronNonlinearObstacle<Dim>>& obs) {
+      nonlinear_obs_ = obs;
     }
-
 
     ///Set bounding box for 2D
     template<int U = Dim>
@@ -60,16 +59,9 @@ class PolyMapUtil {
         bbox_ = Vs;
       }
 
-    /// Check if a point is inside bounding box and outside static obstacles
+    /// Check if a point is inside bounding box
     bool isValid(const Vecf<Dim>& pt) const {
-      if (!bbox_.inside(pt))
-        return false;
-      for(const auto& poly: static_obs_) {
-        if(poly.inside(pt))
-          return false;
-      }
-
-      return true;
+      return bbox_.inside(pt);
     }
 
     /// Check if a point is valid and not colliding moving obstacles
@@ -77,6 +69,11 @@ class PolyMapUtil {
     bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
       if(!isValid(pt))
         return false;
+      for(const auto& poly: static_obs_) {
+        if(poly.inside(pt))
+          return false;
+      }
+
       for(const auto& poly: linear_obs_) {
         if(poly.inside(pt, t))
           return false;

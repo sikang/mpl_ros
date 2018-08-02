@@ -34,7 +34,46 @@ struct ObstacleCourse {
 
     return Trajectory<Dim>(segs);
   }
+
+
+  /// Generate linear square trajectory
+  Trajectory<Dim> square(const Vecf<Dim> &start, const Vecf<Dim> &v,
+                         decimal_t t, bool clockwise = true) {
+    Waypoint<Dim> s1;
+    s1.pos = start;
+    s1.vel = Vecf<Dim>::Zero();
+    s1.acc = Vecf<Dim>::Zero();
+    s1.jrk = Vecf<Dim>::Zero();
+    s1.control = Control::VEL;
+
+    Vecf<Dim> u1 = v;
+
+    Primitive<Dim> seg1(s1, u1, t);
+
+    Waypoint<Dim> s2 = seg1.evaluate(seg1.t());
+    Vec2f u2(v(1), -v(0));
+    if(!clockwise)
+      u2 = -u2;
+    Primitive<Dim> seg2(s2, u2, t);
+
+    Waypoint<Dim> s3 = seg2.evaluate(seg2.t());
+    Vec2f u3 = -u1;
+    Primitive<Dim> seg3(s3, u3, t);
+
+    Waypoint<Dim> s4 = seg2.evaluate(seg3.t());
+    Vec2f u4 = -u2;
+    Primitive<Dim> seg4(s4, u4, t);
+
+    vec_E<Primitive<Dim>> segs;
+    segs.push_back(seg1);
+    segs.push_back(seg2);
+    segs.push_back(seg3);
+    segs.push_back(seg4);
+
+    return Trajectory<Dim>(segs);
+  }
 };
+
 
 /// Include linear obstacles
 struct ObstacleCourse2DConfig0 : ObstacleCourse<2> {
