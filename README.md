@@ -83,11 +83,6 @@ Static Obstacles | Moving Obtacles
 <img src="./mpl_test_node/samples/sample1.gif" width="696">
 
 Even if the trajectories of obstacles are non-linear, our planner could find the optimal maneuver for the robot with certain dynamic constraints through one plan:
-```bash
-$ cd ./mpl_test_node/launch/nonlinear_obstacle_node
-$ roslaunch rviz.launch
-$ roslaunch test.launch
-```
 
 <img src="./mpl_test_node/samples/sample2.gif" width="696">
 
