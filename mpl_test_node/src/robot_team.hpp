@@ -3,7 +3,7 @@
 template <int Dim>
 class HomogeneousRobotTeam {
  public:
-  HomogeneousRobotTeam(decimal_t ddt) : ddt_(ddt) {}
+  HomogeneousRobotTeam(decimal_t ddt = 0) : ddt_(ddt) {}
 
   /// Set max velocity for planner
   void set_v_max(decimal_t v) { v_max_ = v; }

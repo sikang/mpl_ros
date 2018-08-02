@@ -5,9 +5,6 @@
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
 
-using namespace MPL;
-
-
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");

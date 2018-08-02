@@ -60,23 +60,34 @@ class PolyMapUtil {
         bbox_ = Vs;
       }
 
-		bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
-			if (!bbox_.inside(pt))
-				return false;
-			for(const auto& poly: static_obs_) {
-				if(poly.inside(pt))
-					return false;
-			}
-			for(const auto& poly: linear_obs_) {
-				if(poly.inside(pt, t))
-					return false;
-			}
-			for(const auto& poly: nonlinear_obs_) {
-				if(poly.inside(pt, t))
-					return false;
-			}
-			return true;
-		}
+    /// Check if a point is inside bounding box and outside static obstacles
+    bool isValid(const Vecf<Dim>& pt) const {
+      if (!bbox_.inside(pt))
+        return false;
+      for(const auto& poly: static_obs_) {
+        if(poly.inside(pt))
+          return false;
+      }
+
+      return true;
+    }
+
+    /// Check if a point is valid and not colliding moving obstacles
+    /*
+    bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
+      if(!isValid(pt))
+        return false;
+      for(const auto& poly: linear_obs_) {
+        if(poly.inside(pt, t))
+          return false;
+      }
+      for(const auto& poly: nonlinear_obs_) {
+        if(poly.inside(pt, t))
+          return false;
+      }
+      return true;
+    }
+    */
 
 		///Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
     bool isFree(const Primitive<Dim> &pr, decimal_t t) const {

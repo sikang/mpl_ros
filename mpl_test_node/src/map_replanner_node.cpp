@@ -476,23 +476,6 @@ int main(int argc, char **argv) {
   replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true);  // Use LPAstar
 
-  /*
-  sensor_msgs::PointCloud cloud1, cloud2;
-
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = 14, pt1.y = 14, pt1.z = 0.1;
-  pt2.x = 18, pt2.y = 14, pt2.z = 0.1;
-  cloud1.points.push_back(pt1), cloud1.points.push_back(pt2);
-
-  addCloudCallback(boost::make_shared<sensor_msgs::PointCloud>(cloud1));
-
-  pt1.x = 4, pt1.y = 5, pt1.z = 0.1;
-  pt2.x = 12, pt2.y = 5, pt2.z = 0.1;
-  cloud2.points.push_back(pt1), cloud2.points.push_back(pt2);
-
-  addCloudCallback(boost::make_shared<sensor_msgs::PointCloud>(cloud2));
-  */
-
   // Planning thread!
   std_msgs::Bool init;
   init.data = false;

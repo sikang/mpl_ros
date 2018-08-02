@@ -28,9 +28,9 @@ public:
 
   ~env_poly_map() {}
 
-  /// Check if a point is in free space
+  /// Check if a point is inside bounding box and outside static obstacles
   bool is_free(const Vecf<Dim> &pt) const {
-    return map_util_->isFree(pt, 0);
+    return map_util_->isValid(pt);
   }
 
   /**
@@ -53,15 +53,20 @@ public:
 
 		for (size_t i = 0; i < this->U_.size(); i++) {
 			Primitive<Dim> pr(curr, this->U_[i], this->dt_);
-			Waypoint<Dim> tn = pr.evaluate(this->dt_);
-			if(!map_util_->isFree(tn.pos, curr.t+this->dt_) ||
-         !map_util_->isFree(pr, curr.t) ||
-				 !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
-				continue;
-			tn.t = curr.t + this->dt_;
+      Waypoint<Dim> tn = pr.evaluate(this->dt_);
+      if(!map_util_->isValid(tn.pos) ||
+         !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
+        continue;
+      decimal_t cost =
+        map_util_->isFree(pr, curr.t)
+        ? pr.J(pr.control()) +
+        0.001 * pr.J(Control::VEL) +
+        this->w_ * this->dt_
+        : std::numeric_limits<decimal_t>::infinity();
+      tn.t = curr.t + this->dt_;
       tn.enable_t = true;
 			succ.push_back(tn);
-			succ_cost.push_back(pr.J(pr.control()) + 0.001 * pr.J(Control::VEL) + this->w_ * this->dt_);
+			succ_cost.push_back(cost);
 			action_idx.push_back(i);
 		}
 	}

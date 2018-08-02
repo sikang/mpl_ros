@@ -8,8 +8,6 @@
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
 
-using namespace MPL;
-
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
@@ -71,11 +69,12 @@ int main(int argc, char **argv) {
   rec.add(Hyperplane2D(Vec2f(0, 0.5), Vec2f::UnitY()));
 
   std::unique_ptr<HomogeneousRobotTeam<2>> robot_team;
-  if(use_config1) {
+  if(use_config1)
     robot_team.reset(new Team1(0.01));
-  }
   else if(use_config2)
     robot_team.reset(new Team2(0.01));
+  else
+    robot_team.reset(new HomogeneousRobotTeam<2>());
   robot_team->set_v_max(v_max);
   robot_team->set_a_max(a_max);
   robot_team->set_u(U);
