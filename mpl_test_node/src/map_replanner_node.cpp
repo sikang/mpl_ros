@@ -229,9 +229,9 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
 }
 
 void subtreeCallback(const std_msgs::Int8::ConstPtr &msg) {
- if (replan_planner_.initialized()) {
+ if (replan_planner_.initialized())
     replan_planner_.getSubStateSpace(msg->data);
-  } else
+ else
     return;
   auto ws = replan_planner_.getTraj().getWaypoints();
   if (ws.size() < 3)
@@ -406,7 +406,6 @@ int main(int argc, char **argv) {
   planner_.setAmax(a_max);       // Set max acceleration
   planner_.setJmax(j_max);       // Set jrk (as control input)
   planner_.setDt(dt);            // Set dt for each primitive
-  planner_.setTmax(ndt * dt);    // Set the planning horizon: n*dt
   planner_.setMaxNum(
       max_num);     // Set maximum allowed expansion, -1 means no limitation
   planner_.setU(U); // 2D discretization with 1
@@ -419,7 +418,6 @@ int main(int argc, char **argv) {
   replan_planner_.setAmax(a_max);    // Set max acceleration (as control input)
   replan_planner_.setJmax(j_max);    // Set jrk (as control input)
   replan_planner_.setDt(dt);         // Set dt for each primitive
-  replan_planner_.setTmax(ndt * dt); // Set dt for each primitive
   replan_planner_.setMaxNum(
       -1); // Set maximum allowed expansion, -1 means no limitation
   replan_planner_.setU(U);           // 2D discretization with 1

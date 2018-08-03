@@ -62,6 +62,7 @@ toPrimitiveArrayROSMsg(const vec_E<Primitive2D> &prs, double z = 0) {
     msg.primitives.push_back(toPrimitiveROSMsg(pr, z));
   return msg;
 }
+
 /// Multiple Primitive3D to Primitive array ROS message
 inline planning_ros_msgs::PrimitiveArray
 toPrimitiveArrayROSMsg(const vec_E<Primitive3D> &prs) {

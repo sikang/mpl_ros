@@ -13,6 +13,8 @@
     output="screen">
     <remap from="~replan" to="/replan"/>
     <param name="file" value="$(find mpl_test_node)/launch/poly_map_replanner_node/test.bag"/>
+    <param name="subtree" value="true"/>
+    <param name="show_animation" value="false"/>
     <!-- Set start and goal -->
     <param name="goal_x" value="16"/>
     <param name="goal_y" value="0"/>
