@@ -152,4 +152,61 @@ typedef PolyhedronNonlinearObstacle<2> PolyhedronNonlinearObstacle2D;
 
 typedef PolyhedronNonlinearObstacle<3> PolyhedronNonlinearObstacle3D;
 
+///Nonlinear obstacle class
+template <int Dim>
+class PolyhedronCircularObstacle: public PolyhedronObstacle<Dim> {
+ public:
+  /// Empty constructor
+  PolyhedronCircularObstacle() {}
+  /**
+   * @brief Basic constructor
+   * @param poly shape of obstacle
+   * @param traj trajecotory for representative point
+   * @param t start time
+   */
+  PolyhedronCircularObstacle(const Polyhedron<Dim> &poly,
+                             const Vecf<Dim> &center, decimal_t r, decimal_t w,
+                             decimal_t init_angle = 0)
+      : center_(center), radius_(r), w_(w), init_angle_() {
+    this->poly_ = poly;
+  }
 
+  Polyhedron<Dim> poly(decimal_t t) const {
+    Vecf<Dim> offset = Vecf<Dim>::Zero();
+    offset(0) = radius_ * cos(init_angle_+t*w_);
+    offset(1) = radius_ * sin(init_angle_+t*w_);
+
+    auto poly = this->poly_;
+    for(auto& it: poly.vs_)
+      it.p_ += center_ + offset;
+    return poly;
+  }
+
+  /// Downgrade to linear obstacle at time \f$t\f$
+  PolyhedronLinearObstacle<Dim> get_linear_obstacle(decimal_t t) const {
+    Vecf<Dim> offset = Vecf<Dim>::Zero();
+    offset(0) = radius_ * cos(init_angle_+t*w_);
+    offset(1) = radius_ * sin(init_angle_+t*w_);
+
+    auto pos = center_ + offset;
+
+    Vecf<Dim> vel = Vecf<Dim>::Zero();
+    vel(0) = -w_ * radius_ * sin(init_angle_ + t*w_);
+    vel(1) = w_ * radius_ * cos(init_angle_ + t*w_);
+    return PolyhedronLinearObstacle<Dim>(this->poly_, pos, vel);
+  }
+
+ protected:
+  /// Center of circular trajectory
+  Vecf<Dim> center_;
+  /// Radius of circular trajectory
+  decimal_t radius_;
+  /// Angular velocity of circular trajectory
+  decimal_t w_;
+  /// Initial angle
+  decimal_t init_angle_;
+};
+
+typedef PolyhedronCircularObstacle<2> PolyhedronCircularObstacle2D;
+
+typedef PolyhedronCircularObstacle<3> PolyhedronCircularObstacle3D;

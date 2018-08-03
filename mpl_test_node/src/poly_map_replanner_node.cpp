@@ -15,10 +15,10 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     rec1.add(Hyperplane2D(Vec2f(0, -2), -Vec2f::UnitY()));
     rec1.add(Hyperplane2D(Vec2f(0, 2), Vec2f::UnitY()));
 
-    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(7, -1), Vec2f(0, 0.5), 4), 0));
-    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
+    circular_obs.push_back(PolyhedronCircularObstacle2D(
+        rec1, Vec2f(10, 0), 1, 1));
+   // nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+     //   rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
 
     update(0);
   }
@@ -26,6 +26,8 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
   void update(decimal_t t) {
     linear_obs.clear();
     for(const auto& it: nonlinear_obs)
+      linear_obs.push_back(it.get_linear_obstacle(t));
+    for(const auto& it: circular_obs)
       linear_obs.push_back(it.get_linear_obstacle(t));
   }
 
@@ -35,6 +37,8 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
       polys.push_back(it.poly(0));
     return polys;
   }
+
+  vec_E<PolyhedronCircularObstacle2D> circular_obs;
 };
 
 
@@ -56,13 +60,12 @@ std::vector<std_msgs::Float32> astar_runtime_msgs, lpastar_runtime_msgs;
 std::vector<std_msgs::Float32> astar_value_msgs, lpastar_value_msgs;
 
 bool subtree_;
-decimal_t plan_time = 0;
 
 void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   planner_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
   //planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
-  planner_ptr->updateNodes(plan_time);
+  planner_ptr->updateNodes();
 
   if(id == 0)
     ROS_WARN("AStar:");
@@ -117,6 +120,7 @@ void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
 
 void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
   static bool terminated = false;
+  static decimal_t plan_time = 0;
   static decimal_t prev_time = -1000;
   obs_ptr->update(plan_time);
 
@@ -139,10 +143,11 @@ void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
         terminated = true;
       else {
         start = ws[1];
-        if (lpastar_ptr->initialized()) {
+        start.enable_t = true;
+        start.t = 0;
+        if (lpastar_ptr->initialized())
           lpastar_ptr->getSubStateSpace(1);
-        }
-          // Publish primitives
+        // Publish primitives
         planning_ros_msgs::PrimitiveArray prs_msg =
           toPrimitiveArrayROSMsg(lpastar_ptr->getAllPrimitives());
         prs_msg.header.frame_id = "map";
@@ -263,12 +268,14 @@ int main(int argc, char **argv) {
   start.use_acc = use_acc;
   start.use_jrk = use_jrk;
   start.use_yaw = false;
+  start.enable_t = true;
 
   goal.control = start.control;
   goal.pos = Vec2f(goal_x, goal_y);
   goal.vel = Vec2f::Zero();
   goal.acc = Vec2f::Zero();
   goal.jrk = Vec2f::Zero();
+  goal.enable_t = true;
 
   // Publish bounding box
   vec_E<Polyhedron2D> bbox;
@@ -295,7 +302,8 @@ int main(int argc, char **argv) {
 
     double t = 0;
     while (ros::ok()) {
-      if(t < obs_ptr->nonlinear_obs.front().traj().getTotalTime()) {
+      //if(t < obs_ptr->nonlinear_obs.front().traj().getTotalTime()) {
+      if(t < 5) {
         std_msgs::Float32 plan;
         plan.data = 0.02;
         replanCallback(boost::make_shared<std_msgs::Float32>(plan));

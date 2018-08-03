@@ -52,7 +52,7 @@ public:
    return map_util_->getBoundingBox();
  }
 
- void updateNodes(decimal_t plan_time) {
+ void updateNodes() {
    blocked_prs_.clear();
    cleared_prs_.clear();
 
@@ -69,7 +69,7 @@ public:
        this->ENV_->forward_action(succNode_ptr->pred_coord[i],
                                   succNode_ptr->pred_action_id[i], pr);
 
-       if(!map_util_->isFree(pr, succNode_ptr->pred_coord[i].t - plan_time)) {
+       if(!map_util_->isFree(pr, succNode_ptr->pred_coord[i].t)) {
          if(!std::isinf(succNode_ptr->pred_action_cost[i])) {
            blocked_nodes.push_back(std::make_pair(it.first, i));
            blocked_prs_.push_back(pr);
