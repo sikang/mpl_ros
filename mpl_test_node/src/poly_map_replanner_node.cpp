@@ -3,7 +3,40 @@
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
-#include <std_msgs/Bool.h>
+#include <rosbag/bag.h>
+#include <std_msgs/Float32.h>
+
+/// Simple test environment
+struct Simple2DConfig0 : ObstacleCourse<2> {
+  Simple2DConfig0() {
+    Polyhedron2D rec1;
+    rec1.add(Hyperplane2D(Vec2f(-1, 0), -Vec2f::UnitX()));
+    rec1.add(Hyperplane2D(Vec2f(1, 0), Vec2f::UnitX()));
+    rec1.add(Hyperplane2D(Vec2f(0, -2), -Vec2f::UnitY()));
+    rec1.add(Hyperplane2D(Vec2f(0, 2), Vec2f::UnitY()));
+
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, square(Vec2f(7, -1), Vec2f(0, 0.5), 4), 0));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
+
+    update(0);
+  }
+
+  void update(decimal_t t) {
+    linear_obs.clear();
+    for(const auto& it: nonlinear_obs)
+      linear_obs.push_back(it.get_linear_obstacle(t));
+  }
+
+  vec_E<Polyhedron2D> getPolyhedrons() {
+    vec_E<Polyhedron2D> polys;
+    for(const auto& it: linear_obs)
+      polys.push_back(it.poly(0));
+    return polys;
+  }
+};
+
 
 ros::Publisher poly_pub;
 ros::Publisher sg_pub;
@@ -12,34 +45,19 @@ ros::Publisher blocked_prs_pub;
 ros::Publisher cleared_prs_pub;
 std::vector<ros::Publisher> traj_pubs;
 
-std::unique_ptr<ObstacleCourse<2>> obs_ptr;
+std::unique_ptr<Simple2DConfig0> obs_ptr;
 std::unique_ptr<MPL::PolyMapPlanner2D> astar_ptr;
 std::unique_ptr<MPL::PolyMapPlanner2D> lpastar_ptr;
 
 Waypoint2D start, goal;
 
-/// Simple test environment
-struct Simple2DConfig0 : ObstacleCourse<2> {
-  Simple2DConfig0() {
-    Polyhedron2D rec1;
-    rec1.add(Hyperplane2D(Vec2f(-0.5, 0), -Vec2f::UnitX()));
-    rec1.add(Hyperplane2D(Vec2f(0.5, 0), Vec2f::UnitX()));
-    rec1.add(Hyperplane2D(Vec2f(0, -0.5), -Vec2f::UnitY()));
-    rec1.add(Hyperplane2D(Vec2f(0, 0.5), Vec2f::UnitY()));
-    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(10, 0), Vec2f(0, 0.5), 1), 0));
-  }
-
-  void update() {
-
-  }
-};
-
+std::vector<std_msgs::Float32> astar_runtime_msgs, lpastar_runtime_msgs;
+std::vector<std_msgs::Float32> astar_value_msgs, lpastar_value_msgs;
 
 void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   planner_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
-  planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
+  //planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
   planner_ptr->updateNodes();
 
   if(id == 0)
@@ -59,6 +77,28 @@ void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   ros::Time t0 = ros::Time::now();
   bool valid = planner_ptr->plan(start, goal);
   double plan_dt = (ros::Time::now() - t0).toSec();
+  if(id == 0) {
+    std_msgs::Float32 runtime;
+    //runtime.header.stamp = init_t0_ + ros::Duration(1.0);
+    runtime.data = plan_dt;
+    astar_runtime_msgs.push_back(runtime);
+
+    std_msgs::Float32 traj_cost;
+    //traj_cost.header.stamp = init_t0_ + ros::Duration(1.0);
+    traj_cost.data = planner_ptr->getTrajCost();
+    astar_value_msgs.push_back(traj_cost);
+  }
+  else {
+    std_msgs::Float32 runtime;
+    //runtime.header.stamp = init_t0_ + ros::Duration(1.0);
+    runtime.data = plan_dt;
+    lpastar_runtime_msgs.push_back(runtime);
+
+    std_msgs::Float32 traj_cost;
+    //traj_cost.header.stamp = init_t0_ + ros::Duration(1.0);
+    traj_cost.data = planner_ptr->getTrajCost();
+    lpastar_value_msgs.push_back(traj_cost);
+  }
   ROS_INFO(
     "Succeed! Takes %f sec, openset: [%zu], "
       "closeset (expanded): [%zu](%zu), total: [%zu]",
@@ -73,23 +113,38 @@ void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   traj_pubs[id].publish(traj_msg);
 }
 
-void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
-  // Publish location of start and goal
-  sensor_msgs::PointCloud sg_cloud;
-  sg_cloud.header.frame_id = "map";
-  geometry_msgs::Point32 pt1, pt2;
-  pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = 0;
-  pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = 0;
-  sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
-  sg_pub.publish(sg_cloud);
+void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
+  static decimal_t time = 0;
+  static decimal_t prev_time = 0;
+  obs_ptr->update(time);
 
-  plan(astar_ptr, 0);
-  plan(lpastar_ptr, 1);
+  if(time - prev_time > 0.2) {
+    plan(astar_ptr, 0);
+    plan(lpastar_ptr, 1);
+    prev_time = time;
+    // Publish location of start and goal
+    sensor_msgs::PointCloud sg_cloud;
+    sg_cloud.header.frame_id = "map";
+    geometry_msgs::Point32 pt1, pt2;
+    pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = 0;
+    pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = 0;
+    sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
+    sg_pub.publish(sg_cloud);
 
-  vec_E<Polyhedron2D> poly_obs = astar_ptr->getPolyhedrons(0);
+    /*
+    vec_E<Polyhedron2D> poly_obs = astar_ptr->getPolyhedrons(0);
+    decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
+    poly_msg.header.frame_id = "map";
+    poly_pub.publish(poly_msg);
+    */
+  }
+
+  vec_E<Polyhedron2D> poly_obs = obs_ptr->getPolyhedrons();
   decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
   poly_msg.header.frame_id = "map";
   poly_pub.publish(poly_msg);
+
+  time += msg->data;
 
 }
 
@@ -148,7 +203,7 @@ int main(int argc, char **argv) {
   astar_ptr->setMap(origin, dim);         // Set collision checking function
   astar_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   astar_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
-  astar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
+  //astar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
   astar_ptr->setVmax(v_max);      // Set max velocity
   astar_ptr->setAmax(a_max);      // Set max acceleration
   astar_ptr->setDt(dt);           // Set dt for each primitive
@@ -160,7 +215,7 @@ int main(int argc, char **argv) {
   lpastar_ptr->setMap(origin, dim);         // Set collision checking function
   lpastar_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   lpastar_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
-  lpastar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
+  //lpastar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
   lpastar_ptr->setVmax(v_max);      // Set max velocity
   lpastar_ptr->setAmax(a_max);      // Set max acceleration
   lpastar_ptr->setDt(dt);           // Set dt for each primitive
@@ -206,11 +261,57 @@ int main(int argc, char **argv) {
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
 
-  // Planning thread!
-  std_msgs::Bool init;
-  replanCallback(boost::make_shared<std_msgs::Bool>(init));
 
-  ros::spin();
+  bool show_animation = true;
+  if(!show_animation) {
+    // Manual thread!
+    std_msgs::Float32 init;
+    init.data = 1.0;
+    replanCallback(boost::make_shared<std_msgs::Float32>(init));
+    ros::spin();
+  }
+  else {
+    // Show animation
+    double hz = 10;
+    ros::Rate loop_rate(hz);
+
+    double t = 0;
+    while (ros::ok()) {
+      if(t < obs_ptr->nonlinear_obs.front().traj().getTotalTime()) {
+        std_msgs::Float32 plan;
+        plan.data = 0.02;
+        replanCallback(boost::make_shared<std_msgs::Float32>(plan));
+        t += plan.data;
+      }
+      else
+        break;
+
+      ros::spinOnce();
+
+      loop_rate.sleep();
+    }
+
+    std::string file_name;
+    nh.param("file", file_name, std::string("sim.bag"));
+
+    rosbag::Bag bag;
+    bag.open(file_name, rosbag::bagmode::Write);
+
+    auto t0 = ros::Time::now();
+    for(size_t i = 0; i < astar_runtime_msgs.size(); i++)
+      bag.write("astar_run_time", t0 + ros::Duration(i * 1.0), astar_runtime_msgs[i]);
+    for(size_t i = 0; i < lpastar_runtime_msgs.size(); i++)
+      bag.write("lpastar_run_time", t0 + ros::Duration(i * 1.0), lpastar_runtime_msgs[i]);
+    for(size_t i = 0; i < astar_value_msgs.size(); i++)
+      bag.write("astar_traj_cost", t0 + ros::Duration(i * 1.0), astar_value_msgs[i]);
+    for(size_t i = 0; i < lpastar_value_msgs.size(); i++)
+      bag.write("lpastar_traj_cost", t0 + ros::Duration(i * 1.0) , lpastar_value_msgs[i]);
+
+
+    bag.close();
+
+  }
+
 
   return 0;
 }

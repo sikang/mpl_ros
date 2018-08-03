@@ -30,6 +30,11 @@ public:
     return map_util_->isValid(pt);
   }
 
+  /// Overloard original function
+  bool is_free(const Primitive<Dim> &pr) const {
+    return true;
+  }
+
   /**
    * @brief Get successor
    * @param curr The node to expand
@@ -39,40 +44,41 @@ public:
    * successor
    *
    * When goal is outside, extra step is needed for finding optimal trajectory
-	 * Here we use Heuristic function and multiply with 2
-	 */
-	void get_succ(const Waypoint<Dim> &curr, vec_E<Waypoint<Dim>> &succ,
-								std::vector<decimal_t> &succ_cost,
-								std::vector<int> &action_idx) const {
-		succ.clear();
-		succ_cost.clear();
-		action_idx.clear();
+   * Here we use Heuristic function and multiply with 2
+   */
+  void get_succ(const Waypoint<Dim> &curr, vec_E<Waypoint<Dim>> &succ,
+                std::vector<decimal_t> &succ_cost,
+                std::vector<int> &action_idx) const {
+    succ.clear();
+    succ_cost.clear();
+    action_idx.clear();
 
     this->expanded_nodes_.push_back(curr.pos);
 
-		for (size_t i = 0; i < this->U_.size(); i++) {
-			Primitive<Dim> pr(curr, this->U_[i], this->dt_);
+    for (size_t i = 0; i < this->U_.size(); i++) {
+      Primitive<Dim> pr(curr, this->U_[i], this->dt_);
       Waypoint<Dim> tn = pr.evaluate(this->dt_);
-      if(!map_util_->isValid(tn.pos) ||
-         !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
+      if (!map_util_->isValid(tn.pos) ||
+          !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
         continue;
-      decimal_t cost =
-        map_util_->isFree(pr, curr.t)
-        ? pr.J(pr.control()) +
-        0.001 * pr.J(Control::VEL) +
-        this->w_ * this->dt_
-        : std::numeric_limits<decimal_t>::infinity();
+      decimal_t cost = map_util_->isFree(pr, curr.t)
+                           ? calculate_intrinsic_cost(pr)
+                           : std::numeric_limits<decimal_t>::infinity();
       tn.t = curr.t + this->dt_;
       tn.enable_t = true;
-			succ.push_back(tn);
-			succ_cost.push_back(cost);
-			action_idx.push_back(i);
-		}
-	}
+      succ.push_back(tn);
+      succ_cost.push_back(cost);
+      action_idx.push_back(i);
+    }
+  }
+
+  decimal_t calculate_intrinsic_cost(const Primitive<Dim> &pr) const {
+    return pr.J(pr.control()) + 0.001 * pr.J(Control::VEL) +
+           this->w_ * this->dt_;
+  }
+
 protected:
   std::shared_ptr<PolyMapUtil<Dim>> map_util_;
-
-
 };
 }
 

@@ -6,7 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /lpastar1/Trajectory1
+        - /lpastar1
       Splitter Ratio: 0.5
     Tree Height: 747
   - Class: rviz/Selection
@@ -27,7 +27,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: sg
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -170,7 +170,7 @@ Visualization Manager:
           AccScale: 0.0199999996
           AccVis: false
           Class: planning_rviz_plugins/PrimitiveArray
-          Enabled: true
+          Enabled: false
           JrkColor: 200; 20; 55
           JrkScale: 0.0199999996
           JrkVis: false
@@ -181,7 +181,7 @@ Visualization Manager:
           PosScale: 0.0199999996
           Topic: /test_primitive/cleared_primitives
           Unreliable: false
-          Value: true
+          Value: false
           VelColor: 85; 85; 255
           VelScale: 0.0199999996
           VelVis: false
@@ -194,7 +194,7 @@ Visualization Manager:
           AccScale: 0.0199999996
           AccVis: false
           Class: planning_rviz_plugins/PrimitiveArray
-          Enabled: true
+          Enabled: false
           JrkColor: 200; 20; 55
           JrkScale: 0.0199999996
           JrkVis: false
@@ -205,7 +205,7 @@ Visualization Manager:
           PosScale: 0.0199999996
           Topic: /test_primitive/blocked_primitives
           Unreliable: false
-          Value: true
+          Value: false
           VelColor: 85; 85; 255
           VelScale: 0.0199999996
           VelVis: false
@@ -273,4 +273,4 @@ Window Geometry:
     collapsed: false
   Width: 1920
   X: 0
-  Y: 24
+  Y: 48

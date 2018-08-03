@@ -1,3 +1,4 @@
 *.swp
 trajectory_command.bag
 sim.bag
+test.bag

@@ -60,7 +60,7 @@ struct ObstacleCourse {
     Vec2f u3 = -u1;
     Primitive<Dim> seg3(s3, u3, t);
 
-    Waypoint<Dim> s4 = seg2.evaluate(seg3.t());
+    Waypoint<Dim> s4 = seg3.evaluate(seg3.t());
     Vec2f u4 = -u2;
     Primitive<Dim> seg4(s4, u4, t);
 
