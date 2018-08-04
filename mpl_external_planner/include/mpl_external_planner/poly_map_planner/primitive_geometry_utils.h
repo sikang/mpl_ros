@@ -51,6 +51,7 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronLinearObstacle<Dim>& poly
   const auto v = poly.v();
   for(const auto& hp: poly.geometry().hyperplanes()) {
     const auto n = hp.n_;
+    const auto cov_v = v + poly.cov_v() * n;
     decimal_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
     for(int i = 0; i < Dim; i++) {
       a += n(i)*cs[i](0);
@@ -64,8 +65,8 @@ bool collide(const Primitive<Dim>& pr, const PolyhedronLinearObstacle<Dim>& poly
     b /= 24;
     c /= 6;
     d /= 2;
-    e -= n.dot(v);
-    f -= n.dot(hp.p_+p+v*t);
+    e -= n.dot(cov_v);
+    f -= n.dot(hp.p_+p+cov_v*t);
 
     //std::cout << "poly p: " << (poly.v_ * t + v.p_).transpose() << std::endl;
     //std::cout << "poly v: " << poly.v_.transpose() << std::endl;

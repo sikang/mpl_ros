@@ -29,12 +29,14 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
       linear_obs.push_back(it.get_linear_obstacle(t));
     for(const auto& it: circular_obs)
       linear_obs.push_back(it.get_linear_obstacle(t));
+    for(auto& it: linear_obs)
+      it.set_cov_v(0.5);
   }
 
   vec_E<Polyhedron2D> getPolyhedrons() {
     vec_E<Polyhedron2D> polys;
     for(const auto& it: linear_obs)
-      polys.push_back(it.poly(0));
+      polys.push_back(it.poly(1));
     return polys;
   }
 

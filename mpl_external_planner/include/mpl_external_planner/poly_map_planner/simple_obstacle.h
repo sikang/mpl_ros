@@ -72,13 +72,18 @@ class PolyhedronLinearObstacle : public PolyhedronObstacle<Dim> {
   Polyhedron<Dim> poly(decimal_t t) const {
     auto poly = this->poly_;
     for(auto& it: poly.vs_)
-      it.p_ += v_ * t + this->p_;
+      it.p_ += v_ * t + this->p_ + cov_v_ * it.n_ * t;
     return poly;
   }
   /// Check if the given point is inside at time \f$t\f$
-  bool inside (const Vecf<Dim>& pt, decimal_t t) const {
-    return this->poly_.inside(pt - this->p_ - t * v_);
+  bool inside(const Vecf<Dim>& pt, decimal_t t) const {
+    return poly(t).inside(pt);
+    //return this->poly_.inside(pt - this->p_ - t * v_);
   }
+  /// Get covariance velocity
+  decimal_t cov_v() const { return cov_v_; }
+  void set_cov_v(decimal_t v) { cov_v_ = v; }
+
   /// Update the representative point, it resets the initial representative point
   void update(decimal_t t) {
     this->p_ += v_ * t;
@@ -86,6 +91,8 @@ class PolyhedronLinearObstacle : public PolyhedronObstacle<Dim> {
  protected:
   ///Obstacle velocity
   Vecf<Dim> v_{Vecf<Dim>::Zero()};
+  /// Covariance increasing speed
+  decimal_t cov_v_{0};
 };
 
 typedef PolyhedronLinearObstacle<2> PolyhedronLinearObstacle2D;
