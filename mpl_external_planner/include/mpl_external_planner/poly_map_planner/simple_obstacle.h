@@ -33,6 +33,14 @@ class PolyhedronObstacle {
   virtual void update(decimal_t t) {
   }
 
+  vec_E<Polyhedron<Dim>> predict(decimal_t dt, size_t N, decimal_t t = 0) const {
+    vec_E<Polyhedron<Dim>> polys;
+    for(size_t i = 0; i < N; i++) {
+      polys.push_back(poly(i * dt + t));
+    }
+    return polys;
+  }
+
  protected:
   /// Obstacle initial contour
   Polyhedron<Dim> poly_;

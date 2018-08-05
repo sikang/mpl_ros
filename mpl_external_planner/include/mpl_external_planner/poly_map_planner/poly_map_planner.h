@@ -84,8 +84,8 @@ public:
      }
    }
 
-   this->ss_ptr_->increaseCost(blocked_nodes);
    this->ss_ptr_->decreaseCost(cleared_nodes, this->ENV_);
+   this->ss_ptr_->increaseCost(blocked_nodes);
  }
 
  vec_E<Primitive<Dim>> getBlockedPrimitives() {
@@ -95,6 +95,7 @@ public:
  vec_E<Primitive<Dim>> getClearedPrimitives() {
    return cleared_prs_;
  }
+
 protected:
  std::shared_ptr<PolyMapUtil<Dim>> map_util_;
  vec_E<Primitive<Dim>> blocked_prs_;

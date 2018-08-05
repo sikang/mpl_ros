@@ -170,6 +170,8 @@ void TrajectoryDisplay::processMessage(
 }
 
 void TrajectoryDisplay::visualizeMessage() {
+  visual_.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
+
   if (trajectory_.primitives.empty() || !pos_color_property_ ||
       !vel_color_property_ || !acc_color_property_ || !yaw_color_property_ ||
       !pos_scale_property_ || !vel_scale_property_ || !acc_scale_property_ ||
@@ -178,8 +180,6 @@ void TrajectoryDisplay::visualizeMessage() {
       !acc_vis_property_ || !jrk_vis_property_ || !yaw_vis_property_ ||
       !num_property_ || !yaw_num_property_)
     return;
-
-  visual_.reset(new TrajectoryVisual(context_->getSceneManager(), scene_node_));
 
   float n = num_property_->getInt();
   visual_->setNum(n);

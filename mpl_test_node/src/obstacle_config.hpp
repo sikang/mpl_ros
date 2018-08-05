@@ -72,6 +72,7 @@ struct ObstacleCourse {
 
     return Trajectory<Dim>(segs);
   }
+
 };
 
 

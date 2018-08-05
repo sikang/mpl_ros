@@ -86,7 +86,7 @@ class PolyMapUtil {
     }
     */
 
-		///Check if a primitive is inside the SFC from \f$t: 0 \rightarrow dt\f$
+		///Check if a primitive is in free space, \f$t\f$ is the start time of primitive
     bool isFree(const Primitive<Dim> &pr, decimal_t t) const {
       for(const auto& poly: static_obs_) {
         if(collide(pr, poly))

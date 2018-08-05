@@ -23,7 +23,7 @@
     <param name="start_x" value="4"/>
     <param name="start_y" value="0.0"/>
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="2.0"/>
+    <param name="v_max" value="1.0"/>
     <param name="a_max" value="1.0"/>
     <param name="u" value="1.0"/>
     <param name="dt" value="1.0"/>

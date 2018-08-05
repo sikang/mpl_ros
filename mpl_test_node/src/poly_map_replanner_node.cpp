@@ -12,31 +12,57 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     Polyhedron2D rec1;
     rec1.add(Hyperplane2D(Vec2f(-1, 0), -Vec2f::UnitX()));
     rec1.add(Hyperplane2D(Vec2f(1, 0), Vec2f::UnitX()));
-    rec1.add(Hyperplane2D(Vec2f(0, -2), -Vec2f::UnitY()));
-    rec1.add(Hyperplane2D(Vec2f(0, 2), Vec2f::UnitY()));
+    rec1.add(Hyperplane2D(Vec2f(0, -1), -Vec2f::UnitY()));
+    rec1.add(Hyperplane2D(Vec2f(0, 1), Vec2f::UnitY()));
 
-    circular_obs.push_back(PolyhedronCircularObstacle2D(
-        rec1, Vec2f(10, 0), 1, 1));
-   // nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-     //   rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
+    //circular_obs.push_back(PolyhedronCircularObstacle2D(
+      //  rec1, Vec2f(10, 0), 1, 0.2));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, square(Vec2f(8, -1), Vec2f(0, 0.5), 4), 0));
 
     update(0);
   }
 
   void update(decimal_t t) {
     linear_obs.clear();
-    for(const auto& it: nonlinear_obs)
+    for(const auto& it: nonlinear_obs) {
       linear_obs.push_back(it.get_linear_obstacle(t));
-    for(const auto& it: circular_obs)
+      linear_obs.back().set_cov_v(0.0);
+    }
+    for(const auto& it: circular_obs) {
       linear_obs.push_back(it.get_linear_obstacle(t));
-    for(auto& it: linear_obs)
-      it.set_cov_v(0.5);
+      linear_obs.back().set_cov_v(0.0);
+    }
   }
 
-  vec_E<Polyhedron2D> getPolyhedrons() {
+  vec_E<PolyhedronLinearObstacle2D> LinearObs(decimal_t t) {
+    vec_E<PolyhedronLinearObstacle2D> new_linear_obs;
+    for (const auto &it : linear_obs) {
+      new_linear_obs.push_back(
+        PolyhedronLinearObstacle2D(it.poly(t), Vec2f::Zero(), it.v()));
+      new_linear_obs.back().set_cov_v(it.cov_v());
+    }
+    return new_linear_obs;
+  }
+
+  vec_E<Polyhedron2D> getPolyhedrons(decimal_t t) {
     vec_E<Polyhedron2D> polys;
+    for(const auto& it: static_obs)
+        polys.push_back(it.poly(t));
     for(const auto& it: linear_obs)
-      polys.push_back(it.poly(1));
+        polys.push_back(it.poly(t));
+    return polys;
+  }
+
+  vec_E<Polyhedron2D> getPredictPolyhedrons(decimal_t t) {
+    vec_E<Polyhedron2D> polys;
+    for(const auto& it: linear_obs) {
+      for(const auto& itt: it.predict(0.5, 5, t)) {
+        polys.push_back(itt);
+      }
+    }
     return polys;
   }
 
@@ -44,6 +70,7 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
 };
 
 
+ros::Publisher predict_pub;
 ros::Publisher poly_pub;
 ros::Publisher sg_pub;
 ros::Publisher ps_pub;
@@ -61,18 +88,18 @@ Waypoint2D start, goal;
 std::vector<std_msgs::Float32> astar_runtime_msgs, lpastar_runtime_msgs;
 std::vector<std_msgs::Float32> astar_value_msgs, lpastar_value_msgs;
 
-bool subtree_;
+decimal_t dt_;
 
-void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
-  planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
-  planner_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
+bool plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id, decimal_t dt) {
+  //planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
+  planner_ptr->setLinearObstacles(obs_ptr->LinearObs(dt)); // Set linear obstacles
   //planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
-  planner_ptr->updateNodes();
 
   if(id == 0)
     ROS_WARN("AStar:");
   else {
     ROS_WARN("LPAStar:");
+    planner_ptr->updateNodes();
     // Publish affected primitives
     auto blocked_prs_msg = toPrimitiveArrayROSMsg(planner_ptr->getBlockedPrimitives());
     blocked_prs_msg.header.frame_id = "map";
@@ -84,7 +111,8 @@ void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   }
 
   ros::Time t0 = ros::Time::now();
-  bool valid = planner_ptr->plan(start, goal);
+  if(!planner_ptr->plan(start, goal))
+    return false;
   double plan_dt = (ros::Time::now() - t0).toSec();
   ROS_INFO(
     "Succeed! Takes %f sec, openset: [%zu], "
@@ -118,53 +146,68 @@ void plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
     lpastar_value_msgs.push_back(traj_cost);
   }
 
+  planner_ptr->getAllPrimitives();
+  return true;
 }
 
 void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
   static bool terminated = false;
+  static decimal_t start_time = 0;
   static decimal_t plan_time = 0;
-  static decimal_t prev_time = -1000;
+  static Trajectory2D prev_traj;
+  plan_time += msg->data;
+  //printf("start_time: %f, plan_time: %f\n\n", start_time, plan_time);
+  Waypoint2D curr = prev_traj.evaluate(plan_time - (start_time - dt_));
   obs_ptr->update(plan_time);
 
-  if(plan_time - prev_time > 0.2 && !terminated) {
-    plan(astar_ptr, 0);
-    plan(lpastar_ptr, 1);
-    prev_time = plan_time;
-    // Publish location of start and goal
-    sensor_msgs::PointCloud sg_cloud;
-    sg_cloud.header.frame_id = "map";
-    geometry_msgs::Point32 pt1, pt2;
-    pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = 0;
-    pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = 0;
-    sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
-    sg_pub.publish(sg_cloud);
+  if((plan_time - start_time >= 0 && !terminated) || start_time == 0) {
+    decimal_t dt = start_time - plan_time;
+    if(!plan(astar_ptr, 0, dt))
+      terminated = true;
+    if(!plan(lpastar_ptr, 1, dt))
+      terminated = true;
 
-    if(subtree_) {
-      auto ws = lpastar_ptr->getTraj().getWaypoints();
-      if (ws.size() <= 2)
-        terminated = true;
-      else {
-        start = ws[1];
-        start.enable_t = true;
-        start.t = 0;
-        if (lpastar_ptr->initialized())
-          lpastar_ptr->getSubStateSpace(1);
-        // Publish primitives
-        planning_ros_msgs::PrimitiveArray prs_msg =
-          toPrimitiveArrayROSMsg(lpastar_ptr->getAllPrimitives());
-        prs_msg.header.frame_id = "map";
-        prs_pub.publish(prs_msg);
-      }
+    prev_traj = lpastar_ptr->getTraj();
+    decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(obs_ptr->getPredictPolyhedrons(dt));
+    //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(astar_ptr->getPolyhedrons(0));
+    predict_msg.header.frame_id = "map";
+    predict_pub.publish(predict_msg);
+
+    auto ws = prev_traj.getWaypoints();
+    if (ws.size() <= 2)
+      terminated = true;
+    else {
+      start = ws[1];
+      start.enable_t = true;
+      start_time += dt_;
+      start.t = 0;
+      if (lpastar_ptr->initialized())
+        lpastar_ptr->getSubStateSpace(1);
+      // Publish primitives
+      planning_ros_msgs::PrimitiveArray prs_msg =
+        toPrimitiveArrayROSMsg(lpastar_ptr->getAllPrimitives());
+      prs_msg.header.frame_id = "map";
+      prs_pub.publish(prs_msg);
     }
 
   }
 
-  vec_E<Polyhedron2D> poly_obs = obs_ptr->getPolyhedrons();
-  decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
+  // Publish location of start and goal
+  sensor_msgs::PointCloud sg_cloud;
+  sg_cloud.header.frame_id = "map";
+  geometry_msgs::Point32 pt1, pt2, pt3;
+  pt1.x = start.pos(0), pt1.y = start.pos(1), pt1.z = 0;
+  pt2.x = goal.pos(0), pt2.y = goal.pos(1), pt2.z = 0;
+  pt3.x = curr.pos(0), pt3.y = curr.pos(1), pt3.z = 1.0;
+  sg_cloud.points.push_back(pt1);
+  sg_cloud.points.push_back(pt2);
+  sg_cloud.points.push_back(pt3);
+  sg_pub.publish(sg_cloud);
+
+
+  decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(obs_ptr->getPolyhedrons(0));
   poly_msg.header.frame_id = "map";
   poly_pub.publish(poly_msg);
-
-  plan_time += msg->data;
 
 }
 
@@ -176,8 +219,11 @@ int main(int argc, char **argv) {
   ros::Publisher bound_pub =
       nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
 
+  predict_pub =
+    nh.advertise<decomp_ros_msgs::PolyhedronArray>("predicts", 1, true);
   poly_pub =
     nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
+
 
   sg_pub = nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
 
@@ -197,7 +243,6 @@ int main(int argc, char **argv) {
 
   obs_ptr.reset(new Simple2DConfig0());
 
-  nh.param("subtree", subtree_, false);
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
   nh.param("origin_y", origin(1), -2.5);
@@ -205,10 +250,10 @@ int main(int argc, char **argv) {
   nh.param("range_y", dim(1), 5.0);
 
   // Initialize planner
-  double dt, v_max, a_max;
+  double v_max, a_max;
   double u;
   int num;
-  nh.param("dt", dt, 1.0);
+  nh.param("dt", dt_, 1.0);
   nh.param("v_max", v_max, -1.0);
   nh.param("a_max", a_max, -1.0);
   nh.param("u", u, 1.0);
@@ -229,7 +274,7 @@ int main(int argc, char **argv) {
   //astar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
   astar_ptr->setVmax(v_max);      // Set max velocity
   astar_ptr->setAmax(a_max);      // Set max acceleration
-  astar_ptr->setDt(dt);           // Set dt for each primitive
+  astar_ptr->setDt(dt_);           // Set dt for each primitive
   astar_ptr->setU(U); // Set discretization with 1 and efforts
   astar_ptr->setTol(0.5, 0.1); // Tolerance for goal region
   astar_ptr->setLPAstar(false);  // Use LPAstar
@@ -241,7 +286,7 @@ int main(int argc, char **argv) {
   //lpastar_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
   lpastar_ptr->setVmax(v_max);      // Set max velocity
   lpastar_ptr->setAmax(a_max);      // Set max acceleration
-  lpastar_ptr->setDt(dt);           // Set dt for each primitive
+  lpastar_ptr->setDt(dt_);           // Set dt for each primitive
   lpastar_ptr->setU(U); // Set discretization with 1 and efforts
   lpastar_ptr->setTol(0.5, 0.1); // Tolerance for goal region
   lpastar_ptr->setLPAstar(true);  // Use LPAstar
@@ -286,6 +331,11 @@ int main(int argc, char **argv) {
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
 
+  std_msgs::Float32 init;
+  init.data = 0.0;
+  replanCallback(boost::make_shared<std_msgs::Float32>(init));
+
+
 
   bool show_animation = true;
   nh.param("show_animation", show_animation, true);
@@ -305,7 +355,7 @@ int main(int argc, char **argv) {
     double t = 0;
     while (ros::ok()) {
       //if(t < obs_ptr->nonlinear_obs.front().traj().getTotalTime()) {
-      if(t < 5) {
+      if(t < 10) {
         std_msgs::Float32 plan;
         plan.data = 0.02;
         replanCallback(boost::make_shared<std_msgs::Float32>(plan));

@@ -170,6 +170,7 @@ void PrimitiveArrayDisplay::processMessage(
 }
 
 void PrimitiveArrayDisplay::visualizeMessage() {
+  visual_.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
   if (prs_msg_.primitives.empty() || !pos_color_property_ ||
       !vel_color_property_ || !acc_color_property_ || !yaw_color_property_ ||
       !pos_scale_property_ || !vel_scale_property_ || !acc_scale_property_ ||
@@ -178,8 +179,6 @@ void PrimitiveArrayDisplay::visualizeMessage() {
       !acc_vis_property_ || !jrk_vis_property_ || !yaw_vis_property_ ||
       !num_property_ || !yaw_num_property_)
     return;
-
-  visual_.reset(new PrimitiveVisual(context_->getSceneManager(), scene_node_));
 
   float n = num_property_->getInt();
   visual_->setNum(n);

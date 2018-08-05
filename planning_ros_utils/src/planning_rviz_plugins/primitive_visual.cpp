@@ -21,6 +21,7 @@ void PrimitiveVisual::setMessage(const std::vector<planning_ros_msgs::Primitive>
 
   if (num_ < 2)
     return;
+
   for (const auto& pr: msgs) {
     for(size_t i = 0; i < pr.cx.size(); i++)
       if(std::isnan(pr.cx[i]) || std::isinf(pr.cx[i]))
@@ -37,7 +38,13 @@ void PrimitiveVisual::setMessage(const std::vector<planning_ros_msgs::Primitive>
   }
 
 
-  const unsigned int N = msgs.size();
+  const size_t N = msgs.size();
+  if(N > 10000) {
+    printf(ANSI_COLOR_YELLOW "N [%zu] is greater than the max number "
+           "limitation 10000, don't plot this "
+           "message!\n" ANSI_COLOR_RESET, N);
+    return;
+  }
 
   poss_.resize(N*(num_-1));
   if (vel_vis_)
@@ -53,11 +60,11 @@ void PrimitiveVisual::setMessage(const std::vector<planning_ros_msgs::Primitive>
   Mat3f R;
   R << cos(theta), -sin(theta), 0, sin(theta), cos(theta), 0, 0, 0, 1;
 
-  for(unsigned int n = 0; n < N; n++ ) {
+  for(size_t n = 0; n < N; n++ ) {
     const auto p = toPrimitive3D(msgs[n]);
     const auto waypoints = p.sample(num_-1);
 
-    for (unsigned int i = 0; i < waypoints.size(); i++) {
+    for (size_t i = 0; i < waypoints.size(); i++) {
       const auto p1 = waypoints[i];
       const Ogre::Vector3 pos1(p1.pos(0), p1.pos(1), p1.pos(2));
 
