@@ -32,6 +32,8 @@ public:
    this->ENV_.reset(new MPL::env_poly_map<Dim>(map_util_));
  }
 
+ void setStartTime(decimal_t t) { map_util_->setStartTime(t); }
+
  void setStaticObstacles(const vec_E<PolyhedronObstacle<Dim>>& polys) {
    map_util_->setStaticObstacle(polys);
  }
@@ -58,17 +60,17 @@ public:
 
    if(!this->ss_ptr_)
      return;
+  // this->ss_ptr_->checkValidation();
 
    std::vector<std::pair<Waypoint<Dim>, int>> blocked_nodes;
    std::vector<std::pair<Waypoint<Dim>, int>> cleared_nodes;
    for (const auto &it : this->ss_ptr_->hm_) {
      const auto &succNode_ptr = it.second;
 
-     for(size_t i = 0; i < succNode_ptr->pred_coord.size(); i++) {
+     for(int i = 0; i < (int) succNode_ptr->pred_coord.size(); i++) {
        Primitive<Dim> pr;
        this->ENV_->forward_action(succNode_ptr->pred_coord[i],
                                   succNode_ptr->pred_action_id[i], pr);
-
        if(!map_util_->isFree(pr, succNode_ptr->pred_coord[i].t)) {
          if(!std::isinf(succNode_ptr->pred_action_cost[i])) {
            blocked_nodes.push_back(std::make_pair(it.first, i));
@@ -84,8 +86,8 @@ public:
      }
    }
 
-   this->ss_ptr_->decreaseCost(cleared_nodes, this->ENV_);
    this->ss_ptr_->increaseCost(blocked_nodes);
+   this->ss_ptr_->decreaseCost(cleared_nodes, this->ENV_);
  }
 
  vec_E<Primitive<Dim>> getBlockedPrimitives() {

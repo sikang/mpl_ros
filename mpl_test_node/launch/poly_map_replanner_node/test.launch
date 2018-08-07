@@ -16,14 +16,14 @@
     <param name="subtree" value="true"/>
     <param name="show_animation" value="true"/>
     <!-- Set start and goal -->
-    <param name="goal_x" value="16"/>
+    <param name="goal_x" value="20"/>
     <param name="goal_y" value="0"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>
-    <param name="start_x" value="4"/>
+    <param name="start_x" value="0"/>
     <param name="start_y" value="0.0"/>
     <!-- Set dynamic constraints -->
-    <param name="v_max" value="1.0"/>
+    <param name="v_max" value="2.0"/>
     <param name="a_max" value="1.0"/>
     <param name="u" value="1.0"/>
     <param name="dt" value="1.0"/>

@@ -15,12 +15,16 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     rec1.add(Hyperplane2D(Vec2f(0, -1), -Vec2f::UnitY()));
     rec1.add(Hyperplane2D(Vec2f(0, 1), Vec2f::UnitY()));
 
-    //circular_obs.push_back(PolyhedronCircularObstacle2D(
-      //  rec1, Vec2f(10, 0), 1, 0.2));
+    circular_obs.push_back(PolyhedronCircularObstacle2D(
+        rec1, Vec2f(4, 0), 1.5, -0.5));
+    circular_obs.push_back(PolyhedronCircularObstacle2D(
+        rec1, Vec2f(8, 0), 1.5, 0.5));
+    circular_obs.push_back(PolyhedronCircularObstacle2D(
+        rec1, Vec2f(12, 2), 2, 1));
     nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(10, 1), Vec2f(0, -0.5), 4, false), 0));
+        rec1, square(Vec2f(10, 1), Vec2f(0, -1), 2, false), 0));
     nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(8, -1), Vec2f(0, 0.5), 4), 0));
+        rec1, square(Vec2f(12, -1), Vec2f(0, 1), 2, false), 0));
 
     update(0);
   }
@@ -29,11 +33,11 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     linear_obs.clear();
     for(const auto& it: nonlinear_obs) {
       linear_obs.push_back(it.get_linear_obstacle(t));
-      linear_obs.back().set_cov_v(0.0);
+      linear_obs.back().set_cov_v(0.2);
     }
     for(const auto& it: circular_obs) {
       linear_obs.push_back(it.get_linear_obstacle(t));
-      linear_obs.back().set_cov_v(0.0);
+      linear_obs.back().set_cov_v(0.2);
     }
   }
 
@@ -56,10 +60,10 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     return polys;
   }
 
-  vec_E<Polyhedron2D> getPredictPolyhedrons(decimal_t t) {
+  vec_E<Polyhedron2D> getPredictPolyhedrons() {
     vec_E<Polyhedron2D> polys;
     for(const auto& it: linear_obs) {
-      for(const auto& itt: it.predict(0.5, 5, t)) {
+      for(const auto& itt: it.predict(0.5, 5, 0)) {
         polys.push_back(itt);
       }
     }
@@ -90,11 +94,14 @@ std::vector<std_msgs::Float32> astar_value_msgs, lpastar_value_msgs;
 
 decimal_t dt_;
 
-bool plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id, decimal_t dt) {
+bool plan(std::unique_ptr<MPL::PolyMapPlanner2D>& planner_ptr, int id) {
   //planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
-  planner_ptr->setLinearObstacles(obs_ptr->LinearObs(dt)); // Set linear obstacles
+  planner_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
+  //planner_ptr->setLinearObstacles(obs_ptr->LinearObs(0)); // Set linear obstacles
   //planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
 
+  //planner_ptr->setEpsilon(0);
+  planner_ptr->setStartTime(start.t);
   if(id == 0)
     ROS_WARN("AStar:");
   else {
@@ -161,14 +168,17 @@ void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
   obs_ptr->update(plan_time);
 
   if((plan_time - start_time >= 0 && !terminated) || start_time == 0) {
-    decimal_t dt = start_time - plan_time;
-    if(!plan(astar_ptr, 0, dt))
+    if(!plan(astar_ptr, 0))
       terminated = true;
-    if(!plan(lpastar_ptr, 1, dt))
+    if(!plan(lpastar_ptr, 1))
       terminated = true;
 
+    ROS_WARN("Cost astar: [%f], lpastar: [%f], diff: [%f]",
+             astar_ptr->getTrajCost(), lpastar_ptr->getTrajCost(),
+             astar_ptr->getTrajCost() - lpastar_ptr->getTrajCost());
     prev_traj = lpastar_ptr->getTraj();
-    decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(obs_ptr->getPredictPolyhedrons(dt));
+    //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(obs_ptr->getPredictPolyhedrons());
+    decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(lpastar_ptr->getPolyhedrons(0));
     //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(astar_ptr->getPolyhedrons(0));
     predict_msg.header.frame_id = "map";
     predict_pub.publish(predict_msg);
@@ -178,9 +188,10 @@ void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
       terminated = true;
     else {
       start = ws[1];
+      //start = ws[0];
       start.enable_t = true;
       start_time += dt_;
-      start.t = 0;
+      start.t = start_time;
       if (lpastar_ptr->initialized())
         lpastar_ptr->getSubStateSpace(1);
       // Publish primitives
@@ -267,7 +278,7 @@ int main(int argc, char **argv) {
       U.push_back(Vec2f(dx, dy));
 
 
-  astar_ptr.reset(new MPL::PolyMapPlanner2D(true));
+  astar_ptr.reset(new MPL::PolyMapPlanner2D(false));
   astar_ptr->setMap(origin, dim);         // Set collision checking function
   astar_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   astar_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
@@ -279,7 +290,7 @@ int main(int argc, char **argv) {
   astar_ptr->setTol(0.5, 0.1); // Tolerance for goal region
   astar_ptr->setLPAstar(false);  // Use LPAstar
 
-  lpastar_ptr.reset(new MPL::PolyMapPlanner2D(true));
+  lpastar_ptr.reset(new MPL::PolyMapPlanner2D(false));
   lpastar_ptr->setMap(origin, dim);         // Set collision checking function
   lpastar_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
   lpastar_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
@@ -355,7 +366,7 @@ int main(int argc, char **argv) {
     double t = 0;
     while (ros::ok()) {
       //if(t < obs_ptr->nonlinear_obs.front().traj().getTotalTime()) {
-      if(t < 10) {
+      if(t < 20) {
         std_msgs::Float32 plan;
         plan.data = 0.02;
         replanCallback(boost::make_shared<std_msgs::Float32>(plan));

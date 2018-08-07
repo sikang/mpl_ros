@@ -27,7 +27,7 @@ public:
 
   /// Check if a point is inside bounding box and outside static obstacles
   bool is_free(const Vecf<Dim> &pt) const {
-    return map_util_->isValid(pt);
+    return map_util_->isInside(pt);
   }
 
   /// Overloard original function
@@ -58,8 +58,8 @@ public:
     for (size_t i = 0; i < this->U_.size(); i++) {
       Primitive<Dim> pr(curr, this->U_[i], this->dt_);
       Waypoint<Dim> tn = pr.evaluate(this->dt_);
-      if (!map_util_->isValid(tn.pos) ||
-          !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
+      if(!map_util_->isInside(tn.pos) ||
+        !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
         continue;
       decimal_t cost = map_util_->isFree(pr, curr.t)
                            ? calculate_intrinsic_cost(pr)

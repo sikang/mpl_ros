@@ -18,6 +18,8 @@ class PolyMapUtil {
      */
     PolyMapUtil() {}
 
+    void setStartTime(decimal_t t) { start_t_ = t; }
+
     ///Set static polyhedron obstacles
     void setStaticObstacle(const vec_E<PolyhedronObstacle<Dim>>& obs) {
       static_obs_ = obs;
@@ -60,48 +62,50 @@ class PolyMapUtil {
       }
 
     /// Check if a point is inside bounding box
-    bool isValid(const Vecf<Dim>& pt) const {
+    bool isInside(const Vecf<Dim>& pt) const {
       return bbox_.inside(pt);
     }
 
     /// Check if a point is valid and not colliding moving obstacles
-    /*
     bool isFree(const Vecf<Dim>& pt, decimal_t t) const {
-      if(!isValid(pt))
-        return false;
-      for(const auto& poly: static_obs_) {
-        if(poly.inside(pt))
+      for(const auto& obs: static_obs_) {
+        if(obs.inside(pt))
           return false;
       }
 
-      for(const auto& poly: linear_obs_) {
-        if(poly.inside(pt, t))
+      for(const auto& obs: linear_obs_) {
+        if(obs.inside(pt, t - start_t_))
           return false;
       }
-      for(const auto& poly: nonlinear_obs_) {
-        if(poly.inside(pt, t))
+
+      for(const auto& obs: nonlinear_obs_) {
+        if(obs.inside(pt, t - start_t_))
           return false;
       }
       return true;
     }
-    */
 
 		///Check if a primitive is in free space, \f$t\f$ is the start time of primitive
     bool isFree(const Primitive<Dim> &pr, decimal_t t) const {
-      for(const auto& poly: static_obs_) {
-        if(collide(pr, poly))
+      auto start = pr.evaluate(0);
+      if(!isFree(start.pos, t))
+        return false;
+
+      for(const auto& obs: static_obs_) {
+        if(collide(pr, obs))
           return false;
       }
 
-      for(const auto& poly: linear_obs_) {
-        if(collide(pr, poly, t))
+      for(const auto& obs: linear_obs_) {
+        if(collide(pr, obs, t-start_t_))
           return false;
       }
 
-      for(const auto& poly: nonlinear_obs_) {
-        if(collide(pr, poly, t))
+      for(const auto& obs: nonlinear_obs_) {
+        if(collide(pr, obs, t-start_t_))
           return false;
       }
+
       return true;
     }
 
@@ -123,6 +127,8 @@ class PolyMapUtil {
     }
 
   private:
+    ///Start time
+    decimal_t start_t_{0};
     ///Static polyhedron obstacle
     vec_E<PolyhedronObstacle<Dim>> static_obs_;
     ///Static polyhedron obstacle
