@@ -34,20 +34,24 @@ public:
 
  void setStartTime(decimal_t t) { map_util_->setStartTime(t); }
 
- void setStaticObstacles(const vec_E<PolyhedronObstacle<Dim>>& polys) {
-   map_util_->setStaticObstacle(polys);
+ void setStaticObstacles(const vec_E<PolyhedronObstacle<Dim>>& obs) {
+   map_util_->setStaticObstacle(obs);
  }
 
- void setLinearObstacles(const vec_E<PolyhedronLinearObstacle<Dim>>& polys) {
-   map_util_->setLinearObstacle(polys);
+ void setLinearObstacles(const vec_E<PolyhedronLinearObstacle<Dim>>& obs) {
+   map_util_->setLinearObstacle(obs);
  }
 
- void setNonlinearObstacles(const vec_E<PolyhedronNonlinearObstacle<Dim>>& polys) {
-   map_util_->setNonlinearObstacle(polys);
+ void setNonlinearObstacles(const vec_E<PolyhedronNonlinearObstacle<Dim>>& obs) {
+   map_util_->setNonlinearObstacle(obs);
  }
 
  vec_E<Polyhedron<Dim>> getPolyhedrons(decimal_t time) const {
    return map_util_->getPolyhedrons(time);
+ }
+
+ vec_E<PolyhedronLinearObstacle<Dim>> getLinearObstacles() const {
+   return map_util_->getLinearObstacles();
  }
 
  Polyhedron<Dim> getBoundingBox() const {

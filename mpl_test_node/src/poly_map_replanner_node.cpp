@@ -16,15 +16,30 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     rec1.add(Hyperplane2D(Vec2f(0, 1), Vec2f::UnitY()));
 
     circular_obs.push_back(PolyhedronCircularObstacle2D(
-        rec1, Vec2f(4, 0), 1.5, -0.5));
+        rec1, Vec2f(12, 13), 5, -0.5));
     circular_obs.push_back(PolyhedronCircularObstacle2D(
-        rec1, Vec2f(8, 0), 1.5, 0.5));
+        rec1, Vec2f(10, 20), 5, -1));
     circular_obs.push_back(PolyhedronCircularObstacle2D(
-        rec1, Vec2f(12, 2), 2, 1));
+        rec1, Vec2f(20, 20), 6, 1, 0.5));
+
     nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(10, 1), Vec2f(0, -1), 2, false), 0));
+        rec1, square(Vec2f(20, 22), Vec2f(0, -1), 8, false), 0));
     nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
-        rec1, square(Vec2f(12, -1), Vec2f(0, 1), 2, false), 0));
+        rec1, square(Vec2f(25, 14), Vec2f(0, 0.5), 10, false), 0));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, square(Vec2f(30, 20), Vec2f(0.2, 1.5), 10, false), 0));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, back_and_forth(Vec2f(30, 30), Vec2f(1, 1), 6, Control::VEL),
+        -6));
+    nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, back_and_forth(Vec2f(30, 20), Vec2f(-0.5, 1), 10, Control::VEL),
+        -5));
+   nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, back_and_forth(Vec2f(10, 3), Vec2f(-0.2, 1), 10, Control::VEL),
+        -2));
+   nonlinear_obs.push_back(PolyhedronNonlinearObstacle2D(
+        rec1, back_and_forth(Vec2f(5, 13), Vec2f(0.8, -1), 7, Control::VEL),
+        -3));
 
     update(0);
   }
@@ -37,7 +52,21 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     }
     for(const auto& it: circular_obs) {
       linear_obs.push_back(it.get_linear_obstacle(t));
-      linear_obs.back().set_cov_v(0.2);
+      linear_obs.back().set_cov_v(0.4);
+    }
+
+    if(t == 0) {
+      obs_trajs_.resize(linear_obs.size());
+      for(size_t i = 0; i < linear_obs.size(); i++)
+        obs_trajs_[i].push_back(linear_obs[i].p());
+    }
+    else {
+      for(size_t i = 0; i < linear_obs.size(); i++) {
+        if((linear_obs[i].p() - obs_trajs_[i].back()).norm() > 0.2)
+          obs_trajs_[i].push_back(linear_obs[i].p());
+        while(obs_trajs_[i].size() > 100)
+          obs_trajs_[i].erase(obs_trajs_[i].begin());
+      }
     }
   }
 
@@ -70,14 +99,15 @@ struct Simple2DConfig0 : ObstacleCourse<2> {
     return polys;
   }
 
+  vec_E<vec_Vec2f> obs_trajs_;
   vec_E<PolyhedronCircularObstacle2D> circular_obs;
 };
 
 
 ros::Publisher predict_pub;
 ros::Publisher poly_pub;
+ros::Publisher paths_pub;
 ros::Publisher sg_pub;
-ros::Publisher ps_pub;
 ros::Publisher blocked_prs_pub;
 ros::Publisher cleared_prs_pub;
 ros::Publisher prs_pub;
@@ -177,9 +207,17 @@ void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
              astar_ptr->getTrajCost(), lpastar_ptr->getTrajCost(),
              astar_ptr->getTrajCost() - lpastar_ptr->getTrajCost());
     prev_traj = lpastar_ptr->getTraj();
-    //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(obs_ptr->getPredictPolyhedrons());
-    decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(lpastar_ptr->getPolyhedrons(0));
-    //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(astar_ptr->getPolyhedrons(0));
+
+    auto linear_obs = lpastar_ptr->getLinearObstacles();
+    vec_E<Polyhedron2D> polys;
+    for(const auto& it: linear_obs) {
+      for(const auto& itt: it.predict(0.5, 5, 0)) {
+        polys.push_back(itt);
+      }
+    }
+
+    //decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(lpastar_ptr->getPolyhedrons(0));
+    decomp_ros_msgs::PolyhedronArray predict_msg = DecompROS::polyhedron_array_to_ros(polys);
     predict_msg.header.frame_id = "map";
     predict_pub.publish(predict_msg);
 
@@ -220,6 +258,10 @@ void replanCallback(const std_msgs::Float32::ConstPtr &msg) {
   poly_msg.header.frame_id = "map";
   poly_pub.publish(poly_msg);
 
+  auto paths_msg = path_array_to_ros(obs_ptr->obs_trajs_);
+  paths_msg.header.frame_id = "map";
+  paths_pub.publish(paths_msg);
+
 }
 
 int main(int argc, char **argv) {
@@ -243,6 +285,9 @@ int main(int argc, char **argv) {
   traj_pubs.push_back(traj0_pub);
   traj_pubs.push_back(traj1_pub);
 
+  paths_pub =
+    nh.advertise<planning_ros_msgs::PathArray>("paths", 1, true);
+
   prs_pub =
     nh.advertise<planning_ros_msgs::PrimitiveArray>("graph", 1, true);
   blocked_prs_pub =
@@ -250,15 +295,13 @@ int main(int argc, char **argv) {
   cleared_prs_pub =
     nh.advertise<planning_ros_msgs::PrimitiveArray>("cleared_primitives", 1, true);
 
-  ps_pub = nh.advertise<sensor_msgs::PointCloud>("ps", 1, true);
-
   obs_ptr.reset(new Simple2DConfig0());
 
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
-  nh.param("origin_y", origin(1), -2.5);
-  nh.param("range_x", dim(0), 20.0);
-  nh.param("range_y", dim(1), 5.0);
+  nh.param("origin_y", origin(1), 0.0);
+  nh.param("range_x", dim(0), 40.0);
+  nh.param("range_y", dim(1), 40.0);
 
   // Initialize planner
   double v_max, a_max;

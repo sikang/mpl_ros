@@ -130,13 +130,13 @@ int main(int argc, char **argv) {
       poly_pub.publish(poly_msg);
       poly_msgs.push_back(poly_msg);
 
-      vec_E<vec_Vec3f> path_array;
+      vec_E<vec_Vec2f> path_array;
       vec_Vec2f states;
       vec_Vec2f starts;
       for(auto& it: robot_team->get_robots()) {
         starts.push_back(it->get_start().pos);
         states.push_back(it->get_state(time).pos);
-        path_array.push_back(vec2_to_vec3(it->get_history()));
+        path_array.push_back(it->get_history());
       }
 
       auto path_msg = path_array_to_ros(path_array);
@@ -145,13 +145,13 @@ int main(int argc, char **argv) {
       path_pub.publish(path_msg);
       path_msgs.push_back(path_msg);
 
-      auto state_msg = vec_to_cloud(vec2_to_vec3(states));
+      auto state_msg = vec_to_cloud(states);
       state_msg.header.frame_id = "map";
       state_msg.header.stamp = t0 + ros::Duration(time);
       state_pub.publish(state_msg);
       state_msgs.push_back(state_msg);
 
-      auto start_msg = vec_to_cloud(vec2_to_vec3(starts));
+      auto start_msg = vec_to_cloud(starts);
       start_msg.header.frame_id = "map";
       start_msg.header.stamp = t0 + ros::Duration(time);
       start_pub.publish(start_msg);

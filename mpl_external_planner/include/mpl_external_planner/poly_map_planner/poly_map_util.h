@@ -114,6 +114,10 @@ class PolyMapUtil {
       return bbox_;
     }
 
+    vec_E<PolyhedronLinearObstacle<Dim>> getLinearObstacles() const {
+      return linear_obs_;
+    }
+
     vec_E<Polyhedron<Dim>> getPolyhedrons(decimal_t time) const {
       vec_E<Polyhedron<Dim>> poly_obs;
       for(const auto& it: static_obs_)
@@ -125,6 +129,8 @@ class PolyMapUtil {
 
       return poly_obs;
     }
+
+
 
   private:
     ///Start time

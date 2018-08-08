@@ -152,8 +152,11 @@ class PolyhedronNonlinearObstacle : public PolyhedronObstacle<Dim> {
 
   /// Downgrade to linear obstacle at time \f$t\f$
   PolyhedronLinearObstacle<Dim> get_linear_obstacle(decimal_t t) const {
-    auto waypoint = traj_.evaluate(t);
+    auto waypoint = traj_.evaluate(t+start_t_);
+    if(t+start_t_ >= 0)
     return PolyhedronLinearObstacle<Dim>(this->poly_, waypoint.pos, waypoint.vel);
+    else
+    return PolyhedronLinearObstacle<Dim>(this->poly_, waypoint.pos, Vecf<Dim>::Zero());
   }
 
   bool disappear_front_{false};

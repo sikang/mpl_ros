@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
          traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
 
   // Publish expanded nodes
-  sensor_msgs::PointCloud ps = vec_to_cloud(vec2_to_vec3(planner_ptr->getCloseSet()));
+  sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
   ps.header.frame_id = "map";
   ps_pub.publish(ps);
 

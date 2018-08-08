@@ -6,9 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /lpastar1
-        - /PolyhedronArray2
-        - /PrimitiveArray1
+        - /lpastar1/Trajectory1
+        - /PathArray1
       Splitter Ratio: 0.5
     Tree Height: 747
   - Class: rviz/Selection
@@ -89,19 +88,6 @@ Visualization Manager:
       Use rainbow: true
       Value: true
     - Alpha: 0.200000003
-      BoundColor: 255; 0; 0
-      Class: decomp_rviz_plugins/PolyhedronArray
-      Enabled: true
-      MeshColor: 0; 170; 255
-      Name: PolyhedronArray
-      Scale: 0.100000001
-      State: Mesh
-      Topic: /test_primitive/polyhedrons
-      Unreliable: false
-      Value: true
-      VsColor: 0; 255; 0
-      VsScale: 1
-    - Alpha: 0.200000003
       BoundColor: 0; 0; 0
       Class: decomp_rviz_plugins/PolyhedronArray
       Enabled: true
@@ -125,7 +111,7 @@ Visualization Manager:
           JrkScale: 0.0199999996
           JrkVis: false
           Name: Trajectory
-          Num of samples: 50
+          Num of samples: 200
           NumYaw: 20
           PosColor: 204; 51; 204
           PosScale: 0.0500000007
@@ -153,7 +139,7 @@ Visualization Manager:
           JrkScale: 0.0199999996
           JrkVis: false
           Name: Trajectory
-          Num of samples: 50
+          Num of samples: 200
           NumYaw: 20
           PosColor: 0; 0; 255
           PosScale: 0.0500000007
@@ -223,7 +209,7 @@ Visualization Manager:
       Class: decomp_rviz_plugins/PolyhedronArray
       Enabled: true
       MeshColor: 0; 170; 255
-      Name: PolyhedronArray
+      Name: plan_obs
       Scale: 0.0500000007
       State: Bound
       Topic: /test_primitive/predicts
@@ -231,30 +217,30 @@ Visualization Manager:
       Value: true
       VsColor: 0; 255; 0
       VsScale: 1
-    - AccColor: 10; 200; 55
-      AccScale: 0.0199999996
-      AccVis: false
-      Class: planning_rviz_plugins/PrimitiveArray
+    - Alpha: 0.200000003
+      BoundColor: 255; 0; 0
+      Class: decomp_rviz_plugins/PolyhedronArray
       Enabled: true
-      JrkColor: 200; 20; 55
-      JrkScale: 0.0199999996
-      JrkVis: false
-      Name: PrimitiveArray
-      Num: 2
-      NumYaw: 2
-      PosColor: 204; 51; 204
-      PosScale: 0.0299999993
-      Topic: /test_primitive/graph
+      MeshColor: 0; 170; 255
+      Name: obs
+      Scale: 0.100000001
+      State: Mesh
+      Topic: /test_primitive/polyhedrons
       Unreliable: false
       Value: true
-      VelColor: 85; 85; 255
-      VelScale: 0.0199999996
-      VelVis: false
-      YawColor: 100; 20; 55
-      YawScale: 0.0500000007
-      YawTriangleAngle: 0.699999988
-      YawTriangleScale: 0.5
-      YawVis: false
+      VsColor: 0; 255; 0
+      VsScale: 1
+    - Class: planning_rviz_plugins/PathArray
+      Enabled: true
+      ID: All
+      LineColor: 0; 0; 255
+      LineScale: 0.100000001
+      Name: PathArray
+      NodeColor: 85; 85; 255
+      NodeScale: 0
+      Topic: /test_primitive/paths
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -289,11 +275,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 41.4804382
+      Scale: 15.0981741
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 9.86995983
-      Y: -0.875250697
+      X: 18.3477497
+      Y: 14.4908772
     Saved: ~
 Window Geometry:
   Displays:
