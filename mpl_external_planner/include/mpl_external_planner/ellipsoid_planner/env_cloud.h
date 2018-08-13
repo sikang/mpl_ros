@@ -1,6 +1,6 @@
 /**
  * @file env_cloud.h
- * @biref environment for planning using point cloud
+ * @brief environment for planning using ellipsoid model with point cloud
  */
 
 #ifndef MPL_ENV_CLOUD_H

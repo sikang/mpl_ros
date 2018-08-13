@@ -9,7 +9,6 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>catkin_simple</build_depend>
 
-  <depend>roscpp</depend>
   <depend>rosbag</depend>
   <depend>motion_primitive_library</depend>
   <depend>mpl_external_planner</depend>

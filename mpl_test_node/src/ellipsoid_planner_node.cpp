@@ -1,9 +1,9 @@
-#include "bag_reader.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
 #include <mpl_external_planner/ellipsoid_planner/ellipsoid_planner.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
+#include "bag_reader.hpp"
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
@@ -124,9 +124,7 @@ int main(int argc, char **argv) {
   nh.param("use_prior", use_prior, false);
   if (!traj_file_name.empty()) {
     planning_ros_msgs::Trajectory prior_traj =
-        read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name,
-                                                0)
-            .back();
+        read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name, 0).back();
     if (!prior_traj.primitives.empty()) {
       prior_traj_pub.publish(prior_traj);
       if (use_prior) {

@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
 
     // Get intermediate waypoints
     auto waypoints = traj.getWaypoints();
-    for(int i = 1; i < waypoints.size() - 1; i++)
+    for(size_t i = 1; i < waypoints.size() - 1; i++)
       waypoints[i].control = Control::VEL;
     // Get time allocation
     auto dts = traj.getSegmentTimes();
