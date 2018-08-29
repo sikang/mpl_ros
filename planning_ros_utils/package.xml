@@ -14,12 +14,12 @@
   <depend>rviz</depend>
   <depend>pcl_ros</depend>
   <depend>eigen_conversions</depend>
-  <!--<depend>jps3d</depend>-->
   <depend>motion_primitive_library</depend>
   <depend>planning_ros_msgs</depend>
-  <!--<depend>image_geometry</depend>-->
-  <!--<depend>depth_image_proc</depend>-->
   <depend>tf_conversions</depend>
+
+  <depend>sdl</depend>
+  <depend>sdl-image</depend>
 
   <export>
     <rviz plugin="${prefix}/plugin_description.xml"/>
