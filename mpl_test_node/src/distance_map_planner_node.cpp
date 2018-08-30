@@ -224,7 +224,7 @@ int main(int argc, char **argv) {
     vec_Vec3f path;
     for(const auto& w: ws)
       path.push_back(w.pos);
-    planner_ptr->setValidRegion(path, Vec3f(0.5, 0.5, 0.1)); // Set search region around path
+    planner_ptr->setSearchRegion(path, Vec3f(0.5, 0.5, 0.1)); // Set search region around path
   }
   if(use_potential) {
     planner_ptr->setPotentialRadius(Vec3f(1.0, 1.0, 0.1)); // Set potential distance
