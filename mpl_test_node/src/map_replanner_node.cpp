@@ -96,10 +96,10 @@ void visualizeGraph(int id, const VoxelMapPlanner& planner) {
   linked_cloud_pub[id].publish(linked_ps);
 
   // Publish primitives
+  // planning_ros_msgs::PrimitiveArray prs_msg =
+     // toPrimitiveArrayROSMsg(planner.getValidPrimitives());
   planning_ros_msgs::PrimitiveArray prs_msg =
-      toPrimitiveArrayROSMsg(planner.getAllPrimitives());
-  // planning_ros_msgs::Primitives prs_msg =
-  // toPrimitivesROSMsg(planner.getValidPrimitives());
+   toPrimitiveArrayROSMsg(planner.getExpandedEdges());
   prs_msg.header = header;
   prs_pub[id].publish(prs_msg);
 }
@@ -124,6 +124,9 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
     auto traj = planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
+    for(auto& it: traj_msg.primitives) {
+      it.cz[5] += 0.2;
+    }
     traj_pub[0].publish(traj_msg);
 
     printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
@@ -154,6 +157,9 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
     auto traj = replan_planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
+    for(auto& it: traj_msg.primitives) {
+      it.cz[5] += 0.2;
+    }
     traj_pub[1].publish(traj_msg);
 
     printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
@@ -161,7 +167,6 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
            traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK), traj.getTotalTime());
   }
   visualizeGraph(1, replan_planner_);
-  // replan_planner_.checkValidation();
 }
 
 void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
@@ -200,11 +205,18 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
   vec_Vec3f pts = cloud_to_vec(*msg);
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
 
+  vec_Vec3i ns;
+  for(int nx = -2; nx <= 2; nx++)
+    for(int ny = -2; ny <= 2; ny++)
+      ns.push_back(Vec3i(nx, ny, 0));
   vec_Vec3i new_obs;
-  for (const auto &pn : pns) {
-    if (map_util->isFree(pn)) {
-      voxel_mapper_->fill(pn(0), pn(1));
-      new_obs.push_back(pn);
+  for (const auto &it : pns) {
+    for(const auto & itt: ns) {
+      auto pn = it + itt;
+      if (map_util->isFree(pn)) {
+        voxel_mapper_->fill(pn(0), pn(1));
+        new_obs.push_back(pn);
+      }
     }
   }
 
@@ -423,6 +435,7 @@ int main(int argc, char **argv) {
   replan_planner_.setU(U);           // 2D discretization with 1
   replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
   replan_planner_.setLPAstar(true);  // Use LPAstar
+  //replan_planner_.setHeurIgnoreDynamics(false);
 
   // Planning thread!
   std_msgs::Bool init;

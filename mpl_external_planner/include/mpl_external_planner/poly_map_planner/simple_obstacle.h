@@ -185,7 +185,7 @@ class PolyhedronCircularObstacle: public PolyhedronObstacle<Dim> {
   PolyhedronCircularObstacle(const Polyhedron<Dim> &poly,
                              const Vecf<Dim> &center, decimal_t r, decimal_t w,
                              decimal_t init_angle = 0)
-      : center_(center), radius_(r), w_(w), init_angle_() {
+      : center_(center), radius_(r), w_(w), init_angle_(init_angle) {
     this->poly_ = poly;
   }
 
@@ -212,6 +212,18 @@ class PolyhedronCircularObstacle: public PolyhedronObstacle<Dim> {
     vel(0) = -w_ * radius_ * sin(init_angle_ + t*w_);
     vel(1) = w_ * radius_ * cos(init_angle_ + t*w_);
     return PolyhedronLinearObstacle<Dim>(this->poly_, pos, vel);
+  }
+
+  /// Get future trajectory for duration T
+  vec_Vecf<Dim> get_future_traj(decimal_t t0, decimal_t T = 2) const {
+    vec_Vecf<Dim> traj;
+    for(decimal_t t = t0; t <= t0+T; t+=0.1) {
+      Vecf<Dim> offset = Vecf<Dim>::Zero();
+      offset(0) = radius_ * cos(init_angle_+t*w_);
+      offset(1) = radius_ * sin(init_angle_+t*w_);
+      traj.push_back(center_ + offset);
+    }
+    return traj;
   }
 
  protected:

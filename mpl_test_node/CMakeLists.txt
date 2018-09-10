@@ -21,8 +21,8 @@ target_link_libraries(map_replanner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 cs_add_executable(distance_map_planner_node src/distance_map_planner_node.cpp)
 target_link_libraries(distance_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
-cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
-target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+#cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
+#target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
 cs_add_executable(poly_map_planner_node src/poly_map_planner_node.cpp)
 target_link_libraries(poly_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})

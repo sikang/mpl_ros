@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
   nh.param("origin_y", origin(1), -2.5);
-  nh.param("range_x", dim(0), 20.0);
+  nh.param("range_x", dim(0), 15.0);
   nh.param("range_y", dim(1), 5.0);
 
   // Initialize planner
