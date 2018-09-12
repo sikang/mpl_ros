@@ -1,7 +1,23 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(mpl_test_node)
 
+# set default build type
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations")
+
+execute_process(COMMAND lsb_release -cs
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+SET(COMPILE_ELLIPSOID_PLANNER_NODE TRUE)
+if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic1")
+  SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
+  message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
+endif()
+#message("-- COMPILE_ELLIPSOID_PLANNER_NODE: ${COMPILE_ELLIPSOID_PLANNER_NODE}")
 
 find_package(catkin_simple REQUIRED)
 find_package(cmake_modules REQUIRED)
@@ -21,8 +37,10 @@ target_link_libraries(map_replanner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 cs_add_executable(distance_map_planner_node src/distance_map_planner_node.cpp)
 target_link_libraries(distance_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
-#cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
-#target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+if(COMPILE_ELLIPSOID_PLANNER_NODE)
+cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
+target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+endif()
 
 cs_add_executable(poly_map_planner_node src/poly_map_planner_node.cpp)
 target_link_libraries(poly_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
