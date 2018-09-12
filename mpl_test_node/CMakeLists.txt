@@ -9,11 +9,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations"
 
 execute_process(COMMAND lsb_release -cs
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 SET(COMPILE_ELLIPSOID_PLANNER_NODE TRUE)
-if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic1")
+if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic")
   SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
   message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
 endif()

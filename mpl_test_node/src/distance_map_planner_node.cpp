@@ -44,12 +44,12 @@ int main(int argc, char **argv) {
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher cloud_pub =
       nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
+  ros::Publisher potential_pub =
+      nh.advertise<sensor_msgs::PointCloud>("potential", 1, true);
   ros::Publisher traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("trajectory", 1, true);
   ros::Publisher prior_traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("prior_trajectory", 1, true);
-  ros::Publisher refined_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
-      "trajectory_refined", 1, true);
 
   // Standard header
   std_msgs::Header header;
@@ -266,25 +266,16 @@ int main(int argc, char **argv) {
   // Get time allocation
   auto dts = traj.getSegmentTimes();
 
-  // Generate higher order polynomials
-  TrajSolver3D traj_solver(Control::JRK);
-  traj_solver.setWaypoints(waypoints);
-  traj_solver.setDts(dts);
-  traj = traj_solver.solve();
-
-  // Publish refined trajectory
-  planning_ros_msgs::Trajectory refined_traj_msg = toTrajectoryROSMsg(traj);
-  refined_traj_msg.header = header;
-  refined_traj_pub.publish(refined_traj_msg);
-
-  printf("Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
-         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
-         traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
-
   // Publish expanded nodes
   sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getSearchRegion());
   ps.header = header;
   cloud_pub.publish(ps);
+
+  // Publish expanded nodes
+  sensor_msgs::PointCloud potential_msg = vec_to_cloud(planner_ptr->getPotentialCloud());
+  potential_msg.header = header;
+  potential_pub.publish(potential_msg);
+
 
   // Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
