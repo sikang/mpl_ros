@@ -7,7 +7,7 @@
 
   <node pkg="mpl_test_node"
     type="distance_map_planner_node"
-    name="test_primitive"
+    name="distance_map_planner_node"
     launch-prefix="$(arg prefix)"
     output="screen">
     <param name="file" value="$(find mpl_test_node)/maps/simple/simple.bag"/>
@@ -38,7 +38,7 @@
     name="trajectory_extractor"
     type="trajectory_extractor_node"
     output="screen">
-    <remap from="~trajectory" to="test_primitive/trajectory_refined"/>
+    <remap from="~trajectory" to="distance_map_planner_node/perturb"/>
     <param name="file" value="$(find mpl_test_node)/launch/distance_map_planner_node/trajectory_command.bag"/>
     <param name="topic" value="command"/>
   </node>
