@@ -18,9 +18,6 @@
   <depend>planning_ros_msgs</depend>
   <depend>tf_conversions</depend>
 
-  <depend>sdl</depend>
-  <depend>sdl-image</depend>
-
   <export>
     <rviz plugin="${prefix}/plugin_description.xml"/>
   </export>
