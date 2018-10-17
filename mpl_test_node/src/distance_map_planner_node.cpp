@@ -185,12 +185,13 @@ int main(int argc, char **argv) {
     planner_ptr->setU(U);        // 2D discretization with 1
     planner_ptr->setTol(0.5);    // Tolerance for goal region
 
-    planner_ptr->setSearchRegion(path, Vec2f(0.5, 0.5)); // Set search region around path
+    planner_ptr->setSearchRadius(Vec2f(0.5, 0.5)); // Set search region radius
+    planner_ptr->setSearchRegion(path); // Set search region around the path
     planner_ptr->setPotentialRadius(Vec2f(1.5, 1.5)); // Set potential distance
     planner_ptr->setPotentialWeight(10); // Set potential weight
     planner_ptr->setGradientWeight(0); // Set gradient weight
     //planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
-    planner_ptr->updatePotentialMap(start.pos, 1); // Update potential map
+    planner_ptr->updatePotentialMap(start.pos); // Update potential map
 
     planner_ptr->plan(start, goal);
     planning_ros_msgs::Trajectory perturb_traj_msg = toTrajectoryROSMsg(planner_ptr->getTraj(), 1);
@@ -219,7 +220,7 @@ int main(int argc, char **argv) {
     planner_ptr->setPotentialWeight(10); // Set potential weight
     planner_ptr->setGradientWeight(0); // Set gradient weight
     //planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
-    planner_ptr->updatePotentialMap(start.pos, 1); // Update potential map
+    planner_ptr->updatePotentialMap(start.pos); // Update potential map
 
     planner_ptr->plan(start, goal);
     planning_ros_msgs::Trajectory global_traj_msg = toTrajectoryROSMsg(planner_ptr->getTraj());
