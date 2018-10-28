@@ -16,6 +16,7 @@ Packages:
 #### Dependancy:
   - `ROS`(Indigo+)
   - [`catkin_simple`](https://github.com/catkin/catkin_simple)
+  - [`SDL`](`sudo apt install -y libsdl1.2-dev libsdl-image1.2-dev`)
 
 ##### Compile
 Before compiling, make sure submodules are on their corresponding commits.
