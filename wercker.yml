@@ -1,4 +1,4 @@
-box: osrf/ros:kinetic-desktop-full
+box: osrf/ros:melodic-ros-core
 
 build:
   steps:
