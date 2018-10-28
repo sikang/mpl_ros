@@ -1,4 +1,4 @@
-box: osrf/ros:melodic-ros-core
+box: osrf/ros:lunar-desktop-full
 
 build:
   steps:
