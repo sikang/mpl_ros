@@ -11,7 +11,7 @@
     launch-prefix="$(arg prefix)"
     output="screen">
     <!-- Set start and goal -->
-    <param name="goal_x" value="18"/>
+    <param name="goal_x" value="18.0"/>
     <param name="goal_y" value="0"/>
     <param name="start_vx" value="0.0"/>
     <param name="start_vy" value="0.0"/>

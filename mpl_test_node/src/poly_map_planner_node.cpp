@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   Vec2f origin, dim;
   nh.param("origin_x", origin(0), 0.0);
   nh.param("origin_y", origin(1), -2.5);
-  nh.param("range_x", dim(0), 15.0);
+  nh.param("range_x", dim(0), 20.0);
   nh.param("range_y", dim(1), 5.0);
 
   // Initialize planner
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
   planner_ptr->setVmax(v_max);      // Set max velocity
   planner_ptr->setAmax(a_max);      // Set max acceleration
   planner_ptr->setDt(dt);           // Set dt for each primitive
-  planner_ptr->setTol(0.5, 0.1); // Tolerance for goal region
+  planner_ptr->setTol(1.0, 1.0); // Tolerance for goal region
 
   // Set start and goal
   double start_x, start_y;
