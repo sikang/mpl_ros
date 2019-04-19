@@ -1,14 +1,15 @@
 /**
  * @brief Multi-robot test node in a tunnel case
  */
-#include "bag_writter.hpp"
-#include "robot_team.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
 
-int main(int argc, char **argv) {
+#include "bag_writter.hpp"
+#include "robot_team.hpp"
+
+int main(int argc, char** argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
@@ -22,9 +23,9 @@ int main(int argc, char **argv) {
   nh.param("prs_name", prs_name, std::string("/prs"));
 
   ros::Publisher poly_pub =
-    nh.advertise<decomp_ros_msgs::PolyhedronArray>(polys_name, 1, true);
+      nh.advertise<decomp_ros_msgs::PolyhedronArray>(polys_name, 1, true);
   ros::Publisher bound_pub =
-    nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
+      nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
   ros::Publisher state_pub =
       nh.advertise<sensor_msgs::PointCloud>(states_name, 1, true);
   ros::Publisher start_pub =
@@ -54,8 +55,7 @@ int main(int argc, char **argv) {
   vec_E<VecDf> U;
   const decimal_t du = u / num;
   for (decimal_t dx = -u; dx <= u; dx += du)
-    for (decimal_t dy = -u; dy <= u; dy += du)
-      U.push_back(Vec2f(dx, dy));
+    for (decimal_t dy = -u; dy <= u; dy += du) U.push_back(Vec2f(dx, dy));
 
   bool use_config1, use_config2;
   nh.param("use_config1", use_config1, true);
@@ -69,9 +69,9 @@ int main(int argc, char **argv) {
   rec.add(Hyperplane2D(Vec2f(0, 0.5), Vec2f::UnitY()));
 
   std::unique_ptr<HomogeneousRobotTeam<2>> robot_team;
-  if(use_config1)
+  if (use_config1)
     robot_team.reset(new Team1(0.01));
-  else if(use_config2)
+  else if (use_config2)
     robot_team.reset(new Team2(0.01));
   else
     robot_team.reset(new HomogeneousRobotTeam<2>());
@@ -86,7 +86,8 @@ int main(int argc, char **argv) {
 
   vec_E<Polyhedron2D> bbox;
   bbox.push_back(robot_team->get_robots().front()->get_bbox());
-  decomp_ros_msgs::PolyhedronArray bbox_msg = DecompROS::polyhedron_array_to_ros(bbox);
+  decomp_ros_msgs::PolyhedronArray bbox_msg =
+      DecompROS::polyhedron_array_to_ros(bbox);
   bbox_msg.header.frame_id = "map";
   bbox_msg.header.stamp = ros::Time::now();
   bound_pub.publish(bbox_msg);
@@ -107,24 +108,24 @@ int main(int argc, char **argv) {
     time += update_t;
 
     // plan
-    //if(!robot_team->update_centralized(time)) {
-    if(!robot_team->update_decentralized(time)) {
+    // if(!robot_team->update_centralized(time)) {
+    if (!robot_team->update_decentralized(time)) {
       ROS_INFO("Robot fails to plan, ABORT!");
       break;
     }
 
     // set obstacle simultaneously
-    auto poly_obs = robot_team->get_obs(); // set obstacles at time
+    auto poly_obs = robot_team->get_obs();  // set obstacles at time
 
     // Visualizing current status at 10 Hz
-    if(time - prev_time >= 0.1) {
+    if (time - prev_time >= 0.1) {
       // Reduce the size of obstacles manually.
-      for(auto& it: poly_obs) {
-        for(auto& itt: it.vs_)
-          itt.p_ -= itt.n_ * 0.25;
+      for (auto& it : poly_obs) {
+        for (auto& itt : it.vs_) itt.p_ -= itt.n_ * 0.25;
       }
 
-      decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
+      decomp_ros_msgs::PolyhedronArray poly_msg =
+          DecompROS::polyhedron_array_to_ros(poly_obs);
       poly_msg.header.frame_id = "map";
       poly_msg.header.stamp = t0 + ros::Duration(time);
       poly_pub.publish(poly_msg);
@@ -133,7 +134,7 @@ int main(int argc, char **argv) {
       vec_E<vec_Vec2f> path_array;
       vec_Vec2f states;
       vec_Vec2f starts;
-      for(auto& it: robot_team->get_robots()) {
+      for (auto& it : robot_team->get_robots()) {
         starts.push_back(it->get_start().pos);
         states.push_back(it->get_state(time).pos);
         path_array.push_back(it->get_history());
@@ -158,7 +159,7 @@ int main(int argc, char **argv) {
       start_msgs.push_back(start_msg);
 
       vec_E<Primitive2D> prs_array;
-      for(auto& it: robot_team->get_robots()) {
+      for (auto& it : robot_team->get_robots()) {
         auto prs = it->get_primitives();
         prs_array.insert(prs_array.end(), prs.begin(), prs.end());
       }
@@ -172,7 +173,7 @@ int main(int argc, char **argv) {
       prev_time = time;
     }
 
-    if(robot_team->finished(time)) {
+    if (robot_team->finished(time)) {
       ROS_INFO("All robots reached!");
       break;
     }
@@ -188,16 +189,11 @@ int main(int argc, char **argv) {
   rosbag::Bag bag;
   bag.open(file_name, rosbag::bagmode::Write);
 
-  for(const auto& it: start_msgs)
-    bag.write(starts_name, it.header.stamp, it);
-  for(const auto& it: state_msgs)
-    bag.write(states_name, it.header.stamp, it);
-  for(const auto& it: poly_msgs)
-    bag.write(polys_name, it.header.stamp, it);
-  for(const auto& it: path_msgs)
-    bag.write(paths_name, it.header.stamp, it);
-  for(const auto& it: prs_msgs)
-    bag.write(prs_name, it.header.stamp, it);
+  for (const auto& it : start_msgs) bag.write(starts_name, it.header.stamp, it);
+  for (const auto& it : state_msgs) bag.write(states_name, it.header.stamp, it);
+  for (const auto& it : poly_msgs) bag.write(polys_name, it.header.stamp, it);
+  for (const auto& it : path_msgs) bag.write(paths_name, it.header.stamp, it);
+  for (const auto& it : prs_msgs) bag.write(prs_name, it.header.stamp, it);
 
   bag.close();
 

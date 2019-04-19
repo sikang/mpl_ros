@@ -15,7 +15,7 @@ namespace MPL {
  * @brief Motion primitive planner using point cloud
  */
 class EllipsoidPlanner : public PlannerBase<3, Waypoint3D> {
-public:
+ public:
   /**
    * @brief Simple constructor
    * @param verbose enable print out
@@ -32,6 +32,6 @@ public:
     ENV_.reset(new MPL::env_cloud(obs, r, ori, dim));
   }
 };
-}
+}  // namespace MPL
 
 #endif

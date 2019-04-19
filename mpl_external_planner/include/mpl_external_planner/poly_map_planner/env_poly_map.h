@@ -15,25 +15,21 @@ namespace MPL {
  */
 template <int Dim>
 class env_poly_map : public env_base<Dim> {
-public:
+ public:
   /// Simple constructor
   env_poly_map() {}
   /// Simple constructor
-  env_poly_map(const std::shared_ptr<PolyMapUtil<Dim>>& map_util) {
+  env_poly_map(const std::shared_ptr<PolyMapUtil<Dim>> &map_util) {
     map_util_ = map_util;
   }
 
   ~env_poly_map() {}
 
   /// Check if a point is inside bounding box and outside static obstacles
-  bool is_free(const Vecf<Dim> &pt) const {
-    return map_util_->isInside(pt);
-  }
+  bool is_free(const Vecf<Dim> &pt) const { return map_util_->isInside(pt); }
 
   /// Overloard original function
-  bool is_free(const Primitive<Dim> &pr) const {
-    return true;
-  }
+  bool is_free(const Primitive<Dim> &pr) const { return true; }
 
   /**
    * @brief Get successor
@@ -58,8 +54,8 @@ public:
     for (size_t i = 0; i < this->U_.size(); i++) {
       Primitive<Dim> pr(curr, this->U_[i], this->dt_);
       Waypoint<Dim> tn = pr.evaluate(this->dt_);
-      if(!map_util_->isInside(tn.pos) ||
-        !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
+      if (!map_util_->isInside(tn.pos) ||
+          !validate_primitive(pr, this->v_max_, this->a_max_, this->j_max_))
         continue;
       decimal_t cost = map_util_->isFree(pr, curr.t)
                            ? calculate_intrinsic_cost(pr)
@@ -77,9 +73,9 @@ public:
            this->w_ * this->dt_;
   }
 
-protected:
+ protected:
   std::shared_ptr<PolyMapUtil<Dim>> map_util_;
 };
-}
+}  // namespace MPL
 
 #endif

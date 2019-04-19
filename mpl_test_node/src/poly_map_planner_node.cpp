@@ -1,17 +1,18 @@
-#include "obstacle_config.hpp"
 #include <decomp_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
+
+#include "obstacle_config.hpp"
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
   ros::Publisher poly_pub =
-    nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
+      nh.advertise<decomp_ros_msgs::PolyhedronArray>("polyhedrons", 1, true);
   ros::Publisher bound_pub =
-    nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
+      nh.advertise<decomp_ros_msgs::PolyhedronArray>("bound", 1, true);
   ros::Publisher sg_pub =
       nh.advertise<sensor_msgs::PointCloud>("start_and_goal", 1, true);
   ros::Publisher traj_pub =
@@ -23,9 +24,9 @@ int main(int argc, char **argv) {
   nh.param("use_config1", use_config1, false);
 
   std::unique_ptr<ObstacleCourse<2>> obs_ptr;
-  if(use_config0)
+  if (use_config0)
     obs_ptr.reset(new ObstacleCourse2DConfig0());
-  else if(use_config1)
+  else if (use_config1)
     obs_ptr.reset(new ObstacleCourse2DConfig1());
   else
     obs_ptr.reset(new ObstacleCourse<2>());
@@ -48,14 +49,15 @@ int main(int argc, char **argv) {
 
   std::unique_ptr<MPL::PolyMapPlanner2D> planner_ptr;
   planner_ptr.reset(new MPL::PolyMapPlanner2D(true));
-  planner_ptr->setMap(origin, dim);         // Set collision checking function
-  planner_ptr->setStaticObstacles(obs_ptr->static_obs); // Set static obstacles
-  planner_ptr->setLinearObstacles(obs_ptr->linear_obs); // Set linear obstacles
-  planner_ptr->setNonlinearObstacles(obs_ptr->nonlinear_obs); // Set nonlinear obstacles
-  planner_ptr->setVmax(v_max);      // Set max velocity
-  planner_ptr->setAmax(a_max);      // Set max acceleration
-  planner_ptr->setDt(dt);           // Set dt for each primitive
-  planner_ptr->setTol(1.0, 1.0); // Tolerance for goal region
+  planner_ptr->setMap(origin, dim);  // Set collision checking function
+  planner_ptr->setStaticObstacles(obs_ptr->static_obs);  // Set static obstacles
+  planner_ptr->setLinearObstacles(obs_ptr->linear_obs);  // Set linear obstacles
+  planner_ptr->setNonlinearObstacles(
+      obs_ptr->nonlinear_obs);    // Set nonlinear obstacles
+  planner_ptr->setVmax(v_max);    // Set max velocity
+  planner_ptr->setAmax(a_max);    // Set max acceleration
+  planner_ptr->setDt(dt);         // Set dt for each primitive
+  planner_ptr->setTol(1.0, 1.0);  // Tolerance for goal region
 
   // Set start and goal
   double start_x, start_y;
@@ -93,14 +95,14 @@ int main(int argc, char **argv) {
   vec_E<VecDf> U;
   const decimal_t du = u / num;
   for (decimal_t dx = -u; dx <= u; dx += du)
-    for (decimal_t dy = -u; dy <= u; dy += du)
-      U.push_back(Vec2f(dx, dy));
-  planner_ptr->setU(U); // Set discretization with 1 and efforts
+    for (decimal_t dy = -u; dy <= u; dy += du) U.push_back(Vec2f(dx, dy));
+  planner_ptr->setU(U);  // Set discretization with 1 and efforts
 
   auto t0 = ros::Time::now();
-  if(!planner_ptr->plan(start, goal)) {
+  if (!planner_ptr->plan(start, goal)) {
     ROS_WARN("Failed! Takes %f sec for planning, expand [%zu] nodes",
-             (ros::Time::now() - t0).toSec(), planner_ptr->getCloseSet().size());
+             (ros::Time::now() - t0).toSec(),
+             planner_ptr->getCloseSet().size());
     return -1;
   }
   ROS_INFO("Succeed! Takes %f sec for planning, expand [%zu] nodes",
@@ -112,9 +114,11 @@ int main(int argc, char **argv) {
   traj_msg.header.frame_id = "map";
   traj_pub.publish(traj_msg);
 
-  printf("================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
-         "total time: %f\n",
-         traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
+  printf(
+      "================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
+      "total time: %f\n",
+      traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP),
+      traj.getTotalTime());
 
   // Publish expanded nodes
   sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
@@ -123,7 +127,8 @@ int main(int argc, char **argv) {
 
   vec_E<Polyhedron2D> bbox;
   bbox.push_back(planner_ptr->getBoundingBox());
-  decomp_ros_msgs::PolyhedronArray bbox_msg = DecompROS::polyhedron_array_to_ros(bbox);
+  decomp_ros_msgs::PolyhedronArray bbox_msg =
+      DecompROS::polyhedron_array_to_ros(bbox);
   bbox_msg.header.frame_id = "map";
   bound_pub.publish(bbox_msg);
 
@@ -133,9 +138,10 @@ int main(int argc, char **argv) {
   t0 = ros::Time::now();
   while (ros::ok()) {
     double dt = (ros::Time::now() - t0).toSec();
-    if(dt < traj.getTotalTime()) {
+    if (dt < traj.getTotalTime()) {
       vec_E<Polyhedron2D> poly_obs = planner_ptr->getPolyhedrons(dt);
-      decomp_ros_msgs::PolyhedronArray poly_msg = DecompROS::polyhedron_array_to_ros(poly_obs);
+      decomp_ros_msgs::PolyhedronArray poly_msg =
+          DecompROS::polyhedron_array_to_ros(poly_obs);
       poly_msg.header.frame_id = "map";
       poly_pub.publish(poly_msg);
 
@@ -148,8 +154,7 @@ int main(int argc, char **argv) {
       pt2.x = goal_x, pt2.y = goal_y, pt2.z = 0;
       sg_cloud.points.push_back(pt1), sg_cloud.points.push_back(pt2);
       sg_pub.publish(sg_cloud);
-    }
-    else
+    } else
       t0 = ros::Time::now();
 
     ros::spinOnce();

@@ -19,7 +19,7 @@ class Robot {
   ~Robot() {}
 
   /// Construct by the given shape
-  Robot(const Polyhedron<Dim> &shape, std::string robot_name = "",
+  Robot(const Polyhedron<Dim>& shape, std::string robot_name = "",
         bool verbose = false)
       : shape_(shape), robot_name_(robot_name), verbose_(verbose) {}
 
@@ -79,9 +79,7 @@ class Robot {
   }
 
   /// Set traj init time manually
-  void set_traj_t(decimal_t t) {
-    traj_t_ = t;
-  }
+  void set_traj_t(decimal_t t) { traj_t_ = t; }
 
   /**
    * @brief planning thread
@@ -92,52 +90,50 @@ class Robot {
    *
    */
   bool plan(decimal_t t) {
-    if(traj_t_ < 0) {
+    if (traj_t_ < 0) {
       history_.push_back(start_.pos);
-    }
-    else {
+    } else {
       auto state = traj_.evaluate(t - traj_t_);
       start_ = traj_.evaluate(dt_);
-      if(!history_.empty() && (state.pos - history_.back()).norm() > 0.2)
+      if (!history_.empty() && (state.pos - history_.back()).norm() > 0.2)
         history_.push_back(state.pos);
     }
 
-    if(t - traj_t_ < dt_ - 1e-8 || (start_.pos - goal_.pos).norm() < 1)
+    if (t - traj_t_ < dt_ - 1e-8 || (start_.pos - goal_.pos).norm() < 1)
       return true;
 
-    if(verbose_)
-       printf("[%s]: start planning at t: %f, traj_t: %f\n",
-              robot_name_.c_str(), t, traj_t_);
+    if (verbose_)
+      printf("[%s]: start planning at t: %f, traj_t: %f\n", robot_name_.c_str(),
+             t, traj_t_);
 
     ros::Time t0 = ros::Time::now();
     planner_ptr.reset(new MPL::PolyMapPlanner<Dim>(false));
-    planner_ptr->setMap(origin_, dim_);// Set map dimenstion
-    planner_ptr->setStaticObstacles(static_obs_); // Set static obstacles
-    planner_ptr->setLinearObstacles(linear_obs_); // Set linear moving obstacles
-    planner_ptr->setNonlinearObstacles(nonlinear_obs_); // Set nonlinear moving obstacles
-    planner_ptr->setVmax(v_max_);      // Set max velocity
-    planner_ptr->setAmax(a_max_);      // Set max acceleration
-    planner_ptr->setDt(dt_);           // Set dt for each primitive
-    planner_ptr->setTol(0.5); // Tolerance for goal region
-    planner_ptr->setU(U_); // Set control input
+    planner_ptr->setMap(origin_, dim_);            // Set map dimenstion
+    planner_ptr->setStaticObstacles(static_obs_);  // Set static obstacles
+    planner_ptr->setLinearObstacles(
+        linear_obs_);  // Set linear moving obstacles
+    planner_ptr->setNonlinearObstacles(
+        nonlinear_obs_);           // Set nonlinear moving obstacles
+    planner_ptr->setVmax(v_max_);  // Set max velocity
+    planner_ptr->setAmax(a_max_);  // Set max acceleration
+    planner_ptr->setDt(dt_);       // Set dt for each primitive
+    planner_ptr->setTol(0.5);      // Tolerance for goal region
+    planner_ptr->setU(U_);         // Set control input
 
-    if(!planner_ptr->plan(start_, goal_))
-      return false;
+    if (!planner_ptr->plan(start_, goal_)) return false;
 
-    if(verbose_)
+    if (verbose_)
       printf("[%s]: takes %f to plan\n", robot_name_.c_str(),
              (ros::Time::now() - t0).toSec());
 
     traj_ = planner_ptr->getTraj();
     traj_t_ = t;
-    //printf("traj_t: %.2f\n", traj_t_);
+    // printf("traj_t: %.2f\n", traj_t_);
     return true;
   }
 
   /// Get start
-  Waypoint<Dim> get_start() const {
-    return start_;
-  }
+  Waypoint<Dim> get_start() const { return start_; }
 
   /// Get robot state at time \f$t\f$
   Waypoint<Dim> get_state(decimal_t t) const {
@@ -145,26 +141,24 @@ class Robot {
   }
 
   /// Get robot most recent trajectory
-  Trajectory<Dim> get_trajectory() const {
-    return traj_;
-  }
+  Trajectory<Dim> get_trajectory() const { return traj_; }
 
   /// Get trajectory for visualizing
-  vec_E<Primitive<Dim>> get_primitives() const {
-    return traj_.getPrimitives();
-  }
+  vec_E<Primitive<Dim>> get_primitives() const { return traj_.getPrimitives(); }
 
-  /// Create linear obstacle model for robot using position and velocity at time \f$t\f$
+  /// Create linear obstacle model for robot using position and velocity at time
+  /// \f$t\f$
   PolyhedronLinearObstacle<Dim> get_linear_obstacle(decimal_t t) const {
     auto state = get_state(t);
     return PolyhedronLinearObstacle<Dim>(shape_, state.pos, state.vel);
   }
 
   /// Create nonlinear obstacle model for robot using trajectory at time \f$t\f$
-  PolyhedronNonlinearObstacle<Dim> get_nonlinear_obstacle(decimal_t t, decimal_t max_t = 0) const {
+  PolyhedronNonlinearObstacle<Dim> get_nonlinear_obstacle(
+      decimal_t t, decimal_t max_t = 0) const {
     bool disappear = false;
     auto prs = traj_.getPrimitives();
-    if(max_t > 0 && traj_.getTotalTime() > max_t) {
+    if (max_t > 0 && traj_.getTotalTime() > max_t) {
       int n = std::round(max_t / dt_);
       prs.resize(n);
       disappear = true;
@@ -176,14 +170,10 @@ class Robot {
   }
 
   /// Get the map bounding box
-  Polyhedron<Dim> get_bbox() const {
-    return planner_ptr->getBoundingBox();
-  }
+  Polyhedron<Dim> get_bbox() const { return planner_ptr->getBoundingBox(); }
 
   /// Get the history of robot's position
-  vec_Vecf<Dim> get_history() const {
-    return history_;
-  }
+  vec_Vecf<Dim> get_history() const { return history_; }
 
   /// Check if the goal has been reached
   bool reached(decimal_t time) const {

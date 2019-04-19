@@ -1,7 +1,8 @@
-#include <ros/ros.h>
-#include "bag_reader.hpp"
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
+#include <ros/ros.h>
+
+#include "bag_reader.hpp"
 //#include <jps_planner/jps_planner/jps_planner.h>
 //#include <jps_planner/distance_map_planner/distance_map_planner.h>
 #include <mpl_planner/planner/map_planner.h>
@@ -63,8 +64,7 @@ int main(int argc, char **argv) {
       nh.advertise<planning_ros_msgs::VoxelMap>("voxel_map", 1, true);
   ros::Publisher region_pub =
       nh.advertise<sensor_msgs::PointCloud>("region", 1, true);
-  ros::Publisher sg_pub =
-      nh.advertise<sensor_msgs::PointCloud>("sg", 1, true);
+  ros::Publisher sg_pub = nh.advertise<sensor_msgs::PointCloud>("sg", 1, true);
   ros::Publisher cloud_pub =
       nh.advertise<sensor_msgs::PointCloud>("cloud", 1, true);
   ros::Publisher raw_traj_pub =
@@ -73,7 +73,6 @@ int main(int argc, char **argv) {
       nh.advertise<planning_ros_msgs::Trajectory>("perturb", 1, true);
   ros::Publisher global_traj_pub =
       nh.advertise<planning_ros_msgs::Trajectory>("global", 1, true);
-
 
   // Read map from bag file
   std::string file_name, topic_name;
@@ -84,7 +83,7 @@ int main(int argc, char **argv) {
   nh.param("height", h, 0.8);
 
   planning_ros_msgs::VoxelMap map =
-    read_bag<planning_ros_msgs::VoxelMap>(file_name, topic_name, 0).back();
+      read_bag<planning_ros_msgs::VoxelMap>(file_name, topic_name, 0).back();
   map = sliceMap(map, h, 2.0);
   map.header.frame_id = "map";
   map_pub.publish(map);
@@ -140,19 +139,18 @@ int main(int argc, char **argv) {
   vec_E<VecDf> U;
   const decimal_t du = u / num;
   for (decimal_t dx = -u; dx <= u; dx += du)
-    for (decimal_t dy = -u; dy <= u; dy += du)
-      U.push_back(Vec2f(dx, dy));
+    for (decimal_t dy = -u; dy <= u; dy += du) U.push_back(Vec2f(dx, dy));
 
   std::unique_ptr<MPL::OccMapPlanner> planner_ptr;
 
   planner_ptr.reset(new MPL::OccMapPlanner(true));
-  planner_ptr->setMapUtil(map_util); // Set collision checking function
-  planner_ptr->setVmax(v_max);       // Set max velocity
-  planner_ptr->setAmax(a_max); // Set max acceleration (as control input)
-  planner_ptr->setEpsilon(1.0);      // Set dt for each primitive
-  planner_ptr->setDt(dt);      // Set dt for each primitive
-  planner_ptr->setU(U);        // 2D discretization with 1
-  planner_ptr->setTol(0.2);    // Tolerance for goal region
+  planner_ptr->setMapUtil(map_util);  // Set collision checking function
+  planner_ptr->setVmax(v_max);        // Set max velocity
+  planner_ptr->setAmax(a_max);        // Set max acceleration (as control input)
+  planner_ptr->setEpsilon(1.0);       // Set dt for each primitive
+  planner_ptr->setDt(dt);             // Set dt for each primitive
+  planner_ptr->setU(U);               // 2D discretization with 1
+  planner_ptr->setTol(0.2);           // Tolerance for goal region
 
   ros::Time t0 = ros::Time::now();
   bool valid = planner_ptr->plan(start, goal);
@@ -173,28 +171,28 @@ int main(int argc, char **argv) {
     // Create a path from planned traj
     const auto ws = traj.getWaypoints();
     vec_Vec2f path;
-    for(const auto& w: ws)
-      path.push_back(w.pos);
+    for (const auto &w : ws) path.push_back(w.pos);
 
     planner_ptr.reset(new MPL::OccMapPlanner(false));
-    planner_ptr->setMapUtil(map_util); // Set collision checking function
-    planner_ptr->setVmax(v_max);       // Set max velocity
-    planner_ptr->setAmax(a_max); // Set max acceleration (as control input)
-    planner_ptr->setEpsilon(1.0);      // Set dt for each primitive
-    planner_ptr->setDt(dt);      // Set dt for each primitive
-    planner_ptr->setU(U);        // 2D discretization with 1
-    planner_ptr->setTol(0.5);    // Tolerance for goal region
+    planner_ptr->setMapUtil(map_util);  // Set collision checking function
+    planner_ptr->setVmax(v_max);        // Set max velocity
+    planner_ptr->setAmax(a_max);   // Set max acceleration (as control input)
+    planner_ptr->setEpsilon(1.0);  // Set dt for each primitive
+    planner_ptr->setDt(dt);        // Set dt for each primitive
+    planner_ptr->setU(U);          // 2D discretization with 1
+    planner_ptr->setTol(0.5);      // Tolerance for goal region
 
-    planner_ptr->setSearchRadius(Vec2f(0.5, 0.5)); // Set search region radius
-    planner_ptr->setSearchRegion(path); // Set search region around the path
-    planner_ptr->setPotentialRadius(Vec2f(1.5, 1.5)); // Set potential distance
-    planner_ptr->setPotentialWeight(10); // Set potential weight
-    planner_ptr->setGradientWeight(0); // Set gradient weight
-    //planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
-    planner_ptr->updatePotentialMap(start.pos); // Update potential map
+    planner_ptr->setSearchRadius(Vec2f(0.5, 0.5));  // Set search region radius
+    planner_ptr->setSearchRegion(path);  // Set search region around the path
+    planner_ptr->setPotentialRadius(Vec2f(1.5, 1.5));  // Set potential distance
+    planner_ptr->setPotentialWeight(10);               // Set potential weight
+    planner_ptr->setGradientWeight(0);                 // Set gradient weight
+    // planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
+    planner_ptr->updatePotentialMap(start.pos);  // Update potential map
 
     planner_ptr->plan(start, goal);
-    planning_ros_msgs::Trajectory perturb_traj_msg = toTrajectoryROSMsg(planner_ptr->getTraj(), 1);
+    planning_ros_msgs::Trajectory perturb_traj_msg =
+        toTrajectoryROSMsg(planner_ptr->getTraj(), 1);
     perturb_traj_msg.header.frame_id = "map";
     perturb_traj_pub.publish(perturb_traj_msg);
 
@@ -203,34 +201,35 @@ int main(int argc, char **argv) {
     region_pub.publish(region_msg);
 
     std::shared_ptr<MPL::OccMapUtil> global_map_util =
-      std::make_shared<MPL::OccMapUtil>();
+        std::make_shared<MPL::OccMapUtil>();
     setMap(global_map_util, map);
     global_map_util->freeUnknown();
 
     planner_ptr.reset(new MPL::OccMapPlanner(false));
-    planner_ptr->setMapUtil(global_map_util); // Set collision checking function
-    planner_ptr->setVmax(v_max);       // Set max velocity
-    planner_ptr->setAmax(a_max); // Set max acceleration (as control input)
-    planner_ptr->setEpsilon(1.0);      // Set dt for each primitive
-    planner_ptr->setDt(dt);      // Set dt for each primitive
-    planner_ptr->setU(U);        // 2D discretization with 1
-    planner_ptr->setTol(0.5);    // Tolerance for goal region
+    planner_ptr->setMapUtil(
+        global_map_util);          // Set collision checking function
+    planner_ptr->setVmax(v_max);   // Set max velocity
+    planner_ptr->setAmax(a_max);   // Set max acceleration (as control input)
+    planner_ptr->setEpsilon(1.0);  // Set dt for each primitive
+    planner_ptr->setDt(dt);        // Set dt for each primitive
+    planner_ptr->setU(U);          // 2D discretization with 1
+    planner_ptr->setTol(0.5);      // Tolerance for goal region
 
-    planner_ptr->setPotentialRadius(Vec2f(1.5, 1.5)); // Set potential distance
-    planner_ptr->setPotentialWeight(10); // Set potential weight
-    planner_ptr->setGradientWeight(0); // Set gradient weight
-    //planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
-    planner_ptr->updatePotentialMap(start.pos); // Update potential map
+    planner_ptr->setPotentialRadius(Vec2f(1.5, 1.5));  // Set potential distance
+    planner_ptr->setPotentialWeight(10);               // Set potential weight
+    planner_ptr->setGradientWeight(0);                 // Set gradient weight
+    // planner_ptr->setPotentialMapRange(Vec2f(2.0, 2.0));
+    planner_ptr->updatePotentialMap(start.pos);  // Update potential map
 
     planner_ptr->plan(start, goal);
-    planning_ros_msgs::Trajectory global_traj_msg = toTrajectoryROSMsg(planner_ptr->getTraj());
+    planning_ros_msgs::Trajectory global_traj_msg =
+        toTrajectoryROSMsg(planner_ptr->getTraj());
     global_traj_msg.header.frame_id = "map";
     global_traj_pub.publish(global_traj_msg);
   }
 
   auto potential = planner_ptr->getPotentialCloud();
-  for(auto& it: potential)
-    it(2) -= 1;
+  for (auto &it : potential) it(2) -= 1;
   auto cloud_msg = vec_to_cloud(potential);
   cloud_msg.header.frame_id = "map";
   cloud_pub.publish(cloud_msg);

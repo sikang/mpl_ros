@@ -1,12 +1,13 @@
 #ifndef VOXEL_GRID_H
 #define VOXEL_GRID_H
 
-#include <boost/multi_array.hpp>
 #include <mpl_basis/data_type.h>
 #include <planning_ros_msgs/VoxelMap.h>
 
+#include <boost/multi_array.hpp>
+
 class VoxelGrid {
-public:
+ public:
   VoxelGrid(Vec3f origin, Vec3f dim, float res);
   void clear();
 
@@ -27,7 +28,7 @@ public:
   void fill(int nx, int ny, int nz);
   void clear(int nx, int ny);
 
-private:
+ private:
   Vec3i floatToInt(const Vec3f &pt);
   Vec3f intToFloat(const Vec3i &pn);
   bool isOutSide(const Vec3i &pn);

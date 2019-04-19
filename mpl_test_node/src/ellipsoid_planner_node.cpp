@@ -3,6 +3,7 @@
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
+
 #include "bag_reader.hpp"
 
 int main(int argc, char **argv) {
@@ -62,15 +63,16 @@ int main(int argc, char **argv) {
   std::unique_ptr<MPL::EllipsoidPlanner> planner_;
   planner_.reset(new MPL::EllipsoidPlanner(true));
   planner_->setMap(cloud_to_vec(map), robot_radius, origin,
-                   dim);         // Set collision checking function
-  planner_->setEpsilon(epsilon); // Set greedy param (default equal to 1)
-  planner_->setVmax(v_max);      // Set max velocity
-  planner_->setAmax(a_max);      // Set max acceleration
-  planner_->setDt(dt);           // Set dt for each primitive
-  planner_->setW(w);             // Set time weight for each primitive
+                   dim);          // Set collision checking function
+  planner_->setEpsilon(epsilon);  // Set greedy param (default equal to 1)
+  planner_->setVmax(v_max);       // Set max velocity
+  planner_->setAmax(a_max);       // Set max acceleration
+  planner_->setDt(dt);            // Set dt for each primitive
+  planner_->setW(w);              // Set time weight for each primitive
   planner_->setMaxNum(
-      max_num); // Set maximum allowed expansion, -1 means no limitation
-  planner_->setTol(2.0, 2.0, 100.0); // Tolerance for goal region as pos, vel, acc
+      max_num);  // Set maximum allowed expansion, -1 means no limitation
+  planner_->setTol(2.0, 2.0,
+                   100.0);  // Tolerance for goal region as pos, vel, acc
 
   // Set start and goal
   double start_x, start_y, start_z;
@@ -124,7 +126,9 @@ int main(int argc, char **argv) {
   nh.param("use_prior", use_prior, false);
   if (!traj_file_name.empty()) {
     planning_ros_msgs::Trajectory prior_traj =
-        read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name, 0).back();
+        read_bag<planning_ros_msgs::Trajectory>(traj_file_name, traj_topic_name,
+                                                0)
+            .back();
     if (!prior_traj.primitives.empty()) {
       prior_traj_pub.publish(prior_traj);
       if (use_prior) {
@@ -143,14 +147,14 @@ int main(int argc, char **argv) {
     for (decimal_t dx = -u_max; dx <= u_max; dx += du)
       for (decimal_t dy = -u_max; dy <= u_max; dy += du)
         for (decimal_t dz = -u_max_z; dz <= u_max_z;
-             dz += du_z) // here we reduce the z control
+             dz += du_z)  // here we reduce the z control
           U.push_back(Vec3f(dx, dy, dz));
   } else {
     for (decimal_t dx = -u_max; dx <= u_max; dx += du)
       for (decimal_t dy = -u_max; dy <= u_max; dy += du)
         U.push_back(Vec3f(dx, dy, 0));
   }
-  planner_->setU(U); // Set discretization with 1 and efforts
+  planner_->setU(U);  // Set discretization with 1 and efforts
   // planner_->setMode(num, use_3d, start); // Set discretization with 1 and
   // efforts
   // Planning thread!
@@ -176,13 +180,16 @@ int main(int argc, char **argv) {
     traj_msg.header.frame_id = "map";
     traj_pub.publish(traj_msg);
 
-    printf("================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
-           "total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP), traj.getTotalTime());
+    printf(
+        "================== Traj -- total J(VEL): %f, J(ACC): %F, J(JRK): %f, "
+        "total time: %f\n",
+        traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::SNP),
+        traj.getTotalTime());
 
     vec_E<Ellipsoid3D> Es =
         sample_ellipsoids(traj, Vec3f(robot_radius, robot_radius, 0.1), 50);
-    decomp_ros_msgs::EllipsoidArray es_msg = DecompROS::ellipsoid_array_to_ros(Es);
+    decomp_ros_msgs::EllipsoidArray es_msg =
+        DecompROS::ellipsoid_array_to_ros(Es);
     es_msg.header.frame_id = "map";
     es_pub.publish(es_msg);
 

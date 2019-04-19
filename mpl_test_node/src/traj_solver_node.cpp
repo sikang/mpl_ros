@@ -1,24 +1,25 @@
-#include "bag_reader.hpp"
 #include <mpl_traj_solver/traj_solver.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
 
+#include "bag_reader.hpp"
+
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
   ros::NodeHandle nh("~");
 
-  ros::Publisher min_vel_traj_pub =
-    nh.advertise<planning_ros_msgs::Trajectory>("min_vel_trajectory", 1, true);
-  ros::Publisher min_acc_traj_pub =
-    nh.advertise<planning_ros_msgs::Trajectory>("min_acc_trajectory", 1, true);
-  ros::Publisher min_jrk_traj_pub =
-    nh.advertise<planning_ros_msgs::Trajectory>("min_jrk_trajectory", 1, true);
-  ros::Publisher min_snp_traj_pub =
-    nh.advertise<planning_ros_msgs::Trajectory>("min_snp_trajectory", 1, true);
+  ros::Publisher min_vel_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
+      "min_vel_trajectory", 1, true);
+  ros::Publisher min_acc_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
+      "min_acc_trajectory", 1, true);
+  ros::Publisher min_jrk_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
+      "min_jrk_trajectory", 1, true);
+  ros::Publisher min_snp_traj_pub = nh.advertise<planning_ros_msgs::Trajectory>(
+      "min_snp_trajectory", 1, true);
 
   ros::Publisher path_pub =
-    nh.advertise<planning_ros_msgs::Path>("path", 1, true);
+      nh.advertise<planning_ros_msgs::Path>("path", 1, true);
 
   // Standard header
   std_msgs::Header header;
@@ -74,7 +75,6 @@ int main(int argc, char **argv) {
     traj_msg.header = header;
     min_snp_traj_pub.publish(traj_msg);
   }
-
 
   ros::spin();
 

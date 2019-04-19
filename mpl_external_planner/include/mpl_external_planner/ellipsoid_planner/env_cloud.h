@@ -14,10 +14,10 @@ namespace MPL {
  * @brief Point cloud environment
  */
 class env_cloud : public env_base<3> {
-protected:
+ protected:
   std::unique_ptr<EllipsoidUtil> map_util_;
 
-public:
+ public:
   /// Simple constructor
   env_cloud() {}
   /// Simple constructor
@@ -54,22 +54,21 @@ public:
     succ_cost.clear();
     action_idx.clear();
 
-    //expanded_nodes_.push_back(curr.pos);
+    // expanded_nodes_.push_back(curr.pos);
     // ws_.push_back(curr);
     for (int i = 0; i < (int)U_.size(); i++) {
       Primitive3D pr(curr, U_[i], dt_);
       Waypoint3D tn = pr.evaluate(dt_);
-      if(tn == curr || !validate_primitive(pr, v_max_, a_max_, j_max_) ||
-         !map_util_->isFree(pr))
+      if (tn == curr || !validate_primitive(pr, v_max_, a_max_, j_max_) ||
+          !map_util_->isFree(pr))
         continue;
       tn.t = curr.t + dt_;
       succ.push_back(tn);
       succ_cost.push_back(pr.J(pr.control()) + w_ * dt_);
       action_idx.push_back(i);
     }
-
   }
 };
-}
+}  // namespace MPL
 
 #endif

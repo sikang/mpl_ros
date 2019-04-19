@@ -11,7 +11,7 @@ class TrajectoryExtractor {
 
     const auto t0 = ros::Time::now();
     cmd_array_.resize(ws.size());
-    for(unsigned int i = 0; i < ws.size(); i++) {
+    for (unsigned int i = 0; i < ws.size(); i++) {
       cmd_array_[i].header.stamp = t0 + ros::Duration(ws[i].t);
       cmd_array_[i].position.x = ws[i].pos(0);
       cmd_array_[i].position.y = ws[i].pos(1);
@@ -36,5 +36,4 @@ class TrajectoryExtractor {
 
  private:
   std::vector<planning_ros_msgs::TrajectoryCommand> cmd_array_;
-
 };

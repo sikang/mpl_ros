@@ -7,7 +7,8 @@ struct ObstacleCourse {
   vec_E<PolyhedronLinearObstacle<Dim>> linear_obs;
   vec_E<PolyhedronNonlinearObstacle<Dim>> nonlinear_obs;
 
-  /// Generate trajectory: going back and forth once, `t` is the segment duration
+  /// Generate trajectory: going back and forth once, `t` is the segment
+  /// duration
   Trajectory<Dim> back_and_forth(const Vecf<Dim> &start, const Vecf<Dim> &v,
                                  decimal_t t, Control::Control control) {
     Waypoint<Dim> s1;
@@ -35,7 +36,6 @@ struct ObstacleCourse {
     return Trajectory<Dim>(segs);
   }
 
-
   /// Generate linear square trajectory
   Trajectory<Dim> square(const Vecf<Dim> &start, const Vecf<Dim> &v,
                          decimal_t t, bool clockwise = true) {
@@ -52,8 +52,7 @@ struct ObstacleCourse {
 
     Waypoint<Dim> s2 = seg1.evaluate(seg1.t());
     Vec2f u2(v(1), -v(0));
-    if(!clockwise)
-      u2 = -u2;
+    if (!clockwise) u2 = -u2;
     Primitive<Dim> seg2(s2, u2, t);
 
     Waypoint<Dim> s3 = seg2.evaluate(seg2.t());
@@ -72,9 +71,7 @@ struct ObstacleCourse {
 
     return Trajectory<Dim>(segs);
   }
-
 };
-
 
 /// Include linear obstacles
 struct ObstacleCourse2DConfig0 : ObstacleCourse<2> {
@@ -84,7 +81,8 @@ struct ObstacleCourse2DConfig0 : ObstacleCourse<2> {
     rec1.add(Hyperplane2D(Vec2f(6.5, 0), Vec2f::UnitX()));
     rec1.add(Hyperplane2D(Vec2f(6, -1.5), -Vec2f::UnitY()));
     rec1.add(Hyperplane2D(Vec2f(6, 1.5), Vec2f::UnitY()));
-    linear_obs.push_back(PolyhedronLinearObstacle2D(rec1, Vec2f::Zero(), Vec2f(-0.5, 0)));
+    linear_obs.push_back(
+        PolyhedronLinearObstacle2D(rec1, Vec2f::Zero(), Vec2f(-0.5, 0)));
 
     Polyhedron2D rec2;
     rec2.add(Hyperplane2D(Vec2f(15.5, 2.0), -Vec2f::UnitX()));
@@ -98,21 +96,24 @@ struct ObstacleCourse2DConfig0 : ObstacleCourse<2> {
     rec3.add(Hyperplane2D(Vec2f(16.5, -2.0), Vec2f::UnitX()));
     rec3.add(Hyperplane2D(Vec2f(14, -2.5), -Vec2f::UnitY()));
     rec3.add(Hyperplane2D(Vec2f(14, -1.5), Vec2f::UnitY()));
-    linear_obs.push_back(PolyhedronLinearObstacle2D(rec3, Vec2f::Zero(), Vec2f(0.0, 0.25)));
+    linear_obs.push_back(
+        PolyhedronLinearObstacle2D(rec3, Vec2f::Zero(), Vec2f(0.0, 0.25)));
 
     Polyhedron2D rec4;
     rec4.add(Hyperplane2D(Vec2f(15.5, 0.5), -Vec2f::UnitX()));
     rec4.add(Hyperplane2D(Vec2f(16.5, 0.5), Vec2f::UnitX()));
     rec4.add(Hyperplane2D(Vec2f(16, -0.5), -Vec2f::UnitY()));
     rec4.add(Hyperplane2D(Vec2f(16, 0.5), Vec2f::UnitY()));
-    linear_obs.push_back(PolyhedronLinearObstacle2D(rec4, Vec2f::Zero(), Vec2f(0.0, -0.1)));
+    linear_obs.push_back(
+        PolyhedronLinearObstacle2D(rec4, Vec2f::Zero(), Vec2f(0.0, -0.1)));
 
     Polyhedron2D rec5;
     rec5.add(Hyperplane2D(Vec2f(6.5, -2.0), -Vec2f::UnitX()));
     rec5.add(Hyperplane2D(Vec2f(15.5, -2.0), Vec2f::UnitX()));
     rec5.add(Hyperplane2D(Vec2f(7, -4.5), -Vec2f::UnitY()));
     rec5.add(Hyperplane2D(Vec2f(7, -3.5), Vec2f::UnitY()));
-    linear_obs.push_back(PolyhedronLinearObstacle2D(rec5, Vec2f::Zero(), Vec2f(-0.1, 0.3)));
+    linear_obs.push_back(
+        PolyhedronLinearObstacle2D(rec5, Vec2f::Zero(), Vec2f(-0.1, 0.3)));
 
     printf("Initialized obstacle config 0!\n\n");
   }

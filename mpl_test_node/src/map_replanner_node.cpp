@@ -1,4 +1,3 @@
-#include "bag_reader.hpp"
 #include <mpl_planner/planner/map_planner.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
@@ -7,6 +6,8 @@
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Int8.h>
+
+#include "bag_reader.hpp"
 
 using namespace MPL;
 
@@ -60,9 +61,8 @@ void getMap(std::shared_ptr<VoxelMapUtil> &map_util,
   map.data = map_util->getMap();
 }
 
-void visualizeGraph(int id, const VoxelMapPlanner& planner) {
-  if (id < 0 || id > 1)
-    return;
+void visualizeGraph(int id, const VoxelMapPlanner &planner) {
+  if (id < 0 || id > 1) return;
 
   // Publish location of start and goal
   sensor_msgs::PointCloud sg_cloud;
@@ -97,16 +97,15 @@ void visualizeGraph(int id, const VoxelMapPlanner& planner) {
 
   // Publish primitives
   // planning_ros_msgs::PrimitiveArray prs_msg =
-     // toPrimitiveArrayROSMsg(planner.getValidPrimitives());
+  // toPrimitiveArrayROSMsg(planner.getValidPrimitives());
   planning_ros_msgs::PrimitiveArray prs_msg =
-   toPrimitiveArrayROSMsg(planner.getExpandedEdges());
+      toPrimitiveArrayROSMsg(planner.getExpandedEdges());
   prs_msg.header = header;
   prs_pub[id].publish(prs_msg);
 }
 
 void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
-  if (terminated)
-    return;
+  if (terminated) return;
   ros::Time t0 = ros::Time::now();
   bool valid = planner_.plan(start, goal);
   if (!valid) {
@@ -114,25 +113,27 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
               (ros::Time::now() - t0).toSec(), planner_.getCloseSet().size());
     terminated = true;
   } else {
-    ROS_WARN("Succeed! Takes %f sec for normal planning, openset: [%zu], "
-             "closeset (expanded): [%zu](%zu), total: [%zu]",
-             (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(),
-             planner_.getCloseSet().size(), planner_.getExpandedNodes().size(),
-             planner_.getOpenSet().size() + planner_.getCloseSet().size());
+    ROS_WARN(
+        "Succeed! Takes %f sec for normal planning, openset: [%zu], "
+        "closeset (expanded): [%zu](%zu), total: [%zu]",
+        (ros::Time::now() - t0).toSec(), planner_.getOpenSet().size(),
+        planner_.getCloseSet().size(), planner_.getExpandedNodes().size(),
+        planner_.getOpenSet().size() + planner_.getCloseSet().size());
 
     // Publish trajectory
     auto traj = planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
-    for(auto& it: traj_msg.primitives) {
+    for (auto &it : traj_msg.primitives) {
       it.cz[5] += 0.2;
     }
     traj_pub[0].publish(traj_msg);
 
-    printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
-           "time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK), traj.getTotalTime());
-
+    printf(
+        "================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
+        "time: %f\n",
+        traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+        traj.getTotalTime());
   }
   visualizeGraph(0, planner_);
 
@@ -144,27 +145,29 @@ void replanCallback(const std_msgs::Bool::ConstPtr &msg) {
               replan_planner_.getCloseSet().size());
     terminated = true;
   } else {
-    ROS_WARN("Succeed! Takes %f sec for lpastar planning, openset: [%zu], "
-             "closeset (expanded): [%zu](%zu), total: [%zu]",
-             (ros::Time::now() - t1).toSec(),
-             replan_planner_.getOpenSet().size(),
-             replan_planner_.getCloseSet().size(),
-             replan_planner_.getExpandedNodes().size(),
-             replan_planner_.getOpenSet().size() +
-                 replan_planner_.getCloseSet().size());
+    ROS_WARN(
+        "Succeed! Takes %f sec for lpastar planning, openset: [%zu], "
+        "closeset (expanded): [%zu](%zu), total: [%zu]",
+        (ros::Time::now() - t1).toSec(), replan_planner_.getOpenSet().size(),
+        replan_planner_.getCloseSet().size(),
+        replan_planner_.getExpandedNodes().size(),
+        replan_planner_.getOpenSet().size() +
+            replan_planner_.getCloseSet().size());
 
     // Publish trajectory
     auto traj = replan_planner_.getTraj();
     planning_ros_msgs::Trajectory traj_msg = toTrajectoryROSMsg(traj);
     traj_msg.header = header;
-    for(auto& it: traj_msg.primitives) {
+    for (auto &it : traj_msg.primitives) {
       it.cz[5] += 0.2;
     }
     traj_pub[1].publish(traj_msg);
 
-    printf("================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
-           "time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK), traj.getTotalTime());
+    printf(
+        "================== Traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, total "
+        "time: %f\n",
+        traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+        traj.getTotalTime());
   }
   visualizeGraph(1, replan_planner_);
 }
@@ -198,7 +201,6 @@ void clearCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
     changed_prs_pub.publish(prs_msg);
     */
   }
-
 }
 
 void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
@@ -206,12 +208,11 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
   vec_Vec3i pns = map_util->rayTrace(pts.front(), pts.back());
 
   vec_Vec3i ns;
-  for(int nx = -2; nx <= 2; nx++)
-    for(int ny = -2; ny <= 2; ny++)
-      ns.push_back(Vec3i(nx, ny, 0));
+  for (int nx = -2; nx <= 2; nx++)
+    for (int ny = -2; ny <= 2; ny++) ns.push_back(Vec3i(nx, ny, 0));
   vec_Vec3i new_obs;
   for (const auto &it : pns) {
-    for(const auto & itt: ns) {
+    for (const auto &itt : ns) {
       auto pn = it + itt;
       if (map_util->isFree(pn)) {
         voxel_mapper_->fill(pn(0), pn(1));
@@ -237,13 +238,12 @@ void addCloudCallback(const sensor_msgs::PointCloud::ConstPtr &msg) {
     changed_prs_pub.publish(prs_msg);
     */
   }
-
 }
 
 void subtreeCallback(const std_msgs::Int8::ConstPtr &msg) {
- if (replan_planner_.initialized())
+  if (replan_planner_.initialized())
     replan_planner_.getSubStateSpace(msg->data);
- else
+  else
     return;
   auto ws = replan_planner_.getTraj().getWaypoints();
   if (ws.size() < 3)
@@ -404,7 +404,7 @@ int main(int argc, char **argv) {
     for (decimal_t dx = -u_max; dx <= u_max; dx += du)
       for (decimal_t dy = -u_max; dy <= u_max; dy += du)
         for (decimal_t dz = -u_max; dz <= u_max;
-             dz += du_z) // here we reduce the z control
+             dz += du_z)  // here we reduce the z control
           U.push_back(Vec3f(dx, dy, dz));
   } else {
     for (decimal_t dx = -u_max; dx <= u_max; dx += du)
@@ -412,30 +412,30 @@ int main(int argc, char **argv) {
         U.push_back(Vec3f(dx, dy, 0));
   }
 
-  planner_.setMapUtil(map_util); // Set collision checking function
-  planner_.setEpsilon(1.0);      // Set greedy param (default equal to 1)
-  planner_.setVmax(v_max);       // Set max velocity
-  planner_.setAmax(a_max);       // Set max acceleration
-  planner_.setJmax(j_max);       // Set jrk (as control input)
-  planner_.setDt(dt);            // Set dt for each primitive
+  planner_.setMapUtil(map_util);  // Set collision checking function
+  planner_.setEpsilon(1.0);       // Set greedy param (default equal to 1)
+  planner_.setVmax(v_max);        // Set max velocity
+  planner_.setAmax(a_max);        // Set max acceleration
+  planner_.setJmax(j_max);        // Set jrk (as control input)
+  planner_.setDt(dt);             // Set dt for each primitive
   planner_.setMaxNum(
-      max_num);     // Set maximum allowed expansion, -1 means no limitation
-  planner_.setU(U); // 2D discretization with 1
-  planner_.setTol(0.5, 1, 1); // Tolerance for goal region
-  planner_.setLPAstar(false); // Use Astar
+      max_num);      // Set maximum allowed expansion, -1 means no limitation
+  planner_.setU(U);  // 2D discretization with 1
+  planner_.setTol(0.5, 1, 1);  // Tolerance for goal region
+  planner_.setLPAstar(false);  // Use Astar
 
-  replan_planner_.setMapUtil(map_util); // Set collision checking function
-  replan_planner_.setEpsilon(1.0);      // Set greedy param (default equal to 1)
-  replan_planner_.setVmax(v_max);       // Set max velocity
-  replan_planner_.setAmax(a_max);    // Set max acceleration (as control input)
-  replan_planner_.setJmax(j_max);    // Set jrk (as control input)
-  replan_planner_.setDt(dt);         // Set dt for each primitive
+  replan_planner_.setMapUtil(map_util);  // Set collision checking function
+  replan_planner_.setEpsilon(1.0);  // Set greedy param (default equal to 1)
+  replan_planner_.setVmax(v_max);   // Set max velocity
+  replan_planner_.setAmax(a_max);   // Set max acceleration (as control input)
+  replan_planner_.setJmax(j_max);   // Set jrk (as control input)
+  replan_planner_.setDt(dt);        // Set dt for each primitive
   replan_planner_.setMaxNum(
-      -1); // Set maximum allowed expansion, -1 means no limitation
-  replan_planner_.setU(U);           // 2D discretization with 1
-  replan_planner_.setTol(0.5, 1, 1); // Tolerance for goal region
-  replan_planner_.setLPAstar(true);  // Use LPAstar
-  //replan_planner_.setHeurIgnoreDynamics(false);
+      -1);  // Set maximum allowed expansion, -1 means no limitation
+  replan_planner_.setU(U);            // 2D discretization with 1
+  replan_planner_.setTol(0.5, 1, 1);  // Tolerance for goal region
+  replan_planner_.setLPAstar(true);   // Use LPAstar
+  // replan_planner_.setHeurIgnoreDynamics(false);
 
   // Planning thread!
   std_msgs::Bool init;

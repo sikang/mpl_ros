@@ -1,7 +1,6 @@
 #include <mpl_external_planner/poly_map_planner/primitive_geometry_utils.h>
 
 int main() {
-
   // construct primitive
   Waypoint2D s;
   s.pos = Vec2f(0, 0);
@@ -40,12 +39,12 @@ int main() {
 
   printf("seg1: \n");
   print(seg1);
-  //printf("seg2: \n");
-  //print(seg2);
+  // printf("seg2: \n");
+  // print(seg2);
 
   vec_E<Primitive2D> segs;
   segs.push_back(seg1);
-  //segs.push_back(seg2);
+  // segs.push_back(seg2);
 
   Trajectory2D traj(segs);
 

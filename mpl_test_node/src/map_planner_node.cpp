@@ -1,10 +1,11 @@
-#include "bag_reader.hpp"
 #include <mpl_planner/planner/map_planner.h>
 #include <mpl_traj_solver/traj_solver.h>
 #include <planning_ros_msgs/VoxelMap.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
 #include <ros/ros.h>
+
+#include "bag_reader.hpp"
 
 void setMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
             const planning_ros_msgs::VoxelMap &msg) {
@@ -70,15 +71,13 @@ int main(int argc, char **argv) {
   map_util->freeUnknown();
   // Inflate obstacle using robot radius (>0)
   double robot_r = 0.0;
-  if(robot_r > 0) {
+  if (robot_r > 0) {
     vec_Vec3i ns;
     int rn = std::ceil(robot_r / map_util->getRes());
-    for(int nx = -rn; nx <= rn; nx++) {
-      for(int ny = -rn; ny <= rn; ny++) {
-        if(nx == 0 && ny == 0)
-          continue;
-        if(std::hypot(nx, ny) > rn)
-          continue;
+    for (int nx = -rn; nx <= rn; nx++) {
+      for (int ny = -rn; ny <= rn; ny++) {
+        if (nx == 0 && ny == 0) continue;
+        if (std::hypot(nx, ny) > rn) continue;
         ns.push_back(Vec3i(nx, ny, 0));
       }
     }
@@ -106,7 +105,7 @@ int main(int argc, char **argv) {
   nh.param("use_yaw", use_yaw, false);
 
   // Set control input
-  vec_E<VecDf> U; // Control input
+  vec_E<VecDf> U;  // Control input
   const decimal_t du = u / num;
   if (use_3d && !use_yaw) {
     // consider primitive in z-axis, without yawing
@@ -114,12 +113,11 @@ int main(int argc, char **argv) {
       for (decimal_t dy = -u; dy <= u; dy += du)
         for (decimal_t dz = -u; dz <= u; dz += du)
           U.push_back(Vec3f(dx, dy, dz));
-  } else if(!use_3d && !use_yaw) {
+  } else if (!use_3d && !use_yaw) {
     // consider 2D primitive, without yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
-      for (decimal_t dy = -u; dy <= u; dy += du)
-        U.push_back(Vec3f(dx, dy, 0));
-  } else if(!use_3d && use_yaw) {
+      for (decimal_t dy = -u; dy <= u; dy += du) U.push_back(Vec3f(dx, dy, 0));
+  } else if (!use_3d && use_yaw) {
     // consider 2D primitive, with yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
@@ -128,7 +126,7 @@ int main(int argc, char **argv) {
           vec << dx, dy, 0, dyaw;
           U.push_back(vec);
         }
-  } else if(use_3d && use_yaw) {
+  } else if (use_3d && use_yaw) {
     // consider primitive in z-axis, with yawing
     for (decimal_t dx = -u; dx <= u; dx += du)
       for (decimal_t dy = -u; dy <= u; dy += du)
@@ -164,9 +162,9 @@ int main(int argc, char **argv) {
   start.use_vel = true;
   start.use_acc = false;
   start.use_jrk = false;
-  start.use_yaw = use_yaw; // if true, yaw is also propogated
+  start.use_yaw = use_yaw;  // if true, yaw is also propogated
 
-  Waypoint3D goal(start.control); // initialized with the same control as start
+  Waypoint3D goal(start.control);  // initialized with the same control as start
   goal.pos = Vec3f(goal_x, goal_y, goal_z);
   goal.vel = Vec3f(0, 0, 0);
   goal.acc = Vec3f(0, 0, 0);
@@ -175,14 +173,14 @@ int main(int argc, char **argv) {
   std::unique_ptr<MPL::VoxelMapPlanner> planner_ptr;
 
   planner_ptr.reset(new MPL::VoxelMapPlanner(true));
-  planner_ptr->setMapUtil(map_util); // Set collision checking function
-  planner_ptr->setVmax(v_max);       // Set max velocity
-  planner_ptr->setAmax(a_max);       // Set max acceleration (as control input)
-  planner_ptr->setYawmax(yaw_max);       // Set yaw threshold
-  planner_ptr->setDt(dt);            // Set dt for each primitive
-  planner_ptr->setU(U); // Set control input
-  planner_ptr->setTol(0.5); // Tolerance for goal region
-  //planner_ptr->setHeurIgnoreDynamics(true);
+  planner_ptr->setMapUtil(map_util);  // Set collision checking function
+  planner_ptr->setVmax(v_max);        // Set max velocity
+  planner_ptr->setAmax(a_max);        // Set max acceleration (as control input)
+  planner_ptr->setYawmax(yaw_max);    // Set yaw threshold
+  planner_ptr->setDt(dt);             // Set dt for each primitive
+  planner_ptr->setU(U);               // Set control input
+  planner_ptr->setTol(0.5);           // Tolerance for goal region
+  // planner_ptr->setHeurIgnoreDynamics(true);
 
   // Planning thread!
   ros::Time t0 = ros::Time::now();
@@ -200,7 +198,7 @@ int main(int argc, char **argv) {
     auto traj = planner_ptr->getTraj();
     // Publish trajectory as primitives
     planning_ros_msgs::PrimitiveArray prs_msg =
-      toPrimitiveArrayROSMsg(traj.getPrimitives());
+        toPrimitiveArrayROSMsg(traj.getPrimitives());
     prs_msg.header = header;
     prs_pub.publish(prs_msg);
 
@@ -209,13 +207,15 @@ int main(int argc, char **argv) {
     traj_msg.header = header;
     traj_pub.publish(traj_msg);
 
-    printf("Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
-           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+    printf(
+        "Raw traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): "
+        "%f, total time: %f\n",
+        traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+        traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
 
     // Get intermediate waypoints
     auto waypoints = traj.getWaypoints();
-    for(size_t i = 1; i < waypoints.size() - 1; i++)
+    for (size_t i = 1; i < waypoints.size() - 1; i++)
       waypoints[i].control = Control::VEL;
     // Get time allocation
     auto dts = traj.getSegmentTimes();
@@ -231,14 +231,16 @@ int main(int argc, char **argv) {
     refined_traj_msg.header = header;
     refined_traj_pub.publish(refined_traj_msg);
 
-    printf("Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, J(YAW): %f, total time: %f\n",
-           traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
-           traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
+    printf(
+        "Refined traj -- J(VEL): %f, J(ACC): %f, J(JRK): %f, J(SNP): %f, "
+        "J(YAW): %f, total time: %f\n",
+        traj.J(Control::VEL), traj.J(Control::ACC), traj.J(Control::JRK),
+        traj.J(Control::SNP), traj.Jyaw(), traj.getTotalTime());
   }
 
   // Publish expanded nodes
   sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getCloseSet());
-  //sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getValidRegion());
+  // sensor_msgs::PointCloud ps = vec_to_cloud(planner_ptr->getValidRegion());
   ps.header = header;
   cloud_pub.publish(ps);
 
