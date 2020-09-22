@@ -40,9 +40,9 @@ else(NOT VTK_FOUND)
   cs_add_executable(mesh_sampling src/mapping_utils/mesh_sampling.cpp)
 endif(NOT VTK_FOUND)
 
-cs_add_library(voxel_grid src/mapping_utils/voxel_grid.cpp)
+cs_add_library(mpl_voxel_grid src/mapping_utils/voxel_grid.cpp)
 cs_add_executable(cloud_to_map src/mapping_utils/cloud_to_map.cpp)
-target_link_libraries(cloud_to_map voxel_grid)
+target_link_libraries(cloud_to_map mpl_voxel_grid)
 
 cs_add_executable(image_to_map src/mapping_utils/image_to_map.cpp)
 target_link_libraries(image_to_map
