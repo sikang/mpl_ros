@@ -36,7 +36,6 @@ MapDisplay::MapDisplay()
       SLOT(updateMeshColorAndAlpha()));
 
   mesh_height_ = mesh_height_property_->getFloat();
-  update_nh_.setCallbackQueue(point_cloud_common_->getCallbackQueue());
   map_util_.reset(new MPL::VoxelMapUtil());
 }
 
@@ -71,6 +70,7 @@ void MapDisplay::getMap(std::shared_ptr<MPL::VoxelMapUtil> &map_util,
 }
 
 void MapDisplay::onInitialize() {
+  update_nh_.setCallbackQueue(context_->getThreadedQueue());
   MFDClass::onInitialize();
   point_cloud_common_->initialize(context_, scene_node_);
 }
