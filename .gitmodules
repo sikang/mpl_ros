@@ -1,6 +1,0 @@
-[submodule "motion_primitive_library"]
-	path = motion_primitive_library
-	url = https://github.com/sikang/motion_primitive_library.git
-[submodule "DecompROS"]
-	path = DecompROS
-	url = https://github.com/sikang/DecompROS.git
