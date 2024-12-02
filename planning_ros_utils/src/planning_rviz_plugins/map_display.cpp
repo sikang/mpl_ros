@@ -36,7 +36,7 @@ MapDisplay::MapDisplay()
       SLOT(updateMeshColorAndAlpha()));
 
   mesh_height_ = mesh_height_property_->getFloat();
-  update_nh_.setCallbackQueue(point_cloud_common_->getCallbackQueue());
+  //update_nh_.setCallbackQueue(point_cloud_common_->getCallbackQueue());
   map_util_.reset(new MPL::VoxelMapUtil());
 }
 

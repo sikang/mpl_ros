@@ -12,10 +12,10 @@ execute_process(COMMAND lsb_release -cs
 )
 
 SET(COMPILE_ELLIPSOID_PLANNER_NODE TRUE)
-if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic")
-  SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
-  message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
-endif()
+# if(${LSB_RELEASE_ID_SHORT} MATCHES "bionic")
+#   SET(COMPILE_ELLIPSOID_PLANNER_NODE FALSE)
+#   message("-- Systemm version: ${LSB_RELEASE_ID_SHORT}, disable the compile of [ellipsoid_planner_node]")
+# endif()
 #message("-- COMPILE_ELLIPSOID_PLANNER_NODE: ${COMPILE_ELLIPSOID_PLANNER_NODE}")
 
 find_package(catkin_simple REQUIRED)
@@ -37,9 +37,11 @@ cs_add_executable(distance_map_planner_node src/distance_map_planner_node.cpp)
 target_link_libraries(distance_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
 
 if(COMPILE_ELLIPSOID_PLANNER_NODE)
-cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
-target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+  cs_add_executable(ellipsoid_planner_node src/ellipsoid_planner_node.cpp)
+  target_link_libraries(ellipsoid_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
+  target_compile_definitions(ellipsoid_planner_node PRIVATE FLANN_USE_SYSTEM_LZ4)
 endif()
+
 
 cs_add_executable(poly_map_planner_node src/poly_map_planner_node.cpp)
 target_link_libraries(poly_map_planner_node ${MOTION_PRIMITIVE_LIBRARY_LIBRARIES})
