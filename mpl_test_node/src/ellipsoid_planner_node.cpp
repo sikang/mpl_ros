@@ -1,10 +1,18 @@
+#define FLANN_USE_SYSTEM_LZ4
+
+#include <ros/ros.h>
+#include <rosbag/bag.h>
+#include <rosbag/view.h>
+#include <rosbag/query.h>
+#include <rosbag/message_instance.h>
 #include <decomp_ros_utils/data_ros_utils.h>
-#include <mpl_external_planner/ellipsoid_planner/ellipsoid_planner.h>
 #include <planning_ros_utils/data_ros_utils.h>
 #include <planning_ros_utils/primitive_ros_utils.h>
-#include <ros/ros.h>
+
+#include <mpl_external_planner/ellipsoid_planner/ellipsoid_planner.h>
 
 #include "bag_reader.hpp"
+
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "test");
